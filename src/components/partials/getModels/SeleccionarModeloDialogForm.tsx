@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
-import { useState, type Dispatch, type SetStateAction, useEffect } from 'react';
+import { useState, type Dispatch, type SetStateAction } from 'react';
 import {
   Dialog,
   DialogActions,
@@ -19,7 +20,7 @@ import FormInputNoController from '../form/FormInputNoController';
 import FormSelectController from '../form/FormSelectController';
 import FormButton from '../form/FormButton';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
 import { v4 as uuid } from 'uuid';
@@ -33,8 +34,7 @@ import AltRouteIcon from '@mui/icons-material/AltRoute';
 import FormCheckboxController from '../form/FormCheckboxController';
 import FormButtonGrid from '../form/FormButtonGrid';
 import FormKeywords from '../form/FormKeywords';
-import BlankSpaceGrid from '../form/BlankSpaceGrid';
-import FormInputSearchModelController from '../form/FormInputSearchModelController';
+import { setCurrentPersonaRespuestaUsuario } from '../../../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 interface IProps {
   set_models: any;
   form_filters: any[];
@@ -70,6 +70,8 @@ const SeleccionarModeloDialogForm = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
   const [selected_row, set_selected_row] = useState([]);
+
+  const { currentPersonaRespuestaUsuario } = useAppSelector((state) => state.ResRequerimientoOpaSlice);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
   const TypeDatum: any = (input: any) => {
@@ -168,7 +170,6 @@ const SeleccionarModeloDialogForm = ({
           min_date={form_input.min_date ?? null}
           max_date={form_input.max_date ?? null}
           format={form_input.format ?? null}
-          open_to={form_input.open_to ?? null}
         />
       );
     } else if (form_input.datum_type === 'date_picker_time_controller') {
@@ -268,45 +269,6 @@ const SeleccionarModeloDialogForm = ({
           disabled={form_input.disabled ?? null}
         />
       );
-    } else if (form_input.datum_type === 'blank_space') {
-      return (
-        <BlankSpaceGrid
-          xs={form_input.xs}
-          md={form_input.md}
-          hidden_text={form_input.hidden_text ?? null}
-          margin={form_input.margin ?? null}
-          marginTop={form_input.marginTop ?? null}
-        />
-      );
-    } else if (form_input.datum_type === 'input_searcheable') {
-      return (
-        <FormInputSearchModelController
-          xs={form_input.xs}
-          md={form_input.md}
-          margin={form_input.margin ?? null}
-          marginTop={form_input.marginTop ?? null}
-          control_form={form_input.control_form ?? null}
-          control_name={form_input.control_name ?? null}
-          default_value={form_input.default_value ?? null}
-          rules={form_input.rules ?? null}
-          label={form_input.label ?? null}
-          type={form_input.type ?? null}
-          disabled={form_input.disabled ?? null}
-          helper_text={form_input.helper_text ?? null}
-          on_click_function={form_input.on_click_function ?? null}
-          icon_class={form_input.icon_class ?? null}
-          modal_select_model_title={form_input.modal_select_model_title ?? null}
-          modal_form_filters={form_input.modal_form_filters ?? null}
-          set_models={form_input.set_models ?? null}
-          get_filters_models={form_input.get_filters_models ?? null}
-          models={form_input.models ?? null}
-          columns_model={form_input.columns_model ?? null}
-          row_id={form_input.row_id ?? null}
-          open_search_modal={form_input.open_search_modal ?? null}
-          set_open_search_modal={form_input.set_open_search_modal ?? null}
-          set_current_model={form_input.set_current_model ?? null}
-        />
-      );
     }
   };
 
@@ -322,17 +284,18 @@ const SeleccionarModeloDialogForm = ({
     const model = models.find((p) => p[row_id] === selected_row[0]);
     if (model !== undefined) {
       dispatch(set_current_model(model));
+      console.log('model', model);
+      dispatch(setCurrentPersonaRespuestaUsuario({
+        ...currentPersonaRespuestaUsuario,
+        ...model,
+      } as any));
       set_models([]);
       handle_close_select_model();
     }
   };
-
   const search_models = (): void => {
     search_model_function();
   };
-  useEffect(() => {
-    console.log(is_modal_active);
-  }, [is_modal_active]);
 
   return (
     <Dialog

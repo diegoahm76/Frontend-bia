@@ -5,10 +5,16 @@ import Divider from '@mui/material/Divider';
 import Chip from '@mui/material/Chip';
 import ModalBusquedaResponsable from '../manners/ModalBusquedaResponsable';
 import ModalBusquedaOperario from '../manners/ModalBusquedaOperario';
-import { interface_busqueda_operario, interface_busqueda_responsable, response_busqueda_responsable } from '../interfaces/types';
+import { interface_articulos_agregados, interface_articulos_despachados, interface_articulos_obtenidos_por_id, interface_busqueda_articulo, interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_persona_alma_rechaza, interface_inputs_persona_cierra_no_dispo_alma, interface_inputs_resumen_despacho, response_busqueda_responsable } from '../interfaces/types';
 import { useDispatch } from 'react-redux';
 import { get_obtener_operarios, get_obtener_responsables } from '../thunks/solicitud_activos';
 import { control_error, control_success } from '../../../../helpers';
+import { Dayjs } from 'dayjs';
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import TablaArticulosAgregados from '../tables/TablaArticulosAgregados';
+import { Title } from '../../../../components';
+import ResumenDespacho from '../../autorizacion_solicitud_activos/screens/ResumenDespacho';
 
 
 interface props {
@@ -39,6 +45,34 @@ interface props {
   funcionario_responsable_seleccionado: interface_busqueda_responsable;
   set_funcionario_operario_seleccionado: React.Dispatch<React.SetStateAction<interface_busqueda_operario>>;
   funcionario_operario_seleccionado: interface_busqueda_operario;
+  tipo_documento_solicito: string;
+  set_tipo_documento_solicito: React.Dispatch<React.SetStateAction<string>>;
+  documento_solicito: string;
+  set_documento_solicito: React.Dispatch<React.SetStateAction<string>>;
+  nombres_solicito: string;
+  set_nombres_solicito: React.Dispatch<React.SetStateAction<string>>;
+  apellidos_solicito: string;
+  set_apellidos_solicito: React.Dispatch<React.SetStateAction<string>>;
+  set_fecha_devolucion_ver: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  set_fecha_solicitud: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  set_estado_solicitud: React.Dispatch<React.SetStateAction<string>>;
+  fecha_devolucion_ver: Dayjs | null;
+  fecha_solicitud: Dayjs | null;
+  set_fecha_cierre_solicitud: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  fecha_cierre_solicitud: Dayjs | null;
+  estado_solicitud: string;
+  data_articulos_agregados: interface_articulos_agregados[] | interface_articulos_obtenidos_por_id[];
+  set_data_articulos_agregados: React.Dispatch<React.SetStateAction<interface_articulos_agregados[] | interface_articulos_obtenidos_por_id[]>>;
+  set_articulo_encontrado: React.Dispatch<React.SetStateAction<interface_busqueda_articulo>>;
+  set_tipo_unidad_medida: React.Dispatch<React.SetStateAction<string>>;
+  set_cantidad_articulo: React.Dispatch<React.SetStateAction<number>>;
+  set_fecha_devolucion: React.Dispatch<React.SetStateAction<Dayjs | null>>;
+  set_observacion: React.Dispatch<React.SetStateAction<string>>;
+  inputs_resumen_despacho: interface_inputs_resumen_despacho;
+  data_articulos_despachados: interface_articulos_despachados[];
+  inputs_persona_alma_no_dispo_alma: interface_inputs_persona_cierra_no_dispo_alma;
+  inputs_persona_alma_rechaza: interface_inputs_persona_alma_rechaza;
+  unidades_medidas: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -70,6 +104,34 @@ const BusquedaFuncionarios: React.FC<props> = ({
   funcionario_responsable_seleccionado,
   set_funcionario_operario_seleccionado,
   funcionario_operario_seleccionado,
+  tipo_documento_solicito,
+  set_tipo_documento_solicito,
+  documento_solicito,
+  set_documento_solicito,
+  nombres_solicito,
+  set_nombres_solicito,
+  apellidos_solicito,
+  set_apellidos_solicito,
+  set_fecha_devolucion_ver,
+  set_fecha_solicitud,
+  set_estado_solicitud,
+  fecha_devolucion_ver,
+  fecha_solicitud,
+  estado_solicitud,
+  set_fecha_cierre_solicitud,
+  fecha_cierre_solicitud,
+  data_articulos_agregados,
+  set_data_articulos_agregados,
+  set_articulo_encontrado,
+  set_tipo_unidad_medida,
+  set_cantidad_articulo,
+  set_fecha_devolucion,
+  set_observacion,
+  inputs_resumen_despacho,
+  data_articulos_despachados,
+  inputs_persona_alma_no_dispo_alma,
+  inputs_persona_alma_rechaza,
+  unidades_medidas,
 }) => {
 
   const dispatch = useDispatch();
@@ -78,7 +140,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
   const [mostrar_busqueda_operario, set_mostrar_busqueda_operario] = useState<boolean>(false);
 
   useEffect(() => {
-    if (Object.keys(funcionario_responsable_seleccionado).length !== 0){
+    if (Object.keys(funcionario_responsable_seleccionado).length !== 0) {
       set_tipo_documento_responsable(funcionario_responsable_seleccionado.tipo_documento);
       set_documento_responsable(funcionario_responsable_seleccionado.numero_documento);
       set_nombres_responsable(funcionario_responsable_seleccionado.primer_nombre ?? '');
@@ -87,7 +149,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
   }, [funcionario_responsable_seleccionado]);
 
   useEffect(() => {
-    if (Object.keys(funcionario_operario_seleccionado).length !== 0){
+    if (Object.keys(funcionario_operario_seleccionado).length !== 0) {
       set_tipo_documento_operario(funcionario_operario_seleccionado.tipo_documento);
       set_documento_operario(funcionario_operario_seleccionado.numero_documento);
       set_nombres_operario(funcionario_operario_seleccionado.primer_nombre ?? '');
@@ -104,7 +166,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
       '',
       '',
     )).then((response: response_busqueda_responsable) => {
-      if(Object.keys(response).length !== 0) {
+      if (Object.keys(response).length !== 0) {
         if (response.data.length !== 0) {
           set_funcionario_responsable_seleccionado(response.data[0]);
           control_success('Funcionario encontrado');
@@ -127,7 +189,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
       '',
       '',
     )).then((response: response_busqueda_responsable) => {
-      if(Object.keys(response).length !== 0) {
+      if (Object.keys(response).length !== 0) {
         if (response.data.length !== 0) {
           set_funcionario_operario_seleccionado(response.data[0]);
           control_success('Funcionario encontrado');
@@ -142,10 +204,10 @@ const BusquedaFuncionarios: React.FC<props> = ({
   }
 
   const busqueda_responsable = () => {
-    if(tipo_documento_responsable === ''){
+    if (tipo_documento_responsable === '') {
       control_error('Debe seleccionar el tipo de documento');
       return;
-    } else if (documento_responsable.trim() === ''){
+    } else if (documento_responsable.trim() === '') {
       control_error('Debe ingresar el número de documento');
       return;
     }
@@ -153,10 +215,10 @@ const BusquedaFuncionarios: React.FC<props> = ({
   }
 
   const busqueda_operario = () => {
-    if(tipo_documento_operario === ''){
+    if (tipo_documento_operario === '') {
       control_error('Debe seleccionar el tipo de documento');
       return;
-    } else if (documento_operario.trim() === ''){
+    } else if (documento_operario.trim() === '') {
       control_error('Debe ingresar el número de documento');
       return;
     }
@@ -175,27 +237,180 @@ const BusquedaFuncionarios: React.FC<props> = ({
         mostrar_busqueda_operario={mostrar_busqueda_operario}
         set_funcionario_operario_seleccionado={set_funcionario_operario_seleccionado}
       />
-      <Grid item xs={12}>
-        <Grid item xs={12} lg={3}>
-          <FormLabel htmlFor="solicitud_prestamo">
-            ¿Es solicitud de préstamo?
-          </FormLabel>
-          <Switch
-            id="solicitud_prestamo"
-            checked={switch_solicitud_prestamo}
-            disabled={accion === 'ver'}
-            onChange={() =>{
-              set_switch_solicitud_prestamo(!switch_solicitud_prestamo)
-            }}
-          />
-        </Grid>
-      </Grid>
-      
-      <Grid container spacing={2} item xs={12}>
 
+      <Grid item xs={12}>
+        <FormLabel sx={{ fontWeight: '700' }} htmlFor="solicitud_prestamo">
+          ¿Es solicitud de préstamo?
+        </FormLabel>
+        <Switch
+          id="solicitud_prestamo"
+          checked={switch_solicitud_prestamo}
+          disabled={accion === 'ver'}
+          onChange={() => {
+            set_switch_solicitud_prestamo(!switch_solicitud_prestamo)
+          }}
+        />
+      </Grid>
+
+      {accion === 'ver' &&
+        <>
+          <Grid item xs={12} lg={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label="Fecha de solicitud:"
+                value={fecha_solicitud}
+                onChange={(newValue) => {
+                  set_fecha_solicitud(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label="Fecha de cierre solicitud"
+                value={fecha_cierre_solicitud}
+                onChange={(newValue) => {
+                  set_fecha_cierre_solicitud(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled
+                label="Fecha de devolución"
+                value={fecha_devolucion_ver ?? null}
+                onChange={(newValue) => {
+                  set_fecha_devolucion_ver(newValue);
+                }}
+                renderInput={(params) => (
+                  <TextField fullWidth size="small" {...params} />
+                )}
+              />
+            </LocalizationProvider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <TextField
+              fullWidth
+              label='Estado de la solicitud'
+              value={estado_solicitud}
+              disabled
+              onChange={(e) => set_estado_solicitud(e.target.value)}
+              size='small'
+            />
+          </Grid>
+        </>
+      }
+
+      {accion === 'ver' &&
+        <Grid container spacing={2} item xs={12}>
+          <Grid item xs={12}>
+            <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
+              <Chip label="FUNCIONARIO QUIEN SOLICITÓ" size="small" />
+            </Divider>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <FormControl required size="small" fullWidth>
+              <InputLabel >Tipo documento de quien solicitó</InputLabel>
+              <Select
+                label='Tipo documento de quien solicitó'
+                value={tipo_documento_solicito}
+                disabled={accion === 'ver'}
+                onChange={(e) => set_tipo_documento_solicito(e.target.value)}
+              >
+                <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
+                <MenuItem value="RC" >Registro civil</MenuItem>
+                <MenuItem value="TI" >Tarjeta de identidad</MenuItem>
+                <MenuItem value="CE" >Cédula de extranjería</MenuItem>
+                <MenuItem value="PA" >Pasaporte</MenuItem>
+                <MenuItem value="PE" >Permiso especial de permanencia</MenuItem>
+                <MenuItem value="NT" >NIT</MenuItem>
+                <MenuItem value="NU" >NUIP</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} lg={3}>
+            <TextField
+              fullWidth
+              label='Documento de quien solicitó'
+              value={documento_solicito}
+              disabled={accion === 'ver'}
+              onChange={(e) => set_documento_solicito(e.target.value)}
+              size='small'
+            />
+          </Grid>
+
+          {accion !== 'ver' &&
+            <>
+              <Grid item xs={12} lg={3}>
+                <Button
+                  fullWidth
+                  disabled={accion === 'ver'}
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                >
+                  Buscar
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} lg={3}>
+                <Button
+                  fullWidth
+                  disabled={accion === 'ver'}
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                >
+                  Búsqueda avanzada
+                </Button>
+              </Grid>
+            </>
+          }
+
+          <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
+            <TextField
+              fullWidth
+              disabled
+              label='Nombres de quien solicitó'
+              value={nombres_solicito}
+              onChange={(e) => set_nombres_solicito(e.target.value)}
+              size='small'
+            />
+          </Grid>
+
+          <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
+            <TextField
+              fullWidth
+              disabled
+              label='Apellidos de quien solicitó'
+              value={apellidos_solicito}
+              onChange={(e) => set_apellidos_solicito(e.target.value)}
+              size='small'
+            />
+          </Grid>
+        </Grid>
+      }
+
+      <Grid container spacing={2} item xs={12}>
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
-            <Chip label="BÚSQUEDA RESPONSABLE" size="small" />
+          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
+            <Chip label="FUNCIONARIO RESPONSABLE" size="small" />
           </Divider>
         </Grid>
 
@@ -231,31 +446,37 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={busqueda_responsable}
-          >
-            Buscar
-          </Button>
-        </Grid>
+        {accion !== 'ver' &&
+          <>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={busqueda_responsable}
+              >
+                Buscar
+              </Button>
+            </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={()=>set_mostrar_busqueda_responsable(true)}
-          >
-            Búsqueda avanzada
-          </Button>
-        </Grid>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={() => set_mostrar_busqueda_responsable(true)}
+              >
+                Búsqueda avanzada
+              </Button>
+            </Grid>
+          </>
+        }
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled
@@ -266,7 +487,7 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled
@@ -280,10 +501,9 @@ const BusquedaFuncionarios: React.FC<props> = ({
 
 
       <Grid container spacing={2} item xs={12}>
-
         <Grid item xs={12}>
-          <Divider orientation="horizontal" variant="fullWidth" style={{marginBlock: 'auto', width: '100%'}}>
-            <Chip label="BÚSQUEDA OPERARIO" size="small" />
+          <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
+            <Chip label="FUNCIONARIO OPERARIO" size="small" />
           </Divider>
         </Grid>
 
@@ -320,31 +540,37 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={busqueda_operario}
-          >
-            Buscar
-          </Button>
-        </Grid>
+        {accion !== 'ver' &&
+          <>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={busqueda_operario}
+              >
+                Buscar
+              </Button>
+            </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <Button
-            fullWidth
-            color="primary"
-            variant="contained"
-            startIcon={<SearchIcon />}
-            onClick={()=>set_mostrar_busqueda_operario(true)}
-          >
-            Búsqueda avanzada
-          </Button>
-        </Grid>
+            <Grid item xs={12} lg={3}>
+              <Button
+                fullWidth
+                disabled={accion === 'ver'}
+                color="primary"
+                variant="contained"
+                startIcon={<SearchIcon />}
+                onClick={() => set_mostrar_busqueda_operario(true)}
+              >
+                Búsqueda avanzada
+              </Button>
+            </Grid>
+          </>
+        }
 
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled
@@ -354,8 +580,8 @@ const BusquedaFuncionarios: React.FC<props> = ({
             size='small'
           />
         </Grid>
-        
-        <Grid item xs={12} lg={6}>
+
+        <Grid item xs={12} lg={accion === 'ver' ? 3 : 6}>
           <TextField
             fullWidth
             disabled
@@ -366,6 +592,178 @@ const BusquedaFuncionarios: React.FC<props> = ({
           />
         </Grid>
       </Grid>
+
+      {accion === 'ver' &&
+        <>
+          <Grid container spacing={2} item xs={12}>
+            <Grid item xs={12}>
+              <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
+                <Chip label="FUNCIONARIO QUE CIERRA POR NO DISPONIBILIDAD EN ALMACÉN" size="small" />
+              </Divider>
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <FormControl required size="small" fullWidth>
+                <InputLabel >Tipo documento</InputLabel>
+                <Select
+                  label='Tipo documento'
+                  value={inputs_persona_alma_no_dispo_alma.tipo_documento_persona_cierra_no_dispo_alma || ''}
+                  disabled={accion === 'ver'}
+                >
+                  <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
+                  <MenuItem value="RC" >Registro civil</MenuItem>
+                  <MenuItem value="TI" >Tarjeta de identidad</MenuItem>
+                  <MenuItem value="CE" >Cédula de extranjería</MenuItem>
+                  <MenuItem value="PA" >Pasaporte</MenuItem>
+                  <MenuItem value="PE" >Permiso especial de permanencia</MenuItem>
+                  <MenuItem value="NT" >NIT</MenuItem>
+                  <MenuItem value="NU" >NUIP</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                label='Documento: '
+                value={inputs_persona_alma_no_dispo_alma.documento_persona_cierra_no_dispo_alma || ''}
+                disabled={accion === 'ver'}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                disabled
+                label='Nombres: '
+                value={inputs_persona_alma_no_dispo_alma.nombres_persona_cierra_no_dispo_alma || ''}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                disabled
+                label='Apellidos: '
+                value={inputs_persona_alma_no_dispo_alma.apellidos_persona_cierra_no_dispo_alma || ''}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={10}>
+              <TextField
+                fullWidth
+                multiline
+                rows={1}
+                label='Observaciones del cierre: '
+                value={inputs_persona_alma_no_dispo_alma.obser_cierre_no_dispo_alma || ''}
+                disabled={accion === 'ver'}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={2}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  disabled
+                  label="Fecha de cierre:"
+                  value={inputs_persona_alma_no_dispo_alma.fecha_cierre_no_dispo_alma || null}
+                  onChange={() => { }} // No hace nada
+                  renderInput={(params) => (
+                    <TextField fullWidth size="small" {...params} />
+                  )}
+                />
+              </LocalizationProvider>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={2} item xs={12}>
+            <Grid item xs={12}>
+              <Divider orientation="horizontal" variant="fullWidth" style={{ marginBlock: 'auto', width: '100%' }}>
+                <Chip label="FUNCIONARIO DE ALMACÉN QUE RECHAZA LA SOLICITUD" size="small" />
+              </Divider>
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <FormControl required size="small" fullWidth>
+                <InputLabel >Tipo documento:</InputLabel>
+                <Select
+                  label='Tipo documento:'
+                  value={inputs_persona_alma_rechaza.tipo_documento_persona_alma_rechaza || ''}
+                  disabled={accion === 'ver'}
+                >
+                  <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
+                  <MenuItem value="RC" >Registro civil</MenuItem>
+                  <MenuItem value="TI" >Tarjeta de identidad</MenuItem>
+                  <MenuItem value="CE" >Cédula de extranjería</MenuItem>
+                  <MenuItem value="PA" >Pasaporte</MenuItem>
+                  <MenuItem value="PE" >Permiso especial de permanencia</MenuItem>
+                  <MenuItem value="NT" >NIT</MenuItem>
+                  <MenuItem value="NU" >NUIP</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                label='Documento: '
+                value={inputs_persona_alma_rechaza.documento_persona_alma_rechaza || ''}
+                disabled={accion === 'ver'}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                disabled
+                label='Nombres: '
+                value={inputs_persona_alma_rechaza.nombres_persona_alma_rechaza || ''}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                disabled
+                label='Apellidos: '
+                value={inputs_persona_alma_rechaza.apellidos_persona_alma_rechaza || ''}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={10}>
+              <TextField
+                fullWidth
+                multiline
+                rows={1}
+                label='Justificación del rechazo'
+                value={inputs_persona_alma_rechaza.justificacion_rechazo_almacen || ''}
+                disabled={accion === 'ver'}
+                size='small'
+              />
+            </Grid>
+
+            <Grid item xs={12} lg={2}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  disabled
+                  label="Fecha de rechazo:"
+                  value={inputs_persona_alma_rechaza.fecha_rechazo_almacen || null}
+                  onChange={() => { }} // No hace nada
+                  renderInput={(params) => (
+                    <TextField fullWidth size="small" {...params} />
+                  )}
+                />
+              </LocalizationProvider>
+            </Grid>
+          </Grid>
+        </>
+      }
 
 
       <Grid item xs={12} lg={6}>
@@ -393,6 +791,31 @@ const BusquedaFuncionarios: React.FC<props> = ({
           size='small'
         />
       </Grid>
+
+      {accion === 'ver' &&
+        <>
+          <Grid container item xs={12}>
+            <Title title="Artículos solicitados" />
+            <TablaArticulosAgregados
+              accion={accion}
+              unidades_medidas={unidades_medidas}
+              switch_solicitud_prestamo={switch_solicitud_prestamo}
+              data_articulos_agregados={data_articulos_agregados}
+              set_data_articulos_agregados={set_data_articulos_agregados}
+              set_articulo_encontrado={set_articulo_encontrado}
+              set_tipo_unidad_medida={set_tipo_unidad_medida}
+              set_cantidad_articulo={set_cantidad_articulo}
+              set_fecha_devolucion={set_fecha_devolucion}
+              set_observacion={set_observacion}
+            />
+          </Grid>
+
+          <ResumenDespacho
+            inputs_resumen_despacho={inputs_resumen_despacho}
+            data_articulos_despachados={data_articulos_despachados}
+          />
+        </>
+      }
     </>
   );
 }

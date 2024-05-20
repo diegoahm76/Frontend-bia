@@ -75,7 +75,7 @@ export const get_data_user: (id: number) => any = (
       set_user_info({
         ...infoResume,
         profile_img:
-          process.env.NODE_ENV === 'development'
+          process.env.NODE_ENV === 'production'
             ? `${
                 process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
                 `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`

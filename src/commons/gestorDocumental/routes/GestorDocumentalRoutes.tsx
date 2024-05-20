@@ -52,6 +52,13 @@ import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/s
 import { ChartDataProvider } from '../ReportesGeneralesGestorDocumental/context/DataChartContext';
 import { ReportIndicadoresPqrsdf } from '../ReportesIndicadoresPqrsdf/screen/ReportIndicadoresPqrsdf';
 import { ChartDataProviderPQRSDF } from '../ReportesIndicadoresPqrsdf/context/DataChartContext';
+import { MainViweVital } from '../integracionVital/screen/MainVital';
+import { ModalAndLoadingProvider } from '../../../context/GeneralContext';
+import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentanillaContext';
+import { RouteArchibo } from '../ArchivadosOtros/routes/RouteArchibo';
+import { LiquidacionRutesPago } from '../Liquidacion_dos/routes/LiquidacionRutes';
+import { Facturacion } from '../../recaudo/screens/Facturacion';
+import { GeneradorDocumentos } from '../../recaudo/screens/GeneradorDocumentos';
 
 const routes = [
   {
@@ -143,6 +150,11 @@ const routes = [
     name: 'encuesta',
     component: () => <Encuesta />,
   },
+  {
+    path: 'archivado/',
+    name: 'archivado',
+    component: () => <RouteArchibo />,
+  },
 
   {
     path: 'Reubicacion_Expedientes/',
@@ -154,6 +166,13 @@ const routes = [
     name: 'encuesta_asignacion',
     component: () => <EncuestaRoutes />,
   },
+  {
+    path: 'documentos/',
+    name: 'documentos',
+    component: () => <GeneradorDocumentos />,
+    // component: () => <Facturacion />,
+  },
+
 
   {
     path: 'Interno_encuesta/',
@@ -320,7 +339,28 @@ const routes = [
       </ChartDataProviderPQRSDF>
     ),
   },
+  {
+    path: 'vital/',
+    name: 'vital',
+    component: () => (
+      <>
+        {' '}
+        <ModalAndLoadingProvider>
+          <PanelVentanillaProvider>
+            <MainViweVital />
+          </PanelVentanillaProvider>
+        </ModalAndLoadingProvider>
+      </>
+    ),
+  },
+  {
+    path: 'liquidacion/',
+    name: 'liquidacion',
+    component: () => <LiquidacionRutesPago />,
+  },
 ];
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {

@@ -18,7 +18,7 @@ import {
 } from '../components/Programas/BusquedaAvanzada/types';
 import { IBusquedaMetas } from '../../MetasPorIndicador/components/Indicadores/BusquedaAvanzada/types';
 import { IBusquedaPLanes } from '../../Planes/components/Planes/BusquedaAvanzada/types';
-import { IBusquedaProgramas } from '../../Programas/components/Programas/BusquedaAvanzada/types';
+import { IBusquedaObjetivos, IBusquedaPlanes, IBusquedaProgramas } from '../../Programas/components/Programas/BusquedaAvanzada/types';
 import { IBusquedaProyecto } from '../../Proyectos/components/Proyectos/BusquedaAvanzada/types';
 import { IBusquedaProductos } from '../../Productos/components/Programas/BusquedaAvanzada/types';
 import { IBusquedaFuenteIndicador } from '../../FinanciaciónIndicadores/components/Components/BusquedaAvanzada/types';
@@ -151,12 +151,36 @@ export const search_plan = async ({
 
 export const search_programas = async ({
   nombre_programa,
-  nombre_plan,
+  nombre_eje_estrategico,
 }: any): Promise<AxiosResponse<ResponseServer<IBusquedaProgramas[]>>> => {
   const url = `seguimiento/planes/busqueda-avanzada-programas/?nombre_programa=${String(
     nombre_programa ?? ''
-  )}&nombre_plan=${String(nombre_plan ?? '')}`;
+  )}&nombre_eje=${String(nombre_eje_estrategico ?? '')}`;
   return await api.get<ResponseServer<IBusquedaProgramas[]>>(url);
+};
+
+// Busqueda Avanzada objetivos por nombre objetivo y nombre plan
+
+export const search_objetivos = async ({
+  nombre_plan,
+  nombre_objetivo,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaObjetivos[]>>> => {
+  const url = `seguimiento/planes/busqueda-avanzada-objetivos/?nombre_plan=${String(
+    nombre_plan ?? ''
+  )}&nombre_objetivo=${String(nombre_objetivo ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaObjetivos[]>>(url);
+};
+
+// Busqueda Avanzada planes por nombre plan y sigla plan
+
+export const search_planes = async ({
+  nombre_plan,
+  sigla_plan,
+}: any): Promise<AxiosResponse<ResponseServer<IBusquedaPlanes[]>>> => {
+  const url = `seguimiento/planes/consultar-planesPAI/?nombre_plan=${String(
+    nombre_plan ?? ''
+  )}&nombre_sigla_plan=${String(sigla_plan ?? '')}`;
+  return await api.get<ResponseServer<IBusquedaPlanes[]>>(url);
 };
 
 // Busqueda Avanzada proyectos por nombre plan, nombre programa y nombre proyecto
@@ -179,12 +203,11 @@ export const search_proyectos = async ({
 export const search_eje = async ({
   nombre_plan,
   nombre,
-  nombre_programa,
 }: any): Promise<AxiosResponse<ResponseServer<IBusquedaEjeEstrategico[]>>> => {
   const url = `/seguimiento/planes/busqueda-avanzada-ejes/?nombre_plan=${String(
     nombre_plan ?? ''
-  )}&nombre=${String(nombre ?? '')}&nombre_programa=${String(
-    nombre_programa ?? ''
+  )}&nombre_eje=${String(
+    nombre ?? ''
   )}`;
   return await api.get<ResponseServer<IBusquedaEjeEstrategico[]>>(url);
 };

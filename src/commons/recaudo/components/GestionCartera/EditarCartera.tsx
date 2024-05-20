@@ -9,13 +9,15 @@ import {
   Typography,
   type SelectChangeEvent,
   Stack,
-  InputLabel
+  InputLabel,
+  Box,
+  Tab
 } from "@mui/material"
 import type { FlujoProceso } from "../../interfaces/flujoProceso";
 import { type Dispatch, type SetStateAction } from "react";
 import ChangeCircleIcon from '@mui/icons-material/ChangeCircle';
 import SaveIcon from '@mui/icons-material/Save';
-import type { AtributoEtapa } from "../../interfaces/proceso";
+import type { AtributoEtapa, CategoriaAtributo } from "../../interfaces/proceso";
 
 
 interface IProps {
@@ -32,6 +34,7 @@ interface IProps {
 
   },
   flujos_destino: FlujoProceso[];
+  // categorias: CategoriaAtributo[];
   id_proceso: string;
   id_cartera: string;
   id_subetapa_destino: string;
@@ -40,6 +43,7 @@ interface IProps {
   set_open_requisitos_modal: Dispatch<SetStateAction<boolean>>;
   set_open_create_proceso_modal: Dispatch<SetStateAction<boolean>>;
   mover_subetapa_actual: () => void;
+  datos: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -54,23 +58,149 @@ export const EditarCartera: React.FC<IProps> = ({
   handle_select_change,
   set_open_requisitos_modal,
   set_open_create_proceso_modal,
-  mover_subetapa_actual
+  mover_subetapa_actual,
+  datos
 }: IProps) => {
-
 
   // console.log("subetapas", subetapas)
   return (
     <>
       <Grid container spacing={2}>
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            disabled
+            fullWidth
+            size="small"
+            name="Nombre"
+            label="Nombre"
+            helperText="Nombre"
+            value={datos.nombre}
+            />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            disabled
+            fullWidth
+            size="small"
+            name="Fecha inicio de mora"
+            label="Fecha inicio de moran"
+            value={datos.fecha_facturacion}
+            helperText='Fecha inicio de mora'
+             />
+        </Grid>
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label="Número factura"
+            helperText="Número factura"
+            size="small"
+            fullWidth
+            name=" Número factura "
+            value={datos.numero_factura}
+            disabled />
+        </Grid>
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label=" Código contable  "
+            helperText=" Código contable  "
+            size="small"
+            fullWidth
+            name=" Código contable"
+            value={datos.codigo_contable}
+            disabled />
+        </Grid>
+
+
+
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label=" Estado actual "
+            helperText="Estado actual  "
+            size="small"
+            fullWidth
+            name="Estado actual"
+            value={datos.etapa}
+            disabled />
+        </Grid>
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label=" Días de mora "
+            helperText=" Días de mora  "
+            size="small"
+            fullWidth
+            name="Días de mora"
+            value={datos.dias_mora}
+            disabled />
+        </Grid>
+
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label=" Monto inicial"
+            helperText="  Monto inicial "
+            size="small"
+            fullWidth
+            name=" Monto inicial"
+            value={datos.monto_inicial}
+            disabled />
+        </Grid>
+
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label=" Valor intereses"
+            helperText="  Valor intereses "
+            size="small"
+            fullWidth
+            name=" Valor intereses"
+            value={datos.valor_intereses}
+            disabled />
+        </Grid>
+
+
+
+
+        <Grid item xs={12} sm={4}>
+          <TextField
+            label=" Valor sanción"
+            helperText="  Valor sanción "
+            size="small"
+            fullWidth
+            name=" Valor sanción"
+            value={datos.valor_sancion}
+            disabled />
+        </Grid>
+
+
+
+
+
+
+
+
+
+
         <Grid item xs={6}>
           <Grid item xs={12}>
-            <Stack
+            {/* <Stack
               direction='row'
               justifyContent="center"
               alignItems="center"
               sx={{ my: '10px' }}
             >
-              <Grid item xs={3}>
+              {datos.fecha_facturacion}
+              {/* <Grid item xs={3}>
                 <Typography>Fecha inicio de mora</Typography>
               </Grid>
               <Grid item xs={8}>
@@ -85,10 +215,13 @@ export const EditarCartera: React.FC<IProps> = ({
                   }}
                   disabled
                 />
-              </Grid>
-            </Stack>
+              </Grid> */}
+            {/* </Stack>  */}
+
+
+
           </Grid>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Stack
               direction='row'
               justifyContent="center"
@@ -112,7 +245,11 @@ export const EditarCartera: React.FC<IProps> = ({
                 />
               </Grid>
             </Stack>
-          </Grid>
+          </Grid> */}
+
+
+
+          {/*
           <Grid item xs={12}>
             <Stack
               direction='row'
@@ -137,8 +274,11 @@ export const EditarCartera: React.FC<IProps> = ({
                 />
               </Grid>
             </Stack>
-          </Grid>
-          <Grid item xs={12}>
+          </Grid> */}
+
+
+
+          {/* <Grid item xs={12}>
             <Stack
               direction='row'
               justifyContent="center"
@@ -162,10 +302,10 @@ export const EditarCartera: React.FC<IProps> = ({
                 />
               </Grid>
             </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
         <Grid item xs={6}>
-          <Grid item xs={12}>
+          {/* <Grid item xs={12}>
             <Stack
               direction='row'
               justifyContent="center"
@@ -189,8 +329,8 @@ export const EditarCartera: React.FC<IProps> = ({
                 />
               </Grid>
             </Stack>
-          </Grid>
-          <Grid item xs={12}>
+          </Grid> */}
+          {/* <Grid item xs={12}>
             <Stack
               direction='row'
               justifyContent="center"
@@ -214,8 +354,8 @@ export const EditarCartera: React.FC<IProps> = ({
                 />
               </Grid>
             </Stack>
-          </Grid>
-          <Grid item xs={12}>
+          </Grid> */}
+          {/* <Grid item xs={12}>
             <Stack
               direction='row'
               justifyContent="center"
@@ -239,8 +379,8 @@ export const EditarCartera: React.FC<IProps> = ({
                 />
               </Grid>
             </Stack>
-          </Grid>
-          <Grid item xs={12}>
+          </Grid> */}
+          {/* <Grid item xs={12}>
             <Stack
               direction='row'
               justifyContent="center"
@@ -264,7 +404,7 @@ export const EditarCartera: React.FC<IProps> = ({
                 />
               </Grid>
             </Stack>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
       <Grid item xs={12} sx={{ my: '30px' }}>
@@ -402,7 +542,6 @@ export const EditarCartera: React.FC<IProps> = ({
           </Grid>
         </Stack>
       </Grid>
-
     </>
   )
 }

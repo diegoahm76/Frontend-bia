@@ -8,15 +8,23 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { choicesRepresentacion } from '../../utils/choices';
 import { PropiaComponent } from './enRepresentacionDe/propiaComponent/PropiaComponent';
+import { EmpresaComponent } from './enRepresentacionDe/empresaComponent/EmpresaComponent';
+import { ApoderadoComponent } from './enRepresentacionDe/apoderadoComponent/ApoderadoComponent';
+import { setCurrentPersonaRespuestaUsuario } from '../../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { useAppDispatch } from '../../../../../../../../hooks';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const SelccionarPersona = (): JSX.Element => {
+
   const {
     control: control_seleccionar_persona,
     watch,
     reset: reset_seleccionar_persona,
   } = useForm<any>({});
   const watchExe = watch();
+
+  //* dispatch declaration 
+  const dispatch = useAppDispatch()
 
   return (
     <>
@@ -38,7 +46,6 @@ export const SelccionarPersona = (): JSX.Element => {
               marginTop: '20px',
             }}
             onSubmit={(e: any) => {
-              // on_submit_create_ccd(e);
             }}
           >
             <Grid container spacing={2}>
@@ -75,23 +82,11 @@ export const SelccionarPersona = (): JSX.Element => {
                           }}
                         >
                           A NOMBRE *
-                          {/* {ccd_current
-                        ? `
-                          Organigrama Seleccionado
-                        `
-                        : `Seleccionar Organigrama`}*/}
                         </small>
                       </label>
                     </div>
                   )}
                 />
-                {/*   {errors_create_ccd.organigrama != null && (
-              <div className="col-12">
-                <small className="text-center text-danger">
-                  Este campo es obligatorio
-                </small>
-              </div>
-            )}*/}
               </Grid>
               <Grid item xs={12} sm={4}>
                 <Controller
@@ -137,10 +132,7 @@ export const SelccionarPersona = (): JSX.Element => {
                         onChange={(selectedOption) => {
                           //  console.log('')(selectedOption);
                           onChange(selectedOption);
-                          console.log(
-                            control_seleccionar_persona._formValues
-                              ?.en_representacion_de?.value
-                          );
+                          dispatch(setCurrentPersonaRespuestaUsuario(null as any));
                         }}
                         options={choicesRepresentacion ?? []}
                         placeholder="Seleccionar"
@@ -168,9 +160,21 @@ export const SelccionarPersona = (): JSX.Element => {
       </Grid>
 
       {watchExe?.en_representacion_de?.value === 'APODERADO' ? (
-        <>Componente de apoderado</>
+        <ApoderadoComponent
+          {...{
+            control_seleccionar_persona,
+            watchExe,
+            reset_seleccionar_persona,
+          }}
+        />
       ) : watchExe?.en_representacion_de?.value === 'EMPRESA' ? (
-        <>Componente de empresa</>
+        <EmpresaComponent
+          {...{
+            control_seleccionar_persona,
+            watchExe,
+            reset_seleccionar_persona,
+          }}
+        />
       ) : watchExe?.en_representacion_de?.value === 'PROPIA' ? (
         <PropiaComponent
           {...{
@@ -186,13 +190,3 @@ export const SelccionarPersona = (): JSX.Element => {
     </>
   );
 };
-
-{
-  /*<ApoderadoComponent />*/
-}
-{
-  /*<EmpresaComponent />*/
-}
-{
-  /*<PropiaComponent />*/
-}

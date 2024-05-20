@@ -20,7 +20,10 @@ import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
 import { formatDate } from '../../../../../../../utils/functions/formatDate';
-import { getRespuestaTarea } from '../../services/getRespuestaTarea.service';
+import {
+  getRespuestaTarea,
+  getRespuestaTareaOpa,
+} from '../../services/pqrsdf/getRespuestaTarea.service';
 import { columnsRespuesta } from './columnsRespuesta';
 import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 export const SeguimientoRespuestaTarea = (): JSX.Element => {
@@ -83,11 +86,12 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
           case 'RESPONDER OPA':
           case 'Responder Opa':
           case 'Responder OPA':
-
-          showAlert('Advertencia', 'El seguimiento de la opa no está incorporado aún', 'warning');
-          setListaRespuesta([])
-
-
+            const dataSeguimientosRespuestaOpa = await getRespuestaTareaOpa(
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
+              handleSixthLoading
+            );
+            console.log('dataSeguimientosRespuestaOpa', dataSeguimientosRespuestaOpa);
+            setListaRespuesta(dataSeguimientosRespuestaOpa);
 
             // Call the service for OPA
             break;
@@ -150,12 +154,20 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
                 return (
                   <Accordion
                     ref={
-                      expanded === item?.id_respuesta_pqr || 0 /* poner id opa */ ? accordionRef : null
+                      expanded === item?.id_respuesta_pqr ||
+                      expanded === item?.id_respuesta_opa
+                        ? accordionRef
+                        : null
                     }
                     style={{ marginBottom: '1rem' }}
-                    key={item?.id_respuesta_pqr ?? 0 /* poner el id opa*/}
-                    expanded={expanded === item?.id_respuesta_pqr ?? 0 /*poner el id opa*/}
-                    onChange={handleChange(item?.id_respuesta_pqr ?? 0 /*poner el id opa*/)}
+                    key={item?.id_respuesta_pqr || item?.id_respuesta_opa}
+                    expanded={
+                      expanded === item?.id_respuesta_pqr ||
+                      expanded === item?.id_respuesta_opa
+                    }
+                    onChange={handleChange(
+                      item?.id_respuesta_pqr || item?.id_respuesta_opa
+                    )}
                   >
                     <AccordionSummary
                       expandIcon={
@@ -166,7 +178,9 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
                         />
                       }
                       aria-controls={`${item?.fecha_respuesta}-content`}
-                      id={`${item?.id_respuesta_pqr ?? 0 /* poner id opa */}-header`}
+                      id={`${
+                        item?.id_respuesta_pqr || item?.id_respuesta_opa
+                      }-header`}
                     >
                       <Typography>
                         <b>Fecha de respuesta de la tarea:</b>{' '}
@@ -187,7 +201,9 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
                             ...listaRespuesta,
                           ]*/
                           listaRespuesta.filter(
-                            (el) => el.id_respuesta_pqr === expanded
+                            (el) =>
+                              el.id_respuesta_pqr === expanded ||
+                              el?.id_respuesta_opa === expanded
                           ) ?? []
                         }
                       />

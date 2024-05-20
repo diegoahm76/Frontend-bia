@@ -22,43 +22,49 @@ export const ListarProgramas: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
-      width: 300,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
-      width: 300,
+      minWidth: 350,
+      flex: 1
     },
     {
       field: 'porcentaje_1',
       headerName: 'PORCENTAJE 1',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_2',
       headerName: 'PORCENTAJE 2',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_3',
       headerName: 'PORCENTAJE 3',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'porcentaje_4',
       headerName: 'PORCENTAJE 4',
       sortable: true,
-      width: 130,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -159,6 +165,7 @@ export const ListarProgramas: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

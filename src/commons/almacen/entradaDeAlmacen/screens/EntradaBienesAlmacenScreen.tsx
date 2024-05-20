@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Box, Button, Stack, FormHelperText, ButtonGroup } from "@mui/material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
@@ -348,6 +349,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   }
 
   const guardar_entrada = (): void => {
+    console.log("entradas",info_items);
     if(info_items.length > 0){
       cargar_entradas();
     }
@@ -405,7 +407,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         //  console.log('')("Se actualizó una entrada: ",response);
       });
     }else{
-      dispatch(crear_entrada_bien(entradas)).then((response: any) =>{
+      dispatch(crear_entrada_bien(entradas, file)).then((response: any) =>{
         //  console.log('')("Se creo una entrada: ",response);
       });
     }
@@ -695,7 +697,8 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   type={'text'}
                   size="small"
                   fullWidth
-                  value={file === null ? "" : file.name}
+                  value={file === null || file.length === 0 ? "" : file.name}
+                  // value={file === null ? "" : file.name}
                   InputProps={{
                     readOnly: true,
                   }}

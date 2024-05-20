@@ -34,19 +34,22 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       field: 'concepto',
       headerName: 'CONCEPTO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_fuente',
       headerName: 'Nombre de la Fuente',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'vano_1',
       headerName: 'AÑO 1',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -63,7 +66,8 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       field: 'vano_2',
       headerName: 'AÑO 2',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -80,7 +84,8 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       field: 'vano_3',
       headerName: 'AÑO 3',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -97,7 +102,8 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       field: 'vano_4',
       headerName: 'AÑO 4',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params: GridValueFormatterParams) => {
         const inversion = Number(params.value); // Convertir a número
         const formattedInversion = inversion.toLocaleString('es-AR', {
@@ -114,7 +120,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -221,6 +227,7 @@ export const ListarFuentesFinanciacion: React.FC = () => {
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={() => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

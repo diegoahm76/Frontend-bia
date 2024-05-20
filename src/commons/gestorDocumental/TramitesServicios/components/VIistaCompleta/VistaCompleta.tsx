@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, TextField } from '@mui/material'
+import { Box, Button, Grid, IconButton, Modal, TextField } from '@mui/material'
 import { useContext, useEffect, useState } from 'react'
 import { Title } from '../../../../../components/Title'
 import { RenderDataGrid } from '../../../tca/Atom/RenderDataGrid/RenderDataGrid'
@@ -10,6 +10,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import { Iinformacion_opa, initialDataOpa } from '../../interfaces/InterfacesInicializacionJuridicaOpas';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CloseIcon from '@mui/icons-material/Close';
 
 
 export const VistaCompleta = () => {
@@ -18,11 +19,18 @@ export const VistaCompleta = () => {
     const { set_nombre_proyecto, activeStep, id, setActiveStep } = useContext(StepperContext);
     const [form_data, set_form_data] = useState<Iinformacion_opa>(initialDataOpa);
     const [showMoreInfo, setShowMoreInfo] = useState(false);
-    console.log(form_data)
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
 
 
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
 
+    // Función para cerrar el modal
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
 
     // Función para manejar el clic del botón y cambiar el estado
     const handleShowMoreInfo = () => {
@@ -228,22 +236,23 @@ export const VistaCompleta = () => {
                     />
                 </Grid>
 
-                <Grid container alignItems="center" justifyContent="center">
+                {/* <Grid container alignItems="center" justifyContent="center">
                     <Grid item >
                         <Button
-                            onClick={handleShowMoreInfo}
+                            // onClick={handleShowMoreInfo}
+                            onClick={handleOpenModal}
                             variant="contained"
                             style={{ marginTop: 15 }}
-                            color={showMoreInfo ? "error" : "success"}
+                            // color={showMoreInfo ? "error" : "success"}
                             startIcon={showMoreInfo ? <VisibilityOffIcon /> : <VisibilityIcon />}
                         >
                             {showMoreInfo ? "Ocultar información" : "Mostrar más información"}
                         </Button>
                     </Grid>
                 </Grid>
+                <Modal open={isModalOpen} onClose={handleCloseModal}>
+                    <Grid container>
 
-                {showMoreInfo && (
-                    <>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 fullWidth
@@ -332,9 +341,151 @@ export const VistaCompleta = () => {
                                 InputLabelProps={{ shrink: true }}
                             />
                         </Grid>
-                    </>
-                )}
 
+                    </Grid>
+                </Modal> */}
+                 <Grid container alignItems="center" justifyContent="center">
+                <Grid item>
+                    <Button
+                        onClick={handleOpenModal}
+                        variant="contained"
+                        style={{ marginTop: 15 }}
+                        startIcon={<VisibilityIcon />}
+                    >
+                        Mostrar más información
+                    </Button>
+                </Grid>
+            </Grid>
+
+            {/* Modal para mostrar la información adicional */}
+            <Modal open={isModalOpen} onClose={handleCloseModal} >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 800,
+                        bgcolor: 'background.paper',
+                        border: '2px solid #000',
+                        boxShadow: 24,
+                        p: 4,
+                    }}
+                >
+                    <Grid container>
+                        
+
+                    <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.municipio}
+                                label="Municipio"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.fecha_ini_estado_actual}
+                                label="Fecha Inicio Estado Actual"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.estado_actual_solicitud}
+                                label="Estado Actual de la Solicitud"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.descripcion_direccion}
+                                label="Descripción de la Dirección"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.coordenada_x}
+                                label="Coordenada X"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.coordenada_y}
+                                label="Coordenada Y"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.cod_municipio}
+                                label="Código de Municipio"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                fullWidth
+                                style={{ marginTop: 15, width: '95%' }}
+                                size="small"
+                                variant="outlined"
+                                value={form_data.tipo_operacion_tramite}
+                                label="Tipo de Operación de Trámite"
+                                InputLabelProps={{ shrink: true }}
+                            />
+                        </Grid>
+
+
+
+
+                        <IconButton
+                        aria-label="close"
+                        onClick={handleCloseModal}
+                        sx={{
+                            position: 'absolute',
+                            top: 0,
+                            right: 0,
+                        }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+
+
+
+
+
+                    </Grid>
+                </Box>
+            </Modal>
 
                 <Grid container alignItems="center" justifyContent="center">
                     <Grid item xs={10}>

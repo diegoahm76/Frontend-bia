@@ -70,7 +70,7 @@ export const ElementoOPAS = (): JSX.Element => {
     try {
       const result = await Swal.fire({
         title: 'Aceptar tarea',
-        text: `¿Estás seguro que deseas aceptar esta tarea?`,
+        text: `¿Estás seguro que deseas aceptar esta tarea?, recuerda activar las ventanas emergentes en el navegador para ver el auto de inicio y el pago (si aplica)`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Aceptar',
@@ -520,7 +520,7 @@ export const ElementoOPAS = (): JSX.Element => {
           ) ?? []
         }
         columns={columns ?? []}
-        title={`Listado de tareas asignadas en PQRSDF`}
+        title={`Listado de tareas asignadas en OPA`}
         aditionalElement={
           currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ? (
             <Button
@@ -531,11 +531,7 @@ export const ElementoOPAS = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea ({' '}
-              {
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
-              }
-              )
+              Quitar selección de Tarea OPA
             </Button>
           ) : null
         }

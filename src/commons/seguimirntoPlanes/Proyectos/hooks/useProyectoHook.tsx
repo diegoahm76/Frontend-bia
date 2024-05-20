@@ -45,7 +45,7 @@ export const useProyectoHook = (): any => {
       pondera_3: 0,
       pondera_4: 0,
       id_plan: 0,
-      fecha_creacion: '',
+      // fecha_creacion: '',
       cumplio: false,
     });
   };

@@ -16,6 +16,7 @@ export const getSeriesByIdUnidad = async (idUnidad:number): Promise<any> => {
     }
 
     return data?.data?.map((item: any) => ({
+      ...item,
       value: item.id_cat_serie_und,
       label: `${item.cod_serie_doc} - ${item.nombre_serie_doc} / ${item.cod_subserie_doc ?? 'N/A'} - ${item?.nombre_subserie_doc ?? 'N/A'}`,
     }));
@@ -23,6 +24,7 @@ export const getSeriesByIdUnidad = async (idUnidad:number): Promise<any> => {
   }
   catch (error) {
     handleApiError(error);
+    return [];
   }
   finally {}
 }

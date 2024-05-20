@@ -9,6 +9,8 @@ import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import { BusquedaPrograma } from '../components/EjeEstrategico/BusquedaAvanzada/BusquedaPrograma';
 import { BusquedaEje } from '../components/EjeEstrategico/BusquedaAvanzada/BusquedaEje';
+import { BusquedaObjetivo } from '../components/EjeEstrategico/BusquedaAvanzada/BusquedaObjetivos';
+import { BusquedaPlan } from '../components/EjeEstrategico/BusquedaAvanzada/BusquedaPlan';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EjeEstrategicoScreen: React.FC = () => {
@@ -47,8 +49,8 @@ export const EjeEstrategicoScreen: React.FC = () => {
           <Title title="Eje Estrategico" />
         </Grid>
       </Grid>
-      <BusquedaPrograma />
-      {/* <ListarEjeEstrategico /> */}
+      <BusquedaObjetivo />
+      <BusquedaPlan />
       {mode.ver ? <ListarEjeEstrategico /> : null}
       {mode.crear || mode.editar ? <AgregarEjeEstrategico /> : null}
       <Grid

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 
 import { api } from '../../../../../api/axios';
@@ -24,6 +25,7 @@ import {
   get_person_document_service,
   get_persons_service,
 } from '../../store/thunks/pqrsdfThunks';
+import { setCurrentPersonaRespuestaUsuario } from '../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TipoPersona = () => {
   const dispatch = useAppDispatch();
@@ -34,7 +36,6 @@ const TipoPersona = () => {
     reset: reset_persona,
     getValues: get_values,
     watch,
-    handleSubmit: handle_on_submit,
   } = useForm<IObjPerson>();
   const {
     persons,
@@ -49,6 +50,10 @@ const TipoPersona = () => {
   const [aux_document_types, set_aux_document_types] = useState<
     IObjDocumentType[]
   >([]);
+
+    //* states from redux
+    const { currentPersonaRespuestaUsuario } = useAppSelector((state) => state.ResRequerimientoOpaSlice);
+
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());
@@ -167,7 +172,7 @@ const TipoPersona = () => {
           row_id={'id_persona'}
           columns_model={columns_personas}
           models={persons}
-          get_filters_models={handle_on_submit(get_personas)}
+          get_filters_models={get_personas}
           set_models={set_persons}
           reset_values={reset_persona}
           button_submit_label="BUSCAR"
@@ -236,7 +241,7 @@ const TipoPersona = () => {
               control_form: control_tipo_persona,
               control_name: 'tipo_persona',
               default_value: '',
-              rules: { required_rule: { rule: true, message: 'Requerido' } },
+              rules: {},
               label: 'Tipo de persona',
               disabled: false,
               helper_text: 'Debe seleccionar tipo',
@@ -252,7 +257,7 @@ const TipoPersona = () => {
               control_form: control_tipo_persona,
               control_name: 'tipo_documento',
               default_value: '',
-              rules: { required_rule: { rule: true, message: 'Requerido' } },
+              rules: {},
               label: 'Tipo de documento',
               disabled: person_type.id === null,
               helper_text: '',

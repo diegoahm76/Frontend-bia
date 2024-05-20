@@ -96,3 +96,70 @@ export const get_obtener_articulos: any = (
     }
   };
 };
+
+export const post_crear_solicitud_activos: any = (form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.post(`/almacen/activos/crear-solicitud-baja-activos/create/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_editar_solicitud_activos: any = (id_solicitud_activo: string, form_data: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/editar-solicitud-activos/${id_solicitud_activo}/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_unidades_medidas: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/listar-unidades-medida/get/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+
+export const get_obtener_solicitudes_realizadas: any = (id_solicitud_activo: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/almacen/activos/resumen-solicitud-activos/${id_solicitud_activo}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const put_cancelar_solicitud: any = (id_solicitud_activo: string, form_data: {justificacion_anulacion:string}) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`/almacen/activos/cancelar-solicitud-activos/${id_solicitud_activo}/`, form_data);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
+export const get_obtener_tipos_documentos: any = () => {
+  return async () => {
+    try {
+      const { data } = await api.get(`/listas/tipo-documento/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+}

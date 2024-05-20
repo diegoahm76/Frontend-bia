@@ -18,11 +18,13 @@ const columnsStatic = [
     headerName: "Asunto",
     field: "asunto",
     minWidth: 400,
+    renderCell: (params: GridValueGetterParams) => params.value ? params.value : 'N/A'
   },
   {
     headerName: "Cantidad de anexos",
     field: "cantidad_anexos",
     minWidth: 200,
+    renderCell: (params: GridValueGetterParams) => params.value ? params.value : 'N/A'
   },
   {
     headerName: "Radicado",

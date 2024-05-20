@@ -59,7 +59,7 @@ export const RespuestaOpaUsuario = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Requerimiento al usuario sobre una solicitud" />
+          <Title title="Respuesta al usuario sobre una solicitud de OPA" />
           {/* parte Inicial */}
           <ParteInicial />
           {/*stepper*/}

@@ -3,6 +3,7 @@ export interface busqueda_vehiculos {
 }
 
 export interface data_asignacion_vehiculos {
+  activo: boolean;
   id_asignacion: number;
   tipo_vehiculo: string;
   marca: string;
@@ -92,7 +93,7 @@ export interface interface_conductor_seleccionado {
   id_clase_tercero: number
   nombre_clase_tercero: string
   nombre_persona: string
-  nro_documento: string
+  numero_documento: string
 }
 
 

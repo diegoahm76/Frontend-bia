@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import Swal from 'sweetalert2';
 
-export function handleApiError(error: any) {
+export function handleApiError(error: any, info: string = '') {
   const errorMessages: any = {
-    500: 'Ha ocurrido un error y/o no se han encontrado datos relacionados',
-    404: 'Recurso no encontrado, no hay datos disponibles',
+    500: `Ha ocurrido un error y/o no se han encontrado datos relacionados con la solicitud. ${info ? `Detalles: ${info}` : ''}`,
+    404: `Recurso no encontrado o no hay datos disponibles. ${info ? `Detalles: ${info}` : ''}`,
   };
 
   const defaultErrorMessage = 'Ha ocurrido un error';

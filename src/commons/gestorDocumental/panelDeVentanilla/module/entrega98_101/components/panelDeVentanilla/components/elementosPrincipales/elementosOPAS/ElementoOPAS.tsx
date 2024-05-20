@@ -9,6 +9,7 @@ import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/
 import {
   setActionssToManagePermissionsOpas,
   setCurrentElementPqrsdComplementoTramitesYotros,
+  setListaElementosComplementosRequerimientosOtros,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { columnsOpas } from './columnsOpas/columnsOpas';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
@@ -18,6 +19,9 @@ import { ModalOpa as ModalOpaInformacion } from '../../../../../Atom/Opas/ModalO
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import Swal from 'sweetalert2';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
+import { getComplementosAsociadosOpas } from '../../../../../../../toolkit/thunks/opas/complementos/getComplementosOpas.service';
 
 export const ElementoOPAS = (): JSX.Element => {
   // ? dispatch necesario
@@ -33,7 +37,9 @@ export const ElementoOPAS = (): JSX.Element => {
 
   //* context necesario
 
-  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
+  const { handleOpenModalOne, handleThirdLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // ? set actions OPAS, button selected
 
@@ -95,7 +101,7 @@ const actionsOpas: any[] = [
   },
 ];
 */
-
+  //* inicio should disable
     const shouldDisable = (actionId: string) => {
       const isNoSeleccionado = !opa;
       const isAsigGrup = actionId === 'AsigGrup';
@@ -111,33 +117,32 @@ const actionsOpas: any[] = [
       const isEnVentanillaConPendientes =
         opa.estado_actual === 'EN VENTANILLA CON PENDIENTES';
       const isGestion = opa.estado_actual === 'EN GESTION';
-
+      const pendienteRevisionJuridica = opa.estado_asignacion_grupo === 'PENDIENTE DE REVISIÓN JURIDICA DE VENTANILLA';
+      const revisadoPorJuridicaDeVentanilla = opa.estado_asignacion_grupo === 'REVISADO POR JURIDICA DE VENTANILLA';
       if (isNoSeleccionado) {
         return true;
       }
 
-      //?  primer cas
+      //?  primer caso
       if (isRadicado && !hasAnexos) {
-        return !(actionId === 'Jurídica' || actionId === 'AsigGrup');
+        return !(actionId === 'Jurídica'); // || actionId === 'AsigGrup'
       }
       // ? segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
         return !(
-          actionId === 'Jurídica' ||
-          actionId === 'AsigGrup' ||
-          actionId === 'Dig'
+          actionId === 'Jurídica'
         );
       }
       // ? tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
-        return !(actionId === 'Jurídica' || actionId === 'Dig');
+        return !(/*actionId === 'Jurídica' ||*/ actionId === 'Dig');
       }
       // ? cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
         return !(
-          actionId === 'Jurídica' ||
-          actionId === 'Dig' ||
-          actionId === 'AsigGrup'
+          actionId === 'Jurídica' // ||
+          //actionId === 'Dig' ||
+          // actionId === 'AsigGrup'
         );
       }
       // ? quinto caso
@@ -147,7 +152,15 @@ const actionsOpas: any[] = [
 
       // ? sexto caso
       if (isEnVentanillaConPendientes) {
-        return !(actionId === 'Dig' || actionId === 'Jurídica');
+        return !(actionId === 'Dig' /*|| actionId === 'Jurídica'*/);
+      }
+
+      if(pendienteRevisionJuridica){
+        return !(actionId === 'Jurídica');
+      }
+
+      if(revisadoPorJuridicaDeVentanilla){
+        return !(actionId === 'Jurídica' || actionId === 'AsigGrup')
       }
 
       if (isGestion) {
@@ -158,7 +171,8 @@ const actionsOpas: any[] = [
       ...action,
       disabled: shouldDisable(action.id),
     }));
-    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));
+    // * fim should disable
+    dispatch(setActionssToManagePermissionsOpas(actionsOpas));
   };
 
   //* const columns with actions
@@ -238,6 +252,47 @@ const actionsOpas: any[] = [
       renderCell: (params: any) => {
         return (
           <>
+            <Tooltip
+              title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
+            >
+              <IconButton
+                onClick={() => {
+                  (async () => {
+                    try {
+                      const res = await getComplementosAsociadosOpas(
+                        params.row.id_solicitud_tramite,
+                        handleThirdLoading
+                      );
+                      dispatch(
+                        setListaElementosComplementosRequerimientosOtros(res)
+                      );
+                    } catch (error) {
+                      console.error(error);
+                      // Handle error appropriately
+                    }
+                  })();
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <KeyboardDoubleArrowDownIcon
+                    sx={{
+                      color: 'info.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
             <Tooltip title="Ver información asociada a OPA">
               <IconButton
                 onClick={() => {

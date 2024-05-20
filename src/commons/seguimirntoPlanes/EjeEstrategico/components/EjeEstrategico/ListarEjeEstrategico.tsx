@@ -14,7 +14,6 @@ import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { useContext, useEffect } from 'react';
 import { DataContextEjeEstrategico } from '../../context/context';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import EditIcon from '@mui/icons-material/Edit';
 import {
@@ -26,42 +25,69 @@ import { download_xls } from '../../../../../documentos-descargar/XLS_descargar'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ListarEjeEstrategico: React.FC = () => {
+  const {
+    id_plan,
+    id_objetivo,
+    rows_eje_estrategico,
+    set_id_plan,
+    set_id_objetivo,
+    set_id_eje_estrategico,
+    fetch_data_eje_estrategico,
+    fetch_data_eje_estrategico_id_obj,
+  } = useContext(DataContextEjeEstrategico);
+
   const columns_eje: GridColDef[] = [
     {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
+      valueGetter: (params) => params.row.nombre_objetivo ? params.row.nombre_plan_objetivo : params.row.nombre_plan,
     },
     {
-      field: 'nombre_programa',
-      headerName: 'NOMBRE DEL PROGRAMA',
+      field: 'sigla_plan',
+      headerName: 'SIGLA DEL PLAN',
       sortable: true,
-      width: 300,
+      minWidth: 150,
+      flex: 1,
+      valueGetter: (params) => params.row.nombre_objetivo ? params.row.sigla_plan_objetivo : params.row.sigla_plan,
+    },
+    ...(id_objetivo ? [{
+      field: 'nombre_objetivo',
+      headerName: 'NOMBRE DEL OBJETIVO',
+      sortable: true,
+      minWidth: 250,
+      flex: 1
+    }] : []),
+    {
+      field: 'nombre',
+      headerName: 'NOMBRE DEL EJE ESTRATEGICO',
+      sortable: true,
+      minWidth: 300,
+      flex: 1
     },
     {
       field: 'nombre_tipo_eje',
       headerName: 'TIPO DE EJE ESTRATEGICO',
       sortable: true,
-      width: 300,
-    },
-    {
-      field: 'nombre',
-      headerName: 'NOMBRE DEL EJE ESTRATEGICO',
-      sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
             size="small"
             onClick={() => {
+              set_id_plan(params.row.id_plan);
+              set_id_objetivo(params.row.id_objetivo);
+              set_id_eje_estrategico(params.row.id_eje_estrategico);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -96,13 +122,6 @@ export const ListarEjeEstrategico: React.FC = () => {
     },
   ];
 
-  const {
-    id_plan,
-    rows_eje_estrategico,
-    fetch_data_tipo_eje,
-    fetch_data_eje_estrategico,
-  } = useContext(DataContextEjeEstrategico);
-
   // const {
   //   plan: { id_plan },
   // } = useAppSelector((state) => state.planes);
@@ -110,14 +129,16 @@ export const ListarEjeEstrategico: React.FC = () => {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    fetch_data_tipo_eje();
-  }, []);
-
-  useEffect(() => {
-    if (id_plan) {
+    if (id_plan && !id_objetivo) {
       fetch_data_eje_estrategico();
     }
   }, [id_plan]);
+
+  useEffect(() => {
+    if (id_objetivo) {
+      fetch_data_eje_estrategico_id_obj();
+    }
+  }, [id_objetivo]);
 
   return (
     <>
@@ -168,6 +189,7 @@ export const ListarEjeEstrategico: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>
@@ -176,6 +198,7 @@ export const ListarEjeEstrategico: React.FC = () => {
         <Grid container spacing={2} justifyContent="flex-end">
           <Grid item>
             <Button
+              sx={{ marginTop: 2 }}
               variant="outlined"
               color="primary"
               disabled={false}

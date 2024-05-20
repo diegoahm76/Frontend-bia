@@ -12,6 +12,7 @@ export interface interface_busqueda_avanzada_bienes {
   identificador_bien: string
   nombre_marca?: string
   valor_unitario: number
+  depreciacion_valor: number
   id_item_entrada_almacen: number
   fecha_ingreso: string
   numero_doc_origen: string

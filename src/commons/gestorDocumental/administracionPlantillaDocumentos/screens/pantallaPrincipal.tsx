@@ -10,7 +10,7 @@ export const PantallaPrincipalAdministracionPlantillaDocumentos: React.FC =
   () => {
     return (
       <>
-      <Grid container>
+      <Grid container p={2} pr={4}>
         <Grid item xs={12}>
           <SeleccionarArchivo />
         </Grid>

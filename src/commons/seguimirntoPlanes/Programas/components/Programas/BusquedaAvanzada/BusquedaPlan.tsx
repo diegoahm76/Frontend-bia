@@ -25,19 +25,22 @@ import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import {
+  set_current_eje_estrategico,
   set_current_mode_planes,
   set_current_planes,
 } from '../../../../store/slice/indexPlanes';
 import EditIcon from '@mui/icons-material/Edit';
-import { search_plan } from '../../../../Indicadores/services/services';
+import { search_eje, search_plan } from '../../../../Indicadores/services/services';
 import { IBusquedaPLanes } from '../../../../Planes/components/Planes/BusquedaAvanzada/types';
 import { DataContextprograma } from '../../../context/context';
+import { IBusquedaEjeEstrategico } from '../../../../EjeEstrategico/components/EjeEstrategico/BusquedaAvanzada/types';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaPlan: React.FC = () => {
@@ -48,67 +51,43 @@ export const BusquedaPlan: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'NOMBRE DEL PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1,
+      valueGetter: (params) => params.row.nombre_objetivo ? params.row.nombre_plan_objetivo : params.row.nombre_plan,
     },
     {
-      field: 'sigla_plan',
-      headerName: 'SIGLA DEL PLAN',
+      field: 'nombre_objetivo',
+      headerName: 'NOMBRE DEL OBJETIVO',
       sortable: true,
-      width: 250,
+      minWidth: 300,
+      flex: 1,
+      valueGetter: (params) => params.row.nombre_objetivo || 'N/A',
     },
     {
-      field: 'tipo_plan',
-      headerName: 'TIPO DE PLAN',
+      field: 'nombre',
+      headerName: 'NOMBRE DEL EJE ESTRATÉGICO',
       sortable: true,
-      width: 200,
+      minWidth: 250,
+      flex: 1,
     },
     {
-      field: 'agno_inicio',
-      headerName: 'AÑO INICIO',
+      field: 'nombre_tipo_eje',
+      headerName: 'TIPO EJE ESTRATÉGICO',
       sortable: true,
-      width: 150,
+      minWidth: 250,
+      flex: 1,
     },
     {
-      field: 'agno_fin',
-      headerName: 'AÑO FIN',
-      sortable: true,
-      width: 150,
-    },
-    {
-      field: 'activo',
-      headerName: 'VIGENCIA',
-      sortable: true,
-      width: 200,
-      renderCell: (params) => {
-        return params.row.estado_vigencia === true ? (
-          <Chip
-            size="small"
-            label="vigente"
-            color="success"
-            variant="outlined"
-          />
-        ) : (
-          <Chip
-            size="small"
-            label="No vigente"
-            color="error"
-            variant="outlined"
-          />
-        );
-      },
-    },
-    {
-      field: 'acciones',
+      field: 'ACCIONES',
       headerName: 'ACCIONES',
-      sortable: true,
-      width: 250,
+      minWidth: 100,
       flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
             size="small"
             onClick={() => {
-              set_id_plan(params.row.id_plan);
+              set_id_eje_estrategico(params.row.id_eje_estrategico);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -116,9 +95,9 @@ export const BusquedaPlan: React.FC = () => {
                   editar: false,
                 })
               );
-              dispatch(set_current_planes(params.row));
+              dispatch(set_current_eje_estrategico(params.row));
               reset({
-                nombre_plan: params.row.nombre_plan,
+                nombre: params.row.nombre,
               });
               handle_close();
             }}
@@ -156,12 +135,14 @@ export const BusquedaPlan: React.FC = () => {
   } = useForm({
     defaultValues: {
       nombre_plan: '',
+      nombre_objetivo: '',
+      nombre: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaPLanes[]>([]);
+  const [rows, set_rows] = useState<IBusquedaEjeEstrategico[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -172,16 +153,26 @@ export const BusquedaPlan: React.FC = () => {
     set_open_dialog(false);
   };
 
+  const clean_form_advance_search = () => {
+    reset({
+      nombre_plan: '',
+      nombre_objetivo: '',
+      nombre: '',
+    });
+  }
+
   const dispatch = useAppDispatch();
 
-  const on_submit_advance = handle_submit(async ({ nombre_plan }) => {
+  const on_submit_advance = handle_submit(async ({ nombre_plan, nombre_objetivo, nombre }) => {
     set_is_search(true);
     try {
       set_rows([]);
       const {
         data: { data },
-      } = await search_plan({
+      } = await search_eje({
         nombre_plan,
+        nombre_objetivo,
+        nombre,
       });
 
       if (data?.length > 0) {
@@ -197,12 +188,11 @@ export const BusquedaPlan: React.FC = () => {
   });
 
     const {
-      set_id_plan,
+      set_id_eje_estrategico,
     } = useContext(DataContextprograma);
 
   useEffect(() => {
-    reset();
-    set_rows([]);
+    clean_form_advance_search();
     set_is_search(false);
   }, []);
 
@@ -224,21 +214,21 @@ export const BusquedaPlan: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Busqueda Planes" />
+          <Title title="Búsqueda Eje Estratégico" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <Controller
-            name="nombre_plan"
+            name="nombre"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
               <TextField
                 fullWidth
-                label="Nombre plan"
+                label="Nombre eje estratégico"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -260,30 +250,6 @@ export const BusquedaPlan: React.FC = () => {
             Buscar
           </Button>
         </Grid>
-        {/* {id_deposito && (
-          <>
-            <Grid container spacing={2} justifyContent="flex-end">
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    // set_id_deposito(null);
-                    dispatch(
-                      set_current_mode_estantes({
-                        ver: false,
-                        crear: true,
-                        editar: false,
-                      })
-                    );
-                  }}
-                >
-                  Agregar estante
-                </Button>
-              </Grid>
-            </Grid>
-          </>
-        )} */}
       </Grid>
       <Dialog open={open_dialog} onClose={handle_close} fullWidth maxWidth="lg">
         <DialogContent>
@@ -301,21 +267,9 @@ export const BusquedaPlan: React.FC = () => {
               marginLeft: '-5px',
             }}
           >
-            <Title title="Búsqueda avanzada planes" />
-            {/* <form
-              onSubmit={(e) => {
-                void on_submit_advance(e);
-              }}
-              style={{
-                width: '100%',
-                height: 'auto',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            > */}
+            <Title title="Búsqueda avanzada ejes estratégicos" />
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre_plan"
                   control={control}
@@ -334,7 +288,45 @@ export const BusquedaPlan: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre_objetivo"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre objetivo"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md={3}>
+                <Controller
+                  name="nombre"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <TextField
+                      fullWidth
+                      label="Nombre eje estratégico"
+                      value={value}
+                      onChange={onChange}
+                      size="small"
+                      margin="dense"
+                      disabled={false}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6} md sx={{display: 'flex', gap: '1rem'}}>
                 <LoadingButton
                   type="submit"
                   variant="contained"
@@ -348,6 +340,15 @@ export const BusquedaPlan: React.FC = () => {
                 >
                   Buscar
                 </LoadingButton>
+                <Button
+                  size="medium"
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={clean_form_advance_search}
+                >
+                  Limpiar
+                </Button>
               </Grid>
               {rows.length > 0 && (
                 <>
@@ -375,10 +376,11 @@ export const BusquedaPlan: React.FC = () => {
                         density="compact"
                         autoHeight
                         rows={rows ?? []}
-                        columns={columns ?? []} 
+                        columns={columns ?? []}
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={(row) => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

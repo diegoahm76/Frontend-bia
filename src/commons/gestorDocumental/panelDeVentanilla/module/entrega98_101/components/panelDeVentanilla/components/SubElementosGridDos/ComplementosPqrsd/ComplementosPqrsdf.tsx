@@ -51,11 +51,12 @@ export const ComplementosPqrsdf: React.FC = (): JSX.Element => {
     }
 
     if (!requiresDigitalization && !isComplementoAsignadoUnidad) {
-      return !(actionId === 'Dig' || actionId === 'ContinuarAsigGrup');
+      return !(/*actionId === 'Dig' ||*/ actionId === 'ContinuarAsigGrup');
     }
 
     if (!requiresDigitalization && isComplementoAsignadoUnidad) {
-      return !(actionId === 'Dig');
+      // return !(actionId === 'Dig');
+      return true;
     }
   };
   const setActionsComplementos = (complemento: any) => {

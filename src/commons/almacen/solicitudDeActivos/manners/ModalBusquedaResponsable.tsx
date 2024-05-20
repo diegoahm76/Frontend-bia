@@ -3,10 +3,10 @@ import { Box, Button, Dialog, DialogContent, FormControl, FormLabel, Grid, Input
 import { Title } from '../../../../components';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { interface_busqueda_responsable, response_busqueda_responsable } from '../interfaces/types';
+import { interface_busqueda_responsable, interface_tipos_documentos, response_busqueda_responsable, response_tipos_documentos } from '../interfaces/types';
 import TablaModalBusquedaResponsable from '../tables/TablaModalBusquedaResponsable';
 import { useAppDispatch } from '../../../../hooks';
-import { get_obtener_responsables } from '../thunks/solicitud_activos';
+import { get_obtener_responsables, get_obtener_tipos_documentos } from '../thunks/solicitud_activos';
 import { control_error } from '../../../../helpers';
 import ClearIcon from '@mui/icons-material/Clear';
 import SaveIcon from '@mui/icons-material/Save';
@@ -34,6 +34,7 @@ const ModalBusquedaResponsable: React.FC<props> = ({
   const [primer_nombre, set_primer_nombre] = useState<string>('');
   const [primer_apellido, set_primer_apellido] = useState<string>('');
   const [nombre_comercial, set_nombre_comercial] = useState<string>('');
+  const [loadding_tabla, set_loadding_tabla] = useState<boolean>(false);
 
   const [funcionario_responsable_temp, set_funcionario_responsable_temp] = useState<interface_busqueda_responsable>(Object);
   const [data_funcionarios_responsables, set_data_funcionarios_responsables] = useState<interface_busqueda_responsable[]>([
@@ -44,7 +45,10 @@ const ModalBusquedaResponsable: React.FC<props> = ({
     undefined as unknown as interface_busqueda_responsable,
   ]);
 
+  const [tipos_documentos, set_tipos_documentos] = useState<interface_tipos_documentos[]>([]);
+
   const get_obtener_responsables_fc = () => {
+    set_loadding_tabla(true);
     dispatch(get_obtener_responsables(
       tipo_documento,
       documento,
@@ -56,9 +60,11 @@ const ModalBusquedaResponsable: React.FC<props> = ({
       if(Object.keys(response).length !== 0) {
         if (response.data.length !== 0) {
           set_data_funcionarios_responsables(response.data);
+          set_loadding_tabla(false);
         } else {
           set_data_funcionarios_responsables([]);
           control_error('No se encontraron funcionarios');
+          set_loadding_tabla(false);
         }
       } else {
         control_error('Error en el servidor al obtener los responsables de la solicitud de activos');
@@ -66,16 +72,35 @@ const ModalBusquedaResponsable: React.FC<props> = ({
     });
   }
 
-  const responsables_obtenidos = useRef(false);
+  const get_obtener_tipos_documentos_fc = () => {
+    dispatch(get_obtener_tipos_documentos())
+    .then((response: response_tipos_documentos) => {
+      if(Object.keys(response).length !== 0) {
+        if (response.data.length !== 0) {
+          set_tipos_documentos(response.data);
+        } else {
+          set_tipos_documentos([]);
+          control_error('No se encontraron tipos de documentos');
+        }
+      } else {
+        control_error('Error en el servidor al obtener tipos de documentos');
+      }
+    });
+  }
+
+
+
+  const responsables_tp_documentos_obtenidos = useRef(false);
   useEffect(()=>{
-    if(!responsables_obtenidos.current && mostrar_busqueda_responsable){
+    if(!responsables_tp_documentos_obtenidos.current && mostrar_busqueda_responsable){
       get_obtener_responsables_fc();
-      responsables_obtenidos.current = true;
+      get_obtener_tipos_documentos_fc();
+      responsables_tp_documentos_obtenidos.current = true;
     }
   },[mostrar_busqueda_responsable])
 
   const consultar_responsable = () => {
-    alert("Se está realizando la búsqueda del responsable");
+    get_obtener_responsables_fc();
   }
 
   const limpiar_form = () => {
@@ -122,7 +147,6 @@ const ModalBusquedaResponsable: React.FC<props> = ({
 
             <Box
               component="form"
-              onSubmit={consultar_responsable}
               noValidate
               autoComplete="off"
               sx={{width:'100%', mt:'20px'}}
@@ -137,11 +161,14 @@ const ModalBusquedaResponsable: React.FC<props> = ({
                       value={tipo_documento}
                       onChange={(e) => set_tipo_documento(e.target.value)}
                     >
-                      <MenuItem value="CC">Cédula de ciudadanía</MenuItem>
-                      <MenuItem value="CE">Cédula de extranjería</MenuItem>
-                      <MenuItem value="TI">Tarjeta de identidad</MenuItem>
-                      <MenuItem value="RC">Registro civil</MenuItem>
-                      <MenuItem value="PA">Pasaporte</MenuItem>
+                      {
+                        tipos_documentos.length !== 0 ?
+                          tipos_documentos.map((item: interface_tipos_documentos) => (
+                            <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                          ))
+                          :
+                          <MenuItem value=''>Cargando...</MenuItem>
+                      }
                     </Select>
                   </FormControl>
                 </Grid>
@@ -210,7 +237,7 @@ const ModalBusquedaResponsable: React.FC<props> = ({
                       color='primary'
                       variant='contained'
                       startIcon={<SearchIcon />}
-                      type='submit'
+                      onClick={consultar_responsable}
                     >
                       Buscar
                     </Button>
@@ -243,6 +270,7 @@ const ModalBusquedaResponsable: React.FC<props> = ({
               <TablaModalBusquedaResponsable
                 data_funcionarios_responsables={data_funcionarios_responsables}
                 set_funcionario_responsable_temp={set_funcionario_responsable_temp}
+                loadding_tabla={loadding_tabla}
               />
             </Grid>
 

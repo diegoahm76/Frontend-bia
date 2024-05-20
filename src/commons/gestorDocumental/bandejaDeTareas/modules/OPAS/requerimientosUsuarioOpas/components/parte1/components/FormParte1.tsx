@@ -84,23 +84,26 @@ export const FormParte1 = ({
   }, []);
 
   const getInfoSolicitud = async (params: any) => {
-    const [detalleSolicitud, anexos] = await Promise.all([
+  /*  const [detalleSolicitud, anexos] = await Promise.all([
       getDetalleSolicitud(
         params?.row?.id_solicitud_al_usuario_sobre_pqrsdf,
         handleFifthLoading
       ),
-      getAnexosSolicitud(
-        params?.row?.id_solicitud_al_usuario_sobre_pqrsdf,
-        handleFifthLoading
-      ),
-    ]);
-
+    ]);*/
+    getAnexosSolicitud(
+      params?.row?.id_requerimiento,
+      handleFifthLoading
+      ).then((data) => {
+        console.log('data', data);
+        setCurrentSolicitudUsuario(data);
+    }
+    );
+    /*
     const data = {
       detalleSolicitud,
       anexos,
-    };
+    };*/
 
-    setCurrentSolicitudUsuario(data);
   };
 
   // ? definicion de las columnas
@@ -215,7 +218,9 @@ export const FormParte1 = ({
               value={infoInicialUsuario?.detallePQRSDF?.data?.radicado ?? 'N/A'}
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid item xs={12} sm={6}
+           
+          >
             <TextField
               fullWidth
               size="small"

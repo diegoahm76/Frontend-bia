@@ -62,6 +62,7 @@ export const ConceptoPago: React.FC = () => {
         void fetchConfiguraciones();
     }, []);
 
+    
     // const [configuracionInteres, setConfiguracionInteres] = useState<ConfiguracionInteres[]>([]);
 
     // const fetchConfiguracionInteres = async (): Promise<void> => {
@@ -115,20 +116,20 @@ export const ConceptoPago: React.FC = () => {
     };
 
     const columns = [ 
-        { field: 'nombre_tipo_renta', headerName: 'Tipo de Renta', width: 130, flex: 1 },
-        { field: 'nombre_tipo_cobro', headerName: 'Tipo de Cobro', width: 130, flex: 1 },
-        { field: 'descripccion', headerName: 'Descripción', width: 200, flex: 1 },
+        { field: 'nombre_tipo_renta', headerName: 'Tipo de Renta',   flex: 1 },
+        { field: 'nombre_tipo_cobro', headerName: 'Tipo de Cobro', flex: 1 },
+        { field: 'descripccion', headerName: 'Descripción',   flex: 1 },
 
-        { field: 'nombre_variable', headerName: 'varible', width: 130, flex: 1 },
+        { field: 'nombre_variable', headerName: 'varible',   flex: 1 },
    
-        { field: 'fecha_inicio', headerName: 'fecha inicio', width: 130, flex: 1 },
-        { field: 'fecha_fin', headerName: 'Fecha fin', width: 130, flex: 1 },
+        { field: 'fecha_inicio', headerName: 'fecha inicio',  flex: 1 },
+        { field: 'fecha_fin', headerName: 'Fecha fin',   flex: 1 },
 
 
         {
             field: 'valor',
             headerName: 'Valor',
-            width: 130,
+            
             flex: 1,
             renderCell: (params:any) => {
                 // Formatear el valor a pesos colombianos
@@ -144,7 +145,7 @@ export const ConceptoPago: React.FC = () => {
         {
             field: 'Acciones',
             headerName: 'Acciones',
-            width: 200,
+            
             flex: 1,
             renderCell: (params: any) => (
                 <>

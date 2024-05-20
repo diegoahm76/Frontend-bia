@@ -1,16 +1,15 @@
+
 /* eslint-disable @typescript-eslint/naming-convention */
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import Swal from 'sweetalert2';
-
-
-// import { postRequerimientoUsuario } from '../../toolkit/thunks/postRequerimiento.service';
+import Swal from 'sweetalert2'
 import { useAppDispatch, useAppSelector } from '../../../../../../../../hooks';
 import { useStepperRequerimiento } from '../../../../../hook/useStepperRequerimiento';
 
 import { AccionesFinalModulo } from '../../../../../../../../utils/AccionesFinalModulo/Atom/AccionesFinalModulo';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import { resetItems } from '../../../requerimientosUsuarioOpas/toolkit/slice/RequerimientoUsarioOpasSlice';
+import { postRespuestaOPA } from '../../services/postRespuestaOPA.service';
 
 export const AccionesFinales = ({
   controlFormulario,
@@ -38,13 +37,21 @@ export const AccionesFinales = ({
   //* handleSumbit
 
   const sendDataByFormData = () => {
-
+    const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
+      if (a.ruta_soporte && !b.ruta_soporte) {
+        return -1;
+      }
+      if (!a.ruta_soporte && b.ruta_soporte) {
+        return 1;
+      }
+      return 0;
+    });
     // Show alert that the service does not exist yet
-    showAlert('Service not implemented', 'This service is not implemented yet', 'info');
-    return;
+  /*  showAlert('Service not implemented', 'This service is not implemented yet', 'info');
+    return;*/
 
     if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
-      console.error('anexosCreados is not an array or is empty');
+      console.error('No se han creado nuevos anexos');
       return;
     }
 
@@ -64,17 +71,17 @@ export const AccionesFinales = ({
     const formData = new FormData();
 
     formData.append(
-      'solicitud_usu_PQRSDF',
+      'respuesta',
       JSON.stringify({
         asunto: anexosCreados[0]?.asunto,
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
-        id_pqrsdf:
-          +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
+        id_solicitud_tramite:
+          +currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
       })
     );
     formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
 
-    anexosCreados.forEach((anexo: any, index: number) => {
+    sortedAnexos.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);
       formData.append(
         'anexo',
@@ -108,7 +115,7 @@ export const AccionesFinales = ({
 
     // ? se debe crear dentro de la carpeta services un archivo para lalamr este servicio, usar por default el servicio de postRequerimientoUsuario que está en el toolkit del requerimiento al usuario en la carpeta de OPAS
 
-    /*postRequerimientoUsuario(formData, setLoadingButton)
+    postRespuestaOPA(formData, setLoadingButton)
       .then(() => {
         handleReset();
         resetFormulario({});
@@ -124,7 +131,7 @@ export const AccionesFinales = ({
       })
       .catch((error: any) => {
         console.error('Error in postRequerimientoUsuario:', error);
-      });*/
+      });
   };
 
   const handleSubmit = async () => {
@@ -142,8 +149,8 @@ export const AccionesFinales = ({
     console.log(anexosCreados);
 
     await Swal.fire({
-      title: '¿Está seguro de enviar el requerimiento?',
-      text: 'Una vez enviado no podrá realizar cambios',
+      title: '¿Está seguro de dar respuesta a la OPA?',
+      text: 'Una vez enviada la respuesta no podrá realizar cambios',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Enviar',

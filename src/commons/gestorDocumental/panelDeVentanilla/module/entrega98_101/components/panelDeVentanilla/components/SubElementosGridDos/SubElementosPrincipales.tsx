@@ -8,6 +8,7 @@ import { Grid } from '@mui/material';
 import { Loader } from '../../../../../../../../../utils/Loader/Loader';
 import { containerStyles } from './../../../../../../../tca/screens/utils/constants/constants';
 import { RequerimientosTramites } from './requerimientosTramites/RequerimientosTramites';
+import { RequerimientosOpas } from './requerimientosOPas/RequerimientosOpas';
 
 export const SubElementoPrincipales: React.FC = (): JSX.Element => {
   //* states from redux store
@@ -48,6 +49,12 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
     'Complementos trámite – Respuestas a solicitudes',
   ] as any;
 
+  const complementosOpasKeys: any = [
+    'Respuesta Requerimiento',
+    'Respuesta Solicitud',
+    'Respuesta Trámite',
+  ] as any;
+
   const tipoSolicitudComponentMap = {
     ...complementosPqrsdfKeys.reduce((map: any, key: number) => {
       map[key] = <ComplementosPqrsdf />;
@@ -55,6 +62,10 @@ export const SubElementoPrincipales: React.FC = (): JSX.Element => {
     }, {}) as any,
     ...complementosTramitesKeys.reduce((map: any, key: number) => {
       map[key] = <RequerimientosTramites />;
+      return map;
+    }, {}) as any,
+    ...complementosOpasKeys.reduce((map: any, key: number) => {
+      map[key] = <RequerimientosOpas/>;
       return map;
     }, {}) as any,
   };

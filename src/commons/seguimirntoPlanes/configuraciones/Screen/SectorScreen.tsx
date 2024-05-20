@@ -15,6 +15,7 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { eliminar_sector, get_sector } from '../Request/request';
 import type { ISector } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
@@ -33,19 +34,22 @@ export const SectorScreen: React.FC = () => {
       field: 'nombre_sector',
       headerName: 'NOMBRE SECTOR',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'aplicacion',
       headerName: 'APLICACIÓN',
       sortable: true,
-      width: 300,
+      minWidth: 250,
+      flex: 2,
     },
     {
       field: 'activo',
       headerName: 'ESTADO',
       sortable: true,
-      width: 120,
+      minWidth: 100,
+      flex: 1,
       renderCell: (params) => {
         return params.row.activo === true ? (
           <Chip
@@ -67,7 +71,8 @@ export const SectorScreen: React.FC = () => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 200,
+      minWidth: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -185,6 +190,10 @@ export const SectorScreen: React.FC = () => {
     });
   };
 
+  const clean_search = (): void => {
+    setSearchTerm('');
+  }
+
   useEffect(() => {
     void get_traer_sector();
   }, []);
@@ -201,7 +210,7 @@ export const SectorScreen: React.FC = () => {
           background: '#FAFAFA',
           borderRadius: '15px',
           p: '20px',
-          m: '10px 0 20px 0',
+          m: '20px 0 20px 0',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
         }}
@@ -209,9 +218,8 @@ export const SectorScreen: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Configuraciones básicas sectores" />
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} sx={{my: 2}}>
           <Button
-            sx={{ mb: '20px' }}
             variant="outlined"
             onClick={handle_open_crear}
             startIcon={<AddIcon />}
@@ -220,40 +228,48 @@ export const SectorScreen: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          {rows.length > 0 && (
-            <>
-              <ButtonGroup
-                style={{
-                  margin: 7,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                {download_xls({ nurseries: rows, columns })}
-                {download_pdf({
-                  nurseries: rows,
-                  columns,
-                  title: 'CREAR SECTOR',
-                })}
-              </ButtonGroup>
+          <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
+            <Grid style={{display: 'flex', gap: '1rem'}}>
               <TextField
                 label="Buscar sector"
                 size="small"
                 variant="outlined"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ marginBottom: '20px' }}
               />
-              <DataGrid
-                autoHeight
-                rows={filterRows(rows, searchTerm)}
-                columns={columns}
-                getRowId={(row) => row.id_sector}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-              />
-            </>
-          )}
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
+            <ButtonGroup
+              style={{
+                margin: 7,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {download_xls({ nurseries: rows, columns })}
+              {download_pdf({
+                nurseries: rows,
+                columns,
+                title: 'CREAR SECTOR',
+              })}
+            </ButtonGroup>
+          </Grid>
+          <DataGrid
+            autoHeight
+            rows={filterRows(rows, searchTerm)}
+            columns={columns}
+            getRowId={(row) => row.id_sector}
+            pageSize={10}
+            rowsPerPageOptions={[10]}
+            getRowHeight={() => 'auto'}
+          />
         </Grid>
         <Grid item xs={12}>
           <Stack

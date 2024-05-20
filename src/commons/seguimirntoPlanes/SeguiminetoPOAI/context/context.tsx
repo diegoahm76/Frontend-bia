@@ -43,6 +43,7 @@ import {
   get_unidades_organizacionales,
 } from '../../ConceptoPOAI/services/services';
 import { ClaseTercero } from '../../../../interfaces/globalModels';
+import { get_banco_by_meta_id } from '../../BancoProyecto/services/services';
 
 interface UserContext {
   // data
@@ -301,7 +302,7 @@ export const UserProviderSeguimientoPOAI = ({
   const [nombre_producto, set_nombre_producto] = React.useState<string>('');
   const [nombre_actividad, set_nombre_actividad] = React.useState<string>('');
   const [nombre_indicador, set_nombre_indicador] = React.useState<string>('');
-  const [nombre_meta, set_nombre_meta] = React.useState<string>(''); 
+  const [nombre_meta, set_nombre_meta] = React.useState<string>('');
 
   // * rows
 

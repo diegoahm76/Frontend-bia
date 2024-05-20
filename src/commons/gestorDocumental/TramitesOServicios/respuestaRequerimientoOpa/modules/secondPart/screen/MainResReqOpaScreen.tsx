@@ -8,19 +8,24 @@ import { useStepperRequerimiento } from '../../../../../bandejaDeTareas/hook/use
 import { useBandejaTareas } from '../../../../../bandejaDeTareas/hook/useBandejaTareas';
 import { Title } from '../../../../../../../components';
 import { StepperRequerimientoAlUsuario } from '../components/stepper/StepperRequerimientoUsuario';
+import { resetItems } from '../../../toolkit/slice/ResRequerimientoOpaSlice';
+import { useAppDispatch } from '../../../../../../../hooks';
 
 export const MainResReqOpaScreen = (): JSX.Element => {
+  //* dispatch declaration
+  const dispatch = useAppDispatch();
   const { handleReset } = useStepperRequerimiento();
 
   useEffect(() => {
     Swal.fire({
       icon: 'warning',
       title: 'Advertencia',
-      text: 'Recuerda que sí sales del módulo, la información que no hayas guardado se borrará.',
+      text: 'Recuerda que sí sales del módulo y no radicas la respuesta, la información se perderá',
       confirmButtonText: 'Entendido',
     });
 
     // ? tambien se entra a re iniciar el módulo de asignación de usuario || mejor cuando se de en el finish y se envie la solicitud al usuario, por tanto se hará en el componente de stepper o en submit de envío
+    // dispatch(resetItems())
     handleReset();
   }, []);
 
@@ -57,7 +62,7 @@ export const MainResReqOpaScreen = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Respuesta de requerimiento al usario sobre OPA" />
+          <Title title="Responder requerimiento sobre una OPA" />
           {/* parte Inicial */}
           <ParteInicial />
           {/*stepper*/}

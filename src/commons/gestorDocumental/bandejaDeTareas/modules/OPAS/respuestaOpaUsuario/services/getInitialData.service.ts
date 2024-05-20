@@ -35,14 +35,14 @@ export const getInitialData = async (
     const data = {
       dataSolicita: responseSolicita.data,
       dataTitular: responseTitular.data,
-      dataHistoricoSolicitudesPQRSDF: responseHistoricoSolicitudesPQRSDF.data,
+      dataHistoricoSolicitudesPQRSDF: responseHistoricoSolicitudesPQRSDF.data?.data ? [responseHistoricoSolicitudesPQRSDF.data.data] : [],
       detallePQRSDF: responseDetallePQRSDF.data,
     };
 
     console.log('data Informaciones', data);
     return data;
   } catch (error) {
-    handleError(navigate, '/app/gestor_documental/bandeja_tareas/');
+    // handleError(navigate, '/app/gestor_documental/bandeja_tareas/');
   } finally {
     setLoadings(false);
   }

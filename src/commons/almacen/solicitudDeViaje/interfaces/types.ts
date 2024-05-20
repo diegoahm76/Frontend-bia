@@ -59,6 +59,7 @@ export interface interface_solicitar_viaje {
   requiere_carga: boolean,  // Indica si se requiere compañía militar
   consideraciones_adicionales: string,  // Consideraciones adicionales
   indicaciones_destino: string  // Indicaciones para llegar al destino
+  personas_viajan?: any[];  // Personas que viajan
 }
 export interface response_solicitud_respondida {
   success: boolean
@@ -136,3 +137,48 @@ export interface interface_solicitud_respondida {
   id_persona_autoriza: number
 }
 
+
+export interface response_busqueda_persona_solicita {
+  success: boolean
+  detail: string
+  data: interface_busqueda_persona_solicita[]
+}
+
+export interface interface_busqueda_persona_solicita {
+  id_persona: number
+  tipo_persona: string
+  tipo_persona_desc: string
+  tipo_documento: string
+  numero_documento: string
+  primer_nombre?: string
+  segundo_nombre?: string
+  primer_apellido?: string
+  segundo_apellido?: string
+  nombre_completo?: string
+  razon_social?: string
+  nombre_comercial?: string
+  digito_verificacion?: string
+  cod_naturaleza_empresa?: string
+  tiene_usuario: boolean
+  tipo_usuario?: string
+  id_unidad_organizacional_actual: number
+}
+
+export interface inputs_persona_seleccionada {
+  tp_documento: string
+  documento: string
+  nombres: string
+  razon_social: string
+  nombre_comercial: string
+}
+
+export interface response_tipos_documentos {
+  success: boolean
+  detail: string
+  data: interface_tipos_documentos[]
+}
+
+export interface interface_tipos_documentos {
+  value: string
+  label: string
+}

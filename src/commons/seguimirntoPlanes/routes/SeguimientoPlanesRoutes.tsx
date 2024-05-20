@@ -21,9 +21,11 @@ import { PlanAdquisicionesRoutes } from '../PlanAnualAdquisiciones/router/PlanAd
 import { SeguimientoPAIRoutes } from '../SeguimientoPAI/router/SeguimientoPAIRoutes';
 import { ConsultarPlanesRoutes } from '../Consultas/router/ConsultarPlanesRoutes';
 import { ConsultarSeguiminetoPAIRoutes } from '../ConsultaPAI/router/ConsultarPlanesRoutes';
-import { ConsultarPOAIRoutes } from '../ConsultaPOAI/routes/ConsultarPOAIRoutes'; 
+import { ConsultarPOAIRoutes } from '../ConsultaPOAI/routes/ConsultarPOAIRoutes';
 import { ConsultasRoutes } from '../Tableros/router/ConsultasRoutes';
 import { SeguimientoPOAIRoutes } from '../SeguiminetoPOAI/router/SeguimientoPOAIRoutes';
+import { SeguimientoPgarRoutes } from '../SeguimientoPGAR/routes/SeguimientoPgarRoutes';
+import { TablerosControlRoutes } from '../TablerosControlPGAR/routes/TablerosControlRoutes';
 
 const routes = [
   {
@@ -40,6 +42,16 @@ const routes = [
     path: 'configuraciones_basicas/',
     name: 'configuraciones_basicas',
     component: () => <ConfiguracionesBasicasRoutes />,
+  },
+  {
+    path: 'seguimiento_pgar/',
+    name: 'seguimiento_pgar',
+    component: () => <SeguimientoPgarRoutes />,
+  },
+  {
+    path: 'tableros_control/',
+    name: 'tableros_control',
+    component: () => <TablerosControlRoutes />,
   },
   {
     path: 'objetivos/',

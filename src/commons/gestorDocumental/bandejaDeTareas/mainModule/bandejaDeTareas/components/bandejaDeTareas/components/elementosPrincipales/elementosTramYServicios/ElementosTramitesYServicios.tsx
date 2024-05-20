@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
-import { Avatar, Button, Chip, IconButton, Tooltip } from '@mui/material';
+import { Avatar, Button, Chip, Grid, IconButton, Tooltip } from '@mui/material';
 import ClearAllIcon from '@mui/icons-material/ClearAll';
 import {
   setActionsTareasTramites,
   setCurrentTareaPqrsdfTramitesUotrosUopas,
+  setDataExpediente,
   setInfoTarea,
   setListaTareasPqrsdfTramitesUotrosUopas,
 } from '../../../../../../../toolkit/store/BandejaDeTareasStore';
@@ -37,6 +38,7 @@ import { getListadoTareaasOtrosByPerson } from '../../../../../../../toolkit/thu
 import { putAceptarTareaTramite } from '../../../../../../../toolkit/thunks/tramitesServicios/putAceptarTareaTramite.service';
 import { AuthSlice } from '../../../../../../../../../auth/interfaces';
 import { getListadoTramitesByPerson } from '../../../../../../../toolkit/thunks/tramitesServicios/getListadoTramitesByPerson.service';
+import { DownloadButton } from '../../../../../../../../../../utils/DownloadButton/DownLoadButton';
 
 export const ElementosTramitesYServicios = (): JSX.Element => {
   //* dispatch declaration
@@ -49,6 +51,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
   const {
     currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
     listaTareasPqrsdfTramitesUotrosUopas,
+    data_expediente,
     actionsTramitesYServicios,
   } = useAppSelector((state) => state.BandejaTareasSlice);
 
@@ -242,7 +245,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
     try {
       const result = await Swal.fire({
         title: 'Aceptar tarea',
-        text: `¿Estás seguro que deseas aceptar esta tarea (TRÁMITES Y SERVICIOS)?`,
+        text: `¿Estás seguro que deseas aceptar esta tarea (TRÁMITES Y SERVICIOS)?, porfavor activa la vista de ventanas emergentes en tu navegador para poder visualizar la información del auto de inicio y el pago del trámite`,
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'Aceptar',
@@ -250,16 +253,24 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        const res = await putAceptarTareaTramite(row.id_tarea_asignada);
+        await putAceptarTareaTramite(
+          row.id_tarea_asignada,
+        ).then(async (res) => {
+          console.log('res', res);
+          // dispatch(setDataExpediente(res?.data_expediente ?? null));
+          const listadoTareas = await getListadoTramitesByPerson(
+            id_persona,
+            handleSecondLoading
+          );
+          dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+          dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+        });
 
         // cambiar por el get de la bandeja de teareas de otros
-        const listadoTareas = await getListadoTramitesByPerson(
-          id_persona,
-          handleSecondLoading
-        );
+        /*
 
         dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
-        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));*/
       } else {
         await Swal.fire({
           title: 'La tarea no ha sido aceptada (TRÁMITES Y SERVICIOS)',
@@ -438,6 +449,46 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
         );
       },
     },
+  /*  ...(data_expediente
+      ? [
+          {
+            field: 'auto_de_inicio',
+            headerName: 'Descargar auto de inicio',
+            width: 90,
+            renderCell: (params: any) => (
+              <>
+                <Tooltip title="Ver archivo">
+                  <Grid item xs={0.5} md={0.5}>
+                    <DownloadButton
+                      fileUrl={data_expediente?.data_expediente?.auto ?? ''}
+                      fileName={'auto_de_inicio'}
+                      condition={false}
+                    />
+                  </Grid>
+                </Tooltip>
+              </>
+            ),
+          },
+          {
+            field: 'pago',
+            headerName: 'Descargar pago',
+            width: 90,
+            renderCell: (params: any) => (
+              <>
+                <Tooltip title="Ver archivo">
+                  <Grid item xs={0.5} md={0.5}>
+                    <DownloadButton
+                      fileUrl={data_expediente?.data_expediente?.pago ?? ''}
+                      fileName={'pago'}
+                      condition={false}
+                    />
+                  </Grid>
+                </Tooltip>
+              </>
+            ),
+          },
+        ]
+      : []),*/
   ];
 
   return (
@@ -466,11 +517,7 @@ export const ElementosTramitesYServicios = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea ({' '}
-              {
-                currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea
-              }
-              )
+              Quitar selección de tarea de trámite / servicio{' '}
             </Button>
           ) : null
         }

@@ -1,4 +1,4 @@
-export interface response_solicitudes_realizadas {
+export interface response_obtener_solicitudes_realizadas {
   success: boolean
   detail: string
   data: interface_solicitudes_realizadas[]
@@ -34,12 +34,12 @@ export interface interface_busqueda_responsable {
   segundo_nombre?: string
   primer_apellido?: string
   segundo_apellido?: string
-  nombre_completo: string
+  nombre_completo?: string
   razon_social?: string
   nombre_comercial?: string
   digito_verificacion?: string
   cod_naturaleza_empresa?: string
-  tiene_usuario: boolean
+  tiene_usuario?: boolean
   tipo_usuario?: string
 }
 
@@ -64,7 +64,7 @@ export interface interface_busqueda_operario {
   nombre_comercial?: string
   digito_verificacion?: string
   cod_naturaleza_empresa?: string
-  tiene_usuario: boolean
+  tiene_usuario?: boolean
   tipo_usuario?: string
 }
 
@@ -85,6 +85,8 @@ export interface interface_busqueda_articulo {
   codigo_bien: string
   nro_elemento_bien: any
   nombre: string
+  nombre_bien: string
+  nombre_unidad_medida: string
   cod_tipo_bien: string
   nivel_jerarquico: number
   nombre_cientifico: any
@@ -145,7 +147,160 @@ export interface interface_articulos_agregados {
   id_unidad_medida_vida_util: number
   id_bien_padre: number
   cantidad_articulo?: number
+  cantidad?: number
   fecha_devolucion?: string
   tipo_unidad_medida?: string 
   observacion?: string
+  nro_posicion?: number
+}
+
+export interface response_unidades_medidas {
+  success: boolean
+  detail: string
+  data: interface_unidades_medidas[]
+}
+
+export interface interface_unidades_medidas {
+  id_unidad_medida: number
+  nombre: string
+  abreviatura: string
+  precargado: boolean
+  activo: boolean
+  item_ya_usado: boolean
+  id_magnitud: number
+}
+
+export interface response_solicitud_obtenida_por_id {
+  success: boolean
+  detail: string
+  data: interface_solicitud_obtenida_por_id
+}
+
+export interface interface_solicitud_obtenida_por_id {
+  id_bien: number
+  id_solicitud_activo: number
+  primer_nombre_persona_solicitante: string
+  primer_apellido_persona_solicitante: string
+  tipo_documento_persona_solicitante: string
+  numero_documento_persona_solicitante: any
+  primer_nombre_funcionario_resp_unidad: string
+  primer_apellido_funcionario_resp_unidad: string
+  tipo_documento_funcionario_resp_unidad: string
+  numero_documento_funcionario_resp_unidad: string
+  primer_nombre_persona_operario: string
+  primer_apellido_persona_operario: string
+  tipo_documento_persona_operario: string
+  numero_documento_persona_operario: string
+  fecha_cierre_no_dispo_alma: string
+  tipo_documento_persona_cierra_no_dispo_alma: string
+  numero_documento_persona_cierra_no_dispo_alma: string
+  obser_cierre_no_dispo_alma: string
+  primer_apellido_persona_cierra_no_dispo_alma: string
+  primer_nombre_persona_cierra_no_dispo_alma: string
+  numero_documento_persona_alma_rechaza: string
+  primer_apellido_persona_alma_rechaza: string
+  primer_nombre_persona_alma_rechaza: string
+  tipo_documento_persona_alma_rechaza: string
+  fecha_solicitud: string
+  motivo: string
+  observacion: string
+  estado_solicitud: string
+  solicitud_prestamo: boolean
+  fecha_devolucion: any
+  fecha_cierra_solicitud: any
+  revisada_responsable: boolean
+  estado_aprobacion_resp: string
+  justificacion_rechazo_resp: any
+  fecha_aprobacion_resp: any
+  gestionada_alma: boolean
+  rechazada_almacen: boolean
+  fecha_rechazo_almacen: any
+  justificacion_rechazo_almacen: any
+  solicitud_anulada_solicitante: boolean
+  fecha_anulacion_solicitante: any
+  justificacion_anulacion: any
+  id_persona_solicita: number
+  id_uni_org_solicitante: number
+  id_funcionario_resp_unidad: number
+  id_uni_org_responsable: number
+  id_persona_operario: number
+  id_uni_org_operario: number
+  id_persona_cierra_no_dispo_alma: any
+  id_persona_alma_rechaza: any
+  items_solicitud: interface_articulos_obtenidos_por_id[]
+  despachos: any[]
+  items_despacho: any[]
+}
+
+export interface interface_articulos_obtenidos_por_id {
+  id_item_solicitud_activo: number
+  codigo_bien: string
+  nombre_bien: string
+  cod_tipo_bien: string
+  descripcion_bien: string
+  cantidad: number
+  fecha_devolucion: any
+  observacion: string
+  nro_posicion: number
+  id_solicitud_activo: number
+  id_bien: number
+  id_unidad_medida: number
+  nombre_unidad_medida: string
+}
+
+export interface response_tipos_documentos {
+  success: boolean
+  detail: string
+  data: interface_tipos_documentos[]
+}
+
+export interface interface_tipos_documentos {
+  value: string
+  label: string
+}
+
+export interface interface_inputs_resumen_despacho {
+  fecha_despacho: string,
+  motivo: string,
+  tp_documento_pers_despacha: string,
+  documento_pers_despacha: string,
+  nombres_pers_despacha: string,
+  apellidos_pers_despacha: string,
+  tp_documento_pers_anula: string,
+  documento_pers_anula: string,
+  nombres_pers_anula: string,
+  apellidos_pers_anula: string,
+  justificacion: string,
+  fecha_anulacion: string,
+}
+
+export interface interface_articulos_despachados {
+  id_item_solicitud_activo?: number
+  id_solicitud_activo?: number
+  id_bien: number
+  nombre_bien: string
+  cantidad: number
+  id_unidad_medida: number
+  abreviatura_unidad_medida: string
+  nombre_unidad_medida: string
+  observacion: string
+  nro_posicion: number
+}
+
+export interface interface_inputs_persona_cierra_no_dispo_alma {
+  tipo_documento_persona_cierra_no_dispo_alma: string
+  documento_persona_cierra_no_dispo_alma: string
+  nombres_persona_cierra_no_dispo_alma: string
+  apellidos_persona_cierra_no_dispo_alma: string
+  obser_cierre_no_dispo_alma: string
+  fecha_cierre_no_dispo_alma: string
+}
+
+export interface interface_inputs_persona_alma_rechaza {
+  tipo_documento_persona_alma_rechaza: string
+  documento_persona_alma_rechaza: string
+  nombres_persona_alma_rechaza: string
+  apellidos_persona_alma_rechaza: string
+  justificacion_rechazo_almacen: string
+  fecha_rechazo_almacen : string
 }

@@ -83,7 +83,6 @@ const BajaActivos: React.FC = () => {
    */
   useEffect(() => {
     if(accion === 'editar' && Object.keys(data_registro_baja).length !== 0) {
-      console.log(dayjs(data_registro_baja.anexos[0].fecha_creacion_anexo));
       set_hay_anexo_seleccionado(true);
       set_fecha_registro(dayjs(data_registro_baja.fecha_baja));
       set_concepto(data_registro_baja.concepto);
@@ -445,7 +444,6 @@ const BajaActivos: React.FC = () => {
     }
   }
 
-
   return (
     <>
       <Grid container spacing={2} marginTop={2} sx={{
@@ -559,7 +557,7 @@ const BajaActivos: React.FC = () => {
                   startIcon={<ChevronLeftIcon />}
                   onClick={()=>{set_position_tab(position_tab === '1' ? '1' : (parseInt(position_tab) - 1).toString())}}
                 >
-                  Atras
+                  Atrás
                 </Button>
               </Grid>
 

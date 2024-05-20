@@ -47,10 +47,12 @@ export const FormatoCalidadAsociado: React.FC = () => {
     <>
       <Grid
         container
+        spacing={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
+          margin: '10px 0 20px 0',
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
@@ -58,8 +60,9 @@ export const FormatoCalidadAsociado: React.FC = () => {
       >
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            style={{ width: '95%', margin: 4 }}
             variant="outlined"
+            size="small"
+            margin="dense"
             label="Formato de calidad asociado"
             value={form.codigo_formato_calidad_asociado}
             fullWidth
@@ -69,8 +72,9 @@ export const FormatoCalidadAsociado: React.FC = () => {
         </Grid>
         <Grid item xs={12} sm={6} md={4}>
           <TextField
-            style={{ width: '95%', margin: 4 }}
             variant="outlined"
+            size="small"
+            margin="dense"
             label="Version de formato de calidad asociado"
             value={form.version_formato_calidad_asociado}
             fullWidth
@@ -80,24 +84,25 @@ export const FormatoCalidadAsociado: React.FC = () => {
         </Grid>
 
         <Grid item xs={12} sm={6} md={4}>
-          <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label" style={{marginTop:5}} >Seleccionar tipo de acceso</InputLabel>
-            <Select
-              style={{ width: '95%', margin: 4 }}
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              label="Seleccionar tipo de acceso"
-              name="cod_tipo_acceso"
-              value={form.cod_tipo_acceso}
-              onChange={HandleCompletarDatos}
-            >
-              {Tipos_acceso_consulta?.map((item: any, index: number) => (
-                <MenuItem key={index} value={item.value}>
-                  {item.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          <TextField
+            select
+            fullWidth
+            size="small"
+            id="demo-simple-select"
+            label="Seleccionar tipo de acceso"
+            name="cod_tipo_acceso"
+            value={form.cod_tipo_acceso}
+            onChange={HandleCompletarDatos}
+          >
+            <MenuItem value="">
+              <em>Seleccione una opción</em>
+            </MenuItem>
+            {Tipos_acceso_consulta?.map((item: any, index: number) => (
+              <MenuItem key={index} value={item.value}>
+                {item.label}
+              </MenuItem>
+            ))}
+          </TextField>
         </Grid>
       </Grid>
     </>
