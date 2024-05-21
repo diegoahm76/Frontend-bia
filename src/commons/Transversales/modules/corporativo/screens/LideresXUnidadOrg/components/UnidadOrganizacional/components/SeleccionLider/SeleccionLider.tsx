@@ -259,7 +259,7 @@ export const SeleccionLider = (): JSX.Element => {
                             dispatch(set_catalog_trd_action(res));
                           }); */
                           dispatch(set_unidad_current(selectedOption));
-                          //  console.log('')(selectedOption);
+                          console.log(selectedOption);
                           onChange(selectedOption);
                         }}
                         options={unidadesOrganizacionales ?? []}
