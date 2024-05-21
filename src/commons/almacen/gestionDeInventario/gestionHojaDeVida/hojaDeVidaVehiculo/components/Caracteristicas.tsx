@@ -46,7 +46,7 @@ const EspecificacionesVehicle = ({
                     capacidad_pasajeros: get_values("capacidad_pasajeros"),
                     linea: get_values("linea"),
                     tipo_combustible: get_values("tipo_combustible"),
-                    es_arrendado: get_values("es_arrendado"),
+                    // es_arrendado: get_values("es_arrendado"),
                     ultimo_kilometraje: get_values("ultimo_kilometraje"),
                     fecha_ultimo_kilometraje: get_values("fecha_ultimo_kilometraje"),
                     fecha_adquisicion: get_values("fecha_adquisicion"),
@@ -212,7 +212,7 @@ const EspecificacionesVehicle = ({
                             option_label: "label",
                             option_key: "value",
                         },
-                        {
+                        /*{
                             datum_type: "select_controller",
                             xs: 12,
                             md: 4,
@@ -226,7 +226,7 @@ const EspecificacionesVehicle = ({
                             select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
                             option_label: "label",
                             option_key: "value",
-                        },
+                        },*/
                         {
                             datum_type: 'date_picker_controller',
                             xs: 12,
