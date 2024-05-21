@@ -604,7 +604,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                           ? `/#/app/transversal/notificaciones/publicar/correspondencia_fisica`
                           : rowData.tipo_notificacion_correspondencia
                               .notificacion_personal
-                          ? `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
+                          ? `/#/app/transversal/notificaciones/publicar/notificacion_personal`
                           : `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
                       }
                     >

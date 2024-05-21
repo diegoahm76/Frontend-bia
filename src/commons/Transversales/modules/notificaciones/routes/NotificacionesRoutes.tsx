@@ -18,6 +18,8 @@ import { TiposDocumentoNotificacionScreen } from '../screens/parametrizacion/Tip
 import { PanelAsignacionTareaFuncioanrioScreen } from '../screens/PanelAsignacionTareaFuncionarioScreen';
 import { CorrespondenciaFisicaScreen } from '../screens/CorrespondenciaFisicaScreen';
 import { CorreoCertificadoScreen } from '../screens/CorreoCertificadoScreen';
+import { NotificacionPersonalScreen } from '../screens/NotificacionePersonalScreen';
+import { PublicacionAvisoScreen } from '../screens/PublicacionAvisoScreen';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const NotificacionesRoutes: React.FC = () => {
@@ -83,6 +85,14 @@ export const NotificacionesRoutes: React.FC = () => {
       <Route
         path="publicar/correo_electronico"
         element={<CorreoCertificadoScreen />}
+      />
+      <Route
+        path="publicar/notificacion_personal"
+        element={<NotificacionPersonalScreen />}
+      />
+      <Route
+        path="publicar/publicacion_aviso"
+        element={<PublicacionAvisoScreen />}
       />
       <Route path="publicar/edictos" element={<PublicarEdictosScreen />} />
       <Route

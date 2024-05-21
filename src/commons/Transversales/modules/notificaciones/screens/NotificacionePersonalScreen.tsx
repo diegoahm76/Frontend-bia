@@ -44,7 +44,7 @@ import { IObjSoporte } from '../interfaces/notificaciones';
 // import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function GacetaAmbientalScreen(): JSX.Element {
+export function NotificacionPersonalScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const {
     notification_requests,
@@ -130,7 +130,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
         }}
       >
         <Grid item xs={12} marginY={2}>
-          <Title title="Publicación en la gaceta ambiental"></Title>
+          <Title title="Notificación personal"></Title>
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
