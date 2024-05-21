@@ -36,6 +36,7 @@ import {
   set_unidad_current
 } from '../../../../toolkit/LideresSlices/LideresSlice';
 import { BusqueAsignacionesLiderModal } from '../ModalBusAvanLider/ModalBusAvanLider';
+import { control_info } from '../../../../../../../../../gestorDocumental/ccd/store/utils/success_errors';
 export const SeleccionLider = (): JSX.Element => {
   //* dispatch declarations
   const dispatch = useAppDispatch();
@@ -129,8 +130,8 @@ export const SeleccionLider = (): JSX.Element => {
       nombre_persona: asignacion_lideres_current?.nombre_completo,
       id_persona: asignacion_lideres_current?.id_persona,
       id_unidad_organizacional: {
-        label: asignacion_lideres_current?.nombre_unidad_org,
-        value: asignacion_lideres_current?.id_unidad_organizacional
+        label: asignacion_lideres_current?.nombre_unidad_org || asignacion_lideres_current?.label,
+        value: asignacion_lideres_current?.id_unidad_organizacional || asignacion_lideres_current?.value
       },
       observaciones_asignacion:
         asignacion_lideres_current?.observaciones_asignacion
@@ -158,7 +159,7 @@ export const SeleccionLider = (): JSX.Element => {
   };
 
   //* onSubmit busqueda persona
-  const BusquedaPersona = (): void => {
+/*  const BusquedaPersona = (): void => {
     void getPersonaByTipoDocumentoAndNumeroDocumento(
       watch_seleccionar_lideres_value.tipo_documento.value,
       watch_seleccionar_lideres_value.numero_documento
@@ -171,14 +172,15 @@ export const SeleccionLider = (): JSX.Element => {
         numero_documento: res?.numero_documento,
         nombre_persona: res?.nombre_completo,
         id_persona: res?.id_persona,
-        id_unidad_organizacional:
-          watch_seleccionar_lideres_value?.id_unidad_organizacional,
-        observaciones_asignacion:
-          watch_seleccionar_lideres_value?.observaciones_asignacion
+        id_unidad_organizacional: {
+          label: asignacion_lideres_current?.nombre_unidad_org,
+          value: watch_seleccionar_lideres_value?.id_unidad_organizacional,
+        },
+        observaciones_asignacion: watch_seleccionar_lideres_value?.observaciones_asignacion
       });
     });
   };
-
+*/
   return (
     <>
       <Grid container sx={containerStyles}>
@@ -187,49 +189,35 @@ export const SeleccionLider = (): JSX.Element => {
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
-
+            
+              const { id_persona, id_unidad_organizacional, observaciones_asignacion } = watch_seleccionar_lideres_value || {};
+            
               const data = {
-                id_persona: watch_seleccionar_lideres_value?.id_persona,
-                id_unidad_organizacional:
-                  watch_seleccionar_lideres_value?.id_unidad_organizacional
-                    ?.value,
-                observaciones_asignacion:
-                  watch_seleccionar_lideres_value?.observaciones_asignacion
+                id_persona,
+                id_unidad_organizacional: id_unidad_organizacional?.value,
+                observaciones_asignacion
               };
-
+            
               const updateDataFunction = {
-                id_lider_unidad_org:
-                  asignacion_lideres_current?.id_lider_unidad_org,
-                id_persona: watch_seleccionar_lideres_value?.id_persona,
-                observaciones_asignacion:
-                  watch_seleccionar_lideres_value?.observaciones_asignacion
+                id_lider_unidad_org: asignacion_lideres_current?.id_lider_unidad_org,
+                ...data
               };
-
-              asignacion_lideres_current?.id_lider_unidad_org
-                ? void updateLiderUnidadOrganizacional(
-                    updateDataFunction,
-                    setLoadingButton,
-                    cleanElementComponent
-                  ).then(() => {
-                    void getAsignacionesLideresByIdOrganigrama(
-                      organigrama_lideres_current?.id_organigrama
-                    ).then((res: any) => {
-                      //  console.log('')(res);
-                      dispatch(get_list_asignaciones_lideres(res));
-                    });
-                  })
-                : void createLiderUnidadOrganizacional(
-                    data,
-                    setLoadingButton,
-                    cleanElementComponent
-                  ).then(() => {
-                    void getAsignacionesLideresByIdOrganigrama(
-                      organigrama_lideres_current?.id_organigrama
-                    ).then((res: any) => {
-                      //  console.log('')(res);
-                      dispatch(get_list_asignaciones_lideres(res));
-                    });
-                  });
+            
+              const action = asignacion_lideres_current?.id_lider_unidad_org
+                ? updateLiderUnidadOrganizacional
+                : createLiderUnidadOrganizacional;
+            
+              void action(
+                asignacion_lideres_current?.id_lider_unidad_org ? updateDataFunction : data,
+                setLoadingButton,
+                cleanElementComponent
+              ).then(() => {
+                void getAsignacionesLideresByIdOrganigrama(
+                  organigrama_lideres_current?.id_organigrama
+                ).then((res: any) => {
+                  dispatch(get_list_asignaciones_lideres(res));
+                });
+              });
             }}
             style={{
               marginTop: '20px'
@@ -248,7 +236,7 @@ export const SeleccionLider = (): JSX.Element => {
                     <div>
                       <Select
                         isDisabled={
-                          asignacion_lideres_current?.observaciones_asignacion
+                          asignacion_lideres_current?.observaciones_asignacion || asignacion_lideres_current?.label || asignacion_lideres_current?.value
                         }
                         value={value}
                         onChange={(selectedOption) => {
@@ -259,7 +247,7 @@ export const SeleccionLider = (): JSX.Element => {
                             dispatch(set_catalog_trd_action(res));
                           }); */
                           dispatch(set_unidad_current(selectedOption));
-                          //  console.log('')(selectedOption);
+                          console.log(selectedOption);
                           onChange(selectedOption);
                         }}
                         options={unidadesOrganizacionales ?? []}
@@ -395,7 +383,7 @@ export const SeleccionLider = (): JSX.Element => {
               spacing={2}
               sx={{ mb: '20px', mt: '20px', alignItems: 'center' }}
             >
-              <Button
+              {/*<Button
                 color="primary"
                 // type="submit"
                 variant="contained"
@@ -405,7 +393,7 @@ export const SeleccionLider = (): JSX.Element => {
                 }}
               >
                 BUSCAR
-              </Button>
+              </Button>*/}
 
               <Button
                 color="primary"
@@ -420,9 +408,11 @@ export const SeleccionLider = (): JSX.Element => {
                 color="primary"
                 variant="contained"
                 startIcon={<SearchIcon />}
-                onClick={openModalBusquedaPersona}
+                onClick={watch_seleccionar_lideres_value?.id_unidad_organizacional?.value ? openModalBusquedaPersona : () => {
+  control_info('Debe seleccionar una unidad organizacional para realizar la búsqueda de la persona');
+}}
               >
-                BÚSQUEDA AVANZADA LÍDER
+                BÚSQUEDA AVANZADA PERSONA
               </Button>
             </Stack>
 

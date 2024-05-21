@@ -69,7 +69,9 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     form_data.append('otras_aplicaciones', data.otras_aplicaciones);
     form_data.append('id_marca', data.id_marca ?? null);
     form_data.append('id_articulo', (data.id_articulo ?? "").toString());
+    if(data.ruta_imagen_foto !== null) {
     form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+    }
     if (data.id_hoja_de_vida === null) {
       void dispatch(create_cv_computers_service(form_data, navigate));
     } else {

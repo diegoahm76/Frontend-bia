@@ -196,78 +196,7 @@ export const ElementosOtros = (): JSX.Element => {
       if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
         return true;
       }
-
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionEnEspera
-      ) {
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario'
-        );
-      }
-
-      if (isEstadoAsignacionAceptada && isTareaRespondida) {
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
-
-      //* septimo caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionAceptada
-      ) {
-        return !(
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
-
-      //* octavo caso
-
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionRechazada
-      ) {
-        //* se habilitan todos botones -
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
-
-      //* noveno caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaDelegada &&
-        isEstadoReasignacionRechazada
-      ) {
-        //* se habilitan todos botones -
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
-
+      
       return !(actionId === 'InfoSolictud');
       */
     };

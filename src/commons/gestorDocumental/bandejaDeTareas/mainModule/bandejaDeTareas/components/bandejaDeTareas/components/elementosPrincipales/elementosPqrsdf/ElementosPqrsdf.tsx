@@ -218,10 +218,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     //     );
     //   }
 
-    //   if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
-    //     return true;
-    //   }
-
     //   if (
     //     isEstadoAsignacionAceptada &&
     //     isEstadoTareaEnProcesoRespuesta &&
@@ -229,16 +225,14 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     //   ) {
     //     return !(
     //       actionId === 'RespondeSolicitud' ||
-    //       actionId === 'RequerimientoUsuario'
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'InfoSolictud' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario'
     //     );
     //   }
 
     //   if (isEstadoAsignacionAceptada && isTareaRespondida) {
     //     return !(
-    //       actionId === 'RespondeSolicitud' ||
-    //       actionId === 'RequerimientoUsuario' ||
-    //       actionId === 'Reasignar' ||
-    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
     //       actionId === 'SeguimientoARespuesta' ||
     //       actionId === 'InfoSolictud'
     //     );
@@ -251,7 +245,6 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     //     isEstadoReasignacionAceptada
     //   ) {
     //     return !(
-    //       actionId === 'Reasignar' ||
     //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
     //       actionId === 'SeguimientoARespuesta' ||
     //       actionId === 'InfoSolictud'
@@ -291,6 +284,11 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     //       actionId === 'SeguimientoARespuesta' ||
     //       actionId === 'InfoSolictud'
     //     );
+    //   }
+
+    //* REVISAR EL ESTADO DE ARCHIVADO
+    //   if (isTareaRespondida) {
+    //     return !(actionId === 'InfoSolictud');
     //   }
 
     //   return !(actionId === 'InfoSolictud');

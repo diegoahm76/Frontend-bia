@@ -64,6 +64,50 @@ const SeleccionarVehiculo = () => {
             ),
 
         },
+        {
+            field: 'marca',
+            headerName: 'Marca',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'doc_identificador_nro',
+            headerName: 'Placa serial',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'estado',
+            headerName: 'Estado vehículo',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'tipo_bien',
+            headerName: 'Tipo de bien',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
 
     ];
     const filter_vehicle: any = (async () => {
