@@ -690,6 +690,7 @@ export function TiposNotificacionScreen(): JSX.Element {
                   { label: 'Correo electronico', key: 'c' },
                   { label: 'Correspondencia fisica', key: 'd' },
                   { label: 'Notificacion personal', key: 'e' },
+                  { label: 'Publicación por aviso', key: 'e' },
                 ],
                 option_label: 'label',
                 option_key: 'key',
