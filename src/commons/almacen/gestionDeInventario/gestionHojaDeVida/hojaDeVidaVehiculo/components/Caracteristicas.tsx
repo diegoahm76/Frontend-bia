@@ -161,7 +161,7 @@ const EspecificacionesVehicle = ({
                             control_name: "cod_tipo_vehiculo",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Tipo de vehícuo",
+                            label: "Tipo de vehículo",
                             disabled: false,
                             helper_text: "",
                             select_options: [{ label: "Carro", value: "C" }, { label: "Moto", value: "M" }],

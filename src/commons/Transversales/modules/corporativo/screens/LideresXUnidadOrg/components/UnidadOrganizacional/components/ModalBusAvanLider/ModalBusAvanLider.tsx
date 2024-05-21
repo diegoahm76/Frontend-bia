@@ -113,7 +113,7 @@ export const BusqueAsignacionesLiderModal = ({
   const closeModal = (): any => {
     closeModalBusquedaPersona();
     dispatch(get_list_busqueda_avanzada_personas([]));
-    // resetFunction();
+    resetFunction();
     //  console.log('')('Im the close function');
   };
 
