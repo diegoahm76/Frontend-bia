@@ -8,11 +8,16 @@ export const postResponderUsuario = async (
 ) => {
   try {
     const url = `gestor/pqr/crear-respuesta-pqrsdf/`;
+    const url_guardado=`gestor/pqr/archivar-pqrsdf/`;
     setLoadingButton(true);
 
     const response = await api.post(url, formData);
 
     if (response.status === 200 || response.status === 201) {
+
+// aqui
+const response = await api.post(url_guardado, formData);
+
       Swal.fire({
         icon: 'success',
         title: 'Se ha respondido la solicitud',

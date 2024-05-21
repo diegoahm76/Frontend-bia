@@ -73,9 +73,6 @@ export const ModalInfoCategoriaCostoProyecto = () => {
 
 
 
-
-
-
                         <Grid
                             container
                             alignItems="center" justifyContent="center"
@@ -121,25 +118,6 @@ export const ModalInfoCategoriaCostoProyecto = () => {
                                 </Button>
                             </Grid>
                         </Grid >
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                     </Dialog >
                 </Grid>
             </Grid>
