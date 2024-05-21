@@ -108,6 +108,17 @@ const SeleccionarVehiculo = () => {
             ),
 
         },
+        {
+            field: 'nro_elemento_bien',
+            headerName: 'Consecutivo de bien',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
 
     ];
     const filter_vehicle: any = (async () => {
