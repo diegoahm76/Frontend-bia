@@ -135,10 +135,19 @@ export const BusqueAsignacionesLiderModal = ({
 
               // ! ACTUALIZA LA ASIGNACION DE LIDER
               console.log(params.row);
+              console.log(
+                'asignacion_lideres_current',
+                asignacion_lideres_current
+              );
+              console.log(
+                'watch_seleccionar_lideres_value',
+                watch_seleccionar_lideres_value?.id_unidad_organizacional
+              );
               dispatch(
                 set_asignacion_lideres_current({
                   ...asignacion_lideres_current,
                   ...params.row,
+                  ...watch_seleccionar_lideres_value?.id_unidad_organizacional,
                 })
               );
 
@@ -185,13 +194,15 @@ export const BusqueAsignacionesLiderModal = ({
         open={modalBusquedaPersona}
         onClose={closeModal}
         sx={{
-          minHeight: '600px'
+          minHeight: '600px',
         }}
       >
         <Box
           component="form"
           onSubmit={async (e) => {
             e.preventDefault();
+
+            // Destructure the values from watch_seleccionar_lideres_value
             const {
               tipo_documento,
               numero_documento,
@@ -201,13 +212,26 @@ export const BusqueAsignacionesLiderModal = ({
               segundo_apellido,
               id_unidad_organizacional_actual,
             } = watch_seleccionar_lideres_value || {};
-            //watch_asignaciones_lider_by_unidad_value
-            try {
-              const unidad = id_unidad_organizacional_actual?.value
-                ? unidad_current?.value ||
-                  asignacion_lideres_current?.id_unidad_organizacional
-                : '';
 
+            try {
+              // Determine the unit value based on the available data
+              const unidad =
+                watch_seleccionar_lideres_value?.id_unidad_organizacional
+                  ?.value ||
+                id_unidad_organizacional_actual?.value ||
+                unidad_current?.value ||
+                asignacion_lideres_current?.id_unidad_organizacional ||
+                asignacion_lideres_current?.value ||
+                watch_seleccionar_lideres_value?.id_unidad_organizacional
+                  ?.value;
+
+              console.log('soy la unidad --->', unidad);
+              console.log(
+                'soy el watch',
+                watch_seleccionar_lideres_value?.id_unidad_organizacional
+              );
+
+              // Fetch the data using the getPersonaByFilter function
               const data = await getPersonaByFilter(
                 tipo_documento?.value || '',
                 numero_documento || '',
@@ -217,10 +241,10 @@ export const BusqueAsignacionesLiderModal = ({
                 segundo_apellido || '',
                 unidad || '',
                 setLoadingButton || '',
-                () => {}
-                // resetFunction ()=>ñ
+                () => {} // This seems to be a placeholder for a callback function
               );
 
+              // Dispatch the fetched data
               dispatch(get_list_busqueda_avanzada_personas(data));
             } catch (error) {
               console.error('Error fetching data:', error);
@@ -255,34 +279,34 @@ export const BusqueAsignacionesLiderModal = ({
                     fieldState: { error },
                   }) => (
                     <div>
-                    <Select
-                      //inputRef={ref}
-                      options={tiposDocumentos} // options should be an array of objects with 'value' and
-                      value={value} // set selected value
-                      onChange={onChange} // update value when option is selected
-                      isSearchable
-                      placeholder="Tipo de documento"
-                      styles={{
-                        control: (provided, state) => ({
-                          ...provided,
-                          borderColor: error ? 'red' : provided.borderColor,
-                        }),
-                      }}
-                    />
-                    <label>
-                    <small
-                      style={{
-                        color: 'rgba(0, 0, 0, 0.6)',
-                        fontWeight: 'thin',
-                        fontSize: '0.75rem',
-                        marginTop: '0.25rem',
-                        marginLeft: '0.25rem',
-                      }}
-                    >
-                      Tipo de documento
-                    </small>
-                  </label>
-                </div>
+                      <Select
+                        //inputRef={ref}
+                        options={tiposDocumentos} // options should be an array of objects with 'value' and
+                        value={value} // set selected value
+                        onChange={onChange} // update value when option is selected
+                        isSearchable
+                        placeholder="Tipo de documento"
+                        styles={{
+                          control: (provided, state) => ({
+                            ...provided,
+                            borderColor: error ? 'red' : provided.borderColor,
+                          }),
+                        }}
+                      />
+                      <label>
+                        <small
+                          style={{
+                            color: 'rgba(0, 0, 0, 0.6)',
+                            fontWeight: 'thin',
+                            fontSize: '0.75rem',
+                            marginTop: '0.25rem',
+                            marginLeft: '0.25rem',
+                          }}
+                        >
+                          Tipo de documento
+                        </small>
+                      </label>
+                    </div>
                   )}
                 />
               </Grid>
@@ -396,7 +420,7 @@ export const BusqueAsignacionesLiderModal = ({
                   )}
                 />
               </Grid>
-              {organigrama_lideres_current?.actual ? (
+              {/*              {organigrama_lideres_current?.actual ? (
                 <Grid item xs={12} sm={3} zIndex={5}>
                   <Controller
                     name="id_unidad_organizacional_actual"
@@ -444,7 +468,7 @@ export const BusqueAsignacionesLiderModal = ({
                     )}
                   />
                 </Grid>
-              ) : null}
+              ) : null}*/}
 
               <Grid item xs={12} sm={3}>
                 <LoadingButton
@@ -459,13 +483,11 @@ export const BusqueAsignacionesLiderModal = ({
               </Grid>
             </Grid>
 
-
-              <RenderDataGrid
-                title="Resultados de la búsqueda"
-                rows={busqueda_avanzada_personas_list ?? []}
-                columns={columns_busqueda_avanzada_persona ?? []}
-              />
-      
+            <RenderDataGrid
+              title="Resultados de la búsqueda"
+              rows={busqueda_avanzada_personas_list ?? []}
+              columns={columns_busqueda_avanzada_persona ?? []}
+            />
           </DialogContent>
           <Divider />
           <DialogActions>
