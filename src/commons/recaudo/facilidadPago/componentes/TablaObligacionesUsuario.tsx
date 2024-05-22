@@ -49,6 +49,10 @@ export const TablaObligacionesUsuario: React.FC = () => {
     set_modal(false);
   };
 
+  useEffect(() => {
+    console.log(obligaciones);
+  }, [obligaciones])
+
   const handle_submit = async (): Promise<void> => {
     const arr_registro = [];
     for (let i = 0; i < lista_obligaciones.length; i++) {
@@ -133,6 +137,10 @@ export const TablaObligacionesUsuario: React.FC = () => {
     }
     set_total(capital + intereses);
   }, [selected, capital, intereses]);
+
+  useEffect(() => {
+    console.log(lista_obligaciones);
+  }, [lista_obligaciones])
 
   const columns: GridColDef[] = [
     {
@@ -339,7 +347,8 @@ export const TablaObligacionesUsuario: React.FC = () => {
             abrir_dialog={handle_close}
           />
           {show_estado_cuenta && <DocumentoEstadoCuenta
-            datos={lista_obligaciones}
+            dataClean={lista_obligaciones}
+            obligaciones={obligaciones}
           />}
         </>
   );
