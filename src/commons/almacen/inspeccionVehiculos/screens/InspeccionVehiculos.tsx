@@ -13,7 +13,6 @@ import { useAppDispatch } from "../../../../hooks";
 import { get_obtener_viajes_asociados, obtener_nombres_conductor, obtener_vehiculo_logueado } from "../thunks/inspeccion_vehiculos";
 import { control_error } from "../../../../helpers";
 import { create_inspeccion_vehiculo, data_busqueda_vehiculos, inputs_persona_seleccionada, interface_busqueda_persona_solicita, interface_resumen_solicitud, interface_viajes_asociados, response_conductor_logueado, response_vehiculo_logueado, response_viajes_asociados } from "../interfaces/types";
-import BusquedaVehiculos from "./BusquedaVehiculos";
 import TableViajesAsociados from "../tables/TableViajesAsociados";
 import PersonasViajan from "../components/PersonasViajan";
 
@@ -91,7 +90,7 @@ const InspeccionVehiculos = () => {
  * Función para obtener el vehículo logueado.
  */
   const get_obtener_viajes_asociados_fc: () => void = () => {
-    dispatch(get_obtener_viajes_asociados(49))
+    dispatch(get_obtener_viajes_asociados(id_vehiculo_conductor))
       .then((response: response_viajes_asociados) => {
         if (Object.keys(response).length !== 0) {
           if (Object.keys(response.data).length !== 0) {
@@ -244,14 +243,6 @@ const InspeccionVehiculos = () => {
 
   return (
     <>
-      <BusquedaVehiculos
-        refrescar_input_vehiculo_buscado={refrescar_input_vehiculo_buscado}
-        set_refrescar_input_vehiculo_buscado={set_refrescar_input_vehiculo_buscado}
-        set_vehiculo_arrendado_encontrado={set_vehiculo_arrendado_encontrado}
-        set_mostrar_busqueda_vehiculo={set_mostrar_busqueda_vehiculo}
-        mostrar_busqueda_vehiculo={mostrar_busqueda_vehiculo}
-      />
-
       <Grid container item spacing={1} rowSpacing={4} xs={12} sx={{
         display: 'flex',
         borderRadius: '15px',
