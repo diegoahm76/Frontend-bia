@@ -1,5 +1,5 @@
 export interface DownloadButtonProps {
   fileUrl: string;
-  fileName: string;
+  fileName?: string;
   condition: any;
 }

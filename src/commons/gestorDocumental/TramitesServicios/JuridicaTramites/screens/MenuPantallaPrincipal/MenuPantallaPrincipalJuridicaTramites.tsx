@@ -8,7 +8,7 @@ import { CustomizedSteppers } from '../../components/sterper/Steper';
 import { ControlledAccordions } from '../../components/ListaChequeoSolicitudPermisoConsecio/ListaChequeoSolicitudPermisoConsecio';
 import { VisorDocumento } from '../../components/VisorDocumentos/VisorDocumento';
 import { VistaCompleta } from '../../components/VIistaCompleta/VistaCompleta';
-import { StepperContext } from '../../context/SteperContext';
+import { StepperContext } from '../../../context/SteperContext';
 import { Title } from '../../../../../../components';
 
 export const MenuPantallaPrincipalJuridicaTramites = (): JSX.Element => {

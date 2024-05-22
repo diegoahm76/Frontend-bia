@@ -1,23 +1,19 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import 'leaflet/dist/leaflet.css';
-import { CarteraEdad7 } from './CarteraEdad7';
+import { CarteraPorDeuda } from './Graficas/CarteraEdad7';
 import { SetStateAction, useState } from 'react';
 import { Title } from '../../../components/Title';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
-import { ReporteEdad3 } from './ReporteEdad3';
-import { ReporteCartera4 } from './ReporteCartera4';
-import { CarteraEdad } from './CarteraEdad';
-import { Reportetop1 } from './Reportetop1';
-import { Reportetop2 } from './Reportetop2';
-import { CarteraTop } from './CarteraTop';
+import { ReporteEdad3 } from './Graficas/ReporteEdad3';
+import { ReporteCartera4 } from './Graficas/ReporteCartera4';
+import { CarteraEdad } from './Graficas/CarteraEdad';
+import { Reportetop1 } from './Graficas/Reportetop1';
+import { CarteraPorDeudaEdad } from './Graficas/Reportetop2';
+import { DeudoresXConceptoTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('3');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
@@ -66,25 +62,32 @@ export const IndicadoresRecaudo: React.FC = () => {
                 <MenuItem value="1">
                   Reporte General de Cartera Por Edad
                 </MenuItem>
-                <MenuItem value="2">
-                  Reporte General Cartera Por Deuda{' '}
-                </MenuItem>
-                <MenuItem value="3">
-                  Reporte General de Cartera Por Deuda y Edad{' '}
-                </MenuItem>
 
                 <MenuItem value="4">
                   Reporte de Cartera Por Deuda y Edad –Top
                 </MenuItem>
 
+
+                <MenuItem value="2">
+                  Reporte General Cartera Por Deuda{' '}
+                </MenuItem>
+
+                <MenuItem value="7">
+                  Reporte General Cartera Top 10 Deudores x Concepto{' '}
+                </MenuItem>
+
+
+
+
+
                 <MenuItem value="5">
                   Reporte General de Cartera Por Deuda y Edad –Top
                 </MenuItem>
+                <MenuItem value="3">
+                  Reporte General de Cartera Por Deuda y Edad{' '}
+                </MenuItem>
                 <MenuItem value="6">
                   Reporte General Cartera Por Edad – Deuda y Etapa{' '}
-                </MenuItem>
-                <MenuItem value="7">
-                  Reporte General Cartera Top 10 Deudores x Concepto{' '}
                 </MenuItem>
               </Select>
             </FormControl>
@@ -102,7 +105,7 @@ export const IndicadoresRecaudo: React.FC = () => {
       {opcionSeleccionada === '2' ? (
         <>
           {/* Reporte General Cartera Por Edad – Deuda y Etapa */}
-          <CarteraEdad7 />
+          <CarteraPorDeuda />
         </>
       ) : null}
       {opcionSeleccionada === '3' ? (
@@ -121,7 +124,7 @@ export const IndicadoresRecaudo: React.FC = () => {
       {opcionSeleccionada === '5' ? (
         <>
           {/* Reporte General de Cartera Por Deuda y Edad –Top2 */}
-          <Reportetop2 />
+          <CarteraPorDeudaEdad />
         </>
       ) : null}
 
@@ -135,7 +138,7 @@ export const IndicadoresRecaudo: React.FC = () => {
       {opcionSeleccionada === '7' ? (
         <>
           {/* Reporte General de Cartera Por Edad */}
-          <CarteraTop />
+          <DeudoresXConceptoTop />
         </>
       ) : null}
     </>

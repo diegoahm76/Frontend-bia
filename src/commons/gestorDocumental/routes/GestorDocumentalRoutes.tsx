@@ -58,6 +58,7 @@ import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentan
 import { RouteArchibo } from '../ArchivadosOtros/routes/RouteArchibo';
 import { LiquidacionRutesPago } from '../Liquidacion_dos/routes/LiquidacionRutes';
 import { Facturacion } from '../../recaudo/screens/Facturacion';
+import { GeneradorDocumentos } from '../../recaudo/screens/GeneradorDocumentos';
 
 const routes = [
   {
@@ -154,7 +155,7 @@ const routes = [
     name: 'archivado',
     component: () => <RouteArchibo />,
   },
-  
+
   {
     path: 'Reubicacion_Expedientes/',
     name: 'Reubicacion_Expedientes',
@@ -168,9 +169,10 @@ const routes = [
   {
     path: 'documentos/',
     name: 'documentos',
-    component: () => <Facturacion />,
+    component: () => <GeneradorDocumentos />,
+    // component: () => <Facturacion />,
   },
-  
+
 
   {
     path: 'Interno_encuesta/',

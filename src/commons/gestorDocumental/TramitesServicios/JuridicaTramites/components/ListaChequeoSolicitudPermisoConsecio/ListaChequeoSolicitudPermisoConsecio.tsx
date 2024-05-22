@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Switch from '@mui/material/Switch';
 import { Button, Chip, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Tooltip } from '@mui/material';
-import { StepperContext } from '../../context/SteperContext';
+import { StepperContext } from '../../../context/SteperContext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { DownloadButton } from '../../../../../../utils/DownloadButton/DownLoadButton';
@@ -169,26 +169,23 @@ export const ControlledAccordions = () => {
                 borderRadius: '15px',
                 p: '20px',
                 mb: '20px',
-                boxShadow: '0px 3px 6px #042F4A26',
+                background: "#fff",
+                boxShadow: '0px 5px 7px #042F4A26',
             }}>
-
-            <Grid item xs={12}>
-                <Title title="Buscar Trámites en Proceso" />
-            </Grid>
-
-
 
             <Grid container alignItems="center" justifyContent="center">
                 <Grid item xs={10} style={{ marginTop: 10 }}>
                     <RenderDataGrid
-                        title="Documentos Proporcionados"
+                        title="Documentos proporcionados"
                         columns={columns ?? []}
                         rows={form_data ?? []}
                     />
                 </Grid>
 
             </Grid>
-            <Grid item xs={12} style={{ marginTop: 15 }}>
+            <Grid item xs={12} style={{ marginTop: 15 }}
+                sx={{ boxShadow: '0px 5px 7px #042F4A26'}}
+            >
                 {form_data.map((item: any) => (
                     <Accordion
                         key={item.id_anexo_tramite}
@@ -283,13 +280,13 @@ export const ControlledAccordions = () => {
             </Grid>
 
             <Grid container alignItems="center" justifyContent="center">
-                <Grid item xs={4} style={{ marginTop: 15 }} >
+                <Grid item xs={12} style={{ marginTop: 25 }} >
                     <Button startIcon={<ArrowForwardIcon />}
-                        variant="outlined"
-                        color='warning'
+                        variant="contained"
+                        color='primary'
                         onClick={() => setActiveStep(activeStep + 1)}
                     >
-                        Continuar con Requerimiento
+                        Continuar con Revisión
                     </Button>
                 </Grid>
 
@@ -302,13 +299,13 @@ export const ControlledAccordions = () => {
                         fullWidth
                         style={{ width: "90%", marginTop: 15 }}
                         variant="contained"
-                        color="error"
+                        color="warning"
                         startIcon={<ArrowBackIcon />} // Agrega el icono de flecha hacia atrás
                         onClick={() => {
                             setActiveStep(activeStep - 1);
                         }}
                     >
-                        Volver
+                        Paso anterior
                     </Button>
                 </Grid>
             </Grid>
