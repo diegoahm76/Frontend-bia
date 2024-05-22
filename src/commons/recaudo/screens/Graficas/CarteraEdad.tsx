@@ -117,6 +117,7 @@ export const CarteraEdad: React.FC = () => {
     }, [carteraEdad]);
 
     useEffect(() => {
+        fetchCarteraEdad();
         fetchChoiseConcepto();
     }, []);
 

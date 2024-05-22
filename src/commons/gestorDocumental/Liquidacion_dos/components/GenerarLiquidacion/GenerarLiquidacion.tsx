@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import {  Grid, Switch, TextField } from "@mui/material";
+import { Grid, Switch, TextField } from "@mui/material";
 import { useEffect, useState, useContext } from "react";
 import { DetalleLiquidacion } from "../DetalleLiquidacion/DetalleLiquidacion";
 import { api } from "../../../../../api/axios";
@@ -146,8 +146,17 @@ export const GenerarLiquidacion = () => {
         // Evaluar la fórmula
         if (eval(formula)) {
 
-          const logData = { valorMinimo: valor_minimo_filtrado_estandar, capacidad: registro.capacidad, valor: registro.valor, valor_subsidio_trasporte: "0", total_valor_veiculos: "" };
+          const valor_registro = registro.valor;
+       
+
+          const valor_porcentaje = parseInt(valor_registro) < 7 ? (parseInt(valor_registro) / 1000) * variable_sumada_valores_capital_avaluo : valor_registro;
+
+          const logData = { valorMinimo: valor_minimo_filtrado_estandar, capacidad: registro.capacidad, valor: valor_porcentaje.toString(), valor_subsidio_trasporte: "0", total_valor_veiculos: "" };
           setLogs(logData);
+
+          console.log("valor_registro", valor_registro);
+          console.log("valor_porcentaje", valor_porcentaje);
+
         } else {
         }
       } catch (error) {
@@ -186,6 +195,10 @@ export const GenerarLiquidacion = () => {
   useEffect(() => {
     calcular();
   }, [variable_sumada_valores_capital_avaluo])
+
+  useEffect(() => {
+    calcular();
+  }, [])
 
 
   useEffect(() => {
