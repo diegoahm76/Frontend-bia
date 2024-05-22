@@ -12,28 +12,35 @@ import CalculateIcon from '@mui/icons-material/Calculate';
 import { InputAdornment } from "@mui/material";
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { formatNumber, formatNumberTable } from "../../utils/NumerosPuntosMiles";
+import { Chip } from "@mui/material";
 
 
 
 export const DetalleLiquidacion = () => {
 
-  const { precios, setPrecios ,logs} = useContext(PreciosContext);
+  const { precios, setPrecios, logs } = useContext(PreciosContext);
   const [descripcion, setDescripcion] = useState('');
   const [valor, setValor] = useState('');
   const [data_choise, set_data_choise] = useState<TipologiaDocumental[]>([]);
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
-  const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
+  const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("70");
   const [variableValues, setVariableValues] = useState<{ [key: string]: string }>({});
   const [valor_total, set_valor_total] = useState();
 
-  
+  console.log("precios", precios)
+
   const sumaValores = precios.reduce((total, item) => {
     // Convierte el valor a número antes de sumarlo
+    const valor_dias = parseInt(item.valorfuncionario_mes || "0") / 30;
+    const total_dias_funcianrio = parseInt(item.dias || "0") * valor_dias;
     const valorNumerico = parseInt(item.resultado || "0");
-    return total + valorNumerico;
-}, 0);
+    return total + total_dias_funcianrio;
+  }, 0);
 
-  const total_actual =parseInt(logs.total_valor_veiculos)+sumaValores||"0";
+  const total_defecto = parseInt(logs.total_valor_veiculos) ? parseInt(logs.total_valor_veiculos) : 0;
+  const total_actual = total_defecto + sumaValores;
+  const Porcentaje = total_actual * 0.25;
+
 
 
   const fetch_datos_choises = async (): Promise<void> => {
@@ -104,17 +111,16 @@ export const DetalleLiquidacion = () => {
   const columns = [
     // { field: 'id', headerName: 'ID', flex: 1 },
     { field: 'descripcion', headerName: 'Funcionario', flex: 1 },
-    { field: 'valor', headerName: 'Valor', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
-    { field: 'nivel', headerName: 'Nivel', flex: 1 },
-    { field: 'valorfuncionario_mes', headerName: 'Valor Funcionario', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
-    { field: 'viaticos', headerName: 'Viáticos', flex: 1, valueFormatter: (params:any) => formatNumber(params.value) },
+    // { field: 'valor', headerName: 'Valor', flex: 1, valueFormatter: (params: any) => formatNumber(params.value) },
+    { field: 'nivel', headerName: 'Nivel', flex: 1, renderCell: (params: any) => (<Chip label={params.value} />) },
+    { field: 'valorfuncionario_mes', headerName: 'Valor Funcionario Mes', flex: 1, valueFormatter: (params: any) => formatNumber(params.value) },
     { field: 'dias', headerName: 'Días', flex: 1 },
-    { field: 'resultado', headerName: 'Resultado', flex: 1, valueFormatter: (params:any) => formatNumberTable(params.value) }, // Aplicar la función de formato
+    { field: 'resultado', headerName: 'Dias Por Valor', flex: 1, valueFormatter: (params: any) => formatNumberTable(params.value) }, // Aplicar la función de formato
     {
       field: 'Acciones',
       headerName: 'Acciones',
       flex: 1,
-      renderCell: (params:any) => (
+      renderCell: (params: any) => (
         <IconButton color="error" onClick={() => handleRemovePrice(params.row.id - 1)}>
           <DeleteIcon />
         </IconButton>
@@ -129,7 +135,6 @@ export const DetalleLiquidacion = () => {
     valor: precio.valor,
     nivel: precio.nivel,
     valorfuncionario_mes: precio.valorfuncionario_mes || '', // Maneja el caso cuando el atributo no está presente o es undefined
-    viaticos: precio.viaticos || '', // Maneja el caso cuando el atributo no está presente o es undefined
     dias: precio.dias || '', // Maneja el caso cuando el atributo no está presente o es undefined
     resultado: precio.resultado || '', // Añade el campo 'resultado'
 
@@ -180,14 +185,24 @@ export const DetalleLiquidacion = () => {
     fetch_datos_choises();
   }, [])
 
+  const valueeee = [{
+    "id": 70,
+    "usada": false,
+    "nombre": "LiquidacionInicioTramite",
+    "estado": 1,
+    "version": 1,
+    "funcion": "(valorfuncionario / 30 ) * dias;",
+    "variables": {
+      "dias": "",
+      "valorfuncionario": ""
+    },
+    "bloques": "",
+    "tipo_renta": "True",
+    "tipo_cobro": "True"
+  }]
 
   useEffect(() => {
-    api.get('recaudo/liquidaciones/opciones-liquidacion-base/')
-      .then((response) => {
-        set_opciones_liquidacion(response.data.data);
-      })
-      .catch((error) => {
-      });
+    set_opciones_liquidacion(valueeee);
   }, []);
 
 
@@ -221,56 +236,13 @@ export const DetalleLiquidacion = () => {
           </Grid>
 
 
-          <Grid item xs={12}>
-            <FormControl style={{ marginTop: 15 }} size='small' fullWidth required>
-              <InputLabel>Selecciona opción liquidación</InputLabel>
-              <Select
-                label='Selecciona opción liquidación'
-                value={id_opcion_liquidacion}
-                MenuProps={{
-                  style: {
-                    maxHeight: 224,
-                  }
-                }}
-                onChange={handle_select_change}
-              >
-                {opciones_liquidacion
-                  .filter(opc_liquidacion => opc_liquidacion.nombre.includes("LiquidacionInicioTramite"))
-                  .map((opc_liquidacion) => (
-                    <MenuItem key={opc_liquidacion.id} value={opc_liquidacion.id}>
-                      {opc_liquidacion.nombre}
-                    </MenuItem>
-                  ))}
-              </Select>
-            </FormControl>
-          </Grid>
 
 
           <Grid container alignItems="center" justifyContent="center">
-            <Grid item xs={8}>
-
-
-              {Object.keys(opcionSeleccionada?.variables || {}).map((key) => (
-                <TextField
-                  key={key}
-                  style={{ width: '95%', marginTop: 10 }}
-                  variant="outlined"
-                  label={key}
-                  fullWidth
-                  name={key}
-                  value={variableValues[key] || ''}
-                  onChange={handleChange}
-                  disabled={key === 'valorfuncionario'} // Solo deshabilitar si la clave es 'valorfuncionario'
-                />
-              ))}
-
-            </Grid>
 
 
 
-
-
-            <Grid item xs={12} sm={5} style={{ marginTop: 15 }}>
+            <Grid item xs={12} sm={6} style={{ marginTop: 15 }}>
 
               <FormControl fullWidth >
                 <InputLabel id="choise-label">Profesional</InputLabel>
@@ -296,7 +268,7 @@ export const DetalleLiquidacion = () => {
 
 
 
-            <Grid item xs={12} sm={5} style={{ marginTop: 15 }} >
+            <Grid item xs={12} sm={6} style={{ marginTop: 15 }} >
               <FormControl fullWidth>
                 <InputLabel id="valor-label">Valor del precio</InputLabel>
                 <Select
@@ -319,7 +291,27 @@ export const DetalleLiquidacion = () => {
                 </Select>
               </FormControl>
             </Grid>
+
+
+            {Object.keys(opcionSeleccionada?.variables || {}).map((key) => (
+              <Grid key={key} item xs={6} >
+                <TextField
+                  style={{ width: '95%', marginTop: 10 }}
+                  variant="outlined"
+                  size="small"
+                  label={key}
+                  fullWidth
+                  name={key}
+                  value={variableValues[key] || ''}
+                  onChange={handleChange}
+                  disabled={key === 'valorfuncionario'} // Solo deshabilitar si la clave es 'valorfuncionario'
+                />
+              </Grid>
+            ))}
+
           </Grid>
+
+
 
 
 
@@ -386,7 +378,7 @@ export const DetalleLiquidacion = () => {
         <Grid item xs={12} sm={3}>
           <TextField
             label="Sub Total"
-            style={{ marginTop: 15 }}
+            style={{ marginTop: 15, width: "95%" }}
             name="valor"
             type="text" // Cambiado de 'number' a 'text'
             size="medium"
@@ -402,8 +394,45 @@ export const DetalleLiquidacion = () => {
             }}
           />
         </Grid>
+        <Grid item xs={12} sm={3}>
+          <TextField
+            label="% Gastos Administrativos"
+            style={{ marginTop: 15, width: "95%" }}
+            name="valor"
+            type="text" // Cambiado de 'number' a 'text'
+            size="medium"
+            disabled
+            fullWidth
+            value={Porcentaje ? formatNumber(Porcentaje) : ""}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AttachMoneyIcon />
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
 
-
+        <Grid item xs={12} sm={3}>
+          <TextField
+            label="Total"
+            style={{ marginTop: 15, width: "95%" }}
+            name="valor"
+            type="text" // Cambiado de 'number' a 'text'
+            size="medium"
+            disabled
+            fullWidth
+            value={Porcentaje|total_actual?formatNumber(Porcentaje+total_actual ): ""}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <AttachMoneyIcon />
+                </InputAdornment>
+              )
+            }}
+          />
+        </Grid>
 
       </Grid>
 

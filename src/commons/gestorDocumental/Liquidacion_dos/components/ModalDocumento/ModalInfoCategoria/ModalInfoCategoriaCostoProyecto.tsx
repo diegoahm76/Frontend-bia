@@ -86,7 +86,7 @@ export const ModalInfoCategoriaCostoProyecto = () => {
                             }}
                         >
                             <Grid item xs={12}>
-                                <Title title={`Informacion a Enviar a `} />
+                                <Title title={`TABLA DE VALORES SEGUN LA RESOLUCIÓN 1280 DE 2010`} />
                             </Grid>
 
                             <Grid item xs={12} style={{marginTop:15}}>
@@ -103,10 +103,7 @@ export const ModalInfoCategoriaCostoProyecto = () => {
                             </Grid>
 
 
-
                             <Grid container alignItems="flex-end" justifyContent="flex-end">
-
-
                                 <Button
                                     variant="outlined"
                                     color="error"

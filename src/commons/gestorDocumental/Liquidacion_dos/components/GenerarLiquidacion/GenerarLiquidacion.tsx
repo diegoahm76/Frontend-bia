@@ -149,7 +149,7 @@ export const GenerarLiquidacion = () => {
           const valor_registro = registro.valor;
        
 
-          const valor_porcentaje = parseInt(valor_registro) < 7 ? (parseInt(valor_registro) / 100) * variable_sumada_valores_capital_avaluo : valor_registro;
+          const valor_porcentaje = parseInt(valor_registro) < 7 ? (parseInt(valor_registro) / 1000) * variable_sumada_valores_capital_avaluo : valor_registro;
 
           const logData = { valorMinimo: valor_minimo_filtrado_estandar, capacidad: registro.capacidad, valor: valor_porcentaje.toString(), valor_subsidio_trasporte: "0", total_valor_veiculos: "" };
           setLogs(logData);
