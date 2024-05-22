@@ -23,11 +23,7 @@ export const BotonesFinales = () => {
   const { precios,setPrecios } = useContext(PreciosContext);
 
 
-
-
-
-
-
+  const isDisabled = precios.length === 0 || precios[0].resultado === "0";
 
   const LimpiarTabla=()=>{
     setPrecios([]);
@@ -49,8 +45,7 @@ export const BotonesFinales = () => {
     >
 
 
-     
-
+    
       <Grid item xs={12} sm={4}>
         <Button
           startIcon={<DescriptionOutlinedIcon />}
@@ -58,6 +53,7 @@ export const BotonesFinales = () => {
           style={{ width: "90%", marginTop: 15,backgroundColor:"green",color:"white" }}
           variant="contained"
           color="error"
+          disabled={isDisabled}
           onClick={() => {
             navigate('/app/gestor_documental/liquidacion/documneto');
             // localStorage.setItem("valor_recarga", false.toString()); // Convertir a cadena usando toString()

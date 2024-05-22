@@ -26,7 +26,7 @@ export const EncabezadoObligacionesUsuario: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        
+
 
         <Grid item xs={12}>
           <Box

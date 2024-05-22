@@ -238,7 +238,7 @@ const ListadoAnexos = ({ type }: IProps) => {
               <Tooltip title="Ver archivo">
                 <Grid item xs={0.5} md={0.5}>
                   <DownloadButton
-                    fileUrl={params.row.metadatos.archivo.ruta_archivo}
+                    fileUrl={params.row.ruta_archivo}
                     fileName={'exhibit_link'}
                     condition={false}
                   />

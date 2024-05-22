@@ -29,11 +29,12 @@ interface BuscarProps {
   is_modal_active: any;
   set_is_modal_active: any;
   set_position_tab: any;
+  set_cobro_persuasivo_active: any;
   selectedIds: any;
   set_selectedIds: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_selectedIds, selectedIds, set_position_tab, is_modal_active, set_is_modal_active }) => {
+export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_selectedIds, selectedIds, set_position_tab, set_cobro_persuasivo_active, is_modal_active, set_is_modal_active }) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [seledexpediente, set_seledexpediente] = useState<readonly string[]>([]);
 
@@ -150,7 +151,9 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
     set_obligaciones_from_liquidacion(obligaciones_gestor);
     set_is_from_liquidacion(true);
     set_id_deudor(obligaciones.id_deudor);
-    navigate('/app/recaudo/gestion_cartera');
+    set_cobro_persuasivo_active(true);
+    set_position_tab('3');
+    // navigate('/app/recaudo/gestion_cartera');
   }
 
   const total_cop = new Intl.NumberFormat("es-ES", {

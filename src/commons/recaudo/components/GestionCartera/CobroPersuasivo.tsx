@@ -171,7 +171,7 @@ export const CobroPersuasivo: React.FC<any> = ({
             }
           ],
         },
-        { text: `ASUNTO: Cobro persuasivo visita de control y seguimiento expediente 3.37.1.014.016`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
+        { text: `ASUNTO: Cobro persuasivo visita de control y seguimiento expediente ${currentDeudor.nro_expediente || ''}`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
         // { text: `ASUNTO: Cobro Tasa por Utilización de Agua y ofrecimiento de descuento de intereses`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
         // { text: `ASUNTO: Cobro Tasa Retributiva y ofrecimiento de descuento de intereses`, alignment: 'justify', fontSize: 12, margin: [0, 25, 0, 0] },
         { text: `En atención al asunto de la referencia y revisados los registros contables de nuestra entidad, se evidencia que ${datos?.id_deudor?.nombres || currentDeudor.nombre_completo} ${datos?.id_deudor?.apellidos || ''}, identificado con C.C./NIT No. ${datos?.id_deudor?.identificacion || currentDeudor.numero_identificacion} no ha cumplido con en el pago de las siguientes obligaciones:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0] },

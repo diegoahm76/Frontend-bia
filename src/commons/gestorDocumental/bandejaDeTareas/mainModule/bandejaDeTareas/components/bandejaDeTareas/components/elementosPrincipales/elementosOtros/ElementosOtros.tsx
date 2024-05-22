@@ -127,86 +127,101 @@ export const ElementosOtros = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const shouldDisable = (actionId: string) => {
+    /*{
+      id: 'InfoSolictud',
+      icon: <ContactPageIcon />,
+      name: 'Ver información resumida de la tarea',
+      path: '',
+      disabled: false,
+    },
+  
+  
+    {
+      id: 'Reasignar',
+      icon: <PersonAddAlt1Icon />,
+      name: 'Reasignar',
+      //* posiblememenet sea la misma ruta que la de pqrsdf
+      path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
+      disabled: false,
+    },
+    {
+      id: 'Archivado_OTROS',
+      icon: <ArchiveIcon />,
+      name: 'archivado',
+      path: '/app/gestor_documental/archivado',
+      disabled: false,
+    },*/
+
+    /*const shouldDisable = (actionId: string) => {
       if (!tareaOtros) {
         return true; // No se ha seleccionado ninguna tarea
       }
 
       const isNoSeleccionado = !tareaOtros;
-      /*  const isEstadoAsignacionNoDefinido =
+
+        const isEstadoAsignacionNoDefinido =
       tareaOtros.estado_asignacion_tarea === null ||
       tareaOtros.estado_asignacion_tarea === '';
+
       const isEstadoAsignacionRechazada =
       tareaOtros.estado_asignacion_tarea === 'Rechazado';
+
       const isEstadoAsignacionAceptada =
       tareaOtros.estado_asignacion_tarea === 'Aceptado';
       const isEstadoTareaEnProcesoRespuesta =
-      tareaOtros.estado_tarea === 'En proceso de respuesta';
-      const isEstadoTareaDelegada = tareaOtros.estado_tarea === 'Delegada';
+      tareaOtros.estado_asignacion_tarea
+      === 'En proceso de respuesta';
+
+      const isEstadoTareaDelegada = tareaOtros.estado_asignacion_tarea
+      === 'Delegada';
+
+      const isTareaEnEspera = tareaOtros.estado_asignacion_tarea
+      === 'En espera';
+
       const isEstadoReasignacionEnEspera =
       tareaOtros.estado_reasignacion_tarea === null ||
       tareaOtros.estado_reasignacion_tarea === '' ||
       tareaOtros.estado_reasignacion_tarea === 'En espera';
+
       const isEstadoReasignacionRechazada =
       tareaOtros.estado_reasignacion_tarea === 'Rechazado';
+
       const isEstadoReasignacionAceptada =
       tareaOtros.estado_reasignacion_tarea === 'Aceptado';
-
-      const hasReqPendientes = tareaOtros.requerimientos_pendientes_respuesta;*/
 
       if (isNoSeleccionado) {
         return true;
       }
 
-      /*   if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
+      if (isTareaEnEspera || isEstadoAsignacionRechazada) {
         return actionId !== 'InfoSolictud';
       }
 
       if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        !hasReqPendientes
+        isEstadoAsignacionAceptada
       ) {
         //* se habilita todo
         return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
+          actionId === 'InfoSolictud' ||
+          actionId === 'archivado' ||
+          actionId === 'Reasignar'
         );
       }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        hasReqPendientes
-      ) {
-        //* se deshabilita la opción de responder solicitud
-        return !(
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
+      if(isEstadoReasignacionEnEspera){
+        return !(actionId === 'Reasignar');
       }
 
-      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
-        return true;
-      }
-      
       return !(actionId === 'InfoSolictud');
-      */
+
     };
 
     const actionsOtrosValue = actionsOtros.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
-
-    dispatch(setActionsTareasOtros(actionsOtrosValue));
+*/
+    dispatch(setActionsTareasOtros(actionsOtros));
   };
 
   // ? FUNCIONES PARA EL COMPONENTE ---------------
