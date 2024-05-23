@@ -17,6 +17,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
+import CallMadeIcon from '@mui/icons-material/CallMade';
 import CommentIcon from '@mui/icons-material/Comment';
 import { GridCellParams, GridValueGetterParams } from '@mui/x-data-grid';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
@@ -495,6 +496,38 @@ export const ElementoOPAS = (): JSX.Element => {
                       color: 'warning.main',
                       width: '18px',
                       height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip title="Ir a módulo de generador de documentos">
+              <IconButton
+                sx={{
+                  marginLeft: '30px',
+                }}
+                onClick={() => {
+                  navigate('/app/gestor_documental/documentos');
+                  dispatch(
+                    setCurrentTareaPqrsdfTramitesUotrosUopas(params.row)
+                  );
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <CallMadeIcon
+                    sx={{
+                      color: 'success.main',
+                      width: '20px',
+                      height: '20px',
                     }}
                   />
                 </Avatar>
