@@ -235,7 +235,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
           <Grid
             item
             xs={12}
-            sm={props.usuario !== null ? 6 : 6}
+            sm={props.usuario !== null ? 4 : 4}
             textAlign={'center'}
           >
             <Button
@@ -249,31 +249,29 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
               Iniciar trámite de permiso menor
             </Button>
           </Grid>
-          {/*{props.usuario !== null && (
             <Grid
               item
               xs={12}
-              sm={props.usuario !== null ? 3 : 4}
+              sm={props.usuario !== null ? 4 : 4}
               textAlign={'center'}
             >
               <Button
                 variant="contained"
-                color="error"
+                color="warning"
                 startIcon={<QuestionAnswerIcon />}
                 onClick={() => {
                   navigate(
-                    `/app/gestor_documental/tramites/respuesta_requerimiento_opa/`
+                    `/app/gestor_documental/tramites/respuesta_requerimiento_permiso_menor/`
                   );
                 }}
               >
-                Responder requerimientos OPAS
+                Responder requerimientos Permiso menor
               </Button>
             </Grid>
-          )}*/}
           <Grid
             item
             xs={12}
-            sm={props.usuario !== null ? 6: 6}
+            sm={props.usuario !== null ? 4: 4}
             textAlign={'center'}
           >
             <Button

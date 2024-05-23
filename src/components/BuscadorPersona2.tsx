@@ -11,8 +11,11 @@ import {
   Box,
   IconButton,
   Avatar,
+  MenuItem,
 } from '@mui/material';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
+import AddIcon from '@mui/icons-material/Add';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useState, useEffect } from 'react';
 import { CustomSelect } from './CustomSelect';
 // import { LoadingButton } from '@mui/lab';
@@ -39,11 +42,13 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
+  setPersons: (data: InfoPersona[]) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BuscadorPersona2: React.FC<PropsBuscador> = ({
   onResult,
+  setPersons,
 }: PropsBuscador) => {
   const columns: GridColDef[] = [
     {
@@ -90,7 +95,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
     },
     {
       field: 'tipo_usuario',
-      headerName: 'tipo usuario',
+      headerName: 'Tipo de Usuario',
       sortable: true,
       width: 170,
     },
@@ -100,7 +105,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
       width: 80,
       renderCell: (params) => (
         <>
-          <IconButton aria-label="Seleccionar">
+          <IconButton aria-label="Seleccionar Persona">
             <Avatar
               sx={{
                 width: 24,
@@ -110,15 +115,15 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
               }}
               variant="rounded"
             >
-              <ChecklistOutlinedIcon
+              <AddIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 onClick={() => {
                   if (params.row !== undefined) {
                     handle_close();
                     onResult(params.row);
                     set_tipo_documento(params.row.tipo_documento);
+                    set_data_form(params.row);
                     set_value('numero_documento', params.row.numero_documento);
-                    // set_nombre_completo(params.row.nombre_completo);
                   }
                 }}
               />
@@ -161,7 +166,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
     },
     {
       field: 'tipo_usuario',
-      headerName: 'tipo_usuario',
+      headerName: 'Tipo de Usuario',
       sortable: true,
       width: 170,
     },
@@ -183,7 +188,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
               }}
               variant="rounded"
             >
-              <ChecklistOutlinedIcon
+              <AddIcon
                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
                 onClick={() => {
                   if (params.row !== undefined) {
@@ -221,25 +226,53 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
   const [is_search, set_is_search] = useState(false);
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento, set_tipo_documento] = useState('');
-  const [tipo_documento_av, set_tipo_documento_av] = useState('');
+  const [form_search, set_form_search] = useState({
+    tipo_documento: '',
+    numero_documento: '',
+    primer_nombre: '',
+    primer_apellido: '',
+    razon_social: '',
+    nombre_comercial: '',
+    nombre_completo: '',
+  });
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoPersona[]>([]);
-  // const [nombre_completo, set_nombre_completo] = useState('');
+  const [local_ids_persons, set_local_ids_persons] = useState<number[]>([]);
+
+  const set_data_form = (data: InfoPersona): void => {
+    set_form_search({
+      tipo_documento: data.tipo_documento,
+      numero_documento: data.numero_documento,
+      primer_nombre: data?.primer_nombre,
+      primer_apellido: data?.primer_apellido,
+      razon_social: data?.razon_social,
+      nombre_comercial: data?.nombre_comercial,
+      nombre_completo: (data?.primer_nombre || data?.razon_social || data?.nombre_comercial || '') + ' ' + (data?.primer_apellido || ''),
+    });
+  }
+
   const handle_click_open = (): void => {
     set_open_dialog(true);
   };
+
+  const clean_form = (): void => {
+    set_form_search({
+      tipo_documento: '',
+      numero_documento: '',
+      primer_nombre: '',
+      primer_apellido: '',
+      razon_social: '',
+      nombre_comercial: '',
+      nombre_completo: '',
+    });
+  }
 
   const handle_close = (): void => {
     set_open_dialog(false);
   };
 
-  const handle_change_select = (e: SelectChangeEvent<string>): void => {
-    if (!open_dialog) {
-      set_tipo_documento(e.target.value);
-    } else {
-      // Busqueda avanzada
-      set_tipo_documento_av(e.target.value);
-    }
+  const handle_change_select = (e: any) => {
+    set_tipo_documento(e.target.value);
   };
 
   const get_selects_options = async (): Promise<void> => {
@@ -255,59 +288,6 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
       set_is_loading(false);
     }
   };
-
-  const on_submit = handle_submit(async ({ numero_documento }) => {
-    set_is_search(true);
-    try {
-      const {
-        data: { data },
-      } = await get_person_by_document(tipo_documento, numero_documento);
-      if (data !== undefined) {
-        onResult(data);
-        set_value('numero_documento', data.numero_documento);
-        if (
-          data.nombre_completo !== '' &&
-          data.nombre_completo !== undefined &&
-          data.nombre_completo !== null
-        ) {
-          // set_nombre_completo(data.nombre_completo);
-        } else if (
-          data.nombre_comercial !== '' &&
-          data.nombre_comercial !== undefined &&
-          data.nombre_comercial !== null
-        ) {
-          // set_nombre_completo(data.nombre_comercial);
-        }
-      } else {
-        const new_data = {
-          id: 0,
-          id_persona: 0,
-          tipo_persona: tipo_documento === 'NT' ? 'J' : 'N',
-          tipo_documento,
-          numero_documento,
-          primer_nombre: '',
-          segundo_nombre: '',
-          primer_apellido: '',
-          segundo_apellido: '',
-          nombre_completo: '',
-          razon_social: '',
-          nombre_comercial: '',
-          tiene_usuario: false,
-          digito_verificacion: '',
-          cod_naturaleza_empresa: '',
-          tipo_usuario:'',
-        };
-        onResult(new_data);
-      }
-      set_tipo_documento_av(tipo_documento);
-    } catch (error) {
-      const temp_error = error as AxiosError;
-      const resp = temp_error.response?.data as ResponseServer<any>;
-      control_error(resp.detail);
-    } finally {
-      set_is_search(false);
-    }
-  });
 
   const on_submit_advance = handle_submit(
     async ({
@@ -338,6 +318,18 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
     }
   );
 
+  const handle_selection = (newSelection: any) => {
+    set_local_ids_persons(newSelection);
+  };
+
+
+
+  const send_persons = () => {
+    const persons = rows.filter((row) => local_ids_persons.includes(row.id_persona));
+    setPersons(persons);
+    handle_close();
+  }
+
   useEffect(() => {
     void get_selects_options();
   }, []);
@@ -345,85 +337,48 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
   return (
     <>
       <form
-        onSubmit={(e) => {
-          void on_submit(e);
-        }}
       >
         <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-          <Grid item xs={12} sm={6} md={3}>
-            <CustomSelect
-              onChange={handle_change_select}
-              label="Tipo de documento *"
+          <Grid item xs={12} md={6} lg={3}>
+            <TextField
+              size='small'
+              fullWidth
+              label="Tipo de documento"
               name="tipo_documento"
-              value={tipo_documento}
-              options={tipo_documento_opt}
-              disabled={is_loading}
-              errors={errors}
-              register={register}
+              value={form_search.tipo_documento}
+              disabled
             />
           </Grid>
 
-          <Grid item xs={12} sm={6} md={3}>
-            {is_loading ? (
-              <Skeleton variant="rectangular" width="100%" height={45} />
-            ) : (
-              <Controller
-                name="numero_documento"
-                control={control_form}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                }) => (
-                  <TextField
-                    label="Número de documento *"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    onChange={onChange}
-                    value={value}
-
-                    error={!!errors.numero_documento}
-                    helperText={
-                      errors.numero_documento?.type === 'required'
-                        ? 'Este campo es obligatorio'
-                        : ''
-                    }
-                  />
-                )}
-              />
-            )}
-          </Grid>
-          {/* <Grid item xs={12} sm={6} md={2}>
+          <Grid item xs={12} md={6} lg={3}>
             <TextField
+              size="small"
+              fullWidth
+              label="Número de documento"
+              name='numero_documento'
+              value={form_search.numero_documento}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} md={6} lg={3}>
+            <TextField
+              size="small"
               fullWidth
               label="Nombre"
-              size="small"
-              disabled={true}
+              name='nombre_completo'
+              disabled
               multiline
-              value={nombre_completo}
+              value={form_search.nombre_completo}
             />
-          </Grid> */}
-          <Grid item xs={12} sm={6} md={3}>
-            <LoadingButton
-              aria-label="toggle password visibility"
-              variant="contained"
-              startIcon={<SearchIcon />}
-              type="submit"
-              style={{ marginRight: '10px' }}
-              loading={is_search}
-              disabled={is_search}
-            >
-              Buscar
-            </LoadingButton>
           </Grid>
           <Grid item xs={12} sm={6} md={3}>
             <Button
               variant="contained"
-              color="primary"
               startIcon={<SearchIcon />}
+              type="submit"
               onClick={handle_click_open}
             >
-              Búsqueda avanzada
+              Buscar
             </Button>
           </Grid>
         </Grid>
@@ -439,50 +394,43 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
           >
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
               <Grid item xs={12} sm={6} md={3}>
-                <CustomSelect
-                  onChange={handle_change_select}
-                  label="Tipo de documento *"
+                <TextField
+                  select
+                  size='small'
+                  fullWidth
+                  label="Tipo de documento"
                   name="tipo_documento"
-                  value={tipo_documento_av}
-                  options={tipo_documento_opt}
-                  disabled={is_loading}
-                  errors={errors}
-                  register={register}
-                />
+                  value={tipo_documento}
+                  onChange={handle_change_select}
+                  helperText={"Elije el tipo de documento"}
+                >
+                  <MenuItem value=""><em>Selecciona una opción</em></MenuItem>
+                  {tipo_documento_opt.map((item) => (
+                    <MenuItem key={item.value} value={item.value}>
+                      {item.label}
+                    </MenuItem>
+                  ))}
+
+                </TextField>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
-                <Controller
-                  name="numero_documento"
-                  control={control_form}
-                  rules={{ required: false }}
-                  render={({
-                    field: { onChange, value },
-                  }) => (
-                    <TextField
-                      label="Número de documento *"
-                      variant="outlined"
-                      fullWidth
-                      size="small"
-                      onChange={onChange}
-                      value={value}
-                      // error={!!errors}
-                      // helperText={
-                      //   errors.numero_documento?.type === 'required'
-                      //     ? 'Este campo es obligatorio'
-                      //     : ''
-                      // }
-                    />
-                  )}
-                />
+                  <TextField
+                    label="Número de documento"
+                    variant="outlined"
+                    fullWidth
+                    size="small"
+                    value={form_search.numero_documento}
+                    // onchange={onChange}
+                  />
               </Grid>
-              {tipo_documento_av !== 'NT' ? (
+              {tipo_documento !== 'NT' ? (
                 <>
                   <Grid item xs={12} sm={6} md={3}>
                     <TextField
                       fullWidth
                       label="Primer nombre"
                       size="small"
-                      {...register('primer_nombre')}
+                      value={form_search.primer_nombre}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
@@ -490,7 +438,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
                       fullWidth
                       label="Primer apellido"
                       size="small"
-                      {...register('primer_apellido')}
+                      value={form_search.primer_apellido}
                     />
                   </Grid>
                 </>
@@ -501,7 +449,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
                       fullWidth
                       label="Razón social"
                       size="small"
-                      {...register('razon_social')}
+                      value={form_search.razon_social || form_search.primer_nombre || ''}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6} md={3}>
@@ -509,19 +457,27 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
                       fullWidth
                       label="Nombre comercial"
                       size="small"
-                      {...register('nombre_comercial')}
+                      value={form_search.nombre_comercial || form_search.primer_nombre || ''}
                     />
                   </Grid>
                 </>
               )}
-              <Grid item xs={12} container justifyContent="end">
+              <Grid item xs={12} container sx={{gap: '1rem'}} justifyContent="end">
+                <Button
+                  variant="outlined"
+                  type="submit"
+                  startIcon={<CleanIcon />}
+                  onClick={clean_form}
+                >
+                  Limpiar
+                </Button>
                 <LoadingButton
                   type="submit"
                   variant="contained"
                   color="primary"
                   startIcon={<SearchIcon />}
                   loading={is_search}
-                  disabled={is_search}
+                  disabled={is_search || tipo_documento === ''}
                 >
                   Buscar
                 </LoadingButton>
@@ -533,27 +489,17 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
-                      {tipo_documento_av === 'NT' ? (
-                        <>
-                          <DataGrid
-                            rows={rows ?? []}
-                            columns={columns_juridica ?? []}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => row.id_persona}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <DataGrid
-                            rows={rows ?? []}
-                            columns={columns ?? []}
-                            pageSize={5}
-                            rowsPerPageOptions={[5]}
-                            getRowId={(row) => row.id_persona}
-                          />
-                        </>
-                      )}
+                      <DataGrid
+                        autoHeight
+                        checkboxSelection
+                        density='compact'
+                        rows={rows ?? []}
+                        columns={(tipo_documento === 'NT' ? columns_juridica : columns) ?? []}
+                        pageSize={8}
+                        rowsPerPageOptions={[8]}
+                        getRowId={(row) => row.id_persona}
+                        onSelectionModelChange={handle_selection}
+                      />
                     </Box>
                   </Grid>
                 </>
@@ -562,7 +508,8 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
           </form>
         </DialogContent>
         <DialogActions>
-          <Button color='error' variant="outlined" startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
+          <Button color='primary' variant="contained" disabled={local_ids_persons.length < 2} sx={{m: '1rem'}} startIcon={<AddIcon />} onClick={send_persons}>Agregar Personas</Button>
+          <Button color='error' variant="outlined" sx={{m: '1rem'}} startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
         </DialogActions>
       </Dialog>
     </>

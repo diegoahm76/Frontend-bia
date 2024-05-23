@@ -10,6 +10,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LoadingButton } from '@mui/lab';
 import { DataGrid } from '@mui/x-data-grid';
+import GroupIcon from '@mui/icons-material/Group';
 import { FC, useEffect, useState } from 'react';
 import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -23,14 +24,18 @@ import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import { control_success, control_error } from '../../../helpers';
 import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { BuscadorPersona2 } from '../../../components/BuscadorPersona2';
+import { control_warning } from '../../almacen/configuracion/store/thunks/BodegaThunks';
 
 
 export interface Persona {
     id_persona: any;
-    primer_nombre: any;
-    segundo_nombre: any;
-    primer_apellido: any;
-    segundo_apellido: any;
+    primer_nombre: string;
+    segundo_nombre: string;
+    primer_apellido: string;
+    segundo_apellido: string;
+    razon_social?: string;
+    nombre_comercial?: string;
+    numero_documento: string;
 };
 export interface SelectItem {
     value: string;
@@ -52,15 +57,14 @@ export interface lider {
 }
 
 interface IProps {
-    personaselet: any;
+    personaSelected: any;
     setpersona: any;
     perfilselet: any;
     setperfilselet: any;
     lideresUnidad: any;
     setLideresUnidad: any;
 }
-export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, perfilselet, setperfilselet, lideresUnidad, setLideresUnidad }) => {
-
+export const AlertaDocumento: React.FC<IProps> = ({ personaSelected, setpersona, perfilselet, setperfilselet, lideresUnidad, setLideresUnidad }) => {
 
     const initialFormData = {
         id_persona_alertar: "",
@@ -78,12 +82,6 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
             [name]: value,
         }));
     };
-
-
-
-
-
-
 
     const [perfil, set_perfil] = useState<SelectItem[]>([]);
 
@@ -122,15 +120,11 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
     const [persona, set_persona] = useState<Persona>();
     const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
 
-
-    const handleClicdk = () => {
-        console.log(perfilselet);
-    };
-
-    // const handleClick = () => {
-    //     setLideresUnidad((prevLideres: any) => [...prevLideres, formData.lider_unidad]);
-    // };
-
+    useEffect(() => {
+        if(persona?.id_persona){
+            handleSinglePerson();
+        }
+    }, [persona])
 
     const handleClick = () => {
         const liderSeleccionado = formData.lider_unidad;
@@ -236,41 +230,85 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
     ];
 
 
+    const [persons, setPersons] = useState<Persona[]>([]);
+    const [personaSelecteda, setpersonaa] = useState<
+    { id_persona: string, primer_nombre: string, primer_apellido: string, numero_documento: string, razon_social: string, nombre_comercial: string  }[]
+    >([]);
 
-    const [personaseleta, setpersonaa] = useState<{ id_persona: string, primer_nombre: string }[]>([]);
+    useEffect(() => {
+        if (persons.length) {
+            handlePersons();
+        }
+    }, [persons])
 
-
-    const handlpersona = () => {
+    const handleSinglePerson = () => {
         // Verifica si 'persona' está definido y tiene un 'id_persona' no nulo/no indefinido
         if (persona && persona.id_persona) {
             // Verifica si la persona ya está en la lista basado en 'id_persona'
-            const yaExiste = personaseleta.some(p => p.id_persona === persona.id_persona);
+            const yaExiste = personaSelecteda.some(p => p.id_persona === persona.id_persona);
 
             if (!yaExiste) {
                 setpersona((prevLideres: any) => [...prevLideres, persona?.id_persona]);
-                setpersonaa(prevLideres => [...prevLideres, { id_persona: persona.id_persona, primer_nombre: persona.primer_nombre }]);
-                // Si también necesitas actualizar el otro estado, asegúrate de hacerlo aquí.
+                setpersonaa(prevLideres => [...prevLideres, {
+                    id_persona: persona.id_persona,
+                    primer_nombre: persona.primer_nombre,
+                    primer_apellido: persona.primer_apellido,
+                    numero_documento: persona.numero_documento,
+                    razon_social: persona.razon_social || '',
+                    nombre_comercial: persona.nombre_comercial || ''
+                }]);
+            } else{
+                control_warning("La persona ya fue agregada");
             }
         } else {
             control_error("No hay ninguna persona seleccionada para agregar.");
-
         }
     };
 
+    const handlePersons = () => {
+        if (persons.length) {
+          const newPersons = persons.filter((persona) => {
+            return persona && persona.id_persona && !personaSelecteda.some(p => p.id_persona === persona.id_persona);
+          });
+
+          if (newPersons.length) {
+            setpersona((prevLideres: any) => [...prevLideres, ...newPersons.map(persona => persona.id_persona)]);
+            setpersonaa(prevLideres => [...prevLideres, ...newPersons.map(persona => ({
+              id_persona: persona.id_persona,
+              primer_nombre: persona.primer_nombre,
+              primer_apellido: persona.primer_apellido,
+              numero_documento: persona.numero_documento,
+              razon_social: persona.razon_social || '',
+              nombre_comercial: persona.nombre_comercial || ''
+            }))]);
+          } else {
+            control_error("No hay ninguna persona nueva para agregar.");
+          }
+        } else {
+          control_error("No hay ninguna persona seleccionada para agregar.");
+        }
+      };
+
     const handleDelete = (idPersona: any) => {
-        // Elimina el id_persona de personaselet
-        setpersona(personaselet.filter((id: any) => id !== idPersona));
+        // Elimina el id_persona de personaSelected
+        setpersona(personaSelected.filter((id: any) => id !== idPersona));
 
         // Elimina la persona de personaa basado en id_persona
-        setpersonaa(personaseleta.filter((persona: { id_persona: any; }) => persona.id_persona !== idPersona));
+        setpersonaa(personaSelecteda.filter((persona: { id_persona: any; }) => persona.id_persona !== idPersona));
     };
 
     const columnss = [
         {
+            field: 'numero_documento',
+            headerName: 'Número de Documento',
+            flex: 1,
+        },
+        {
             field: 'primer_nombre',
             headerName: 'Nombre',
-            flex: 1,
+            flex: 2,
             editable: false,
+            valueGetter: (params: any) => `${params.row.primer_nombre || params.row.razon_social || params.row.nombre_comercial || ''} ${params.row.primer_apellido || ''}`,
         },
         {
             field: 'acciones',
@@ -322,7 +360,7 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
                     <Button variant="contained" color="primary" onClick={selt2} >Perfil</Button>
                 </Grid> */}
                 <Grid item>
-                    <Button variant="contained" color="primary" onClick={selt3}>  Buscador Persona</Button>
+                    <Button startIcon={<GroupIcon />} variant="contained" color="primary" onClick={selt3}>Buscador Persona</Button>
                 </Grid>
                 {opcionSeleccionada === '1' && <>
                     <Grid container
@@ -362,10 +400,6 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
 
                 </>}
 
-
-
-
-
                 {opcionSeleccionada === '2' && <>
                     <Grid container
                         item xs={12} sm={12}
@@ -400,18 +434,6 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
                     />
                 </>}
 
-
-
-
-
-
-
-
-
-
-
-
-
                 {opcionSeleccionada === '3' && <>
 
                     <>
@@ -420,9 +442,10 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
                                 onResult={(data) => {
                                     void on_result(data);
                                 }}
+                                setPersons={setPersons}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={3}>
+                        {/* <Grid item xs={12} sm={3}>
                             <TextField
                                 label="Primer Nombre"
                                 variant="outlined"
@@ -434,22 +457,22 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaselet, setpersona, pe
                                 }}
                                 value={persona?.primer_nombre}
                             />
-                        </Grid>
+                        </Grid> */}
 
 
-                        <Grid item >
+                        {/* <Grid item >
                             <Button color='success'
                                 variant='contained'
-                                startIcon={<SaveIcon />} onClick={handlpersona}>
+                                startIcon={<SaveIcon />} onClick={handleSinglePerson}>
                                 guardar
                             </Button>
 
-                        </Grid>
+                        </Grid> */}
 
                         <RenderDataGrid
                             title='Personas  '
                             columns={columnss ?? []}
-                            rows={personaseleta ?? []}
+                            rows={personaSelecteda ?? []}
                         />
 
 

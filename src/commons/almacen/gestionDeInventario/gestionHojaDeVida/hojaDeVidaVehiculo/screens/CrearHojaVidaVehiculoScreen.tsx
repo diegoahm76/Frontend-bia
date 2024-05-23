@@ -68,14 +68,18 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
     form_data.append('observaciones_adicionales', data.observaciones_adicionales
     );
     form_data.append('es_agendable', data.es_agendable);
-    form_data.append('fecha_circulacion', dayjs(data.fecha_circulacion).format('YYYY-MM-DD') );
+    if (data.fecha_circulacion !== null) {
+      form_data.append('fecha_circulacion', dayjs(data.fecha_circulacion).format('YYYY-MM-DD'));
+    }
     form_data.append('id_articulo', data.id_articulo);
     form_data.append('doc_identificador_nro', data.doc_identificador_nro
     );
     form_data.append('codigo_bien', data.codigo_bien);
     form_data.append('tipo_vehiculo', data.tipo_vehiculo);
     form_data.append('id_marca', data.id_marca);
+    if (data.ruta_imagen_foto !== null) {
     form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+    }
     if (data.id_hoja_de_vida === null) {
       void dispatch(create_cv_vehicles_service(form_data, navigate));
     } else {

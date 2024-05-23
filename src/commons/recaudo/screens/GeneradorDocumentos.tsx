@@ -10,9 +10,6 @@ import {
   TextField,
   Button,
   Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../components';
@@ -21,18 +18,15 @@ import { AuthSlice } from '../../auth/interfaces';
 import { api, baseURL } from '../../../api/axios';
 import { control_error, control_success } from '../../../helpers';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import SaveIcon from '@mui/icons-material/Save';
+import EditIcon from '@mui/icons-material/Edit';
+import FeedIcon from '@mui/icons-material/Feed';
 import CloseIcon from '@mui/icons-material/Close';
-import SearchIcon from '@mui/icons-material/Search';
-import CleanIcon from '@mui/icons-material/CleaningServices';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { AlertaDocumento } from './AlertaDocumento';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
-import { data } from '../../almacen/gestionDeInventario/catalogoBienes/interfaces/Nodo';
-import { LoadingButton } from '@mui/lab';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
-export interface UnidadOrganizaciona {
+export interface UnidadOrganizacional {
   codigo: any;
   nombre: string;
   tiene_configuracion: any;
@@ -46,53 +40,62 @@ interface TipoRadicado {
 export const GeneradorDocumentos: React.FC = () => {
 
   const {
-    userinfo: { nombre_unidad_organizacional, nombre, id_persona },
+    userinfo: { id_persona },
   } = useSelector((state: AuthSlice) => state.auth);
 
   const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
-
-  const [radicadof, setradicadof] = useState<number | null>(null);
-  const [file, setFile] = useState('');
-  const [urlFile, setUrlFile] = useState<any>(null);
+  const [file, setFile] = useState(''); //Archivo desde el server (plantilla)
+  const [urlFile, setUrlFile] = useState<any>(null); //Archivo cargado desde local
   const [updateBorrador, setUpdateBorrador] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(false);
   const [isNewData, setIsNewData] = useState(false);
   const [hasConsecutivo, setHasConsecutivo] = useState(false);
   const [hasPersona, setHasPersona] = useState(false);
-  const [open_dialog, setOpenDialog] = useState(false);
 
-  const [personaselet, setpersona] = useState<string[]>([]);
+  const [personaSelected, setpersona] = useState<string[]>([]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
+  const urlBase = baseURL.replace("/api/", "");
+
 
   useEffect(() => {
-    if (personaselet.length > 0) {
+    if (personaSelected.length > 0) {
       setHasPersona(true);
-      console.log(personaselet);
+      console.log(personaSelected);
     }
-  }, [personaselet])
+  }, [personaSelected])
 
-  const handleSubmitRadicado = async () => {
-    try {
-      const url = '/gestor/adminitrador_radicados/crear-radicado/';
-      const fecha_actual = new Date().toISOString(); // Formato de fecha ISO
+  const currentElement = useSelector((state: any) => state.BandejaTareasSlice.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas);
 
-      const payload = {
-        id_persona: id_persona,
-        tipo_radicado: tipos_radicado,
-        fecha_actual: fecha_actual,
-        modulo_radica: 'Generador de Documento',
-      };
-      const response = await api.post(url, payload);
-      setradicadof(response.data?.data?.radicado_nuevo);
-
-      const numeroRadicado = response.data.nro_radicado;
-
-      control_success('Numero de radicado creado');
-    } catch (error: any) {
-      // control_error(error.response.data.detail?.error);
-      control_error(error.response.data.detail);
+  useEffect(() => {
+    if(currentElement && currentElement.documento){
+      removeFile()
+      setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
     }
-  };
+    console.log(currentElement);
+  }, [currentElement])
+
+  // const handleSubmitRadicado = async () => {
+  //   try {
+  //     const url = '/gestor/adminitrador_radicados/crear-radicado/';
+  //     const fecha_actual = new Date().toISOString(); // Formato de fecha ISO
+
+  //     const payload = {
+  //       id_persona: id_persona,
+  //       tipo_radicado: tipos_radicado,
+  //       fecha_actual: fecha_actual,
+  //       modulo_radica: 'Generador de Documento',
+  //     };
+  //     const response = await api.post(url, payload);
+  //     setradicadof(response.data?.data?.radicado_nuevo);
+
+  //     const numeroRadicado = response.data.nro_radicado;
+
+  //     control_success('Numero de radicado creado');
+  //   } catch (error: any) {
+  //     // control_error(error.response.data.detail?.error);
+  //     control_error(error.response.data.detail);
+  //   }
+  // };
 
   const [tipos_radicado, settipos_radicado] = useState('');
 
@@ -145,7 +148,7 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
 
-  const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
+  const [unidades, setUnidades] = useState<UnidadOrganizacional[]>([]);
   const [plantillas, setPlantillas] = useState<any[]>([]);
   const [showVariables, setShowVariables] = useState(false);
   const [variablesPlantilla, setVariablesPlantilla] = useState<any[]>([]);
@@ -168,12 +171,10 @@ export const GeneradorDocumentos: React.FC = () => {
     try {
       const url = `/gestor/trd/consecutivo-tipologia-doc/`;
       const resp: any = await api.post(url, data);
-      console.log(resp);
       if(resp.data.data){
         removeFile()
-        const url = baseURL.replace("/api/", "");
-        if(updateBorrador) setCurrentBorrador(resp.data.data)
-        setFile(`${url}${resp.data.data.archivos_digitales.ruta_archivo}`)
+        if(updateBorrador || sendTemplate) setCurrentBorrador(resp.data.data)
+        setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -182,12 +183,11 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const createAsignacionDocumento = async (body: any) => {
     try {
-      const url =
-        '/gestor/bandeja-tareas/asginacion/documentos/create/';
+      const url = '/gestor/bandeja-tareas/asginacion/documentos/create/';
       const res = await api.post(url, body);
-      control_success('Documento enviado correctamente');
+      return true;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      return false;
     }
   };
 
@@ -296,19 +296,38 @@ export const GeneradorDocumentos: React.FC = () => {
     setUpdateBorrador(true);
   }
 
-  const sendDocument = () => {
-    const body = {
-      id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
-      id_persona_asignada: personaselet[0],
+  const sendDocument = async () => {
+    if(personaSelected.length){
+      let allSuccess = true;
+      for (const id_persona_asignada of personaSelected) {
+        const body = {
+          id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
+          id_persona_asignada,
+        }
+        const success = await createAsignacionDocumento(body);
+        if (!success) allSuccess = false;
+      }
+      if (allSuccess) {
+        if (personaSelected.length == 1) control_success('El documento se envió correctamente');
+        if (personaSelected.length > 1) control_success('Todos los documentos se enviaron correctamente');
+        cleanTemplate();
+      } else {
+        if (personaSelected.length == 1) control_error('Ocurrio un error al enviar el documento');
+        if (personaSelected.length > 1) control_error('Hubo un error al enviar algunos documentos');
+      }
     }
-    createAsignacionDocumento(body);
-    // setIsNewData(true);
-    // setSendTemplate(true);
   }
 
-  const handle_close = (): void => {
-    setOpenDialog(false);
-  };
+  const cleanTemplate = () => {
+    setFile('');
+    setSendTemplate(false);
+    setUpdateBorrador(false);
+    setHasConsecutivo(false);
+    setHasPersona(false);
+    setpersona([]);
+    setperfilselet([]);
+    setLideresUnidad([]);
+  }
 
   return (
     <>
@@ -337,8 +356,9 @@ export const GeneradorDocumentos: React.FC = () => {
               label="Plantilla"
               disabled={!plantillas.length}
               onChange={handlePlantillaChange}
+              helperText={"Elige una plantilla"}
             >
-              <MenuItem value="">Seleccione una opción</MenuItem>
+              <MenuItem value=""><em>Seleccione una opción</em></MenuItem>
               {plantillas.map((plantilla) => (
               <MenuItem key={plantilla.id_plantilla_doc} value={plantilla.id_plantilla_doc}>
                 {plantilla.nombre}
@@ -357,6 +377,7 @@ export const GeneradorDocumentos: React.FC = () => {
               value={tipos_radicado}
               label="Radicado"
               onChange={handleradicado}
+              helperText={"Elige un tipo de radicado"}
             >
               <MenuItem value="NA">Sin radicado</MenuItem>
               {tiposRadicado.map((tipo) => (
@@ -389,16 +410,6 @@ export const GeneradorDocumentos: React.FC = () => {
               </TextField>
               </FormControl>
           </Grid> */}
-            <Grid item xs={12}>
-              <TextField
-              rows={3}
-              fullWidth
-              multiline
-              size="small"
-              label="Observaciones"
-              variant="outlined"
-              />
-            </Grid>
             <FormularioGenerador
               exCallback={saveData}
               sendBorradorData={updateBorrador}
@@ -426,7 +437,7 @@ export const GeneradorDocumentos: React.FC = () => {
             >
               <Grid item>
                 <Button
-                  startIcon={<VisibilityIcon />}
+                  startIcon={<EditIcon />}
                   variant="contained"
                   onClick={handleEdicion}
                   disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
@@ -436,7 +447,7 @@ export const GeneradorDocumentos: React.FC = () => {
               </Grid>
               <Grid item>
                 <Button
-                  startIcon={<VisibilityIcon />}
+                  startIcon={<FeedIcon />}
                   variant="contained"
                   onClick={generateConsecutivo}
                   disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
@@ -444,21 +455,6 @@ export const GeneradorDocumentos: React.FC = () => {
                   Generar Consecutivo
                 </Button>
               </Grid>
-              {/* <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                <Button
-                  component="label"
-                  variant="outlined"
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Cargar Plantilla
-                  <input
-                    type="file"
-                    style={{ display: "none" }}
-                    onChange={handleFileUpload}
-                    accept=".doc, .docx"
-                  />
-                </Button>
-              </Grid> */}
               <Grid item>
                 <Button
                 startIcon={<VisibilityIcon />}
@@ -467,6 +463,22 @@ export const GeneradorDocumentos: React.FC = () => {
                 disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
                 >
                   Ver borrador
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  component="label"
+                  variant="outlined"
+                  startIcon={<CloudUploadIcon />}
+                  disabled={!plantillaSeleccionada}
+                >
+                  Cargar Plantilla
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileUpload}
+                    accept=".doc, .docx"
+                  />
                 </Button>
               </Grid>
               <Grid item>
@@ -483,14 +495,14 @@ export const GeneradorDocumentos: React.FC = () => {
             </Grid>
       </Grid>
       <AlertaDocumento
-        personaselet={personaselet}
+        personaSelected={personaSelected}
         setpersona={setpersona}
         perfilselet={perfilselet}
         setperfilselet={setperfilselet}
         lideresUnidad={lideresUnidad}
         setLideresUnidad={setLideresUnidad}
       />
-      <Grid
+      {file && <Grid
         container
         spacing={2}
         m={2}
@@ -507,7 +519,7 @@ export const GeneradorDocumentos: React.FC = () => {
       >
         <VisorDocumentos file={file} />
 
-      </Grid>
+      </Grid>}
     </>
   );
 };

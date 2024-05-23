@@ -46,6 +46,9 @@ import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import { TablaObligacionesUsuarioConsulta } from '../facilidadPago/componentes/TablaObligacionesUsuarioConsulta';
 import { Article, SearchOutlined } from '@mui/icons-material';
+import { DocumentoPagoPersuasivo } from '../components/GestionCartera/DocumentoPagoPersuasivo';
+import { ProcesoPagoCoactivo } from '../components/GestionCartera/ProcesoPagoCoactivo';
+import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
 
 const detalles_ciclos: string[] = [
   'diario',
@@ -159,6 +162,10 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   });
   const [tamano_detalles, set_tamano_detalles] = useState<boolean>(true);
   const [periodos, set_periodos] = useState<string[]>([]);
+
+  //New States
+  const [cobro_persuasivo_active, set_cobro_persuasivo_active] = useState<boolean>(false);
+  const [cobro_coactivo_active, set_cobro_coactivo_active] = useState<boolean>(false);
 
   useEffect(() => {
     api
@@ -757,7 +764,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
   const handleBuscar = () => {
 
-    
+
     const deudoresFiltrados = deudores.filter(
       (deudor) =>
         deudor.identificacion.includes(filtroIdentificacion) &&
@@ -768,7 +775,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
 
 
-  
+
 
   const handleClear = () => {
     setFiltroNombres('');
@@ -828,6 +835,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 <TabList onChange={handle_position_tab_change}>
                   <Tab label="Deudores" value="1" />
                   <Tab label="Generar Liquidación" disabled value="2" />
+                  {cobro_persuasivo_active && <Tab label="Proceso cobro Persuasivo" value="3"/>}
+                  {cobro_coactivo_active && <Tab label="Proceso Cobro Coactivo" value="4"/>}
                 </TabList>
               </Box>
 
@@ -924,6 +933,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                           <>
                             <TablaObligacionesUsuarioConsulta
                               set_position_tab={set_position_tab}
+                              set_cobro_persuasivo_active={set_cobro_persuasivo_active}
                               is_modal_active={is_modal_activee}
                               set_is_modal_active={set_is_buscarr}
                               set_selectedIds={set_selectedIds}
@@ -968,10 +978,25 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                   selectedIds={selectedIds}
                 />
               </TabPanel>
+
+              {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
+                  <DocumentoPagoPersuasivo
+                    // datos={datos}
+                  ></DocumentoPagoPersuasivo>
+              </TabPanel>}
+              {cobro_coactivo_active && <TabPanel value="4" sx={{ p: '20px 0' }}>
+                  <ProcesoPagoCoactivo
+                    // datos={datos}
+                  ></ProcesoPagoCoactivo>
+              </TabPanel>}
             </TabContext>
           </Box>
         </Grid>
       </Grid>
+
+      {/* {position_tab !== '1'&& position_tab !== '2' && <SeccionEnvio_MSM_CORREO_F
+
+      />} */}
 
       <TabContext value={position_tab}>
         <TabPanel value="2" sx={{ p: '20px 0' }}>
