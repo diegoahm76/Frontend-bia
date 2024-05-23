@@ -23,6 +23,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import FeedIcon from '@mui/icons-material/Feed';
 import CloseIcon from '@mui/icons-material/Close';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import UpdateIcon from '@mui/icons-material/Update';
 import { AlertaDocumento } from './AlertaDocumento';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
@@ -47,10 +48,15 @@ export const GeneradorDocumentos: React.FC = () => {
   const [file, setFile] = useState(''); //Archivo desde el server (plantilla)
   const [urlFile, setUrlFile] = useState<any>(null); //Archivo cargado desde local
   const [updateBorrador, setUpdateBorrador] = useState(false);
+  const [updateDocument, setUpdateDocument] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(false);
   const [isNewData, setIsNewData] = useState(false);
   const [hasConsecutivo, setHasConsecutivo] = useState(false);
+  const [hasRadicado, setHasRadicado] = useState(false);
   const [hasPersona, setHasPersona] = useState(false);
+
+  const [dataPQRS, setDataPQRS] = useState<any>({}); // Datos para llenar el documento
+  const [matchingData, setMatchingData] = useState<any>({}); // Datos para llenar el documento
 
   const [personaSelected, setpersona] = useState<string[]>([]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
@@ -71,39 +77,34 @@ export const GeneradorDocumentos: React.FC = () => {
       removeFile()
       setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
     }
+
+    if(currentElement && currentElement.id_pqrsdf){
+      removeFile()
+      search_pqrt(currentElement.id_pqrsdf);
+    }
     console.log(currentElement);
   }, [currentElement])
 
-  // const handleSubmitRadicado = async () => {
-  //   try {
-  //     const url = '/gestor/adminitrador_radicados/crear-radicado/';
-  //     const fecha_actual = new Date().toISOString(); // Formato de fecha ISO
+  const search_pqrt = async (id: string) => {
+    try {
+      const url = `gestor/pqr/get_pqrsdf-panel/${id}/`;
+      const response = await api.get(url);
+      console.log(response.data);
+      if(response?.data?.data){
+        setDataPQRS(response.data.data);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  }
 
-  //     const payload = {
-  //       id_persona: id_persona,
-  //       tipo_radicado: tipos_radicado,
-  //       fecha_actual: fecha_actual,
-  //       modulo_radica: 'Generador de Documento',
-  //     };
-  //     const response = await api.post(url, payload);
-  //     setradicadof(response.data?.data?.radicado_nuevo);
-
-  //     const numeroRadicado = response.data.nro_radicado;
-
-  //     control_success('Numero de radicado creado');
-  //   } catch (error: any) {
-  //     // control_error(error.response.data.detail?.error);
-  //     control_error(error.response.data.detail);
-  //   }
-  // };
-
-  const [tipos_radicado, settipos_radicado] = useState('');
+  const [radicado_selected, set_radicado_selected] = useState('');
 
   // Función para manejar el cambio en el select
   const handleradicado = (event: {
     target: { value: SetStateAction<string> };
   }) => {
-    settipos_radicado(event.target.value);
+    set_radicado_selected(event.target.value);
   };
   const [tiposRadicado, setTiposRadicado] = useState<TipoRadicado[]>([]);
 
@@ -142,6 +143,11 @@ export const GeneradorDocumentos: React.FC = () => {
     if(currentPlantilla){
       setPlantillaSeleccionada(currentPlantilla);
     }
+
+    if(!id_plantilla){
+      setFile('');
+      setPlantillaSeleccionada(null);
+    }
   };
 
   const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
@@ -162,7 +168,6 @@ export const GeneradorDocumentos: React.FC = () => {
       if(data.length === 0) control_error('No se encontraron plantillas disponibles');
       setPlantillas(data);
     } catch (error: any) {
-      console.error(error);
       control_error(error.response.data.detail);
     }
   };
@@ -173,7 +178,7 @@ export const GeneradorDocumentos: React.FC = () => {
       const resp: any = await api.post(url, data);
       if(resp.data.data){
         removeFile()
-        if(updateBorrador || sendTemplate) setCurrentBorrador(resp.data.data)
+        if(updateBorrador || updateDocument || sendTemplate) setCurrentBorrador(resp.data.data)
         setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
       }
     } catch (error: any) {
@@ -226,19 +231,38 @@ export const GeneradorDocumentos: React.FC = () => {
       const url = baseURL.replace("/api/", "");
       setFile(`${url}${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
       let variablesFiltradas = plantillaSeleccionada.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
+      let newMatchingData: any = {};
+      if (dataPQRS?.id_PQRSDF) {
+        const keysdataPQRS = Object.keys(dataPQRS);
+        variablesFiltradas = variablesFiltradas.filter((variable: string) => {
+          if (keysdataPQRS.includes(variable)) {
+            newMatchingData[variable] = dataPQRS[variable];
+            return false;
+          }
+          return true;
+        });
+      }
+      setMatchingData(newMatchingData);
       setVariablesPlantilla(variablesFiltradas);
     }
-  }, [plantillaSeleccionada]);
+  }, [plantillaSeleccionada, dataPQRS]);
+
+  useEffect(() => {
+    if (plantillaSeleccionada?.archivos_digitales && hasValue(matchingData)) {
+      generateBorrador();
+      saveData({})
+    }
+  }, [matchingData])
 
   const hasValue = (obj: any) => {
     return Object.values(obj).some(valor => valor !== null && valor !== undefined && valor !== '');
   }
 
-  const handleChange = (event: any) => {
-    setUnidadSeleccionada(event.target.value as string);
-    const selectedId = event.target.value;
-    setIdUnidadSeleccionada(selectedId);
-  };
+  // const handleChange = (event: any) => {
+  //   setUnidadSeleccionada(event.target.value as string);
+  //   const selectedId = event.target.value;
+  //   setIdUnidadSeleccionada(selectedId);
+  // };
 
   const handleEdicion = () => {
     setShowVariables(!showVariables);
@@ -247,53 +271,55 @@ export const GeneradorDocumentos: React.FC = () => {
   const saveData = (data: any) => {
     let sendData: any = {
       plantilla: idPlantilla,
-      payload: data,
+      payload: {...data, ...matchingData},
     };
-    if(updateBorrador && !sendTemplate){
-      hasValue(data)
-        ? sendData.variable = 'B'
-        : control_error('No se han ingresado datos para actualizar el borrador');
-    }
+    if(hasValue(data) || hasValue(matchingData)){
 
-    if(updateBorrador && sendTemplate || !updateBorrador && sendTemplate){
-      if(hasValue(data)){
+      if(updateBorrador){
+        sendData.variable = 'B'
+      }
+
+      if(sendTemplate && !hasConsecutivo && !radicado_selected){
         sendData.variable = 'DC'
         setHasConsecutivo(true);
-      }else{
-        control_error('No se han ingresado datos para generar el documento');
       }
-    }
 
-    if(tipos_radicado && tipos_radicado !== 'NA'){
-      if(hasValue(data)){
-        sendData.cod_tipo_radicado = tipos_radicado;
+      if(radicado_selected && sendTemplate && !hasConsecutivo){
+        sendData.cod_tipo_radicado = radicado_selected;
         sendData.variable = 'DCR'
         setHasConsecutivo(true);
-      }else{
-        control_error('No se han ingresado datos para generar el documento');
+        setHasRadicado(true);
       }
-    }
-    // if(sendTemplate && !updateBorrador){
-    //   sendData.variable = 'DC';
-    // }
 
-    // if(sendTemplate && updateBorrador){
-    //   sendData.variable = 'AD';
-    //   sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
-    // }
-    if(hasValue(data)) generateDocument(sendData);
+      if(updateDocument){
+        if(!hasRadicado) sendData.cod_tipo_radicado = radicado_selected;
+        sendData.variable = 'A'
+        sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
+        setHasConsecutivo(true);
+      }
+
+      generateDocument(sendData);
+    }else{
+      control_error('No se han ingresado datos para actualizar el documento');
+      setSendTemplate(false);
+    }
   }
 
   const generateConsecutivo = () => {
+    setUpdateBorrador(false);
     setIsNewData(true);
     setSendTemplate(true);
   }
 
   const generateBorrador = () => {
-    settipos_radicado('');
-    setSendTemplate(false);
+    if(sendTemplate){
+      setUpdateDocument(true);
+    }else{
+      set_radicado_selected('');
+      setSendTemplate(false);
+      setUpdateBorrador(true);
+    }
     setIsNewData(true);
-    setUpdateBorrador(true);
   }
 
   const sendDocument = async () => {
@@ -374,12 +400,12 @@ export const GeneradorDocumentos: React.FC = () => {
             <TextField
               select
               size="small"
-              value={tipos_radicado}
+              value={radicado_selected}
               label="Radicado"
               onChange={handleradicado}
               helperText={"Elige un tipo de radicado"}
             >
-              <MenuItem value="NA">Sin radicado</MenuItem>
+              <MenuItem value="">Sin radicado</MenuItem>
               {tiposRadicado.map((tipo) => (
                 <MenuItem key={tipo.value} value={tipo.value}>
                   {tipo.label}
@@ -450,19 +476,19 @@ export const GeneradorDocumentos: React.FC = () => {
                   startIcon={<FeedIcon />}
                   variant="contained"
                   onClick={generateConsecutivo}
-                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0 || sendTemplate}
                 >
-                  Generar Consecutivo
+                  {radicado_selected ? 'Generar Consecutivo y Radicado' : 'Generar Consecutivo'}
                 </Button>
               </Grid>
               <Grid item>
                 <Button
-                startIcon={<VisibilityIcon />}
+                startIcon={sendTemplate ? <UpdateIcon /> : <VisibilityIcon />}
                 variant="contained"
                 onClick={generateBorrador}
                 disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
                 >
-                  Ver borrador
+                  {sendTemplate ? 'Actualizar Documento' : 'Ver borrador'}
                 </Button>
               </Grid>
               <Grid item>

@@ -25,16 +25,26 @@ export const VisorDocumentos: React.FC<any> = ({file}: {file: any}) => {
     <Grid item xs={12} sm={12}>
       {(file) && (
         <>
-          <Button
-            variant="contained"
-            color="primary"
-            href={file}
-            sx={{display: 'flex', m: 'auto', width: '200px', mb: '1.5rem'}}
-            download
-            endIcon={<CloudDownloadIcon />}
-          >
-            Descargar
-          </Button>
+          <Grid sx={{display: 'flex', m: 'auto', width: '200px', mb: '1.5rem'}}>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              href={file}
+              download
+              endIcon={<CloudDownloadIcon />}
+            >
+              Descargar
+            </Button>
+            <Button
+              fullWidth
+              variant="contained"
+              color="primary"
+              endIcon={<CloudDownloadIcon />}
+            >
+              Firmar Documento
+            </Button>
+          </Grid>
           <DocViewer
             pluginRenderers={DocViewerRenderers}
             documents={[{ uri: file, fileType: 'docx' }]}

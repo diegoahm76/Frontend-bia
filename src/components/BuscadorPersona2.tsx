@@ -508,7 +508,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
           </form>
         </DialogContent>
         <DialogActions>
-          <Button color='primary' variant="contained" disabled={local_ids_persons.length < 2} sx={{m: '1rem'}} startIcon={<AddIcon />} onClick={send_persons}>Agregar Personas</Button>
+          <Button color='primary' variant="contained" disabled={!local_ids_persons.length} sx={{m: '1rem'}} startIcon={<AddIcon />} onClick={send_persons}>Agregar Personas</Button>
           <Button color='error' variant="outlined" sx={{m: '1rem'}} startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
         </DialogActions>
       </Dialog>
