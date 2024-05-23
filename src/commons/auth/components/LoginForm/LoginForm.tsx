@@ -293,6 +293,28 @@ export const LoginForm: React.FC = () => {
               </i>
             </Typography>
           </Grid>
+          <Grid item>
+            {/* <Link className="no-decoration" to="/auth/pagos_online">
+              <Button
+                type="button"
+                variant="outlined"
+                color="primary"
+                sx={{ fontSize: '.9rem', display: 'flex', width: '80%', margin: 'auto', marginBottom: '10px'}}
+              >
+                PQR en línea
+              </Button>
+            </Link> */}
+            <Link className="no-decoration" to="/auth/pagos_online">
+              <Button
+                type="button"
+                variant="outlined"
+                color="primary"
+                sx={{ fontSize: '.9rem', display: 'flex', width: '80%', margin: 'auto' }}
+              >
+                Pagos en línea
+              </Button>
+            </Link>
+          </Grid>
         </Grid>
       </Grid>
       <DialogRepresentantes />

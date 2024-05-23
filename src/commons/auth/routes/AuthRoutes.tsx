@@ -38,6 +38,7 @@ import { Route, Routes } from 'react-router-dom';
 
 import { Page404 } from '../../../screens/404';
 import { Loader } from '../../../utils/Loader/Loader';
+import { PagosEnLineaScreen } from '../screens/PagosEnLineaScreen';
 
 const LoginScreen = lazy(async () => {
   const module = await import('../screens/LoginScreen');
@@ -101,6 +102,7 @@ export const AuthRoutes: React.FC = () => {
           element={<DesbloqueoDeUsuarioScreen />}
         />
         <Route path="/crear_pqrsdf" element={<CrearPqrsdfScreen />} />
+        <Route path="/pagos_online" element={<PagosEnLineaScreen />} />
         <Route path="/activacion_cuenta" element={<ConfirmarCuentaScreen />} />
 
         <Route path="/*" element={<Page404 />} />
