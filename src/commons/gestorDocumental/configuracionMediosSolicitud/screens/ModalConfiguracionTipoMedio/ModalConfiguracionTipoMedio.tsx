@@ -9,6 +9,7 @@ import { api } from '../../../../../api/axios';
 import { control_error, control_success } from '../../../../seguridad/components/SucursalEntidad/utils/control_error_or_success';
 import { Title } from '../../../../../components/Title';
 import { confirmarAccion } from '../../../deposito/utils/function';
+import AddIcon from '@mui/icons-material/Add';
 
 
 interface ModalConfiguracionTipoMedioProps {
@@ -16,7 +17,7 @@ interface ModalConfiguracionTipoMedioProps {
     setOpenModal: (value: boolean) => void;
 }
 
-export const ModalConfiguracionTipoMedio: React.FC<ModalConfiguracionTipoMedioProps> = ({ openModal, setOpenModal }:ModalConfiguracionTipoMedioProps) => {
+export const ModalConfiguracionTipoMedio: React.FC<ModalConfiguracionTipoMedioProps> = ({ openModal, setOpenModal }: ModalConfiguracionTipoMedioProps) => {
 
     const [checked, setChecked] = useState<boolean>(false);
     const [checkedtramites, set_checkedtramites] = useState<boolean>(false);
@@ -25,7 +26,6 @@ export const ModalConfiguracionTipoMedio: React.FC<ModalConfiguracionTipoMedioPr
     const [dataChoise, setDataChoise] = useState(null);
     const [inputValue, setInputValue] = useState<string>('');
     const [id_medio_solicitud, set_id_medio_solicitud] = useState<number>(0);
-    // const [openModal, setOpenModal] = useState<boolean>(false);
 
     const { datos_Editar } = useContext(ModalBusquedaMediosSolicitudContext);
 
@@ -93,15 +93,27 @@ export const ModalConfiguracionTipoMedio: React.FC<ModalConfiguracionTipoMedioPr
 
     }, [datos_Editar])
 
+    const handleClose = () => {
+        setOpenModal(false);
+        limpiar_datos();
+    };
 
     return (
 
         <>
-
-            <Button variant="contained" onClick={() => setOpenModal(true)}>Abrir Modal</Button>
+            <Button
+                color='success'
+                variant='contained'
+                startIcon={<AddIcon />}
+                fullWidth
+                onClick={() => setOpenModal(true)}
+                style={{ flex: 1, marginTop: 14, marginRight: 14 }}
+            >
+                Crear Tipo Medio
+            </Button>
             <Modal
                 open={openModal}
-                onClose={() => setOpenModal(false)}
+                onClose={() => handleClose()}
                 style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -250,7 +262,7 @@ export const ModalConfiguracionTipoMedio: React.FC<ModalConfiguracionTipoMedioPr
                                 Limpiar
                             </Button>
                         </Grid>
-                       
+
 
                     </Grid>
                 </Grid>

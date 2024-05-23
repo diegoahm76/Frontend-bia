@@ -11,7 +11,7 @@ export const ConfiguracionMediosSolicitudScreem: React.FC = () => {
         <>
             <MostrarModalBuscarMediosSolicitud   openModal={openModal} setOpenModal={setOpenModal} />
             {/* Aquí se pasa el estado y su función de actualización como props */}
-            <ModalConfiguracionTipoMedio openModal={openModal} setOpenModal={setOpenModal} />
+            {/* <ModalConfiguracionTipoMedio openModal={openModal} setOpenModal={setOpenModal} /> */}
         </>
     );
 };

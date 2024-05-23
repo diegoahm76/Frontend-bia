@@ -14,6 +14,7 @@ import {
     TextField,
     CircularProgress,
     Checkbox,
+    ButtonGroup,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { DataGrid } from '@mui/x-data-grid';
@@ -28,12 +29,15 @@ import { ModalBusquedaMediosSolicitudContext } from '../../context/pasarDatosEdi
 import { MedioSolicitud } from '../../interfaces/inerfacesMediosSolicitud';
 import { BotonInformativo } from '../../../TramitesServicios/JuridicaTramites/utils/BotonInformativo';
 import Chip from '@mui/material/Chip';
+import { ModalConfiguracionTipoMedio } from '../../screens/ModalConfiguracionTipoMedio/ModalConfiguracionTipoMedio';
+import { download_pdf } from '../../../../../documentos-descargar/PDF_descargar';
+import { download_xls } from '../../../../../documentos-descargar/XLS_descargar';
 interface ModalConfiguracionTipoMedioProps {
     openModal: boolean;
     setOpenModal: (value: boolean) => void;
 }
 
-export const MostrarModalBuscarMediosSolicitud: React.FC <ModalConfiguracionTipoMedioProps> = ({ openModal, setOpenModal }:ModalConfiguracionTipoMedioProps) => {
+export const MostrarModalBuscarMediosSolicitud: React.FC<ModalConfiguracionTipoMedioProps> = ({ openModal, setOpenModal }: ModalConfiguracionTipoMedioProps) => {
     const { set_datos_editar } = useContext(ModalBusquedaMediosSolicitudContext);
 
     const [checked, setChecked] = useState(false);
@@ -89,107 +93,107 @@ export const MostrarModalBuscarMediosSolicitud: React.FC <ModalConfiguracionTipo
     };
 
     const columns = [
-      {
-        field: 'nombre',
-        headerName: 'Nombre',
-        flex: 1,
-      },
-      {
-        field: 'aplica_para_pqrsdf',
-        headerName: 'Aplica para PQRSDF',
-        flex: 1,
-        renderCell: (params: any) => (
-          <Chip label={params.row.aplica_para_pqrsdf ? 'Sí' : 'No'} color={params.row.aplica_para_pqrsdf ? 'success' : 'error'} />
-        ),
-      },
-      {
-        field: 'aplica_para_tramites',
-        headerName: 'Aplica para Trámites',
-        flex: 1,
-        renderCell: (params: any) => (
-          <Chip label={params.row.aplica_para_tramites ? 'Sí' : 'No'} color={params.row.aplica_para_tramites ? 'success' : 'error'} />
-        ),
-      },
-      {
-        field: 'aplica_para_otros',
-        headerName: 'Aplica para Otros',
-        flex: 1,
-        renderCell: (params: any) => (
-          <Chip label={params.row.aplica_para_otros ? 'Sí' : 'No'} color={params.row.aplica_para_otros ? 'success' : 'error'} />
-        ),
-      },
-      {
-        field: 'registro_precargado',
-        headerName: 'Registro Precargado',
-        flex: 1,
-        renderCell: (params: any) => (
-          <Chip label={params.row.registro_precargado ? 'Sí' : 'No'} color={params.row.registro_precargado ? 'success' : 'error'} />
-        ),
-      },
-      {
-        field: 'activo',
-        headerName: 'Activo',
-        flex: 1,
-        renderCell: (params: any) => (
-          <Chip label={params.row.activo ? 'Sí' : 'No'} color={params.row.activo ? 'success' : 'error'} />
-        ),
-      },
-      {
-        field: 'item_ya_usado',
-        headerName: 'Item Ya Usado',
-        flex: 1,
-        renderCell: (params: any) => (
-          <Chip label={params.row.item_ya_usado ? 'Sí' : 'No'} color={params.row.item_ya_usado ? 'success' : 'error'} />
-        ),
-      },
-      {
-        field: 'acciones',
-        headerName: 'Acciones',
-        flex: 1,
-        sortable: false,
-        renderCell: (params: any) => {
-          const idMedioSolicitud = params.row.id_medio_solicitud;
-          const valor_actualizar = params.row;
-    
-          const handleDeleteClick = () => {
-            fetch_delete_registro(idMedioSolicitud).then(() => {
-              fetch_get_tabla().then((data) => {
-                applyFilter(data);
-              });
-            });
-          };
-    
-          return (
-            <>
-              <IconButton
-                onClick={() => {
-                  void confirmarAccion(
-                    handleDeleteClick,
-                    '¿Estás seguro de eliminar este campo?'
-                  );
-                }}
-              >
-                <DeleteIcon style={{ color: "red" }} />
-              </IconButton>
-    
-              <IconButton
-                color="primary"
-                aria-label="Editar"
-                onClick={() => {
-                  void confirmarAccion(
-                    () => { set_datos_editar(valor_actualizar); setOpenModal(true)},
-                    '¿Estás seguro de editar este campo?'
-                  );
-                }}
-              >
-                <EditIcon />
-              </IconButton>
-            </>
-          );
+        {
+            field: 'nombre',
+            headerName: 'Nombre',
+            flex: 1,
         },
-      },
+        {
+            field: 'aplica_para_pqrsdf',
+            headerName: 'Aplica para PQRSDF',
+            flex: 1,
+            renderCell: (params: any) => (
+                <Chip label={params.row.aplica_para_pqrsdf ? 'Sí' : 'No'} color={params.row.aplica_para_pqrsdf ? 'success' : 'error'} />
+            ),
+        },
+        {
+            field: 'aplica_para_tramites',
+            headerName: 'Aplica para Trámites',
+            flex: 1,
+            renderCell: (params: any) => (
+                <Chip label={params.row.aplica_para_tramites ? 'Sí' : 'No'} color={params.row.aplica_para_tramites ? 'success' : 'error'} />
+            ),
+        },
+        {
+            field: 'aplica_para_otros',
+            headerName: 'Aplica para Otros',
+            flex: 1,
+            renderCell: (params: any) => (
+                <Chip label={params.row.aplica_para_otros ? 'Sí' : 'No'} color={params.row.aplica_para_otros ? 'success' : 'error'} />
+            ),
+        },
+        {
+            field: 'registro_precargado',
+            headerName: 'Registro Precargado',
+            flex: 1,
+            renderCell: (params: any) => (
+                <Chip label={params.row.registro_precargado ? 'Sí' : 'No'} color={params.row.registro_precargado ? 'success' : 'error'} />
+            ),
+        },
+        {
+            field: 'activo',
+            headerName: 'Activo',
+            flex: 1,
+            renderCell: (params: any) => (
+                <Chip label={params.row.activo ? 'Sí' : 'No'} color={params.row.activo ? 'success' : 'error'} />
+            ),
+        },
+        {
+            field: 'item_ya_usado',
+            headerName: 'Item Ya Usado',
+            flex: 1,
+            renderCell: (params: any) => (
+                <Chip label={params.row.item_ya_usado ? 'Sí' : 'No'} color={params.row.item_ya_usado ? 'success' : 'error'} />
+            ),
+        },
+        {
+            field: 'acciones',
+            headerName: 'Acciones',
+            flex: 1,
+            sortable: false,
+            renderCell: (params: any) => {
+                const idMedioSolicitud = params.row.id_medio_solicitud;
+                const valor_actualizar = params.row;
+
+                const handleDeleteClick = () => {
+                    fetch_delete_registro(idMedioSolicitud).then(() => {
+                        fetch_get_tabla().then((data) => {
+                            applyFilter(data);
+                        });
+                    });
+                };
+
+                return (
+                    <>
+                        <IconButton
+                            onClick={() => {
+                                void confirmarAccion(
+                                    handleDeleteClick,
+                                    '¿Estás seguro de eliminar este campo?'
+                                );
+                            }}
+                        >
+                            <DeleteIcon style={{ color: "red" }} />
+                        </IconButton>
+
+                        <IconButton
+                            color="primary"
+                            aria-label="Editar"
+                            onClick={() => {
+                                void confirmarAccion(
+                                    () => { set_datos_editar(valor_actualizar); setOpenModal(true) },
+                                    '¿Estás seguro de editar este campo?'
+                                );
+                            }}
+                        >
+                            <EditIcon />
+                        </IconButton>
+                    </>
+                );
+            },
+        },
     ];
-    
+
 
     const applyFilter = (data: any = data_tabla) => {
         const filteredItems = data.filter((item: any) => {
@@ -280,77 +284,70 @@ export const MostrarModalBuscarMediosSolicitud: React.FC <ModalConfiguracionTipo
 
 
                 <Grid item xs={12} sm={6} md={3} container alignItems="center" spacing={2} style={{ marginTop: 15 }}>
-    <Grid item>
-        <Checkbox
-            checked={checked}
-            onChange={(e) => setChecked(e.target.checked)}
-            color="primary"
-        />
-    </Grid>
-    <Grid item>
-        <label htmlFor="aplicaPQRSDF" className="ml-2">
-            Aplica para PQRSDF
-        </label>
-    </Grid>
-</Grid>
+                    <Grid item>
+                        <Checkbox
+                            checked={checked}
+                            onChange={(e) => setChecked(e.target.checked)}
+                            color="primary"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <label htmlFor="aplicaPQRSDF" className="ml-2">
+                            Aplica para PQRSDF
+                        </label>
+                    </Grid>
+                </Grid>
 
-<Grid item xs={12} sm={6} md={3} container alignItems="center" spacing={2} style={{ marginTop: 15 }}>
-    <Grid item>
-        <Checkbox
-            checked={checkedtramites}
-            onChange={(e) => set_checkedtramites(e.target.checked)}
-            color="primary"
-        />
-    </Grid>
-    <Grid item>
-        <label htmlFor="aplicaTramites" className="ml-2">
-            Aplica para Trámites
-        </label>
-    </Grid>
-</Grid>
+                <Grid item xs={12} sm={6} md={3} container alignItems="center" spacing={2} style={{ marginTop: 15 }}>
+                    <Grid item>
+                        <Checkbox
+                            checked={checkedtramites}
+                            onChange={(e) => set_checkedtramites(e.target.checked)}
+                            color="primary"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <label htmlFor="aplicaTramites" className="ml-2">
+                            Aplica para Trámites
+                        </label>
+                    </Grid>
+                </Grid>
 
-<Grid item xs={12} sm={6} md={3} container alignItems="center" spacing={2} style={{ marginTop: 15 }}>
-    <Grid item>
-        <Checkbox
-            checked={checkedOtros}
-            onChange={(e) => set_checkedOtros(e.target.checked)}
-            color="primary"
-        />
-    </Grid>
-    <Grid item>
-        <label htmlFor="aplicaOtros" className="ml-2">
-            Aplica para Otros
-        </label>
-    </Grid>
-</Grid>
+                <Grid item xs={12} sm={6} md={3} container alignItems="center" spacing={2} style={{ marginTop: 15 }}>
+                    <Grid item>
+                        <Checkbox
+                            checked={checkedOtros}
+                            onChange={(e) => set_checkedOtros(e.target.checked)}
+                            color="primary"
+                        />
+                    </Grid>
+                    <Grid item>
+                        <label htmlFor="aplicaOtros" className="ml-2">
+                            Aplica para Otros
+                        </label>
+                    </Grid>
+                </Grid>
 
-<Grid item xs={12} sm={6} md={3} container alignItems="center" spacing={2} style={{ marginTop: 15 }}>
-    <Grid item xs={12}>
-        <FormControl fullWidth size="small">
-            <InputLabel id="activo">Activo</InputLabel>
-            <Select
-                labelId="activo"
-                id="activo"
-                required
-                value={activo.toString()}
-                label="Activo"
-                onChange={(e) => {
-                    set_activo(e.target.value === "true");
-                }}
-            >
-                <MenuItem value={"true"}>Sí</MenuItem>
-                <MenuItem value={"false"}>No</MenuItem>
-            </Select>
-        </FormControl>
-    </Grid>
-</Grid>
-
-
-
-
-
-
-
+                <Grid item xs={12} sm={6} md={3} container alignItems="center" spacing={2} style={{ marginTop: 15 }}>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth size="small">
+                            <InputLabel id="activo">Activo</InputLabel>
+                            <Select
+                                labelId="activo"
+                                id="activo"
+                                required
+                                value={activo.toString()}
+                                label="Activo"
+                                onChange={(e) => {
+                                    set_activo(e.target.value === "true");
+                                }}
+                            >
+                                <MenuItem value={"true"}>Sí</MenuItem>
+                                <MenuItem value={"false"}>No</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                </Grid>
 
 
 
@@ -362,6 +359,11 @@ export const MostrarModalBuscarMediosSolicitud: React.FC <ModalConfiguracionTipo
 
 
                 <Grid container style={{ display: "flex", justifyContent: "flex-end" }} spacing={2}>
+                    <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+
+                        <ModalConfiguracionTipoMedio openModal={openModal} setOpenModal={setOpenModal} />
+                    </Grid>
+
                     <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
                         <Button
                             color='primary'
@@ -389,11 +391,25 @@ export const MostrarModalBuscarMediosSolicitud: React.FC <ModalConfiguracionTipo
                         </Button>
                     </Grid>
                 </Grid>
-
+                <Grid item xs={12} container
+                    direction="row"
+                    justifyContent="flex-end"
+                    alignItems="center" >
+                    <Grid item  >
+                        <ButtonGroup style={{ marginTop: 15, }}>
+                            {download_xls({ nurseries: filteredData, columns })}
+                            {download_pdf({
+                                nurseries: filteredData,
+                                columns,
+                                title: 'Solicitudes realizadas',
+                            })}
+                        </ButtonGroup>
+                    </Grid>
+                </Grid>
                 <Grid item xs={12}>
                     <Box
                         component="form"
-                        sx={{ mt: '20px' }}
+                        // sx={{ mt: '20px' }}
                         noValidate
                         autoComplete="off"
                     >
