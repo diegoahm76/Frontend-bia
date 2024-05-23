@@ -48,6 +48,7 @@ import { TablaObligacionesUsuarioConsulta } from '../facilidadPago/componentes/T
 import { Article, SearchOutlined } from '@mui/icons-material';
 import { DocumentoPagoPersuasivo } from '../components/GestionCartera/DocumentoPagoPersuasivo';
 import { ProcesoPagoCoactivo } from '../components/GestionCartera/ProcesoPagoCoactivo';
+import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
 
 const detalles_ciclos: string[] = [
   'diario',
@@ -992,6 +993,10 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+
+      {/* {position_tab !== '1'&& position_tab !== '2' && <SeccionEnvio_MSM_CORREO_F
+
+      />} */}
 
       <TabContext value={position_tab}>
         <TabPanel value="2" sx={{ p: '20px 0' }}>
