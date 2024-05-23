@@ -42,11 +42,13 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
+  setPersons: (data: InfoPersona[]) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BuscadorPersona2: React.FC<PropsBuscador> = ({
   onResult,
+  setPersons,
 }: PropsBuscador) => {
   const columns: GridColDef[] = [
     {
@@ -235,6 +237,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
   });
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoPersona[]>([]);
+  const [local_ids_persons, set_local_ids_persons] = useState<number[]>([]);
 
   const set_data_form = (data: InfoPersona): void => {
     set_form_search({
@@ -314,6 +317,18 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
       }
     }
   );
+
+  const handle_selection = (newSelection: any) => {
+    set_local_ids_persons(newSelection);
+  };
+
+
+
+  const send_persons = () => {
+    const persons = rows.filter((row) => local_ids_persons.includes(row.id_persona));
+    setPersons(persons);
+    handle_close();
+  }
 
   useEffect(() => {
     void get_selects_options();
@@ -474,31 +489,17 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
                   </Grid>
                   <Grid item xs={12}>
                     <Box sx={{ height: 400, width: '100%' }}>
-                      {tipo_documento === 'NT' ? (
-                        <>
-                          <DataGrid
-                            autoHeight
-                            density='compact'
-                            rows={rows ?? []}
-                            columns={columns_juridica ?? []}
-                            pageSize={8}
-                            rowsPerPageOptions={[8]}
-                            getRowId={(row) => row.id_persona}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <DataGrid
-                            autoHeight
-                            density='compact'
-                            rows={rows ?? []}
-                            columns={columns ?? []}
-                            pageSize={8}
-                            rowsPerPageOptions={[8]}
-                            getRowId={(row) => row.id_persona}
-                          />
-                        </>
-                      )}
+                      <DataGrid
+                        autoHeight
+                        checkboxSelection
+                        density='compact'
+                        rows={rows ?? []}
+                        columns={(tipo_documento === 'NT' ? columns_juridica : columns) ?? []}
+                        pageSize={8}
+                        rowsPerPageOptions={[8]}
+                        getRowId={(row) => row.id_persona}
+                        onSelectionModelChange={handle_selection}
+                      />
                     </Box>
                   </Grid>
                 </>
@@ -507,7 +508,8 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
           </form>
         </DialogContent>
         <DialogActions>
-          <Button color='error' variant="outlined" startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
+          <Button color='primary' variant="contained" disabled={local_ids_persons.length < 2} sx={{m: '1rem'}} startIcon={<AddIcon />} onClick={send_persons}>Agregar Personas</Button>
+          <Button color='error' variant="outlined" sx={{m: '1rem'}} startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
         </DialogActions>
       </Dialog>
     </>

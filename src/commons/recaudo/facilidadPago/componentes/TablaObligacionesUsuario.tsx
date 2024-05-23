@@ -15,7 +15,6 @@ import {
 import { DialogoInformativo } from './DialogoInformativo';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
-import { DocumentoEstadoCuenta } from './DocumentoEstadoCuenta';
 
 interface RootState {
   obligaciones: {
@@ -31,7 +30,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
   const [total, set_total] = useState(0);
   const [modal, set_modal] = useState(false);
   const [modal_opcion, set_modal_opcion] = useState(0);
-  const [show_estado_cuenta, set_show_estado_cuenta] = useState(false);
   const { obligaciones } = useSelector(
     (state: RootState) => state.obligaciones
   );
@@ -48,10 +46,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
   const handle_close = (): void => {
     set_modal(false);
   };
-
-  useEffect(() => {
-    console.log(obligaciones);
-  }, [obligaciones])
 
   const handle_submit = async (): Promise<void> => {
     const arr_registro = [];
@@ -92,10 +86,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
     }
     set_selected(new_selected);
   };
-
-  const generate_state = (): void => {
-    set_show_estado_cuenta(true);
-  }
 
   const total_cop = new Intl.NumberFormat('es-ES', {
     style: 'currency',
@@ -324,15 +314,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
                 >
                   Crear Facilidad de Pago
                 </Button>
-                <Button
-                  color="primary"
-                  variant="contained"
-                  startIcon={<Add />}
-                  sx={{ marginTop: '30px' }}
-                  onClick={generate_state}
-                >
-                  Generar Estado de Cuenta
-                </Button>
               </Stack>
             </Grid>
           </Grid>
@@ -346,10 +327,6 @@ export const TablaObligacionesUsuario: React.FC = () => {
             abrir_modal={modal}
             abrir_dialog={handle_close}
           />
-          {show_estado_cuenta && <DocumentoEstadoCuenta
-            dataClean={lista_obligaciones}
-            obligaciones={obligaciones}
-          />}
         </>
   );
 };
