@@ -368,6 +368,18 @@ export const FormParte3 = ({
             />
           </Grid>
           <Grid item xs={12} sm={4}>
+            <TextField
+              select
+              fullWidth
+              label="Documento a cargar"
+              size="small"
+              variant="outlined"
+              value={watchFormulario.fecha_de_solicitud}
+            >
+              <MenuItem value=""><em>Selecciona un documento</em></MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={4}>
             <Controller
               name="nombre_archivo"
               control={controlFormulario}
