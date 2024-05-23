@@ -22,6 +22,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 import FeedIcon from '@mui/icons-material/Feed';
 import CloseIcon from '@mui/icons-material/Close';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { AlertaDocumento } from './AlertaDocumento';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
@@ -53,6 +54,8 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const [personaSelected, setpersona] = useState<string[]>([]);
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
+  const urlBase = baseURL.replace("/api/", "");
+
 
   useEffect(() => {
     if (personaSelected.length > 0) {
@@ -60,6 +63,16 @@ export const GeneradorDocumentos: React.FC = () => {
       console.log(personaSelected);
     }
   }, [personaSelected])
+
+  const currentElement = useSelector((state: any) => state.BandejaTareasSlice.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas);
+
+  useEffect(() => {
+    if(currentElement && currentElement.documento){
+      removeFile()
+      setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
+    }
+    console.log(currentElement);
+  }, [currentElement])
 
   // const handleSubmitRadicado = async () => {
   //   try {
@@ -158,12 +171,10 @@ export const GeneradorDocumentos: React.FC = () => {
     try {
       const url = `/gestor/trd/consecutivo-tipologia-doc/`;
       const resp: any = await api.post(url, data);
-      console.log(resp);
       if(resp.data.data){
         removeFile()
-        const url = baseURL.replace("/api/", "");
-        if(updateBorrador) setCurrentBorrador(resp.data.data)
-        setFile(`${url}${resp.data.data.archivos_digitales.ruta_archivo}`)
+        if(updateBorrador || sendTemplate) setCurrentBorrador(resp.data.data)
+        setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
       }
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -172,12 +183,11 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const createAsignacionDocumento = async (body: any) => {
     try {
-      const url =
-        '/gestor/bandeja-tareas/asginacion/documentos/create/';
+      const url = '/gestor/bandeja-tareas/asginacion/documentos/create/';
       const res = await api.post(url, body);
-      control_success('Documento enviado correctamente');
+      return true;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      return false;
     }
   };
 
@@ -286,14 +296,37 @@ export const GeneradorDocumentos: React.FC = () => {
     setUpdateBorrador(true);
   }
 
-  const sendDocument = () => {
-    const body = {
-      id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
-      id_persona_asignada: personaSelected[0],
+  const sendDocument = async () => {
+    if(personaSelected.length){
+      let allSuccess = true;
+      for (const id_persona_asignada of personaSelected) {
+        const body = {
+          id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
+          id_persona_asignada,
+        }
+        const success = await createAsignacionDocumento(body);
+        if (!success) allSuccess = false;
+      }
+      if (allSuccess) {
+        if (personaSelected.length == 1) control_success('El documento se envió correctamente');
+        if (personaSelected.length > 1) control_success('Todos los documentos se enviaron correctamente');
+        cleanTemplate();
+      } else {
+        if (personaSelected.length == 1) control_error('Ocurrio un error al enviar el documento');
+        if (personaSelected.length > 1) control_error('Hubo un error al enviar algunos documentos');
+      }
     }
-    createAsignacionDocumento(body);
-    // setIsNewData(true);
-    // setSendTemplate(true);
+  }
+
+  const cleanTemplate = () => {
+    setFile('');
+    setSendTemplate(false);
+    setUpdateBorrador(false);
+    setHasConsecutivo(false);
+    setHasPersona(false);
+    setpersona([]);
+    setperfilselet([]);
+    setLideresUnidad([]);
   }
 
   return (
@@ -325,7 +358,7 @@ export const GeneradorDocumentos: React.FC = () => {
               onChange={handlePlantillaChange}
               helperText={"Elige una plantilla"}
             >
-              <MenuItem value="">Seleccione una opción</MenuItem>
+              <MenuItem value=""><em>Seleccione una opción</em></MenuItem>
               {plantillas.map((plantilla) => (
               <MenuItem key={plantilla.id_plantilla_doc} value={plantilla.id_plantilla_doc}>
                 {plantilla.nombre}
@@ -422,21 +455,6 @@ export const GeneradorDocumentos: React.FC = () => {
                   Generar Consecutivo
                 </Button>
               </Grid>
-              {/* <Grid item sx={{display: 'flex', alignItems: 'center', gap: '1rem'}}>
-                <Button
-                  component="label"
-                  variant="outlined"
-                  startIcon={<CloudUploadIcon />}
-                >
-                  Cargar Plantilla
-                  <input
-                    type="file"
-                    style={{ display: "none" }}
-                    onChange={handleFileUpload}
-                    accept=".doc, .docx"
-                  />
-                </Button>
-              </Grid> */}
               <Grid item>
                 <Button
                 startIcon={<VisibilityIcon />}
@@ -445,6 +463,22 @@ export const GeneradorDocumentos: React.FC = () => {
                 disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
                 >
                   Ver borrador
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  component="label"
+                  variant="outlined"
+                  startIcon={<CloudUploadIcon />}
+                  disabled={!plantillaSeleccionada}
+                >
+                  Cargar Plantilla
+                  <input
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={handleFileUpload}
+                    accept=".doc, .docx"
+                  />
                 </Button>
               </Grid>
               <Grid item>

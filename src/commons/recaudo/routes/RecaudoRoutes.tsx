@@ -24,6 +24,7 @@ import { Indicadores } from '../screens/Indicadores';
 import { TalentoHumano } from '../screens/TalentoHumano';
 import { IndicadoresRecaudo } from '../screens/IndicadoresRecaudo';
 import { SeguimientoExpendientes } from '../screens/SeguimientoExpedientesScreen';
+import { EstadoCuentaGeneralUsuario } from '../facilidadPago/screens/EstadoCuentaGeneralUsuario';
 
 
 
@@ -55,6 +56,8 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="Indicadores/*" element={<Indicadores/>} />
       <Route path="talento_humano/*" element={<TalentoHumano />} />
       <Route path="graficas_indicadores/*" element={<IndicadoresRecaudo/>} />
+      <Route path='estado_cuenta' element={<EstadoCuentaGeneralUsuario />} />
+
 
 
 

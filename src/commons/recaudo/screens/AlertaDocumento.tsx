@@ -24,6 +24,7 @@ import { BuscadorPersona } from '../../../components/BuscadorPersona';
 import { control_success, control_error } from '../../../helpers';
 import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import { BuscadorPersona2 } from '../../../components/BuscadorPersona2';
+import { control_warning } from '../../almacen/configuracion/store/thunks/BodegaThunks';
 
 
 export interface Persona {
@@ -121,7 +122,7 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaSelected, setpersona,
 
     useEffect(() => {
         if(persona?.id_persona){
-            handlpersona();
+            handleSinglePerson();
         }
     }, [persona])
 
@@ -229,13 +230,18 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaSelected, setpersona,
     ];
 
 
-
+    const [persons, setPersons] = useState<Persona[]>([]);
     const [personaSelecteda, setpersonaa] = useState<
     { id_persona: string, primer_nombre: string, primer_apellido: string, numero_documento: string, razon_social: string, nombre_comercial: string  }[]
     >([]);
 
+    useEffect(() => {
+        if (persons.length) {
+            handlePersons();
+        }
+    }, [persons])
 
-    const handlpersona = () => {
+    const handleSinglePerson = () => {
         // Verifica si 'persona' está definido y tiene un 'id_persona' no nulo/no indefinido
         if (persona && persona.id_persona) {
             // Verifica si la persona ya está en la lista basado en 'id_persona'
@@ -251,12 +257,37 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaSelected, setpersona,
                     razon_social: persona.razon_social || '',
                     nombre_comercial: persona.nombre_comercial || ''
                 }]);
-
+            } else{
+                control_warning("La persona ya fue agregada");
             }
         } else {
             control_error("No hay ninguna persona seleccionada para agregar.");
         }
     };
+
+    const handlePersons = () => {
+        if (persons.length) {
+          const newPersons = persons.filter((persona) => {
+            return persona && persona.id_persona && !personaSelecteda.some(p => p.id_persona === persona.id_persona);
+          });
+
+          if (newPersons.length) {
+            setpersona((prevLideres: any) => [...prevLideres, ...newPersons.map(persona => persona.id_persona)]);
+            setpersonaa(prevLideres => [...prevLideres, ...newPersons.map(persona => ({
+              id_persona: persona.id_persona,
+              primer_nombre: persona.primer_nombre,
+              primer_apellido: persona.primer_apellido,
+              numero_documento: persona.numero_documento,
+              razon_social: persona.razon_social || '',
+              nombre_comercial: persona.nombre_comercial || ''
+            }))]);
+          } else {
+            control_error("No hay ninguna persona nueva para agregar.");
+          }
+        } else {
+          control_error("No hay ninguna persona seleccionada para agregar.");
+        }
+      };
 
     const handleDelete = (idPersona: any) => {
         // Elimina el id_persona de personaSelected
@@ -411,6 +442,7 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaSelected, setpersona,
                                 onResult={(data) => {
                                     void on_result(data);
                                 }}
+                                setPersons={setPersons}
                             />
                         </Grid>
                         {/* <Grid item xs={12} sm={3}>
@@ -431,7 +463,7 @@ export const AlertaDocumento: React.FC<IProps> = ({ personaSelected, setpersona,
                         {/* <Grid item >
                             <Button color='success'
                                 variant='contained'
-                                startIcon={<SaveIcon />} onClick={handlpersona}>
+                                startIcon={<SaveIcon />} onClick={handleSinglePerson}>
                                 guardar
                             </Button>
 
