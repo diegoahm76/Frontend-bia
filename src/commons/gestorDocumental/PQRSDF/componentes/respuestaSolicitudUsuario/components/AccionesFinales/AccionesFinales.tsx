@@ -93,10 +93,10 @@ export const AccionesFinales = ({
             asunto: anexo.asunto,
             descripcion: anexo.descripcionMetadatos,
             cod_categoria_archivo:
-              anexo.categoriaArchivoMetadatos?.value || null,
+              anexo.categoriaArchivoMetadatos?.value.toUpperCase() || null,
             tiene_replica_fisica:
               anexo.tieneReplicaFisicaMetadatos?.value === 'Si',
-            cod_origen_archivo: anexo.origenArchivoMetadatos?.value || null,
+            cod_origen_archivo: anexo.origenArchivoMetadatos?.value|| null,
             id_tipologia_doc:
               +anexo.tipologiasDocumentalesMetadatos?.value || null,
             tipologia_no_creada_TRD: null,

@@ -389,8 +389,8 @@ export const DocumentosAnexos: React.FC<IProps> = (props: IProps) => {
               if (
                 descripcion === '' ||
                 file_name === '' ||
-                !form.tipologiaRelacionada ||
-                !form.CodCategoriaArchivo ||
+                // !form.tipologiaRelacionada ||
+                // !form.CodCategoriaArchivo ||
                 !form.origenArchivo ||
                 !form.keywords
               ) {
