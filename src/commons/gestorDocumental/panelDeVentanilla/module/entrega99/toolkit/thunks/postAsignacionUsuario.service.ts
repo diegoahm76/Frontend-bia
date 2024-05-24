@@ -12,7 +12,7 @@ export const postAsignacionUsuario = async (
     setLoadingButton(true);
     const response = await api.post(url, formData);
 
-    if (response.data.success) {
+    if (response.data.succes) {
       Swal.fire({
         title: 'Solicitud enviada',
         icon: 'success',

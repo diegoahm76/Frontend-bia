@@ -4,11 +4,11 @@ import { control_warning } from '../../../../../almacen/configuracion/store/thun
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const getSubGrupoAsiGrupo = async (
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  //setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   idUnidadOrg: number
 ) => {
   try {
-    setLoading(true);
+    //setLoading(true);
     const url = `gestor/panel_ventanilla/subseccion-grupo/get/${idUnidadOrg}/`;
     const { data } = await api.get(url);
     if (data?.data?.length > 0) {
@@ -34,6 +34,6 @@ export const getSubGrupoAsiGrupo = async (
     control_error(error?.response?.data?.detail ?? 'Error desconocido');
     return [];
   } finally {
-    setLoading(false);
+    //setLoading(false);
   }
 };
