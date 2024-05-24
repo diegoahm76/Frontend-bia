@@ -329,6 +329,7 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
     handleSubmit: handle_submit_notificacion,
     reset: reset_notificacion,
     watch,
+    getValues: get_values,
   } = useForm<any>();
   const [action, set_action] = useState<string>('crear');
 
@@ -591,6 +592,20 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
       }
     }
   };
+  const [notificaciones, set_notificaciones] = useState<boolean>(false);
+
+  const on_change_select = (value: any, name: string): void => {
+    if (name === 'aplica_para') {
+      console.log(value);
+      if (value !== undefined) {
+        if (value.includes('notificaciones')) {
+          set_notificaciones(true);
+        } else {
+          set_notificaciones(false);
+        }
+      }
+    }
+  };
   const descartar = (): void => {
     dispatch(
       set_tipo_documento_notificacion({
@@ -647,6 +662,7 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
                 ],
                 option_label: 'label',
                 option_key: 'key',
+                on_change_function: on_change_select,
               },
               {
                 datum_type: 'select_controller',
@@ -667,6 +683,7 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
                 ],
                 option_label: 'label',
                 option_key: 'key',
+                hidden_text: !notificaciones,
               },
               {
                 datum_type: 'input_controller',

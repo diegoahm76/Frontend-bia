@@ -13,7 +13,7 @@ import { CausasNotificacionScreen } from '../screens/parametrizacion/CausasNotif
 import { TiposSoporteScreen } from '../screens/parametrizacion/TiposSoporteScreen';
 import { GacetaAmbientalScreen } from '../screens/GacetaAmbientalScreen';
 import { PublicarEdictosScreen } from '../screens/PublicarEdictosScreen';
-import { GeneradorDocumentosScreen } from '../screens/generadorDocumentos/GeneradorDocumentosScreen';
+import { GeneradorDocumentos } from '../screens/GeneradorDocumentos';
 import { TiposDocumentoNotificacionScreen } from '../screens/parametrizacion/TiposDocumentoNotificacionScreen';
 import { PanelAsignacionTareaFuncioanrioScreen } from '../screens/PanelAsignacionTareaFuncionarioScreen';
 import { CorrespondenciaFisicaScreen } from '../screens/CorrespondenciaFisicaScreen';
@@ -97,7 +97,7 @@ export const NotificacionesRoutes: React.FC = () => {
       <Route path="publicar/edictos" element={<PublicarEdictosScreen />} />
       <Route
         path="generador_documentos/generar"
-        element={<GeneradorDocumentosScreen />}
+        element={<GeneradorDocumentos />}
       />
 
       {/* <Route path="solicitud_pqrsdf" element={<SolicitudPqrsdfScreen />} />
