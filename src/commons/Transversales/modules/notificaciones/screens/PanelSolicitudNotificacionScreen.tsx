@@ -589,6 +589,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
           <Grid container direction="row" padding={2} spacing={2}>
             <Grid item xs={12} md={3}>
               <FormButton
+                href={`/#/app/transversal/notificaciones/crear_notificacion/`}
                 disabled={false}
                 variant_button="outlined"
                 on_click_function={null}

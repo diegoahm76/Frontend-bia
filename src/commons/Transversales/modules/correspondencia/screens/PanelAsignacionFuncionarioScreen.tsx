@@ -913,7 +913,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
         <Grid item xs={12} marginY={2}>
           <Title title="Solicitudes correspondencia asignadas funcionario"></Title>
           <Grid container direction="row" padding={2} spacing={2}>
-            <Grid item xs={12} md={6}>
+            {/* <Grid item xs={12} md={6}>
               <FormButton
                 disabled={
                   notification_request?.id_notificacion_correspondencia === null
@@ -925,7 +925,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 type_button="button"
                 color_button="warning"
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={6}>
               <FormButton
                 disabled={

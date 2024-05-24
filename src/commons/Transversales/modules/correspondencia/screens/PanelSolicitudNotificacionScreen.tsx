@@ -586,8 +586,9 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
         <Grid item xs={12} marginY={2}>
           <Title title="Listado de solicitudes de correspondencia"></Title>
           <Grid container direction="row" padding={2} spacing={2}>
-            {/* <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={3}>
               <FormButton
+                href={`/#/app/transversal/correspondencia/crear_solicitud_despacho/`}
                 disabled={false}
                 variant_button="outlined"
                 on_click_function={null}
@@ -596,7 +597,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 type_button="button"
                 color_button="primary"
               />
-            </Grid> */}
+            </Grid>
 
             <Grid item xs={12} md={2}>
               <FormButton

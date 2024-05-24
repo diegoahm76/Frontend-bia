@@ -27,10 +27,10 @@ export const NotificacionesRoutes: React.FC = () => {
         path="panel_solicitudes_correspondencia"
         element={<PanelSolicitudNotificacionScreen />}
       />
-      <Route
+      {/* <Route
         path="ver_solicitud_correspondencia"
         element={<VerSolicitudNotificacionScreen />}
-      />
+      /> */}
       <Route
         path="rechazar_solicitud_correspondencia"
         element={<RechazoSolicitudNotificacionScreen />}
@@ -54,7 +54,10 @@ export const NotificacionesRoutes: React.FC = () => {
         path="gestionar_tarea_solicitud_correspondencia"
         element={<GacetaAmbientalScreen />}
       />
-
+      <Route
+        path="crear_solicitud_despacho"
+        element={<CrearSolicitudNotificacionScreen />}
+      />
       {/* <Route path="solicitud_pqrsdf" element={<SolicitudPqrsdfScreen />} />
       <Route path="crear_pqrsdf/:id?" element={<CrearPqrsdfScreen />} />
       <Route path="imprimir_radicado" element={<ImpresionRadicadoScreen />} /> */}

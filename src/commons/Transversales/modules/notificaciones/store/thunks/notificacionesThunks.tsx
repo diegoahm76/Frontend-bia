@@ -2059,33 +2059,32 @@ export const get_persons_service = (
 // };
 
 // // crear pqrsdf
-// export const add_pqrsdf_service = (
-//   pqrsdf: any,
-//   navigate: NavigateFunction,
-//   navigate_flag?: boolean
-// ): any => {
-//   return async (dispatch: Dispatch<any>) => {
-//     try {
-//       console.log(pqrsdf);
-//       const { data } = await api.post(`gestor/pqr/crear-pqrsdf/`, pqrsdf);
-//       console.log(data);
+export const add_pqrsdf_service = (pqrsdf: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(pqrsdf);
+      const { data } = await api.post(
+        `gestor/notificaciones/create-notificacion-manual/`,
+        pqrsdf
+      );
+      console.log(data);
 
-//       control_success(data.detail);
-//       if (navigate_flag ?? true) {
-//         navigate(
-//           `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
-//         );
-//       }
+      control_success(data.detail);
+      // if (navigate_flag ?? true) {
+      //   navigate(
+      //     `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      //   );
+      // }
 
-//       dispatch(set_pqr(data.data));
-//       return data;
-//     } catch (error: any) {
-//       console.log('add_pqrsdf_service');
-//       control_error(error.response.data.detail);
-//       return error as AxiosError;
-//     }
-//   };
-// };
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('add_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // // editar pqrsdf
 // export const edit_pqrsdf_service = (

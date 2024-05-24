@@ -933,19 +933,6 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
             <Grid item xs={12} md={6}>
               <FormButton
                 disabled={
-                  notification_request?.id_notificacion_correspondencia === null
-                }
-                variant_button="contained"
-                on_click_function={null}
-                icon_class={null}
-                label="Ver solicitud"
-                type_button="button"
-                color_button="warning"
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <FormButton
-                disabled={
                   (notification_request?.id_notificacion_correspondencia ===
                     null ||
                     notification_request?.id_persona_asignada !==

@@ -39,6 +39,7 @@ import {
   set_tramites,
 } from '../store/slice/notificacionesSlice';
 import {
+  add_pqrsdf_service,
   get_acto_administrativo_filter,
   get_document_types_service,
   get_expedientes_filter,
@@ -46,6 +47,7 @@ import {
   get_grupos_id_unidad_service,
   get_subdirecciones_service,
   get_tipos_acto_administrativo_service,
+  get_tipos_documento_notification,
   get_tramite_filter,
   get_trd_service,
   obtener_serie_subserie,
@@ -54,6 +56,8 @@ import {
 import dayjs from 'dayjs';
 import DialogSearchModel from '../componentes/DialogSearchModel';
 import { get_document_types_service as get_dni_types } from '../../../../gestorDocumental/PQRSDF/store/thunks/pqrsdfThunks';
+import { IObjExhibit } from '../../../../gestorDocumental/PQRSDF/interfaces/pqrsdf';
+import { IObjTypeDocument } from '../interfaces/notificaciones';
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
 // import ListadoPqrsdf from '../componentes/SolicitudPQRSDF/ListadoPqrsdf';
@@ -90,8 +94,9 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     serie_subserie,
     unidades_marcadas,
     tipos_acto_administrativo,
+    tipos_documento_notificacion,
   } = useAppSelector((state) => state.notificaciones_slice);
-
+  const { exhibits } = useAppSelector((state) => state.pqrsdf_slice);
   const [expediente_modal, set_expediente_modal] = useState<any>(false);
   const [tramite_modal, set_tramite_modal] = useState<any>(false);
   const [acto_modal, set_acto_modal] = useState<any>(false);
@@ -134,6 +139,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     void dispatch(get_dni_types());
     void dispatch(get_document_types_service());
     void dispatch(get_subdirecciones_service());
+    void dispatch(get_tipos_documento_notification());
   }, []);
   const columns_list: GridColDef[] = [
     {
@@ -439,6 +445,8 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     dispatch(
       set_notification_request({
         ...notification_request,
+        tramite: tramite?.nombre_proyecto,
+        id_solicitud_tramite: tramite?.id_solicitud_tramite,
       })
     );
   }, [tramite]);
@@ -447,6 +455,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     dispatch(
       set_notification_request({
         ...notification_request,
+        id_acto_administrativo: acto_administrativo?.id_acto_administrativo,
       })
     );
   }, [acto_administrativo]);
@@ -455,6 +464,10 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     dispatch(
       set_notification_request({
         ...notification_request,
+        persona_solicitante: person.nombre_completo,
+        id_und_org_oficina_solicita: person.id_unidad_organizacional_actual,
+        id_persona_solicita: person.id_persona,
+        oficina: group.label,
       })
     );
   }, [person]);
@@ -526,6 +539,62 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     void dispatch(get_funcionarios_unidad_service(grupo));
   };
 
+  const on_submit = (data: any): void => {
+    const form_data: any = new FormData();
+
+    // const fecha = new Date(data.fecha_registro ?? '').toISOString();
+    let folios: number = 0;
+    let ya_digitalizado: boolean = true;
+    const aux_items: any[] = [];
+    exhibits.forEach((elemento: IObjExhibit, index: number) => {
+      folios = folios + Number(elemento.numero_folios ?? 0);
+      aux_items.push({
+        ...elemento,
+        uso_del_documento: true,
+        cod_tipo_documento: data.tipo_documento,
+        cod_medio_almacenamiento: 'Na',
+        orden_anexo_doc: index,
+        ya_digitalizado:
+          elemento.metadatos === null
+            ? false
+            : elemento.metadatos.cod_origen_archivo === 'F'
+            ? false
+            : true,
+      });
+      ya_digitalizado =
+        elemento.metadatos === null
+          ? false
+          : elemento.metadatos.cod_origen_archivo === 'F'
+          ? false
+          : true;
+    });
+    const data_edit: any = {
+      ...data,
+      procede_recurso_reposicion: false,
+      es_anonima: false,
+      allega_copia_fisica: false,
+      cantidad_anexos: exhibits.length,
+      nro_folios_totales: folios,
+      requiere_digitalizacion: !ya_digitalizado,
+      datos_manual: true,
+      permite_notificaciones_email: true,
+      cod_municipio_notificacion_nal: null,
+      id_persona_notificada: null,
+      tipo_notificacion: 'NO',
+      anexos: aux_items,
+    };
+    console.log(data_edit);
+
+    form_data.append('data', JSON.stringify(data_edit));
+    exhibits.forEach((elemento) => {
+      form_data.append(
+        `archivo-create-${elemento.nombre_anexo}`,
+        elemento.exhibit_link
+      );
+    });
+    void dispatch(add_pqrsdf_service(form_data));
+  };
+
   return (
     <>
       <Grid
@@ -558,9 +627,11 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 label: 'Tipo de documento',
                 disabled: false,
                 helper_text: '',
-                select_options: list_document_types,
-                option_label: 'label',
-                option_key: 'key',
+                select_options: tipos_documento_notificacion?.filter(
+                  (tipo: IObjTypeDocument) => tipo.aplica_para_notificaciones
+                ),
+                option_label: 'nombre',
+                option_key: 'id_tipo_documento',
               },
               {
                 datum_type: 'input_searcheable',
@@ -569,7 +640,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 control_form: control_notificacion,
                 control_name: 'codigo_exp_und_serie_subserie',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Expediente',
                 disabled: true,
                 helper_text: '',
@@ -583,7 +654,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 control_form: control_notificacion,
                 control_name: 'tramite',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Solicitud de trámite',
                 disabled: true,
                 helper_text: '',
@@ -597,24 +668,12 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 control_form: control_notificacion,
                 control_name: 'acto',
                 default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                rules: { required_rule: { rule: false, message: 'Requerido' } },
                 label: 'Acto administrativo',
                 disabled: true,
                 helper_text: '',
                 on_click_function: open_acto_modal,
                 icon_class: null,
-              },
-              {
-                datum_type: 'checkbox_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'recurso_reposicion',
-                default_value: false,
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Procede recurso de reposición',
-                disabled: false,
-                helper_text: '',
               },
               {
                 datum_type: 'input_controller',
@@ -625,7 +684,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Oficina solicitante',
-                disabled: false,
+                disabled: true,
                 helper_text: '',
               },
               {
@@ -675,12 +734,13 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 xs: 12,
                 md: 4,
                 control_form: control_notificacion,
-                control_name: 'numero_documento',
+                control_name: 'nro_documentoID',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Número de identificación',
                 disabled: false,
                 helper_text: '',
+                type: 'number',
               },
               {
                 datum_type: 'input_controller',
@@ -694,25 +754,25 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 disabled: false,
                 helper_text: '',
               },
-              {
-                datum_type: 'select_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_notificacion,
-                control_name: 'cod_municipio_notificacion_nal',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Municipio',
-                disabled: false,
-                helper_text: '',
-                select_options: [],
-                option_label: 'label',
-                option_key: 'key',
-              },
+              // {
+              //   datum_type: 'select_controller',
+              //   xs: 12,
+              //   md: 4,
+              //   control_form: control_notificacion,
+              //   control_name: 'cod_municipio_notificacion_nal',
+              //   default_value: '',
+              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
+              //   label: 'Municipio',
+              //   disabled: false,
+              //   helper_text: '',
+              //   select_options: [],
+              //   option_label: 'label',
+              //   option_key: 'key',
+              // },
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 8,
+                md: 12,
                 control_form: control_notificacion,
                 control_name: 'dir_notificacion_nal',
                 default_value: '',
@@ -732,6 +792,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 label: 'Teléfono fijo',
                 disabled: false,
                 helper_text: '',
+                type: 'number',
               },
               {
                 datum_type: 'input_controller',
@@ -744,6 +805,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 label: 'Celular',
                 disabled: false,
                 helper_text: '',
+                type: 'number',
               },
               {
                 datum_type: 'input_controller',
@@ -756,20 +818,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 label: 'Email',
                 disabled: false,
                 helper_text: '',
-              },
-
-              {
-                datum_type: 'checkbox_controller',
-                xs: 12,
-                md: 12,
-                control_form: control_notificacion,
-                control_name: 'permite_notificacion_email',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label:
-                  'El usuario autorizó el correo electrónico para notificaciones',
-                disabled: false,
-                helper_text: '',
+                type: 'email',
               },
             ]}
           />
@@ -785,7 +834,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 title_label: 'Datos básicos de la solicitud',
               },
               {
-                datum_type: 'select_controller',
+                datum_type: 'input_controller',
                 xs: 12,
                 md: 12,
                 control_form: control_notificacion,
@@ -795,9 +844,6 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 label: 'Asunto',
                 disabled: false,
                 helper_text: '',
-                select_options: [],
-                option_label: 'label',
-                option_key: 'key',
               },
               {
                 datum_type: 'input_controller',
@@ -813,70 +859,47 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
                 multiline_text: true,
                 rows_text: 4,
               },
-              {
-                datum_type: 'checkbox_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'allega_copia_fisica',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Allega copia física',
-                disabled: false,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'cantidad_anexos',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Cantidad de anexos',
-                disabled: false,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'nro_folios_totales',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Cantidad de folios',
-                disabled: false,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'funcionario_recibe',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Funcionario que recibe',
-                disabled: false,
-                helper_text: '',
-              },
-              {
-                datum_type: 'checkbox_controller',
-                xs: 12,
-                md: 3,
-                control_form: control_notificacion,
-                control_name: 'requiere_digitalizacion',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Requiere digitalización',
-                disabled: true,
-                helper_text: '',
-              },
+              // {
+              //   datum_type: 'checkbox_controller',
+              //   xs: 12,
+              //   md: 3,
+              //   control_form: control_notificacion,
+              //   control_name: 'allega_copia_fisica',
+              //   default_value: '',
+              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
+              //   label: 'Allega copia física',
+              //   disabled: false,
+              //   helper_text: '',
+              // },
+
+              // {
+              //   datum_type: 'input_controller',
+              //   xs: 12,
+              //   md: 3,
+              //   control_form: control_notificacion,
+              //   control_name: 'funcionario_recibe',
+              //   default_value: '',
+              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
+              //   label: 'Funcionario que recibe',
+              //   disabled: false,
+              //   helper_text: '',
+              // },
+              // {
+              //   datum_type: 'checkbox_controller',
+              //   xs: 12,
+              //   md: 3,
+              //   control_form: control_notificacion,
+              //   control_name: 'requiere_digitalizacion',
+              //   default_value: '',
+              //   rules: { required_rule: { rule: true, message: 'Requerido' } },
+              //   label: 'Requiere digitalización',
+              //   disabled: true,
+              //   helper_text: '',
+              // },
             ]}
           />
         </Grid>
-        <StepTwo />
+        <StepTwo flag_metadata={true} />
         <DialogSearchModel
           set_current_model={set_expediente}
           modal_select_model_title="Buscar expediente"
@@ -1133,7 +1156,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
           set_select_model_is_active={set_persona_modal}
         />
         <Grid container direction="row" padding={2} spacing={2}>
-          <Grid item xs={12} md={3}>
+          {/* <Grid item xs={12} md={3}>
             <FormButton
               variant_button="contained"
               on_click_function={null}
@@ -1143,12 +1166,12 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
               type_button="button"
               color_button="error"
             />
-          </Grid>
+          </Grid> */}
           <>
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="outlined"
-                on_click_function={null}
+                on_click_function={handle_submit_notificacion(on_submit)}
                 icon_class={<StarOutlineIcon />}
                 label={'Agregar solicitud de notificación'}
                 type_button="button"

@@ -95,6 +95,32 @@ const map_list = (
 
   return list_aux;
 };
+export const add_pqrsdf_service = (pqrsdf: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(pqrsdf);
+      const { data } = await api.post(
+        `gestor/notificaciones/create-notificacion-manual/`,
+        pqrsdf
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      // if (navigate_flag ?? true) {
+      //   navigate(
+      //     `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      //   );
+      // }
+
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('add_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // obtener radicados filtro pqrsdf
 export const get_solicitudes_notificacion = (params: any): any => {
