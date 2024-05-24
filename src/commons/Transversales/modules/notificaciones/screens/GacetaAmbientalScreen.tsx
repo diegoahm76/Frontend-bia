@@ -18,12 +18,19 @@ import { type ColumnProps } from 'primereact/column';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import React from 'react';
 import PrimaryForm from '../../../../../components/partials/form/PrimaryForm';
-import ListadoAnexos from '../../../../gestorDocumental/CentralDigitalizacion/componentes/CentralDigitalizacion/ListadoAnexos';
+import ListadoAnexos from '../componentes/ListadoAnexos';
 import FormButton from '../../../../../components/partials/form/FormButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckIcon from '@mui/icons-material/Check';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 import CloseIcon from '@mui/icons-material/Close';
+import {
+  control_success,
+  get_solicitud_notificacion_id_service,
+  publicar_gaceta_service,
+} from '../store/thunks/notificacionesThunks';
+import StepTwo from '../componentes/StepTwo';
+import { IObjSoporte } from '../interfaces/notificaciones';
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
 // import ListadoPqrsdf from '../componentes/SolicitudPQRSDF/ListadoPqrsdf';
@@ -39,12 +46,25 @@ import CloseIcon from '@mui/icons-material/Close';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function GacetaAmbientalScreen(): JSX.Element {
   const dispatch = useAppDispatch();
-
+  const {
+    notification_requests,
+    list_document_types,
+    list_status,
+    list_groups,
+    notification_request,
+    tipos_notificacion,
+    person,
+    persons,
+    list_status_asignation,
+    notification_per_request,
+    soportes,
+  } = useAppSelector((state) => state.notificaciones_slice);
   const [selectedPqr, setSelectedPqr] = useState<any>(null);
   const [button_option, set_button_option] = useState('');
   const [expandedRows, setExpandedRows] = useState<
     DataTableExpandedRows | DataTableValueArray | undefined
   >(undefined);
+
   const [detail_is_active, set_detail_is_active] = useState<boolean>(false);
   const {
     control: control_notificacion,
@@ -52,32 +72,50 @@ export function GacetaAmbientalScreen(): JSX.Element {
     reset: reset_notificacion,
     watch,
   } = useForm<any>();
-  const [file_name, set_file_name] = useState<string>('');
-  const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
-  const [file, set_file] = useState<any>(null);
+  // const [file_name, set_file_name] = useState<string>('');
+  // const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
+  // const [file, set_file] = useState<any>(null);
   useEffect(() => {}, []);
   useEffect(() => {
-    if (file !== null) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        set_selected_image_aux(reader.result);
-      };
-      reader.readAsDataURL(file);
-
-      if ('name' in file) {
-        //  console.log('')(file.name)
-        set_file_name(file.name);
-        // dispatch(set_current_cv_others({
-        //     ...current_cv_other,
-        //     id_marca: get_values("id_marca"),
-        //     especificaciones_tecnicas: get_values("especificaciones_tecnicas"),
-        //     caracteristicas_fisicas: get_values("caracteristicas_fisicas"),
-        //     observaciones_adicionales: get_values("observaciones_adicionales"),
-        //     ruta_imagen_foto: file
-        // }))
+    reset_notificacion(notification_request);
+  }, [notification_request]);
+  const guardar_soportes = (): void => {
+    const aux_items: IObjSoporte[] = [];
+    soportes.forEach((elemento: IObjSoporte, index: number) => {
+      if (elemento.id_anexo === null || elemento.id_anexo === undefined) {
+        aux_items.push({
+          ...elemento,
+          orden_anexo_doc: index,
+          ya_digitalizado: false,
+          cod_medio_almacenamiento: 'Ot',
+          uso_del_documento: true,
+          cod_tipo_documento: notification_request?.cod_tipo_documento,
+          id_tipo_anexo_soporte: elemento.id_tipo_anexo,
+          numero_folios: Number(elemento.numero_folios),
+          link_publicacion: null,
+        });
       }
-    }
-  }, [file]);
+    });
+    console.log(aux_items);
+    const form_data: any = new FormData();
+    form_data.append('data', JSON.stringify({ anexos: aux_items }));
+    soportes.forEach((elemento: IObjSoporte) => {
+      if (elemento.id_anexo === null || elemento.id_anexo === undefined) {
+        form_data.append(
+          `archivo-create-${elemento.nombre_anexo}`,
+          elemento.ruta_archivo
+        );
+      }
+    });
+    void dispatch(
+      publicar_gaceta_service(
+        form_data,
+        notification_per_request?.id_registro_notificacion_correspondencia
+      )
+    );
+
+    // control_success('Soportes guardados con exito');
+  };
   return (
     <>
       <Grid
@@ -100,35 +138,26 @@ export function GacetaAmbientalScreen(): JSX.Element {
             show_button={false}
             form_inputs={[
               {
-                datum_type: 'input_controller',
+                datum_type: 'select_controller',
                 xs: 12,
-                md: 4,
+                md: 3,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'cod_tipo_documento',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Tipo de documento',
                 disabled: true,
                 helper_text: '',
+                select_options: list_document_types,
+                option_label: 'label',
+                option_key: 'key',
               },
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 4,
+                md: 3,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
-                default_value: '',
-                rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Acto administrativo',
-                disabled: true,
-                helper_text: '',
-              },
-              {
-                datum_type: 'input_controller',
-                xs: 12,
-                md: 4,
-                control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'expediente',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Expediente',
@@ -138,9 +167,33 @@ export function GacetaAmbientalScreen(): JSX.Element {
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 4,
+                md: 3,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'tramite',
+                default_value: '',
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Solicitud de trámite',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 3,
+                control_form: control_notificacion,
+                control_name: 'acto_administrativo',
+                default_value: '',
+                rules: { required_rule: { rule: true, message: 'Requerido' } },
+                label: 'Acto administrativo',
+                disabled: true,
+                helper_text: '',
+              },
+              {
+                datum_type: 'input_controller',
+                xs: 12,
+                md: 3,
+                control_form: control_notificacion,
+                control_name: 'oficina_solicitante',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'oficina solicitante',
@@ -150,24 +203,24 @@ export function GacetaAmbientalScreen(): JSX.Element {
               {
                 datum_type: 'input_controller',
                 xs: 12,
-                md: 4,
+                md: 3,
                 control_form: control_notificacion,
-                control_name: 'type_applicant',
+                control_name: 'persona_solicitante',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Funcionario solicitante',
+                label: 'Persona solicitante',
                 disabled: true,
                 helper_text: '',
               },
               {
                 datum_type: 'date_picker_controller',
                 xs: 12,
-                md: 2,
+                md: 3,
                 control_form: control_notificacion,
-                control_name: 'fecha_actual',
+                control_name: 'fecha_solicitud',
                 default_value: new Date(),
                 rules: {},
-                label: 'Fecha solicitud',
+                label: 'Fecha de solicitud',
                 disabled: true,
                 helper_text: '',
                 format: 'YYYY-MM-DD',
@@ -175,12 +228,12 @@ export function GacetaAmbientalScreen(): JSX.Element {
               {
                 datum_type: 'date_picker_controller',
                 xs: 12,
-                md: 2,
+                md: 3,
                 control_form: control_notificacion,
-                control_name: 'fecha_actual',
+                control_name: 'fecha_asignacion',
                 default_value: new Date(),
                 rules: {},
-                label: 'Fecha asignación',
+                label: 'Fecha de asignacion',
                 disabled: true,
                 helper_text: '',
                 format: 'YYYY-MM-DD',
@@ -188,7 +241,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
             ]}
           />
           <ListadoAnexos />
-
+          {/* 
           <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
@@ -210,9 +263,9 @@ export function GacetaAmbientalScreen(): JSX.Element {
                 rows_text: 4,
               },
             ]}
-          />
+          /> */}
 
-          <PrimaryForm
+          {/* <PrimaryForm
             on_submit_form={null}
             button_submit_label=""
             button_submit_icon_class={null}
@@ -228,11 +281,11 @@ export function GacetaAmbientalScreen(): JSX.Element {
                 xs: 12,
                 md: 9,
                 control_form: control_notificacion,
-                control_name: 'type_applicant_0',
+                control_name: 'link',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Link de publicacion en página',
-                disabled: true,
+                disabled: false,
                 helper_text: '',
               },
               {
@@ -285,7 +338,8 @@ export function GacetaAmbientalScreen(): JSX.Element {
                 height_image: 'auto',
               },
             ]}
-          />
+          /> */}
+          <StepTwo />
         </Grid>
         <Grid container direction="row" padding={2} spacing={2}>
           <Grid item xs={12} md={3}>
@@ -300,7 +354,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
             />
           </Grid>
           <>
-            <Grid item xs={12} md={3}>
+            {/* <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="outlined"
                 on_click_function={null}
@@ -309,11 +363,11 @@ export function GacetaAmbientalScreen(): JSX.Element {
                 type_button="button"
                 color_button="primary"
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="contained"
-                on_click_function={null}
+                on_click_function={guardar_soportes}
                 icon_class={<CheckIcon />}
                 label={'Guardar'}
                 type_button="button"

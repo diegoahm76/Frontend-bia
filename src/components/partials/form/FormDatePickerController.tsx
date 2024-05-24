@@ -36,6 +36,7 @@ interface IProps {
   max_date?: string | null;
   format?: string | null;
   marginTop?: number;
+  open_to?: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -52,6 +53,8 @@ const FormDatePickerController = ({
   hidden_text,
   min_date,
   max_date,
+  open_to,
+  format,
 }: IProps) => {
   return (
     <>
@@ -72,9 +75,17 @@ const FormDatePickerController = ({
                   <DatePicker
                     disabled={disabled}
                     label={label}
-                    value={(value === null || value == undefined)?null:value === ''?null: value}
+                    openTo={open_to ?? 'day'}
+                    views={open_to ?? null !== null ? [open_to] : ['day']}
+                    value={
+                      value === null || value == undefined
+                        ? null
+                        : value === ''
+                        ? null
+                        : value
+                    }
                     onChange={onChange}
-                    inputFormat={'YYYY-MM-DD'}
+                    inputFormat={format ?? 'YYYY-MM-DD'}
                     minDate={min_date ?? null}
                     maxDate={max_date ?? null}
                     renderInput={(
@@ -91,13 +102,13 @@ const FormDatePickerController = ({
                     )}
                   />
                 </LocalizationProvider>
-                <FormHelperText error={!(error??null === null)}>
+                <FormHelperText error={!(error ?? null === null)}>
                   {error !== null && error !== undefined
                     ? error.type === 'required'
                       ? rules.required_rule?.message
                       : error.type === 'min'
-                        ? rules.min_rule?.message
-                        : rules.max_rule?.message
+                      ? rules.min_rule?.message
+                      : rules.max_rule?.message
                     : helper_text}
                 </FormHelperText>
               </FormControl>

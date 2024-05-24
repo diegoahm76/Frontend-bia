@@ -14,6 +14,7 @@ import { PantallaPrincipalAlertas } from '../modules/Alertas/screens/pantallaPri
 import { ModalProviderLideres } from '../modules/corporativo/screens/LideresXUnidadOrg/context/ModalContextLideres';
 import { Sucursal } from '../../seguridad/components/SucursalEntidad/Sucursal';
 import { NotificacionesRoutes } from '../modules/notificaciones/routes/NotificacionesRoutes';
+import { NotificacionesRoutes as CorrespondenciaRoutes } from '../modules/correspondencia/routes/NotificacionesRoutes';
 
 const routes = [
   {
@@ -40,6 +41,7 @@ export const TransversalRoutes: React.FC = () => {
         <Route path="procesos/*" element={<ProcesosRoutes />} />
         <Route path="corporativo/*" element={<CorporativoRoutes />} />
         <Route path="notificaciones/*" element={<NotificacionesRoutes />} />
+        <Route path="correspondencia/*" element={<CorrespondenciaRoutes />} />
         <Route path="/*" element={<Page404 />} />
       </Routes>
     </ModalProviderLideres>

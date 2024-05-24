@@ -37,6 +37,22 @@ export const CatalogodeBienesScreen: React.FC = () => {
   const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
   const { nodo, code_bien, current_nodo } = useAppSelector((state) => state.bien);
   const is_solicitud_realizada_ref = useRef(false);
+
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (nodo?.length === 0) {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 15000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(false);
+    }
+  }, [nodo]);
   
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (node: INodo, Column: any) => {
@@ -160,7 +176,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           <Title title="Catálogo de bienes " />
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
             <Button
-              disabled={Object.keys(nodo).length === 0 ? true : false}
+              disabled={Object.keys(nodo).length !== 0 ? true : false}
               variant="outlined"
               startIcon={<AddIcon style={{ fontSize: '20px' }} />}
               onClick={() => {
@@ -179,7 +195,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           </Stack>
           <Grid item>
             <Box sx={{ width: '100%' }}>
-              <TreeTable value={nodo} filterMode="strict" loading={Object.keys(nodo).length === 0 ? true : false} loadingIcon={<CircularProgress />}>
+              <TreeTable value={nodo} filterMode="strict" loading={loading} loadingIcon={<CircularProgress />}>
                 <Column
                   expander
                   body={(row) =>

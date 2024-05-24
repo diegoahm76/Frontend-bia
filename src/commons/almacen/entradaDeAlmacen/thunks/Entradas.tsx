@@ -35,10 +35,16 @@ const control_success = (message: ToastContent) =>
   });
 
 // Crear entrada
-export const crear_entrada_bien: any = (form_data: crear_entrada) => {
+export const crear_entrada_bien: any = (dataCreate: crear_entrada, archivo: any) => {
   return async () => {
     try {
-      const { data } = await api.post('almacen/bienes/entradas/create/', form_data);
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const formData = new FormData();
+      formData.append('info_entrada', JSON.stringify(dataCreate.info_entrada));
+      formData.append('info_items_entrada', JSON.stringify(dataCreate.info_items_entrada))
+      formData.append('archivo_soporte', JSON.stringify(archivo))
+
+      const { data } = await api.post('almacen/bienes/entradas/create/', formData);
       control_success('La entrada se creo correctamente');
       return data;
     } catch (error: any) {

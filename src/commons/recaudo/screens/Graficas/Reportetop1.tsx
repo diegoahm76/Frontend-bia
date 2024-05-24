@@ -1,474 +1,190 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-
-import 'leaflet/dist/leaflet.css';
-import { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Title } from '../../../../components/Title';
-import { Grid, TextField, Button } from '@mui/material';
+import { Grid, TextField, Button, InputLabel, FormControl, Select, MenuItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
-import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { api } from '../../../../api/axios';
+import ClearIcon from '@mui/icons-material/Clear';
 
-const GraficaApex = () => {
 
 
-    
-    interface top_5_por_codigo_contable {
-        "MULTAS COACTIVO DIFICIL RECAUDO": number,
-        "TASA RETRIBUTIVA COACTIVO DIFICIL RECAUDO": number,
-        "VISITAS TECNICAS DE EVALUACION, SEGUMIENTO Y CONTROL ANTERIOR": number,
-        "PORCENTAJE AMBIENTAL ACTUAL": number,
-        "TASA USO DE AGUA COACTIVO DIFICIL RECAUDO": number
+export const Reportetop1: React.FC = () => {
+    interface FormData {
+        fecha_facturacion_desde: string;
+        fecha_facturacion_hasta: string;
+        codigo_contable: string;
+        id_rango: string;
     }
-    
-    
-    
-    
+
+    interface TopData {
+        [key: string]: number;
+    }
+
+    const initialFormData: FormData = {
+        fecha_facturacion_desde: '',
+        fecha_facturacion_hasta: '',
+        codigo_contable: '',
+        id_rango: ''
+    };
+
+    const [formData, setFormData] = useState(initialFormData);
+    const [topData, setTopData] = useState<TopData>({});
+    const [loading, setLoading] = useState(false);
+    console.log("formData", formData)
 
 
-    
-    const [CarteraDeudaTop, set_CarteraDeudaTop] = useState<top_5_por_codigo_contable>({
-        "MULTAS COACTIVO DIFICIL RECAUDO": 0,
-        "TASA RETRIBUTIVA COACTIVO DIFICIL RECAUDO": 0,
-        "VISITAS TECNICAS DE EVALUACION, SEGUMIENTO Y CONTROL ANTERIOR": 0,
-        "PORCENTAJE AMBIENTAL ACTUAL": 0,
-        "TASA USO DE AGUA COACTIVO DIFICIL RECAUDO": 0
-    });
+    const fetchTopData = async (): Promise<void> => {
+        setLoading(true);
+        try {
+            const url = `/recaudo/reportes/reporte-general-cartera-deuda-top/`;
+            const res = await api.get(url, { params: formData });
+            setTopData(res.data.top_5_por_codigo_contable);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const [estado, setEstado] = useState({
-        series: [{
-            data: [
-                CarteraDeudaTop["MULTAS COACTIVO DIFICIL RECAUDO"],
-                CarteraDeudaTop["TASA RETRIBUTIVA COACTIVO DIFICIL RECAUDO"],
-                CarteraDeudaTop["VISITAS TECNICAS DE EVALUACION, SEGUMIENTO Y CONTROL ANTERIOR"],
-                CarteraDeudaTop["PORCENTAJE AMBIENTAL ACTUAL"],
-                CarteraDeudaTop["TASA USO DE AGUA COACTIVO DIFICIL RECAUDO"]
-            ]
-        }],
-        options: {
+
+    const [choiseConcepto, setChoiseConcepto] = useState([]);
+
+    const fetchChoiseConcepto = async (): Promise<void> => {
+        setLoading(true);
+        try {
+            const url = `/recaudo/reportes/reporte-concepto-contable/`;
+            const res = await api.get(url);
+            setChoiseConcepto(res.data.data);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
+    useEffect(() => {
+        fetchTopData();
+        fetchChoiseConcepto();
+    }, []);
+
+    return (
+        <Grid container item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}>
+            <Grid item xs={12} sm={12}>
+                <Title title="Reporte de Cartera Por Deuda y Edad – Top 1" />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+                <TextField
+                    fullWidth
+                    label="Fecha desde"
+                    type="date"
+                    size="small"
+                    name="fecha_facturacion_desde"
+                    variant="outlined"
+                    value={formData.fecha_facturacion_desde}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => setFormData({ ...formData, fecha_facturacion_desde: e.target.value })}
+                />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+                <TextField
+                    fullWidth
+                    label="Fecha hasta"
+                    type="date"
+                    size="small"
+                    name="fecha_facturacion_hasta"
+                    variant="outlined"
+                    value={formData.fecha_facturacion_hasta}
+                    InputLabelProps={{ shrink: true }}
+                    onChange={(e) => setFormData({ ...formData, fecha_facturacion_hasta: e.target.value })}
+                />
+            </Grid>
+            <Grid item xs={12} sm={3}>
+                <TextField
+                    label="Codigo Contable"
+                    name="codigo_contable"
+                    variant="outlined"
+                    size="small"
+                    fullWidth
+                    value={formData.codigo_contable}
+                    onChange={(e) => setFormData({ ...formData, codigo_contable: e.target.value })}
+
+                />
+            </Grid>
+
+            <Grid item xs={12} sm={3}>
+                <FormControl fullWidth>
+                    <InputLabel id="choise-label">Concepto</InputLabel>
+                    <Select
+                        id="demo-simple-select-2"
+                        size="small"
+                        name="codigo_contable"
+                        style={{ width: "95%" }}
+                        label="Profesional"
+                        value={formData.codigo_contable || ""}
+                        onChange={(e) => setFormData({ ...formData, codigo_contable: e.target.value })}
+                    >
+                        {choiseConcepto.map((item: any, index: number) => (
+                            <MenuItem key={index} value={item.id}>
+                                {item.descripcion}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </Grid>
+
+
+            <Grid item>
+                <Button
+                    color="primary"
+                    variant="contained"
+                    startIcon={<SearchIcon />}
+                    onClick={fetchTopData}
+                    disabled={loading}
+                >
+                    Buscar
+                </Button>
+            </Grid>
+
+            <Grid item>
+
+                <Button
+                    color="primary"
+                    variant="outlined"
+                    startIcon={<ClearIcon />}
+                    onClick={() => setFormData(initialFormData)}
+                    disabled={loading}
+                >
+                    Limpiar
+                </Button>
+            </Grid>
+
+            <Grid item xs={12} sm={12}>
+                <ReactApexChart
+                    options={{
                         chart: {
-                            // Especifica explícitamente el tipo de gráfico como un valor literal correspondiente
-                            type: 'bar' as const, // La adición de `as const` asegura que el tipo sea tratado como un literal
-                            height: 350
+                            type: 'bar',
+                            height: 450,
                         },
                         plotOptions: {
                             bar: {
                                 borderRadius: 4,
                                 horizontal: true,
-                            }
+                            },
                         },
-                        dataLabels: {
-                            enabled: false
-                        },
+                        dataLabels: { enabled: false },
                         xaxis: {
-            
-                            categories: [
-                                ['Visitas tecnicas de', 'evaluacions eguimiento', ' y control actual'],
-                                ['Tasa uso de agua  ', ' coactivo dificil recaudado'],
-                                ['Porcentaje ', 'ambiental actual'],
-                                ['Tasa retributiva coactivo ', 'difucil recaudo'],
-            
-            
-                                ['Multas coactivo ', 'difucil recaudo']
-            
-                            ],
-                        }
-        }
-    });
-
-    const carteraDeudaTop = async (): Promise<void> => {
-        try {
-            const url = `/recaudo/reportes/reporte-general-cartera-deuda-top/`;
-            const res = await api.get(url);
-            const data_consulta = res.data.top_5_por_codigo_contable;
-            set_CarteraDeudaTop(data_consulta);
-
-            // Actualizamos el estado de la gráfica con los nuevos valores
-            setEstado({
-                series: [{
-                    data: [
-                        data_consulta["MULTAS COACTIVO DIFICIL RECAUDO"],
-                        data_consulta["TASA RETRIBUTIVA COACTIVO DIFICIL RECAUDO"],
-                        data_consulta["VISITAS TECNICAS DE EVALUACION, SEGUMIENTO Y CONTROL ANTERIOR"],
-                        data_consulta["PORCENTAJE AMBIENTAL ACTUAL"],
-                        data_consulta["TASA USO DE AGUA COACTIVO DIFICIL RECAUDO"]
-                    ]
-                }],
-                options: estado.options // Mantenemos las opciones del estado anterior
-            });
-
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    useEffect(() => {
-        carteraDeudaTop();
-    }, []);
-
-    return (
-        <div>
-            <div id="chart">
-                <ReactApexChart options={estado.options} series={estado.series} type="bar" height={450} />
-            </div>
-        </div>
-    );
-};
-
-
-
-export interface FormData {
-
-    edad: any,
-    fecha_hasta: any;
-    fecha_desde: any;
-    deuda: any;
-    top: any;
-};
-export const Reportetop1: React.FC = () => {
-    const initialFormData: FormData = {
-
-        fecha_desde: '',
-        fecha_hasta: '',
-        edad: '',
-        deuda: '',
-        top: "",
-    };
-    const [formData, setFormData] = useState(initialFormData);
-
-
-    const handleInputChange = (event: any) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
-
-
-    return (
-        <>
-            <Grid container
-                item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
-                sx={{
-                    position: 'relative',
-                    borderRadius: '15px',
-                    background: '#FAFAFA',
-                    boxShadow: '0px 3px 6px #042F4A26',
-                    p: '20px', m: '10px 0 20px 0', mb: '20px',
-                }}
-            >
-                <Grid item xs={12} sm={12}>
-                    <Title title="Reporte de Cartera Por Deuda y Edad –Top 1" />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        fullWidth
-                        label="Fecha desde  "
-                        type="date"
-                        size="small"
-                        name="fecha_desde"
-                        variant="outlined"
-                        value={formData.fecha_desde}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                            handleInputChange(e);
-                        }}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        fullWidth
-                        label=" Fecha hasta  "
-                        type="date"
-                        size="small"
-                        name="fecha_hasta"
-                        variant="outlined"
-                        value={formData.fecha_hasta}
-                        InputLabelProps={{ shrink: true }}
-                        onChange={(e) => {
-                            handleInputChange(e);
-                        }}
-                    />
-                </Grid>
-
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Concepto edad"
-                        name="edad"
-                        disabled
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onChange={handleInputChange}
-                        // value={formData.edad}
-                        value={'TODOS'}
-
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Concepto deuda"
-                        name="deuda"
-                        disabled
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        value={'TODOS'}
-
-                        onChange={handleInputChange}
-                    // value={formData.deuda}
-                    />
-                </Grid>
-                <Grid item xs={12} sm={3}>
-                    <TextField
-                        label="Concepto "
-                        name="top"
-                        disabled
-                        variant="outlined"
-                        size="small"
-                        fullWidth
-                        onChange={handleInputChange}
-                        // value={formData.deuda}
-                        value={'Top 5'}
-
-                    />
-                </Grid>
-                <Grid item>
-                    <Button
-                        color="primary"
-                        variant="contained"
-                        startIcon={<SearchIcon />}
-                        onClick={() => {
-
-                        }}
-                    >
-                        buscar
-                    </Button>
-                </Grid>
-                <Grid item xs={12} sm={12} sx={{
-                    background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
-                }}  >
-                    <GraficaApex />
-                </Grid>
-
-
+                            categories: Object.keys(topData).map((key) => [key]),
+                        },
+                    }}
+                    series={[{ data: Object.values(topData) }]}
+                    type="bar"
+                    height={450}
+                />
             </Grid>
-        </>
+        </Grid>
     );
 };
-
-
-
-
-
-
-
-// /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-// // eslint-disable-next-line @typescript-eslint/naming-convention
-// // eslint-disable-next-line @typescript-eslint/no-var-requires
-// /* eslint-disable @typescript-eslint/naming-convention */
-// /* eslint-disable no-unused-vars */
-// import 'leaflet/dist/leaflet.css';
-// import { useState } from 'react';
-// import { Title } from '../../../../components/Title';
-// import { Grid, TextField, Button } from '@mui/material';
-// import SearchIcon from '@mui/icons-material/Search';
-
-// import React from 'react';
-// import ReactApexChart from 'react-apexcharts';
-
-// const GraficaApex = () => {
-//     // Asegúrate de que los estados iniciales y las opciones cumplan con los tipos esperados
-//     const estado = React.useState({
-//         series: [{
-//             data: [200, 330, 348, 370,
-// 100,]
-//         }],
-//         options: {
-//             chart: {
-//                 // Especifica explícitamente el tipo de gráfico como un valor literal correspondiente
-//                 type: 'bar' as const, // La adición de `as const` asegura que el tipo sea tratado como un literal
-//                 height: 350
-//             },
-//             plotOptions: {
-//                 bar: {
-//                     borderRadius: 4,
-//                     horizontal: true,
-//                 }
-//             },
-//             dataLabels: {
-//                 enabled: false
-//             },
-//             xaxis: {
-
-//                 categories: [
-//                     ['Visitas tecnicas de', 'evaluacions eguimiento', ' y control actual'],
-//                     ['Tasa uso de agua  ', ' coactivo dificil recaudado'],
-//                     ['Porcentaje ', 'ambiental actual'],
-//                     ['Tasa retributiva coactivo ', 'difucil recaudo'],
-
-
-//                     ['Multas coactivo ', 'difucil recaudo']
-
-//                 ],
-//             }
-//         }
-//     })[0]; // Accede directamente al estado inicial desde el hook
-
-//     return (
-//         <div>
-//             <div id="chart">
-//                 <ReactApexChart options={estado.options} series={estado.series} type="bar" height={450} />
-//             </div>
-//         </div>
-//     );
-// };
-
-
-// export interface FormData {
-
-//     edad: any,
-//     fecha_hasta: any;
-//     fecha_desde: any;
-//     deuda: any;
-// top:any;
-// };
-// export const Reportetop1: React.FC = () => {
-//     const initialFormData: FormData = {
-
-//         fecha_desde: '',
-//         fecha_hasta: '',
-//         edad: '',
-//         deuda: '',
-//         top:"",
-//     };
-//     const [formData, setFormData] = useState(initialFormData);
-
-
-//     const handleInputChange = (event: any) => {
-//         const { name, value } = event.target;
-//         setFormData((prevData) => ({
-//             ...prevData,
-//             [name]: value,
-//         }));
-//     };
-
-
-//     return (
-//         <>
-//             <Grid container
-//                 item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}
-//                 sx={{
-//                     position: 'relative',
-//                     borderRadius: '15px',
-//                     background: '#FAFAFA',
-//                     boxShadow: '0px 3px 6px #042F4A26',
-//                     p: '20px', m: '10px 0 20px 0', mb: '20px',
-//                 }}
-//             >
-//                 <Grid item xs={12} sm={12}>
-//                     <Title title="Reporte de Cartera Por Deuda y Edad –Top 1" />
-//                 </Grid>
-//                 <Grid item xs={12} sm={3}>
-//                     <TextField
-//                         fullWidth
-//                         label="Fecha desde  "
-//                         type="date"
-//                         size="small"
-//                         name="fecha_desde"
-//                         variant="outlined"
-//                         value={formData.fecha_desde}
-//                         InputLabelProps={{ shrink: true }}
-//                         onChange={(e) => {
-//                             handleInputChange(e);
-//                         }}
-//                     />
-//                 </Grid>
-//                 <Grid item xs={12} sm={3}>
-//                     <TextField
-//                         fullWidth
-//                         label=" Fecha hasta  "
-//                         type="date"
-//                         size="small"
-//                         name="fecha_hasta"
-//                         variant="outlined"
-//                         value={formData.fecha_hasta}
-//                         InputLabelProps={{ shrink: true }}
-//                         onChange={(e) => {
-//                             handleInputChange(e);
-//                         }}
-//                     />
-//                 </Grid>
-
-//                 <Grid item xs={12} sm={3}>
-//                     <TextField
-//                         label="Concepto edad"
-//                         name="edad"
-//                         disabled
-//                         variant="outlined"
-//                         size="small"
-//                         fullWidth
-//                         onChange={handleInputChange}
-//                         // value={formData.edad}
-//                         value={'TODOS'}
-
-//                     />
-//                 </Grid>
-//                 <Grid item xs={12} sm={3}>
-//                     <TextField
-//                         label="Concepto deuda"
-//                         name="deuda"
-//                         disabled
-//                         variant="outlined"
-//                         size="small"
-//                         fullWidth
-//                         value={'TODOS'}
-
-//                         onChange={handleInputChange}
-//                         // value={formData.deuda}
-//                     />
-//                 </Grid>
-//                 <Grid item xs={12} sm={3}>
-//                     <TextField
-//                         label="Concepto "
-//                         name="top"
-//                         disabled
-//                         variant="outlined"
-//                         size="small"
-//                         fullWidth
-//                         onChange={handleInputChange}
-//                         // value={formData.deuda}
-//                         value={'Top 5'}
-
-//                     />
-//                 </Grid>
-//                 <Grid item>
-//           <Button
-//             color="primary"
-//             variant="contained"
-//             startIcon={<SearchIcon />}
-//             onClick={() => {
-
-//             }}
-//           >
-//             buscar
-//           </Button>
-//         </Grid>
-//                 <Grid item xs={12} sm={12} sx={{
-//                     background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
-//                 }}  >
-//                     <GraficaApex />
-//                 </Grid>
-
-
-//             </Grid>
-//         </>
-//     );
-// };
-
-
-
-
 
