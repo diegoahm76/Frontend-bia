@@ -72,11 +72,11 @@ export const AccionesFinales = ({
           meta_data: {
             tiene_replica_fisica:
               anexo?.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
-            cod_origen_archivo: anexo?.origenArchivoMetadatos?.value,
+            cod_origen_archivo: anexo?.origenArchivoMetadatos?.value.toUpperCase(),
             nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
             descripcion: anexo?.descripcionMetadatos,
             asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
+            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value.toUpperCase(),
             nro_folios_documento: anexo?.numero_folios,
             id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value
               ? anexo?.tipologiasDocumentalesMetadatos?.value
