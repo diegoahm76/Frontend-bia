@@ -114,7 +114,9 @@ export const AccionesFinales = (): JSX.Element => {
           {
             id_otros: currentElementPqrsdComplementoTramitesYotros?.id_otros,
             id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
+            id_catalogo_serie_subserie:
+              currentGrupo?.currentSerie?.id_cat_serie_und,
           },
           handleSecondLoading
         );
