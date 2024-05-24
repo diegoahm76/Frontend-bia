@@ -603,7 +603,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
               />
             </Grid>
 
-            <Grid item xs={12} md={2}>
+            {/* <Grid item xs={12} md={2}>
               <FormButton
                 disabled={
                   notification_request?.id_notificacion_correspondencia === null
@@ -616,7 +616,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 type_button="button"
                 color_button="warning"
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={4}>
               <FormButton
                 disabled={
