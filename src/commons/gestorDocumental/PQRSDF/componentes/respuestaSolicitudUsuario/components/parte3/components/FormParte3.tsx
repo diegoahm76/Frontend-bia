@@ -32,7 +32,7 @@ import { columnsThirdForm } from './columns/columnsTercerFormulario';
 import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { control_success } from '../../../../../../../../helpers';
+import { control_error, control_success } from '../../../../../../../../helpers';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
 import './style.css';
@@ -43,6 +43,8 @@ import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolici
 import { useResSolicitudUsu } from '../../../hook/useResSolicitudUsu';
 import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../toolkit/slice/ResSolicitudUsarioSlice';
 import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
+import { api } from '../../../../../../../../api/axios';
+import axios from 'axios';
 export const FormParte3 = ({
   controlFormulario,
   resetFormulario,
@@ -76,6 +78,9 @@ export const FormParte3 = ({
     resetManejoMetadatosModal,
   } = useResSolicitudUsu();
 
+  const [documentosFinalizados, setDocumentosFinalizados] = useState<any[]>([]);
+  const [docSelected, setDocSelected] = useState<any>('');
+
   useEffect(() => {
     if (currentAnexo) {
       //  console.log('')('currentAnexo', currentAnexo);
@@ -84,6 +89,38 @@ export const FormParte3 = ({
       });
     }
   }, [currentAnexo]);
+
+  //Code Julian
+  const getDocuments = async () => {
+    try {
+      const response = await api.get('gestor/trd/documentos-finalizados-get/');
+      if(response.data && response.data.data){
+        setDocumentosFinalizados(response.data.data);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  }
+
+  // useEffect(() => {
+  //   getDocuments();
+  // }, [])
+
+  // const handleDocumentSelected = async (e: any) => {
+  //   const idDoc = e.target.value;
+  //   const doc = documentosFinalizados.find((doc) => doc.id === idDoc);
+  //   setDocSelected(idDoc);
+
+  //   if (doc) {
+  //     try {
+  //       const response = await axios.get(doc.url, { responseType: 'blob' });
+  //       const file = new File([response.data], doc.nombre_documento);
+  //       controlar_tamagno_archivos(file);
+  //     } catch (error) {
+  //       console.error('Error al descargar el archivo', error);
+  //     }
+  //   }
+  // };
 
   // ? funciones third form
 
@@ -368,16 +405,56 @@ export const FormParte3 = ({
             />
           </Grid>
           <Grid item xs={12} sm={4}>
-            <TextField
-              select
-              fullWidth
-              label="Documento a cargar"
-              size="small"
-              variant="outlined"
-              value={watchFormulario.fecha_de_solicitud}
-            >
-              <MenuItem value=""><em>Selecciona un documento</em></MenuItem>
-            </TextField>
+            <Controller
+              name="ruta_soporte"
+              control={controlFormulario}
+              defaultValue=""
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <>
+                  <TextField
+                    select
+                    fullWidth
+                    label="Documento a cargar"
+                    size="small"
+                    variant="outlined"
+                    value={docSelected}
+                    onChange={async (e) => {
+                      setDocSelected(e.target.value);
+                      const documentoSeleccionado = documentosFinalizados.find(document => document.id === e.target.value);
+                      if (documentoSeleccionado) {
+                        try {
+                          const response = await axios.get(documentoSeleccionado.url, { responseType: 'blob' });
+                          const file = new File([response.data], documentoSeleccionado.nombre_documento);
+                          controlar_tamagno_archivos(file, onChange);
+                        } catch (error) {
+                          console.error('Error al descargar el archivo', error);
+                        }
+                      }
+                    }}
+                  >
+                    <MenuItem value=""><em>Selecciona un documento</em></MenuItem>
+                    {documentosFinalizados.map((document: any) => (
+                      <MenuItem key={document.id} value={document.id}>
+                        {document.nombre_documento}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                  <label htmlFor="">
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                      }}
+                    >
+                      {value
+                        ? value.replace(/https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//, '')
+                        : 'Seleccione archivo'}
+                    </small>
+                  </label>
+                </>
+              )}
+            />
           </Grid>
           <Grid item xs={12} sm={4}>
             <Controller

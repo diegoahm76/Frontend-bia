@@ -182,7 +182,7 @@ export const GestionAccionesCorrectivas: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Configuraciones básicas acciones" />
+          <Title title="Gestionar Acciones Correctivas" />
         </Grid>
         <Grid item xs={12} sx={{my: 2}}>
           <Button

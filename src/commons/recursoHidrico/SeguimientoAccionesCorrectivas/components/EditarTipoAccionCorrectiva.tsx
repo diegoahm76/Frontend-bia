@@ -136,7 +136,6 @@ export const ActualizarAccion: React.FC<IProps> = ({
             <Grid item xs={12} mt={1}>
               <TextField
                 label="Descripción"
-                multiline
                 fullWidth
                 size="small"
                 margin="dense"
@@ -166,7 +165,8 @@ export const ActualizarAccion: React.FC<IProps> = ({
             }}
           >
             Cerrar
-          </Button>{' '}          <Button
+          </Button>{' '}
+          <Button
             variant="contained"
             disabled={is_loading}
             color="success"

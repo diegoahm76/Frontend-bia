@@ -17,16 +17,15 @@ import SendIcon from '@mui/icons-material/Send';
 import { Title } from '../../../../components';
 import { useEffect, useState } from 'react';
 
-export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen}: {open: boolean, setOpen: (b: boolean) => void}) => {
+export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen, put_firma_code, new_firma_code}: {open: boolean, setOpen: (b: boolean) => void, put_firma_code: (code: string) => void, new_firma_code: () => void}) => {
 
-  const [tiempoRestante, setTiempoRestante] = useState(10);
+  const [tiempoRestante, setTiempoRestante] = useState(300);
   const [error, setError] = useState(false);
-  const handleClick = async () => {
-    // const emailEnviado = await enviarEmail(); // Reemplaza esto con la llamada a tu servicio de correo electrónico
-    // if (emailEnviado) {
-    // }
+  const [codeConfirm, setCodeConfirm] = useState('');
+
+  const handleClick = () => {
+    put_firma_code(codeConfirm);
     setError(false);
-    setTiempoRestante(120);
   };
 
   useEffect(() => {
@@ -52,6 +51,10 @@ export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen}: {open: boo
     setTiempoRestante(120);
   };
 
+  const handleChangeCode = (e: any) => {
+    setCodeConfirm(e.target.value);
+  };
+
   return (
     <>
       <Dialog open={open} fullWidth>
@@ -65,16 +68,16 @@ export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen}: {open: boo
                   fullWidth
                   size="small"
                   error={error}
-                  helperText={error ? "Por favor, solicita un nuevo código." : "Ingrese el código de confirmación enviado a su correo"}
-                  // value={numero_documento}
-                  // onchange={onChange}
+                  helperText={error ? "Por favor, solicita un nuevo código." : "Ingrese el código de confirmación enviado a su correo asociado"}
+                  onChange={handleChangeCode}
+                  value={codeConfirm}
                 />
             </Grid>
             <Grid item xs={12}>
               {tiempoRestante > 0 ? (
                 <Typography variant="subtitle2">Tiempo restante: {tiempoRestante} segundos</Typography>
               ) : (
-                <Typography variant="subtitle2">El tiempo ha expirado. <Button onClick={handleClick}>Reenviar código</Button></Typography>
+                <Typography variant="subtitle2">El tiempo ha expirado. <Button onClick={new_firma_code}>Reenviar código</Button></Typography>
               )}
             </Grid>
           </Grid>
@@ -85,7 +88,8 @@ export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen}: {open: boo
             variant="contained"
             type="submit"
             startIcon={<SendIcon />}
-            // onClick={clean_form}
+            disabled={error || !codeConfirm}
+            onClick={handleClick}
           >
             Enviar
           </Button>

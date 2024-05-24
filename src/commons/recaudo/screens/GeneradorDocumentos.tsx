@@ -27,6 +27,9 @@ import UpdateIcon from '@mui/icons-material/Update';
 import { AlertaDocumento } from './AlertaDocumento';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
+import { resetBandejaDeTareas } from '../../gestorDocumental/bandejaDeTareas/toolkit/store/BandejaDeTareasStore';
+import { useAppDispatch } from '../../../hooks';
+import { BusquedaPersonasGenerador } from '../components/GeneradorDocumentos/BusquedaPersonas';
 export interface UnidadOrganizacional {
   codigo: any;
   nombre: string;
@@ -50,6 +53,7 @@ export const GeneradorDocumentos: React.FC = () => {
   const [updateBorrador, setUpdateBorrador] = useState(false);
   const [updateDocument, setUpdateDocument] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(false);
+  const [uplockFirma, setUplockFirma] = useState(false);
   const [isNewData, setIsNewData] = useState(false);
   const [hasConsecutivo, setHasConsecutivo] = useState(false);
   const [hasRadicado, setHasRadicado] = useState(false);
@@ -62,19 +66,31 @@ export const GeneradorDocumentos: React.FC = () => {
   const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
   const urlBase = baseURL.replace("/api/", "");
 
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (personaSelected.length > 0) {
       setHasPersona(true);
-      console.log(personaSelected);
+    }else{
+      setHasPersona(false);
     }
   }, [personaSelected])
+
+  useEffect(() => {
+    return () => {
+      dispatch(resetBandejaDeTareas());
+    };
+  }, []);
 
   const currentElement = useSelector((state: any) => state.BandejaTareasSlice.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas);
 
   useEffect(() => {
     if(currentElement && currentElement.documento){
       removeFile()
+      if(currentElement.documento.id_consecutivo_tipologia){
+        setCurrentBorrador(currentElement.documento);
+        setHasConsecutivo(true);
+      }
       setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
     }
 
@@ -91,6 +107,7 @@ export const GeneradorDocumentos: React.FC = () => {
       const response = await api.get(url);
       console.log(response.data);
       if(response?.data?.data){
+        control_success('Datos cargados correctamente, elige la plantalla correspondiente');
         setDataPQRS(response.data.data);
       }
     } catch (error: any) {
@@ -138,6 +155,7 @@ export const GeneradorDocumentos: React.FC = () => {
     target: { value: SetStateAction<string> };
   }) => {
     const id_plantilla = event.target.value;
+    setHasConsecutivo(false);
     setIdPlantilla(id_plantilla)
     const currentPlantilla = plantillas.find(plantilla => plantilla.id_plantilla_doc === id_plantilla);
     if(currentPlantilla){
@@ -233,10 +251,11 @@ export const GeneradorDocumentos: React.FC = () => {
       let variablesFiltradas = plantillaSeleccionada.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
       let newMatchingData: any = {};
       if (dataPQRS?.id_PQRSDF) {
-        const keysdataPQRS = Object.keys(dataPQRS);
+        const keysdataPQRS = Object.keys(dataPQRS.info_persona_titular);
+        console.log(keysdataPQRS);
         variablesFiltradas = variablesFiltradas.filter((variable: string) => {
-          if (keysdataPQRS.includes(variable)) {
-            newMatchingData[variable] = dataPQRS[variable];
+          if (keysdataPQRS.includes(variable) && dataPQRS.info_persona_titular[variable]) {
+            newMatchingData[variable] = dataPQRS.info_persona_titular[variable];
             return false;
           }
           return true;
@@ -250,7 +269,7 @@ export const GeneradorDocumentos: React.FC = () => {
   useEffect(() => {
     if (plantillaSeleccionada?.archivos_digitales && hasValue(matchingData)) {
       generateBorrador();
-      saveData({})
+      console.log('matchingData', matchingData);
     }
   }, [matchingData])
 
@@ -273,6 +292,7 @@ export const GeneradorDocumentos: React.FC = () => {
       plantilla: idPlantilla,
       payload: {...data, ...matchingData},
     };
+    console.log(sendData, variablesPlantilla);
     if(hasValue(data) || hasValue(matchingData)){
 
       if(updateBorrador){
@@ -334,6 +354,7 @@ export const GeneradorDocumentos: React.FC = () => {
         if (!success) allSuccess = false;
       }
       if (allSuccess) {
+        setUplockFirma(true);
         if (personaSelected.length == 1) control_success('El documento se envió correctamente');
         if (personaSelected.length > 1) control_success('Todos los documentos se enviaron correctamente');
         cleanTemplate();
@@ -345,6 +366,7 @@ export const GeneradorDocumentos: React.FC = () => {
   }
 
   const cleanTemplate = () => {
+    setPlantillaSeleccionada(null);
     setFile('');
     setSendTemplate(false);
     setUpdateBorrador(false);
@@ -491,7 +513,7 @@ export const GeneradorDocumentos: React.FC = () => {
                   {sendTemplate ? 'Actualizar Documento' : 'Ver borrador'}
                 </Button>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Button
                   component="label"
                   variant="outlined"
@@ -506,7 +528,7 @@ export const GeneradorDocumentos: React.FC = () => {
                     accept=".doc, .docx"
                   />
                 </Button>
-              </Grid>
+              </Grid> */}
               <Grid item>
                 <Button
                   startIcon={<SaveIcon />}
@@ -520,13 +542,9 @@ export const GeneradorDocumentos: React.FC = () => {
               </Grid>
             </Grid>
       </Grid>
-      <AlertaDocumento
+      <BusquedaPersonasGenerador
         personaSelected={personaSelected}
         setpersona={setpersona}
-        perfilselet={perfilselet}
-        setperfilselet={setperfilselet}
-        lideresUnidad={lideresUnidad}
-        setLideresUnidad={setLideresUnidad}
       />
       {file && <Grid
         container
@@ -543,7 +561,11 @@ export const GeneradorDocumentos: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <VisorDocumentos file={file} />
+        <VisorDocumentos
+          file={file}
+          current_borrador={currentBorrador}
+          uplock_firma={hasConsecutivo}
+        />
 
       </Grid>}
     </>
