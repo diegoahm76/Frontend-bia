@@ -82,7 +82,7 @@ export const AccionesFinales = (): JSX.Element => {
               currentGrupo?.currentSerie?.id_cat_serie_und,
           }
         );
-       /*res = await postAsignacionGrupoOpas(
+       res = await postAsignacionGrupoOpas(
           {
             id_solicitud_tramite:
               currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
@@ -92,7 +92,7 @@ export const AccionesFinales = (): JSX.Element => {
             id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
           },
           handleSecondLoading
-        );*/
+        );
         break;
       default:
         // Default service call or no service call

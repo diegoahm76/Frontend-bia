@@ -125,6 +125,7 @@ export const SeleccionUnidadSecSub = (): JSX.Element => {
                       }
                       Promise.all([
                         getSeriesByIdUnidad(value),
+                        getSubGrupoAsiGrupo(value),
                         getLiderByUnidadOrganizacional(value, setLiderAsignado),
                       ])
                         .then(([series, lider]) => {
@@ -133,6 +134,11 @@ export const SeleccionUnidadSecSub = (): JSX.Element => {
 
                           if (Array.isArray(series)) {
                             setListaSeries(series);
+                          }
+
+                          if (Array.isArray(lider)) {
+                            setListaSubGrupos(undefined);
+                            return;
                           }
 
                           if (!Array.isArray(lider)) {
