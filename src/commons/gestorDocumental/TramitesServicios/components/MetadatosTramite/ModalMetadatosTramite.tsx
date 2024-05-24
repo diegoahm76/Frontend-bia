@@ -266,7 +266,7 @@ const listarTipologias = async (): Promise<void> => {
 
           {/* Campo condicional: ¿Cual? */}
           {!form.tieneTipologiaRelacionada && (
-                    <Grid item xs={12} md={6}>
+                    <Grid item xs={12} md={12}>
                         <TextField
                             fullWidth
                             size="small"
