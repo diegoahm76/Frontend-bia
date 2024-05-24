@@ -236,7 +236,7 @@ export interface IObjNotificacionType{
     notificacion_personal?:boolean | null;
     notificacion_correo_electronico?:boolean | null;
     notificacion_medio_fisico?:boolean | null;
-    notificacion_aviso?:boolean | null;
+    publicacion_por_aviso?:boolean | null;
 }
 
 export interface IObjNotificacionCause{

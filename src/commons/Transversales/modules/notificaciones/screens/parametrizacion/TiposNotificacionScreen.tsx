@@ -577,7 +577,7 @@ export function TiposNotificacionScreen(): JSX.Element {
           notificacion_correo_electronico: data.accion === 'c',
           notificacion_medio_fisico: data.accion === 'd',
           notificacion_personal: data.accion === 'e',
-          notificacion_aviso: data.accion === 'f',
+          publicacion_por_aviso: data.accion === 'f',
         };
         void dispatch(edit_tipo_notificacion(data_edit));
       }
@@ -598,7 +598,7 @@ export function TiposNotificacionScreen(): JSX.Element {
           notificacion_correo_electronico: data.accion === 'c',
           notificacion_medio_fisico: data.accion === 'd',
           notificacion_personal: data.accion === 'e',
-          notificacion_aviso: data.accion === 'f',
+          publicacion_por_aviso: data.accion === 'f',
         };
         void dispatch(add_tipo_notificacion(data_edit));
       }

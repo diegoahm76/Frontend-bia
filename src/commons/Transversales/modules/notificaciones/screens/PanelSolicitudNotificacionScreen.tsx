@@ -37,6 +37,7 @@ import {
   add_asignacion_notificacion,
   aceptar_rechazar_solicitud_notificacion_service,
   cancelar_asignacion_notificacion,
+  get_tipos_documento_notification,
 } from '../store/thunks/notificacionesThunks';
 import {
   set_notification_per_request,
@@ -45,7 +46,10 @@ import {
   set_notifications_per_request,
 } from '../store/slice/notificacionesSlice';
 import FormButton from '../../../../../components/partials/form/FormButton';
-import { IObjNotificacionType } from '../interfaces/notificaciones';
+import {
+  IObjNotificacionType,
+  IObjTypeDocument,
+} from '../interfaces/notificaciones';
 import SolicitudDetailDialog from '../componentes/SolicitudDetailDialog';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DialogRechazo from '../componentes/DialogRechazo';
@@ -69,7 +73,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
 
   const {
     notification_requests,
-    list_document_types,
+    tipos_documento_notificacion,
     list_status,
     list_groups,
     notification_request,
@@ -494,6 +498,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     dispatch(get_document_types_service());
     dispatch(get_groups_list_service());
     void dispatch(get_persons_service('', '', '', '', '', ''));
+    void dispatch(get_tipos_documento_notification());
   }, []);
   useEffect(() => {
     if (selectedPqr !== null) {
@@ -671,9 +676,11 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 label: 'Tipo de documento',
                 disabled: false,
                 helper_text: '',
-                select_options: list_document_types,
-                option_label: 'label',
-                option_key: 'key',
+                select_options: tipos_documento_notificacion?.filter(
+                  (tipo: IObjTypeDocument) => tipo.aplica_para_notificaciones
+                ),
+                option_label: 'nombre',
+                option_key: 'id_tipo_documento',
               },
               {
                 datum_type: 'input_controller',

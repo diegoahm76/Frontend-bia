@@ -578,7 +578,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
       requiere_digitalizacion: !ya_digitalizado,
       datos_manual: true,
       permite_notificaciones_email: true,
-      cod_municipio_notificacion_nal: null,
+      cod_municipio_notificacion_nal: '05002',
       id_persona_notificada: null,
       tipo_notificacion: 'CD',
       anexos: aux_items,
