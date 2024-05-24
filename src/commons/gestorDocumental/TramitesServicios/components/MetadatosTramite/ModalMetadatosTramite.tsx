@@ -154,7 +154,7 @@ const listarTipologias = async (): Promise<void> => {
       >
         <DialogTitle>
           {' '}
-          <Title title="Agregar metadatos al anexo" />
+          <Title title="Agregar metadatos al anexooo" />
         </DialogTitle>
 
         {/* Contenedor principal del formulario */}
@@ -265,8 +265,8 @@ const listarTipologias = async (): Promise<void> => {
           </Grid>
 
           {/* Campo condicional: ¿Cual? */}
-          {/*{!form.tieneTipologiaRelacionada && (
-                    <Grid item xs={12} md={6}>
+          {!form.tieneTipologiaRelacionada && (
+                    <Grid item xs={12} md={12}>
                         <TextField
                             fullWidth
                             size="small"
@@ -276,7 +276,7 @@ const listarTipologias = async (): Promise<void> => {
                             onChange={(e) => handleInputChange('tipologiaRelacionadaotra', e.target.value)}
                         />
                     </Grid>
-                )}*/}
+                )}
 
           <Grid item xs={12} md={3.63}>
             {/* Campo condicional: Tipología */}
