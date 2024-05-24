@@ -93,7 +93,7 @@ export const AccionesFinales = ({
             asunto: anexo.asunto,
             descripcion: anexo.descripcionMetadatos,
             cod_categoria_archivo:
-              (anexo.categoriaArchivoMetadatos?.value).toUpperCase() || null,
+              anexo.categoriaArchivoMetadatos?.value.toUpperCase() || null,
             tiene_replica_fisica:
               anexo.tieneReplicaFisicaMetadatos?.value === 'Si',
             cod_origen_archivo: anexo.origenArchivoMetadatos?.value || null,

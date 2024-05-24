@@ -43,7 +43,7 @@ import { useStepperResSolicitudUsuario } from '../../../hook/useStepperResSolici
 import { useResSolicitudUsu } from '../../../hook/useResSolicitudUsu';
 import { addAnexo, deleteAnexo, editAnexo, setCurrentAnexo, setMetadatos, setViewMode } from '../../../toolkit/slice/ResSolicitudUsarioSlice';
 import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
-import { api } from '../../../../../../../../api/axios';
+import { api, baseURL } from '../../../../../../../../api/axios';
 import axios from 'axios';
 export const FormParte3 = ({
   controlFormulario,
@@ -102,9 +102,9 @@ export const FormParte3 = ({
     }
   }
 
-  // useEffect(() => {
-  //   getDocuments();
-  // }, [])
+  useEffect(() => {
+    getDocuments();
+  }, [])
 
   // const handleDocumentSelected = async (e: any) => {
   //   const idDoc = e.target.value;
@@ -345,7 +345,7 @@ export const FormParte3 = ({
         }}
       >
         <Grid container spacing={2}>
-          <Grid item xs={12} sm={4}>
+          {/* <Grid item xs={12} sm={4}>
             <Controller
               name="ruta_soporte"
               control={controlFormulario}
@@ -378,6 +378,7 @@ export const FormParte3 = ({
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
                           const file = files[0];
+                          console.log(file,"file");
                           controlar_tamagno_archivos(file,onChange)
                         }
                       }}
@@ -403,7 +404,7 @@ export const FormParte3 = ({
                 </>
               )}
             />
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={4}>
             <Controller
               name="ruta_soporte"
@@ -420,13 +421,19 @@ export const FormParte3 = ({
                     value={docSelected}
                     onChange={async (e) => {
                       setDocSelected(e.target.value);
-                      const documentoSeleccionado = documentosFinalizados.find(document => document.id === e.target.value);
-                      if (documentoSeleccionado) {
+                      const documentoSeleccionado = documentosFinalizados.find(document => document.id_consecutivo_tipologia === e.target.value);
+                      if (documentoSeleccionado && documentoSeleccionado.archivos_digitales) {
                         try {
-                          const response = await axios.get(documentoSeleccionado.url, { responseType: 'blob' });
-                          const file = new File([response.data], documentoSeleccionado.nombre_documento);
+                          const url = baseURL.replace("/api/", "");
+                          const urlFile = `${url}${documentoSeleccionado.archivos_digitales.ruta_archivo}`
+                          const response = await axios.get(urlFile, { responseType: 'blob' });
+                          const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+                          // const file = new File([response.data], `${documentoSeleccionado.archivos_digitales.nombre_de_Guardado}${randomNumber}.docx`);
+                          const file = new File([response.data], `${randomNumber}_plantilla-nota-interna.docx`);
+                          console.log(file,"file");
                           controlar_tamagno_archivos(file, onChange);
                         } catch (error) {
+                          control_error('No existe un documento asociado');
                           console.error('Error al descargar el archivo', error);
                         }
                       }
@@ -434,24 +441,11 @@ export const FormParte3 = ({
                   >
                     <MenuItem value=""><em>Selecciona un documento</em></MenuItem>
                     {documentosFinalizados.map((document: any) => (
-                      <MenuItem key={document.id} value={document.id}>
-                        {document.nombre_documento}
+                      <MenuItem key={document.id_consecutivo_tipologia} value={document.id_consecutivo_tipologia}>
+                        {document.archivos_digitales.nombre_de_Guardado}
                       </MenuItem>
                     ))}
                   </TextField>
-                  <label htmlFor="">
-                    <small
-                      style={{
-                        color: 'rgba(0, 0, 0, 0.6)',
-                        fontWeight: 'thin',
-                        fontSize: '0.75rem',
-                      }}
-                    >
-                      {value
-                        ? value.replace(/https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//, '')
-                        : 'Seleccione archivo'}
-                    </small>
-                  </label>
                 </>
               )}
             />
