@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import {
@@ -26,6 +27,8 @@ import { api } from '../../../../api/axios';
 import { Title } from '../../../../components';
 import SaveIcon from '@mui/icons-material/Save';
 import { control_error } from '../../../../helpers';
+import { BuscadorPerzonasStiven } from '../../../gestorDocumental/WorkFlowPQRSDF/components/BuscadorPersonaPersonalizado/BuscadorPerzonas';
+import { Persona } from '../../../gestorDocumental/WorkFlowPQRSDF/interface/IwordFlow';
 interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
@@ -38,12 +41,28 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
   persona,
 }) => {
   const [estaciones_options, set_estaciones_options] = useState([]);
+  const [persona_selec, set_persona] = useState<Persona | undefined>();
+
+
+  const {
+    id_persona,
+    primer_nombre,
+    segundo_nombre,
+    primer_apellido,
+    segundo_apellido,
+  } = persona_selec ?? {};
+  const nombre_completo = `${primer_nombre ?? ''} ${segundo_nombre ?? ''} ${primer_apellido ?? ''} ${segundo_apellido ?? ''}`;
+  const nombre = nombre_completo ?? '';
+
+
+
 
   const handle_close = (): void => {
     set_is_modal_active(false);
   };
   const {
     register,
+    setValue,
     control,
     reset,
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -146,6 +165,36 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
     },
   ];
 
+
+
+  const handleResult = async (persona?: Persona): Promise<void> => {
+    if (persona) {
+      // Haz lo que necesites con la información de la persona
+      set_persona(persona);
+
+    } else {
+      // Manejar el caso en el que la persona es undefined
+      console.log("No se seleccionó ninguna persona.");
+    }
+  };
+
+ // useEffect para actualizar el valor de 'primer_nombre' cuando 'persona_selec' cambie
+ useEffect(() => {
+
+    setValue('primer_nombre', primer_nombre);  // Actualizamos el valor de 'primer_nombre' en el formulario
+
+    setValue('segundo_nombre', segundo_nombre);  // Actualizamos el valor de 'primer_nombre' en el formulario
+
+    setValue('primer_apellido', primer_apellido);  // Actualizamos el valor de 'primer_nombre' en el formulario
+
+    setValue('segundo_apellido', segundo_apellido);  // Actualizamos el valor de 'primer_nombre' en el formulario
+
+
+   
+  
+}, [primer_nombre, setValue]);
+
+
   return (
     <Dialog open={is_modal_active} onClose={handle_close}>
       <Grid
@@ -166,6 +215,22 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
       </Grid>
 
       <Divider />
+
+      <Grid
+        container
+        item
+        xs={12}
+        justifyContent="center"
+        alignItems="center"
+        style={{ marginTop: 25 }}
+      >
+        <Grid item>
+          <BuscadorPerzonasStiven onResultt={handleResult} />
+        </Grid>
+      </Grid>
+
+
+
       <DialogContent sx={{ mb: '0px' }}>
         <form onSubmit={handleSubmit(on_sumbit_persona)}>
           <Grid
@@ -227,6 +292,7 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                 }
               />
             </Grid>
+
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Primer Nombre"
@@ -396,8 +462,8 @@ export const NuevoUsuarioModal: React.FC<IProps> = ({
                   errors.nro_celular_notificacion?.type === 'required'
                     ? 'Este campo es obligatorio'
                     : errors.nro_celular_notificacion?.type === 'pattern'
-                    ? 'El número celular debe tener de 10 a 12 dígitos'
-                    : ''
+                      ? 'El número celular debe tener de 10 a 12 dígitos'
+                      : ''
                 }
               />
             </Grid>

@@ -1,4 +1,5 @@
 import { type Persona } from '../../../../../interfaces/globalModels';
+import { IObjExhibit } from '../../../../gestorDocumental/CentralDigitalizacion/interfaces/central_digitalizacion';
 
 export interface INotificaciones {
   // Solicitud PQRSDF
@@ -6,10 +7,14 @@ export interface INotificaciones {
   document_type: IObjListType;
   list_status: IObjListType[];
   status_notification: IObjListType;
+  list_status_asignation: IObjListType[];
+  status_asignation: IObjListType;
   list_groups: IObjListType[];
   group: IObjListType;
- // persons: IObjPerson[];
-  //person: IObjPerson;
+  list_unidades_organizacionales: IObjListType[];
+  unidad_organizacional: IObjListType;
+  persons: IObjPerson[];
+  person: IObjPerson;
   notification_requests: IObjNotificationRequest[];
   notification_request: IObjNotificationRequest | null;
   notifications_per_request: IObjNotificationPerRequest[];
@@ -24,7 +29,23 @@ export interface INotificaciones {
   estado_notificacion: IObjNotificacionStatus|  null;
   tipos_soporte: IObjSupportType[]|  null;
   tipo_soporte: IObjSupportType|  null;
+  tipos_acto_administrativo: IObjSupportType[]|  null;
+  tipos_documento_notificacion: IObjTypeDocument[]|  null;
+  tipo_documento_notificacion: IObjTypeDocument|  null;
 
+  asignacion_funcionario: IObjAsignacionFuncioanrio | null;
+
+  expedientes: IObjExpediente[];
+  expediente: IObjExpediente | null;
+  actos_administrativos: IObjActo[];
+  acto_administrativo: IObjActo | null;
+  tramites: IObjTramite[];
+  tramite: IObjTramite | null;
+  trd: IObjTrd[];
+  serie_subserie:IObjSerieSubserie[];
+  unidades_marcadas: IObjUnidadesMarcadas[];
+  soportes: IObjSoporte[];
+  soporte: IObjSoporte | null;
   // grantors: IObjPerson[];
   // grantor: IObjPerson;
   // attorneys: IObjPerson[];
@@ -78,6 +99,126 @@ export interface INotificaciones {
 
 }
 
+
+export interface IObjSoporte {
+  id_anexo?: number | null;
+  id_tipo_anexo?: number | null;
+  id_tipo_anexo_soporte?: number | null;
+  numero_folios?: number | null;
+  link_publicacion?: string | null;
+  ya_digitalizado?: boolean | null;
+  uso_del_documento?: boolean | null;
+  id_causa_o_anomalia?: string | null;
+  observaciones?: string | null;
+  fecha_registro?: string | null;
+  ruta_archivo?: string | null;
+  is_soporte?: boolean;
+  nombre_anexo?: string | null;
+  cod_medio_almacenamiento?: string | null;
+  medio_almacenamiento_otros_Cual?: string | null;
+  orden_anexo_doc?: number | null;
+  cod_tipo_documento?: number | null |string;
+}
+export interface IObjUnidadesMarcadas {
+  id_trd?: number | null;
+  usado?: boolean;
+  version?: string | null;
+  nombre?: string | null;
+  fecha_terminado?: string | null;
+  fecha_puesta_produccion?: string | null;
+  fecha_retiro_produccion?: string | null;
+  actual?: boolean;
+  id_ccd?: number | null;
+}
+export interface IObjTrd {
+  id_trd?: number | null;
+  usado?: boolean;
+  version?: string | null;
+  nombre?: string | null;
+  fecha_terminado?: string | null;
+  fecha_puesta_produccion?: string | null;
+  fecha_retiro_produccion?: string | null;
+  actual?: boolean;
+  id_ccd?: number | null;
+}
+
+
+export interface IObjSerieSubserie{
+  codigo_serie?: string | null;
+  codigo_subserie?: string | null;
+  codigo_unidad_org_actual_admin_series?: string | null;
+  codigo_unidad_organizacional?: string | null;
+  id_catalogo_serie?: number | null;
+  id_catserie_unidadorg?: number | null;
+  id_serie_doc?: number | null;
+  id_subserie_doc?: number | null;
+  id_unidad_org_actual_admin_series?: number | null;
+  id_unidad_organizacional?: number | null;
+  nombre_serie?: string | null;
+  nombre_subserie?: string | null;
+  nombre_unidad_org_actual_admin_series?: string | null;
+  nombre_unidad_organizacional?: string | null;
+}
+
+export interface IObjExpediente{
+  id_expediente_documental?: number | null;
+  id_cat_serie_und_org_ccd_trd_prop?: number | null;
+  codigo_exp_und_serie_subserie?: string | null;
+  id_trd_origen?: number | null;
+  nombre_trd_origen?: string | null;
+  titulo_expediente?: string | null;
+  id_und_seccion_propietaria_serie?: number | null;
+  nombre_unidad_org?: string | null;
+  id_serie_origen?: number | null;
+  nombre_serie_origen?: string | null;
+  id_subserie_origen?: number | null;
+  nombre_subserie_origen?: string | null;
+  codigo_exp_Agno?: string | number | null;
+  id_persona_titular_exp_complejo?: number | null;
+  nombre_persona_titular?: string | null;
+}
+export interface IObjActo{
+  persona_asignada?: string | null;
+  id_persona_asignada?: number | null;
+  vigencia_contrato?: string | null;
+  Asignadas?: number | null;
+  resueltas?: number | null;
+  pendientes?: number | null;
+}
+export interface IObjTramite{
+  id_solicitud_tramite?: number | null;
+  nombre_proyecto?: string | null;
+  radicado?: string | null;
+  fecha_radicado?: string | null;
+  expediente?: number | null;
+}
+
+export interface IObjAsignacionFuncioanrio{
+  persona_asignada?: string | null;
+  id_persona_asignada?: number | null;
+  vigencia_contrato?: string | null;
+  tarear_asignadas?: number | null;
+  tarear_resueltas?: number | null;
+  tarear_pendientes?: number | null;
+  notificaciones_asignadas?: number | null;
+  notificaciones_resueltas?: number | null;
+  notificaciones_pendientes?: number | null;
+}
+export interface IObjTypeDocument{
+  id_tipo_documento?: string | number | null;
+  nombre?: string | null;
+  aplica_para_notificaciones?: boolean | null;
+  aplica_para_correspondencia?: boolean | null;
+  aplica_para_publicaciones?: boolean | null;
+  aplica_para_comunicaciones?: boolean | null;
+  aplica_para_notificaciones_publicaciones?: boolean | null;
+  registro_precargado?: boolean | null;
+  activo?: boolean | null;
+  item_ya_usado?: boolean | null;
+  aplica_para?: string[] | null;
+  aplica_para_acciones?: string[] | null;
+}
+
 export interface IObjNotificacionType{
   id_tipo_notificacion_correspondencia?: string | number | null;
   nombre?: string | null;
@@ -89,12 +230,19 @@ export interface IObjNotificacionType{
   activo?: boolean | null;
   item_ya_usado?: boolean | null;
   aplica_para?: string[] | null;
+  accion?: string | null;
+  publicar_pagina_gaceta?:boolean | null;
+    publicar_pagina_edictos?:boolean | null;
+    notificacion_personal?:boolean | null;
+    notificacion_correo_electronico?:boolean | null;
+    notificacion_medio_fisico?:boolean | null;
 }
 
 export interface IObjNotificacionCause{
   id_causa_o_anomalia?: string | number | null;
   nombre?: string | null;
   id_tipo_notificacion_correspondencia?: number | null;
+  cod_tipo_notificacion_correspondencia?: number | null;
   registro_precargado?: boolean | null;
   activo?: boolean | null;
   item_ya_usado?: boolean | null;
@@ -112,6 +260,7 @@ export interface IObjSupportType{
   id_tipo_anexo_soporte?: string | number | null;
   nombre?: string | null;
   id_tipo_notificacion_correspondencia?: number | null;
+  cod_tipo_notificacion_correspondencia?: number | null;
   registro_precargado?: boolean | null;
   activo?: boolean | null;
   item_ya_usado?: boolean | null;
@@ -125,6 +274,7 @@ export interface IObjSearchNotificationRequest{
 }
 
 export interface IObjNotificationPerRequest{
+  dias_faltantes?: string | null;
   id_registro_notificacion_correspondencia?: number | null;
   fecha_registro?: string | Date | null;
   cod_relacion_con_titular?: string | null;
@@ -159,10 +309,19 @@ export interface IObjNotificationPerRequest{
   id_radicado_salida?: number | null;
   id_persona_finaliza_registro?: number | null;
   id_estado_actual_registro?: number | null;
+  persdona_a_quien_se_dirige?: string | null;
+  plazo_entrega?: string | null;
+  funcionario_asignado?: string | null;
+  tipo_gestion?: string | null;
   id_doc_de_arch_exp?: number | null;
+  radicado?: number | null;
+  anexos?: IObjExhibit[]
 }
 
 export interface IObjNotificationRequest{
+
+  nommbre_tipo_documento?: string | null;
+  estado_solicitud?: string | null;
   id_notificacion_correspondencia?: number | null;
   cod_tipo_documento?: string | null;
   registros_notificaciones?: IObjNotificationPerRequest[] | null;
@@ -206,9 +365,27 @@ export interface IObjNotificationRequest{
   id_und_org_oficina_solicita?: string | number | null;
   id_persona_recibe_solicitud_manual?: string | number | null;
   id_persona_rta_final_gestion?: string | number | null;
+  id_persona_asignada?: string | number | null;
+  cod_estado_asignacion?: string | number | null;
   id_doc_de_arch_exp?: string | number | null;
+  codigo_exp_und_serie_subserie?: string | number | null;
+  tramite?: string | number | null;
+  justificacion_rechazo?: string | number | null;
+  anexos?: IObjExhibit[]
+  tipo_documento ?: IObjTipoDocumento | null;
 }
-
+export interface IObjTipoDocumento{
+  id_tipo_documento?: number | null;
+  nombre?: string | null;
+  aplica_para_notificaciones?: boolean | null;
+  aplica_para_correspondencia?: boolean | null;
+  aplica_para_publicaciones?: boolean | null;
+  aplica_para_comunicaciones?: boolean | null;
+  aplica_para_notificaciones_publicaciones?: boolean | null;
+  registro_precargado?: boolean | null;
+  activo?: boolean | null;
+  item_ya_usado?: boolean | null;
+}
 export interface IObjListType {
   id: number | string | null;
   key: string | number | null;
@@ -332,22 +509,22 @@ export interface IObjPqrRequest {
   descripcion?: string | null;
 }
 
-export interface IObjExhibit {
-  id_anexo?: number | null;
-  nombre_anexo?: string | null;
-  orden_anexo_doc?: number | null;
-  medio_almacenamiento?: string | null;
-  cod_medio_almacenamiento?: string | number | null;
-  medio_almacenamiento_otros_cual?: string | number | null;
-  numero_folios?: number | null;
-  ya_digitalizado?: boolean | null;
-  observacion_digitalizacion?: string | null;
-  exhibit_link?: string | IObjFile | null;
-  id_docu_de_arch_exp?: number | null;
-  metadatos: IObjMetaData | null;
-  nombre_medio_almacenamiento?: string | number | null;
-  descripcionMetadatos?:string|null;
-}
+// export interface IObjExhibit {
+//   id_anexo?: number | null;
+//   nombre_anexo?: string | null;
+//   orden_anexo_doc?: number | null;
+//   medio_almacenamiento?: string | null;
+//   cod_medio_almacenamiento?: string | null;
+//   medio_almacenamiento_otros_cual?: string | number | null;
+//   numero_folios?: number | null;
+//   ya_digitalizado?: boolean | null;
+//   observacion_digitalizacion?: string | null;
+//   exhibit_link?: string | IObjFile | null;
+//   id_docu_de_arch_exp?: number | null;
+//   metadatos: IObjMetaData | null;
+//   nombre_medio_almacenamiento?: string | number | null;
+//   descripcionMetadatos?:string|null;
+// }
 
 export interface IObjMetaData {
   id_metadatos_anexo_tmp?: number | null;

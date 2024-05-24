@@ -18,12 +18,15 @@ import { control_success, control_error } from "../../../../helpers";
 interface Props {
   set_mostrar_generar_bitacora: (value: boolean)=>void;
   data_solicitud_agendada:interface_agendamientos_bitacora;
-  set_refrescar_tabla: React.Dispatch<React.SetStateAction<boolean>>;
-  refrescar_tabla: boolean;
+  buscar_agendamientos_fc: () => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const GenerarBitacora: React.FC<Props> = ({set_mostrar_generar_bitacora,data_solicitud_agendada,set_refrescar_tabla,refrescar_tabla}) => {
+const GenerarBitacora: React.FC<Props> = ({
+  set_mostrar_generar_bitacora,
+  data_solicitud_agendada,
+  buscar_agendamientos_fc
+}) => {
   const dispatch = useAppDispatch();
 
   const [es_conductor_asignado, set_es_conductor_asignado] = useState<boolean>(false);
@@ -110,7 +113,7 @@ const GenerarBitacora: React.FC<Props> = ({set_mostrar_generar_bitacora,data_sol
               if(response?.success){
                 limpiar_form_salida();
                 set_mostrar_generar_bitacora(false);
-                set_refrescar_tabla(!refrescar_tabla);
+                buscar_agendamientos_fc();
                 control_success('Se envió la bitácora de salida correctamente');
                 return;
               } else if (response?.detail) {
@@ -127,7 +130,7 @@ const GenerarBitacora: React.FC<Props> = ({set_mostrar_generar_bitacora,data_sol
               if(response?.success){
                 limpiar_form_salida();
                 set_mostrar_generar_bitacora(false);
-                set_refrescar_tabla(!refrescar_tabla);
+                buscar_agendamientos_fc();
                 control_success('Se envió la bitácora de llegada correctamente');
                 return;
               } else if (response?.detail) {

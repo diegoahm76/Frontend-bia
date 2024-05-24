@@ -36,8 +36,6 @@ const BitacoraViajes: React.FC = () => {
    
   const [data_solicitud_agendada, set_data_solicitud_agendada] = useState<interface_agendamientos_bitacora>(Object);
 
-  const [refrescar_tabla, set_refrescar_tabla] = useState<boolean>(false);
-
   /**
    * Funcion para buscar los agendamientos y listarlos en la tabla
    * @returns void
@@ -72,7 +70,7 @@ const BitacoraViajes: React.FC = () => {
       buscar_agendamientos_fc();
       agenmientos_bitacora_obtenidos.current = true;
     }
-  },[refrescar_tabla])
+  },[])
 
   const cambio_fecha_inicio = (date: Dayjs | null): void => {
     if (date !== null) {
@@ -218,10 +216,9 @@ const BitacoraViajes: React.FC = () => {
 
         {mostrar_generar_bitacora &&
           <GenerarBitacora
-            refrescar_tabla={refrescar_tabla }
-            set_refrescar_tabla={set_refrescar_tabla}
             data_solicitud_agendada={data_solicitud_agendada}
             set_mostrar_generar_bitacora={set_mostrar_generar_bitacora}
+            buscar_agendamientos_fc={buscar_agendamientos_fc}
           />
         }
 
