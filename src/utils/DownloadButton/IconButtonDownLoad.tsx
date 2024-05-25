@@ -32,7 +32,9 @@ export const IconButtonDownLoad = ({
       <a
         target="_blank"
         rel="noopener noreferrer"
+
         href={getDownloadUrl()}
+
         ref={linkRef}
         style={{ display: 'none' }}
         download={fileName}

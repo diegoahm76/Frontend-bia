@@ -43,7 +43,7 @@ export const DesbloqueodeUsuario: React.FC = () => {
     email: '',
     fecha_nacimiento: '',
     redirect_url:
-    (process.env.NODE_ENV === 'development'
+    (process.env.NODE_ENV === 'production'
       ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
       : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
     ) + '/auth/cambiar_contrasena?desbloquear=true',

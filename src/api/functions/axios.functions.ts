@@ -17,7 +17,7 @@ const handleRequest = async (request: AxiosRequestConfig | any) => {
       request.headers = request.headers || {}; // Asegúrate de que 'headers' exista
       request.headers.Authorization = `Bearer ${token}`;
 
-      process.env.NODE_ENV === 'development' &&
+      process.env.NODE_ENV === 'production' &&
         console.log(
           `%c ${request?.method?.toUpperCase()} ${request.url}`,
           'color: blue; font-weight: bold;'
