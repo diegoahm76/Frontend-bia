@@ -167,7 +167,8 @@ export const Traslado: FC<any> = (): JSX.Element => {
               void onSubmit();
             }}
             style={{
-              marginTop: '20px'
+              marginTop: '20px',
+              marginBottom: '2rem',
             }}
           >
             <Grid

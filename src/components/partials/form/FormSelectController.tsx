@@ -103,7 +103,13 @@ const FormSelectController = ({
                     variant="outlined"
                     disabled={disabled}
                     value={value === null ? [] : value}
-                    onChange={onChange}
+                    onChange={(e) => {
+                      onChange(e);
+                      {
+                        (on_change_function ?? null) !== null &&
+                          on_change_function(e.target.value, e.target.name);
+                      }
+                    }}
                     error={
                       !(error == null) ||
                       ((auto_focus ?? false) &&
