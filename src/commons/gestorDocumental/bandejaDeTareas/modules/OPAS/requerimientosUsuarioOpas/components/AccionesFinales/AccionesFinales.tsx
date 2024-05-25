@@ -94,7 +94,7 @@ export const AccionesFinales = ({
               nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
               descripcion: anexo?.descripcionMetadatos,
               asunto: anexo?.asuntoMetadatos,
-              cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
+              cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value.toUpperCase(),
               nro_folios_documento: +anexo?.numero_folios
                 ? +anexo?.numero_folios
                 : 0,

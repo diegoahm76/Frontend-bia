@@ -108,7 +108,7 @@ export const AccionesFinales = ({
         })),
       })
     );
-
+    console.log('object');
     postResponderUsuario(formData, setLoadingButton)
       .then(() => {
         handleReset();
@@ -123,27 +123,28 @@ export const AccionesFinales = ({
   };
 
   const handleSubmit = async () => {
-    if (
-      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
-      'Respondida por el propietario de la bandeja de tareas'
-    ) {
-      showAlert('Opss!', 'Esta PQRSDF ya ha sido respondida', 'warning');
-      return;
-    }
+    // if (
+    //   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
+    //   'Respondida por el propietario de la bandeja de tareas'
+    // ) {
+    //   console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas);
+    //   showAlert('Opss!', 'Esta PQRSDF ya ha sido respondida', 'warning');
+    //   return;
+    // }
 
-    if (anexosCreados.length === 0) {
-      Swal.fire({
-        title: 'No se ha creado ningún anexo',
-        text: 'Por favor cree al menos un anexo para poder enviar la solicitud al usuario',
-        icon: 'warning',
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      return;
-    }
+    // if (anexosCreados.length === 0) {
+    //   Swal.fire({
+    //     title: 'No se ha creado ningún anexo',
+    //     text: 'Por favor cree al menos un anexo para poder enviar la solicitud al usuario',
+    //     icon: 'warning',
+    //     showConfirmButton: false,
+    //     timer: 1500,
+    //   });
+    //   return;
+    // }
 
     await Swal.fire({
-      title: '¿Está seguro de responder la PQRSDF?',
+      title: '¿Está seguro de responder la PQRSDF bro?',
       text: 'Una vez enviada la respuesta no podrá realizar cambios',
       icon: 'warning',
       showCancelButton: true,

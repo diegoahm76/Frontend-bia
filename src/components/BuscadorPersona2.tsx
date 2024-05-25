@@ -284,7 +284,11 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
       );
 
       if (data?.length > 0) {
-        set_rows(data);
+        const new_data: any = data.map(item => ({
+          ...item,
+          require_firma: false
+        }));
+        set_rows(new_data);
       }else{
         control_error('No se encontraron resultados');
       }

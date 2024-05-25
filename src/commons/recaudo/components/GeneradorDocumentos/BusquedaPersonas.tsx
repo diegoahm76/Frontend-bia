@@ -17,7 +17,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import CircularProgress from '@mui/material/CircularProgress';
 // import { BuscadorPersona } from '../../../../../components/BuscadorPersona';
 //  import { Alertas, Persona, Props, SelectItem, lider } from '../../interfaces/types';
-import { Button, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
+import { Button, Checkbox, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
 import { api } from '../../../../api/axios';
 import { control_error } from '../../../../helpers';
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
@@ -35,6 +35,7 @@ export interface Persona {
     razon_social?: string;
     nombre_comercial?: string;
     numero_documento: string;
+    require_firma?: boolean;
 };
 export interface SelectItem {
     value: string;
@@ -82,8 +83,15 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
 
     const [persons, setPersons] = useState<Persona[]>([]);
     const [personaSelecteda, setpersonaa] = useState<
-    { id_persona: string, primer_nombre: string, primer_apellido: string, numero_documento: string, razon_social: string, nombre_comercial: string  }[]
+    { id_persona: string, primer_nombre: string, primer_apellido: string, numero_documento: string, razon_social: string, nombre_comercial: string, require_firma: boolean  }[]
     >([]);
+
+    //TODO: eliminar
+    useEffect(() => {
+      if(personaSelecteda.length){
+        setpersona(personaSelecteda.map((persona) => ({ id: persona.id_persona, require_firma: persona.require_firma })));
+      }
+    }, [personaSelecteda])
 
     useEffect(() => {
         if (persons.length) {
@@ -98,14 +106,14 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
             const yaExiste = personaSelecteda.some(p => p.id_persona === persona.id_persona);
 
             if (!yaExiste) {
-                setpersona((prevLideres: any) => [...prevLideres, persona?.id_persona]);
                 setpersonaa(prevLideres => [...prevLideres, {
                     id_persona: persona.id_persona,
                     primer_nombre: persona.primer_nombre,
                     primer_apellido: persona.primer_apellido,
                     numero_documento: persona.numero_documento,
                     razon_social: persona.razon_social || '',
-                    nombre_comercial: persona.nombre_comercial || ''
+                    nombre_comercial: persona.nombre_comercial || '',
+                    require_firma: persona.require_firma || false
                 }]);
             } else{
                 control_warning("La persona ya fue agregada");
@@ -122,14 +130,14 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
           });
 
           if (newPersons.length) {
-            setpersona((prevLideres: any) => [...prevLideres, ...newPersons.map(persona => persona.id_persona)]);
             setpersonaa(prevLideres => [...prevLideres, ...newPersons.map(persona => ({
               id_persona: persona.id_persona,
               primer_nombre: persona.primer_nombre,
               primer_apellido: persona.primer_apellido,
               numero_documento: persona.numero_documento,
               razon_social: persona.razon_social || '',
-              nombre_comercial: persona.nombre_comercial || ''
+              nombre_comercial: persona.nombre_comercial || '',
+              require_firma: persona.require_firma || false
             }))]);
           } else {
             control_error("No hay ninguna persona nueva para agregar.");
@@ -137,15 +145,29 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
         } else {
           control_error("No hay ninguna persona seleccionada para agregar.");
         }
-      };
+    };
 
     const handleDelete = (idPersona: any) => {
         // Elimina el id_persona de personaSelected
-        setpersona(personaSelected.filter((id: any) => id !== idPersona));
+        setpersona(personaSelected.filter((obj: any) => obj.id !== idPersona));
 
         // Elimina la persona de personaa basado en id_persona
         setpersonaa(personaSelecteda.filter((persona: { id_persona: any; }) => persona.id_persona !== idPersona));
     };
+
+    const handleCheckboxChange = (id_persona: any, isChecked: boolean) => {
+      // Crear una copia del estado actual
+      const newRows = [...personaSelecteda];
+
+      // Encontrar el índice de la fila que se está actualizando
+      const index = newRows.findIndex(row => row.id_persona === id_persona);
+
+      // Actualizar el valor de 'require_firma' para esa fila
+      newRows[index].require_firma = isChecked;
+
+      // Actualizar el estado
+      setpersonaa(newRows);
+  };
 
     const columnss = [
         {
@@ -159,6 +181,17 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
             flex: 2,
             editable: false,
             valueGetter: (params: any) => `${params.row.primer_nombre || params.row.razon_social || params.row.nombre_comercial || ''} ${params.row.primer_apellido || ''}`,
+        },
+        {
+          field: 'requiere_firma',
+          headerName: 'Requiere Firma',
+          flex: 1,
+          renderCell: (params: any) => (
+              <Checkbox
+                  checked={params.row.require_firma}
+                  onChange={(event) => handleCheckboxChange(params.row.id_persona, event.target.checked)}
+              />
+          ),
         },
         {
             field: 'acciones',
