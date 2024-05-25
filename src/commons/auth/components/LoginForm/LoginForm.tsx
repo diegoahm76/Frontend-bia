@@ -79,7 +79,7 @@ export const LoginForm: React.FC = () => {
 
   useEffect(() => {
     // ! debe ser is_captcha_valid
-    if (!is_captcha_valid) {
+    if (is_captcha_valid) {
       set_disale(false);
     } else {
       set_disale(true);
