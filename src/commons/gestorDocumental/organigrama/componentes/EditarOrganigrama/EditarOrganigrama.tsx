@@ -124,6 +124,28 @@ export const EditarOrganigrama = ({
     }
   }, []);
 
+  const getFileName = () => {
+    const rutaResolucion = control_organigrama._formValues?.ruta_resolucion;
+
+    console.log('------------------RUTAAAA BRO--------------', control_organigrama?._formValues);
+    if (!rutaResolucion) {
+      return 'Seleccione archivo';
+    }
+
+    if (rutaResolucion.name) {
+      return rutaResolucion.name;
+    }
+
+    const baseUrl =
+      process.env.NODE_ENV === 'development'
+        ? process.env.REACT_APP_DOWNLOAD_FILES_BETA
+        : process.env.REACT_APP_DOWNLOAD_FILES_PROD;
+
+    return rutaResolucion?.replace(new RegExp(`^${baseUrl}/`), '');
+  };
+
+  // ...
+
   return (
     <>
       <Grid item xs={12}>
@@ -316,14 +338,7 @@ export const EditarOrganigrama = ({
                           fontSize: '0.75rem',
                         }}
                       >
-                        {control_organigrama._formValues?.ruta_resolucion
-                          ? control_organigrama._formValues?.ruta_resolucion
-                              .name ??
-                            control_organigrama?._formValues?.ruta_resolucion.replace(
-                              /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
-                              ''
-                            )
-                          : 'Seleccione archivo'}
+                        {getFileName()}
                       </small>
                     </label>
                   </>
@@ -342,9 +357,13 @@ export const EditarOrganigrama = ({
               />*/}
               <DownloadButton
                 fileName="ruta_soporte"
-                condition={!control_organigrama._formValues?.ruta_resolucion}
-                fileUrl={organigram_current?.ruta_resolucion}
-               
+                condition={
+                  !(
+                    control_organigrama._formValues?.ruta_resolucion &&
+                    organigram_current?.ruta_resolucion
+                  )
+                }
+                fileUrl={organigram_current?.ruta_resolucion || ''} // default value if null or undefined
               />
             </Grid>
           </Grid>

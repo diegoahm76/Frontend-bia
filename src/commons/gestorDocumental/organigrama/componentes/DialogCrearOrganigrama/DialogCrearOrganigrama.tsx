@@ -54,6 +54,12 @@ const DialogCrearOrganigrama = ({
   };
 
   const on_submit = (data: FormValues): void => {
+
+    console.log('Data de la creación del organigrama')
+    console.log('nombre', creacion_organigrama_values.nombre)
+    console.log('version', creacion_organigrama_values.version)
+    console.log('descripcion', creacion_organigrama_values.descripcion)
+    console.log('ruta_resolucion', creacion_organigrama_values.ruta_resolucion)
     //  console.log('')(creacion_organigrama_values);
 
     // Convertir el objeto new_ccd en un objeto FormData
