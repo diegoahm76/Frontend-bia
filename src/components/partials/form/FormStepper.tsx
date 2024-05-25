@@ -131,7 +131,7 @@ const FormStepper = ({
             <Box sx={{ flex: '1 1 auto' }} />
 
             <Button variant="contained" onClick={handleReset}>
-              Reset
+              Reiniciar
             </Button>
           </Box>
         </React.Fragment>
