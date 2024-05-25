@@ -1435,7 +1435,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
       </Grid>
 
       <AlertaDocumento
-        personaSelected={personaselet}
+        personaselet={personaselet}
         setpersona={setpersona}
         perfilselet={perfilselet}
         setperfilselet={setperfilselet}

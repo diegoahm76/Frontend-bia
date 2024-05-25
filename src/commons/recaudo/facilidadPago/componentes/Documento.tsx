@@ -871,7 +871,7 @@ export const Documento: React.FC<BuscarProps> = ({
           </Grid> */}
 
           <AlertaDocumento
-            personaSelected={personaselet}
+            personaselet={personaselet}
             setpersona={setpersona}
             perfilselet={perfilselet}
             setperfilselet={setperfilselet}
