@@ -554,6 +554,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
         cod_tipo_documento: data.tipo_documento,
         cod_medio_almacenamiento: 'Na',
         orden_anexo_doc: index,
+        id_tipo_anexo_soporte: 2,
         ya_digitalizado:
           elemento.metadatos === null
             ? false
