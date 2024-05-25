@@ -22,25 +22,28 @@ export const ListarProductos: React.FC = () => {
       field: 'nombre_producto',
       headerName: 'NOMBRE DEL PRODUCTO',
       sortable: true,
-      width: 300,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'numero_producto',
       headerName: 'NUMERO DEL PRODUCTO',
       sortable: true,
-      width: 200,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_proyecto',
       headerName: 'NOMBRE DEL PROYECTO',
       sortable: true,
-      width: 300,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 250,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -79,7 +82,7 @@ export const ListarProductos: React.FC = () => {
               />
             </Avatar>
           </IconButton>
-          
+
         </>
       ),
     },
@@ -144,6 +147,7 @@ export const ListarProductos: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>

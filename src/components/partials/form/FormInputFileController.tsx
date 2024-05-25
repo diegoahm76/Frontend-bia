@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { DownloadButton } from '../../../utils/DownloadButton/DownLoadButton';
+import { useEffect } from 'react';
 
 interface IRuleMessage {
   rule: any;
@@ -113,7 +114,7 @@ const FormInputFileController = ({
                     </Typography>
                     <Input
                       type="file"
-                      disabled={disabled}
+                      // disabled={disabled}
                       style={{
                         opacity: 0,
                         position: 'absolute',

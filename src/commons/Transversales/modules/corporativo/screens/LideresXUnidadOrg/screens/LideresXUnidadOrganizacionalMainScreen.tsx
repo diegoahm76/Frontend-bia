@@ -78,7 +78,6 @@ export const LideresXUnidadOrganizacionalMainScreen = (): JSX.Element => {
   useEffect(() => {
     void fetchCurrentOrganigrama();
   }, []);
-
   if (!organigrama_lideres_current?.descripcion) {
     return (
       <Grid

@@ -20,6 +20,11 @@ import { ConstructorLiquidacionScreen } from '../screens/ConstructorLiquidacionS
 import { EtapaProcesoProvider } from '../components/GestionCartera/Context/EtapaProcesoContext';
 import { AprovacionAutodeclaracion } from '../screens/AprovacionAutodeclaracion';
 import { ActivacionComponentRoutes } from '../components/aprobarDocumento/routes/ActivacoinDocumento';
+import { Indicadores } from '../screens/Indicadores';
+import { TalentoHumano } from '../screens/TalentoHumano';
+import { IndicadoresRecaudo } from '../screens/IndicadoresRecaudo';
+import { SeguimientoExpendientes } from '../screens/SeguimientoExpedientesScreen';
+import { EstadoCuentaGeneralUsuario } from '../facilidadPago/screens/EstadoCuentaGeneralUsuario';
 
 
 
@@ -29,7 +34,7 @@ export const RecaudoRoutes: React.FC = () => {
     <EtapaProcesoProvider >
     <Routes>
       {/* <Route path="datos/*" element={<RecaudoScreen />} /> */}
-      <Route path="facturacion/*" element={<Facturacion/>} />
+      <Route path="documento/*" element={<Facturacion/>} />
       <Route path="reportes/*" element={<ReportesRoutes />} />
       <Route path="Sup_Etapas/*" element={<SupEtapasProceso />} />
       <Route path="liquidacion/*" element={<LiquidacionScreen />} />
@@ -37,6 +42,7 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="historial_proceso/*" element={<HistorialProceso />} />
       <Route path="alertas/*" element={<ConfiguracionAlertasScreen />} />
       <Route path="gestion_cartera/*" element={<GestionCarteraScreen />} />
+      <Route path="seguimiento_expedientes/*" element={<SeguimientoExpendientes />} />
       <Route path="liquidacion_tua/*" element={<LiquidacionTUAScreen />} />
       <Route path="facilidades_pago/*" element={<FacilidadPagoRoutes />} />
       <Route path="estados_proceso/*" element={<EstadosProcesoScreen />} />
@@ -47,11 +53,17 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="constructor_liquidacion/*" element={<ConstructorLiquidacionScreen />} />
       <Route path="aprobacion_autodeclaracion/*" element={<AprovacionAutodeclaracion/>} />
       <Route path="formulario_auto_declaracion/*" element={<ActivacionComponentRoutes/>} />
+      <Route path="Indicadores/*" element={<Indicadores/>} />
+      <Route path="talento_humano/*" element={<TalentoHumano />} />
+      <Route path="graficas_indicadores/*" element={<IndicadoresRecaudo/>} />
+      <Route path='estado_cuenta' element={<EstadoCuentaGeneralUsuario />} />
 
-      
 
 
-      
+
+
+
+
       <Route path="/*" element={<Page404 />} />
     </Routes>
     </EtapaProcesoProvider>

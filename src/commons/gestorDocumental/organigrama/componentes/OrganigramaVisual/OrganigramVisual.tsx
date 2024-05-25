@@ -6,7 +6,7 @@ import { useAppSelector } from '../../../../../hooks';
 import { StyleColor } from './functions/functions';
 import { styles_tree, styles_tree_node } from './utils/constants';
 import './styles.css';
-const OrganigramVisual = () => {
+const OrganigramVisual = (): JSX.Element => {
   const { mold_organigram } = useAppSelector((state) => state.organigram);
   console.log('mold_organigram', mold_organigram);
 
@@ -33,7 +33,7 @@ const OrganigramVisual = () => {
                 color: '#fff',
               }}
             >
-               {node.codigo} - {node.title}
+              {node.codigo} - {node.title}
             </div>
           }
         >

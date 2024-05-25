@@ -8,7 +8,11 @@ import {
   Grid,
   InputLabel,
   MenuItem,
-  Select, TextField, Button, Dialog
+  Select,
+  TextField,
+  Button,
+  Dialog,
+  Switch,
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
 import { jsPDF } from 'jspdf';
@@ -24,15 +28,20 @@ import { Persona } from '../../../interfaces/globalModels';
 import { UnidadOrganizacional } from '../../conservacion/solicitudMaterial/interfaces/solicitudVivero';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
+import {
+  remicion_viso,
+  constancia_publicacion,
+  plantila_4,
+  constancia_publicaci5,
+  citacion,
+  documento8,
+} from '../plantillasRecaudo/miguel';
+import { AlertaDestinatario } from '../alertas/components/AlertaDestinatario';
+import { DialogGeneradorDeDirecciones } from '../../../components/DialogGeneradorDeDirecciones';
+import { AlertaDocumento } from './AlertaDocumento';
 
 export interface SerieSubserie {
-  // id_catserie_unidadorg: number;
-  // id_serie_doc: number;
-  // nombre_serie_doc: string;
-  // id_subserie_doc: number | null;
-  // nombre_subserie_doc: string | null;
-
-
+  tiene_configuracion: any;
   id_cat_serie_und: number;
   id_serie_doc: number;
   cod_serie_doc: string;
@@ -42,56 +51,128 @@ export interface SerieSubserie {
   nombre_subserie_doc: string | null;
 }
 
-
 export interface UnidadOrganizaciona {
+  codigo: any;
+  nombre: string;
+  tiene_configuracion: any;
   id_unidad_organizacional: number;
-  nombre: string; 
+}
+interface TipoRadicado {
+  value: string;
+  label: string;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Facturacion: React.FC = () => {
-  const { userinfo: { nombre_unidad_organizacional, nombre, id_persona } } = useSelector((state: AuthSlice) => state.auth);
+  const {
+    userinfo: { nombre_unidad_organizacional, nombre, id_persona },
+  } = useSelector((state: AuthSlice) => state.auth);
   const [visor, setVisor] = useState('');
   // const [consecutivo, setConsecutivo] = useState<string | null>(null);
+  const [personaselet, setpersona] = useState<string[]>([]);
+  const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
+  const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
 
-  const [consecutivoActual, setConsecutivoActual] = useState<number | null>(null);
+  const [consecutivoActual, setConsecutivoActual] = useState<number | null>(
+    null
+  );
+  const [consecutivo_id, setConsecutivo_id] = useState<number | null>(null);
+
+  const [radicadof, setradicadof] = useState<number | null>(null);
+
+  const handleSubmitRadicado = async () => {
+    try {
+      const url = '/gestor/adminitrador_radicados/crear-radicado/';
+      const fecha_actual = new Date().toISOString(); // Formato de fecha ISO
+
+      const payload = {
+        id_persona: id_persona,
+        tipo_radicado: tipos_radicado,
+        fecha_actual: fecha_actual,
+        modulo_radica: 'Generador de Documento',
+      };
+      const response = await api.post(url, payload);
+      setradicadof(response.data?.data?.radicado_nuevo);
+
+      const numeroRadicado = response.data.nro_radicado;
+
+      control_success('Numero de radicado creado');
+    } catch (error: any) {
+      // control_error(error.response.data.detail?.error);
+      control_error(error.response.data.detail);
+    }
+  };
+
+  const [tipos_radicado, settipos_radicado] = useState('');
+
+  // Función para manejar el cambio en el select
+  const handleradicado = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    settipos_radicado(event.target.value);
+  };
+  const [tiposRadicado, setTiposRadicado] = useState<TipoRadicado[]>([]);
+
+  const fetchTiposRadicado = async () => {
+    try {
+      const response = await api.get('/gestor/choices/tipo-radicado/');
+
+      // Aseguramos que cada elemento mapeado cumpla con la interfaz TipoRadicado
+      const tipos: TipoRadicado[] = response.data.map(
+        ([value, label]: [string, string]) => ({ value, label })
+      );
+
+      setTiposRadicado(tipos);
+    } catch (error: any) {
+      // console.error('Error al obtener los tipos de radicado:', error);
+      control_error(error.response.data.detail);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposRadicado();
+  }, []);
 
   const realizarActualizacion = async () => {
     try {
-      const url = "/gestor/adminitrador_radicados/config_tipos_radicado_agno/generar_n/";
+      const url =
+        '/gestor/adminitrador_radicados/config_tipos_radicado_agno/generar_n/';
       const payload = {
-        cod_tipo_radicado: "U",
+        cod_tipo_radicado: 'U',
         id_persona: id_persona, // Asumiendo que id_persona viene del estado de Redux
-        fecha_actual: new Date().toISOString() // O la fecha que necesites enviar
+        fecha_actual: new Date().toISOString(), // O la fecha que necesites enviar
       };
 
       const res = await api.put(url, payload);
       const data = res.data.data;
       // setConsecutivoActual(data.radicado_nuevo);
       await generarHistoricoBajas();
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      // console.error(error);
+      control_error(error.response.data.detail);
     }
   };
 
   useEffect(() => {
     generarHistoricoBajas();
-
   }, [consecutivoActual]);
 
   const [opcionSeleccionada, setOpcionSeleccionada] = useState('1');
 
   // Función para manejar el cambio en el select
-  const handleChangeee = (event: { target: { value: SetStateAction<string>; }; }) => {
+  const handleChangeee = (event: {
+    target: { value: SetStateAction<string> };
+  }) => {
     setOpcionSeleccionada(event.target.value);
   };
-  const [plantillaSeleccionada, setPlantillaSeleccionada] = useState('plantilla1');
+  const [plantillaSeleccionada, setPlantillaSeleccionada] =
+    useState('plantilla1');
 
   const generarHistoricoBajas = () => {
     const doc = new jsPDF();
     const anchoPagina = doc.internal.pageSize.width;
     const agregarEncabezado = () => {
       doc.setFontSize(22);
-      doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+      doc.text('    ', anchoPagina / 2, 20, { align: 'center' });
       doc.setFontSize(12);
       doc.addImage(logo_cormacarena_h, 160, 10, 40, 10);
 
@@ -106,9 +187,9 @@ export const Facturacion: React.FC = () => {
         doc.setFontSize(9);
         const espacioEntreLineas = 6; // Espacio entre líneas de texto
         let yTexto = yCuadro + 10; // Posición inicial del texto en Y
-        doc.text("Cormacarena ", xCuadro + 30, yTexto);
+        doc.text('Cormacarena ', xCuadro + 30, yTexto);
         yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
-        doc.text(`Radicado: ${consecutivoActual}`, xCuadro + 10, yTexto);
+        doc.text(`Radicado: ${radicadof}`, xCuadro + 10, yTexto);
         yTexto += espacioEntreLineas;
 
         doc.text(dayjs().format('DD/MM/YYYY'), xCuadro + 10, yTexto);
@@ -126,9 +207,9 @@ export const Facturacion: React.FC = () => {
         doc.setFontSize(9);
         const espacioEntreLineas = 6; // Espacio entre líneas de texto
         let yTexto = yCuadro + 10; // Posición inicial del texto en Y
-        doc.text("Cormacarenaccc ", xCuadro + 30, yTexto);
+        doc.text('Cormacarenaccc ', xCuadro + 30, yTexto);
         yTexto += espacioEntreLineas; // Aumentar Y para la siguiente línea
-        doc.text(`Radicado: ${consecutivoActual}`, xCuadro + 10, yTexto);
+        doc.text(`Radicado: ${radicadof}`, xCuadro + 10, yTexto);
         yTexto += espacioEntreLineas;
 
         doc.text(dayjs().format('DD/MM/YYYY'), xCuadro + 10, yTexto);
@@ -136,16 +217,18 @@ export const Facturacion: React.FC = () => {
 
         doc.text(`Nombre: ${nombre}`, xCuadro + 10, yTexto); // Reemplazar X con el número de hojas
       }
-
-
     };
     agregarEncabezado();
-    // Añadir información del usuario   
+    // Añadir información del usuario
     doc.setFontSize(12);
     let y = 30; // posición inicial para el texto
+    // ${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}
 
-    doc.text(`${nombreSerieSeleccionada} - ${nombreSubserieSeleccionada}`, 10, y);
+    doc.text(`${consecutivoActual}`, 10, y);
     y += 6;
+
+    // doc.text(`Serie ${unidadSeleccionada} - Subserie ${selectedSerieSubserie}`, 10, y);
+    // y += 6;
 
     doc.text(`Identificación: ${identificacion}`, 10, y);
     y += 6;
@@ -155,108 +238,92 @@ export const Facturacion: React.FC = () => {
     y += 6;
     doc.text(`Ciudad: ${ciudad}`, 10, y);
 
-    y += 6; doc.text(``, 10, y);
+    y += 6;
+    doc.text(``, 10, y);
     y += 6;
 
-    let texto1 = ` hola`;
-    let textoPersonalizado =
-
-      `
-    Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${Fecha_vigencia ? Fecha_vigencia : '__________'} de la tasa por utilización de agua.
+    let textoPersonalizado = `
+    Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${
+      Fecha_vigencia ? Fecha_vigencia : '__________'
+    } de la tasa por utilización de agua.
 
 Cordial Saludo,
-Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
-a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${Fecha_a ? Fecha_a : '__________'} .  
-b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${Fecha_b ? Fecha_b : '__________'} .  
-Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${Fecha_entrega ? Fecha_entrega : '__________'} , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
+Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información:
+a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${
+      Fecha_a ? Fecha_a : '__________'
+    } .
+b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${
+      Fecha_b ? Fecha_b : '__________'
+    } .
+Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${
+      Fecha_entrega ? Fecha_entrega : '__________'
+    } , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
 
- 
+
      `;
-
 
     let textoAMostrar: string;
 
     if (opcionSeleccionada === '1') {
       textoAMostrar = `
-  Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${Fecha_vigencia ? Fecha_vigencia : '__________'} de la tasa por utilización de agua.
+  Asunto: Solicitud de información requerida para llevar a cabo el proceso de liquidación de los documentos de cobro de la vigencia  ${
+    Fecha_vigencia ? Fecha_vigencia : '__________'
+  } de la tasa por utilización de agua.
 
 Cordial Saludo,
-Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información: 
-a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${Fecha_a ? Fecha_a : '__________'} .  
-b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${Fecha_b ? Fecha_b : '__________'} .  
-Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${Fecha_entrega ? Fecha_entrega : '__________'} , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
+Teniendo en cuenta el proceso de liquidación del instrumento económico tasa por utilización del agua, por medio de la presente solicito amablemente su colaboración para obtener la siguiente información:
+a) Usuarios cuyos expedientes fueron archivados en el periodo comprendido del ${
+        Fecha_a ? Fecha_a : '__________'
+      } .
+b) Nuevos usuarios a quienes se les haya otorgado permiso de concesión de agua durante el periodo comprendido del ${
+        Fecha_b ? Fecha_b : '__________'
+      } .
+Este reporte se deberá diligenciar en la matriz que se remite como adjunto y debe ser enviada al correo gruporentas@cormacarena.gov.co  y/o facturacion.rentas@cormacarena.gov.co. Es importante mencionar la prioridad de esta información, por lo que se requiere que sea entregada a más tardar el ${
+        Fecha_entrega ? Fecha_entrega : '__________'
+      } , con la finalidad de llevar a cabo un proceso eficiente en términos de tiempo y manejo adecuado de la información. Agradezco la atención prestada.
 
 
    `;
-    }
-
-
-    else if (opcionSeleccionada === '2') {
-      textoAMostrar = ` 
-               «Por medio de la cual se otorga una facilidad de pago en instancia persuasiva a
-                 la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396 y 
-                                                 se toman otras determinaciones»
-
-               El Jefe de la Oficina Asesora Jurídica de la Corporación para el Desarrollo
-                 Sostenible del Área de Manejo Especial de la Macarena CORMACARENA, en
-                        uso de sus facultades legales conferidas mediante la Resolución número
-                                                  2.6.05.107 del 31 de enero de 2005
-
-.                                                            CONSIDERANDO:
-
-Que la Constitución Política de Colombia, en su artículo 209 establece que «la función administrativa está al servicio de los intereses generales y se desarrolla con fundamento en los principios de igualdad, moralidad, eficacia, economía, celeridad, imparcialidad y publicidad mediante la descentralización, la delegación y la desconcentración de funciones. Las autoridades administrativas deben coordinar sus actuaciones para el adecuado cumplimiento de los fines del Estado. La administración pública, en todos sus órdenes, tendrá un control interno que se ejercerá en los términos que señale la ley...»
-
-Que de conformidad con la resolución No 2.6.07.073 de fecha quince (15) de febrero de 2007, artículo quinto, numeral 4, facilidades de pago, establece como requisitos y documentos necesarios para el trámite los siguientes          
-
-1. Los deudores no deben encontrarse reportados en el boletín de deudores morosos del estado por incumplimiento de acuerdos de pago
-2. Tener obligaciones a favor de CORMACARENA
-3. Presentar un escrito en el cual solicite el plazo
-4. Ofrecer garantías que respalden el pago de las obligaciones, determinando los usuarios y capacidades de pago de los mismos
-
-Que mediante Resolución No 2.6.08.465 de fecha veintisiete (27) de junio de 2008, se adoptó El Manual de Cobro Persuasivo y coactivo de CORMACARENA, el cual tuvo su última actualización el día siete (07) de febrero de 2023.
-
- 
-Que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, mediante escrito radicado en la Corporación con el número 18922 de fecha veintisiete (27) de julio de 2023 solicitó se le concediera una facilidad de pago para pagar el valor capital e intereses de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, la señora BLANCA LUCIA RAMIREZ TORO, realizó consignación del 30% del valor total de la deuda, capital más intereses, el día seis (06) de agosto de 2023, para dar continuidad al trámite de otorgamiento de la facilidad de pago.
-
-Que una vez revisado el boletín de deudores morosos del estado BDME, a través de la página web de la contaduría general de la nación, se verifico que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, no se encuentra reportada por incumplimiento de acuerdos de pago. En mérito de lo expuesto,
-
-                                                              RESUELVE
-                                                             
- ARTÍCULO PRIMERO: Otorgar facilidad de pago a la señora BLANCA LUCIARAMIREZ TORO identificada con C.C. 32.505.396, con un plazo de nueve (09) cuotas mensuales de igual valor, para el pago de la multa impuesta mediante resolución PS-GJ.1.2.6.22.2004, de fecha veinte (20) de diciembre de 2022, confirmada mediante la resolución número PS-GJ.1.2.6.23.0723, de fecha dieciocho (18) de mayo de 2023, dentro del expediente sancionatorio número 3.11.011.494, incluido valor capital e intereses. PARÁGRAFO PRIMERO: Teniendo en cuenta que el valor capital de la presente facilidad de pago es la suma de UN MILLON SEISCIENTOS OCHENTA Y TRES MIL QUINIENTOS TREINTA Y CINCO PESOS MCTE ($1.683.535) y que la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396, consignó el día seis (06) de agosto de 2023, la suma de QUINIENTOS QUINCE MIL SEISCIENTOS SESENTA Y SEIS PESOS MCTE ($515.666), el cual se aplicó proporcionalmente a capital por valor de QUINIENTOS CINCO MIL OCHOCIENTOS OCHENTA Y SEIS PESOS MCTE ($505.886) y a intereses de mora por valor de NUEVE MIL SETECIENTOS OCHENTA PESOS MCTE ($9.780).
-
-Conforme a lo anterior, queda un saldo a capital por valor de UN MILLON CIENTO SETENTA Y SIETE MIL SEISCIENTOS CUARENTA Y NUEVE PESOS MCTE ($1.177.649), más los intereses proyectados por el término de la facilidad de pago, es decir, al día cinco (05) de Junio del año 2024, fecha en la que se estima el pago total de las obligaciones, por valor de CIENTO CUARENTA Y DOS MIL CIENTO TRES PESOS MCTE ($142.103), y que arrojan una deuda total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752). ARTICULO SEGUNDO: Autorizar el pago del valor capital más los intereses que sumados arrojan un valor total de UN MILLON TRESCIENTOS DIECINUEVE MIL SETECIENTOS CINCUENTA Y DOS PESOS MCTE ($1.319.752) en nueve (09) cuotas, distribuido de la siguiente manera:
-
-
-
-No cuota FECHAS DE PAGO CUOTA
-1  05 de octubre de 2023 146,640
-2  05 de noviembre de 2023 146,639
-3  05 de diciembre de 2023 146,639
-4  05 de enero de 2024 146,639
-5  05 de febrero de 2024 146,639
-6  05 de marzo de 2024 146,639
-7  05 de abril de 2024 146,639
-8  05 de mayo de 2024 146,639
-9  05 de junio de 2024 146,639
-
-TOTAL 1,319,752
-
-PARÁGRAFO ÚNICO: Si el día acordado para el pago de las cuotas fuere feriado el pago se prorrogará hasta el día siguiente hábil.
-
-ARTÍCULO TERCERO: El pago deberá efectuarse en la cuenta corriente 364190062-66 Bancolombia (convenio 87318) por concepto de multas Ref. 1 C.C. (32505396) y Ref. 2. Resolución facilidad de pago (126223020) a nombre de CORMACARENA; identificada con NIT. 822.000.091-2, a más tardar en la fecha de vencimiento de la respectiva cuota y acreditarlo en la oficina del Grupo Rentas de la Corporación.
-
-ARTÍCULO CUARTO: En caso de presentarse incumplimiento por parte del deudor, en relación con el pago de una de las cuotas estipuladas y en las demás obligaciones contenidas en la presente resolución, CORMACARENA
-
-dispondrá la terminación anticipada de la facilidad de pago y se iniciará el trámite del proceso administrativo de cobro coactivo. Parágrafo único: Los saldos de las obligaciones que resulten luego de dar por terminada la facilidad de pago, se continuarán ejecutando por medio del respectivo proceso administrativo de cobro coactivo, hasta cuando se satisfaga la obligación en su totalidad. ARTÍCULO QUINTO: Como consecuencia de lo convenido en la facilidad de pago, las partes acuerdan interrumpir los términos de prescripción de las obligaciones, y se reanudaran en el momento en que se declare el incumplimiento de la presente Resolución. ARTÍCULO SEXTO: Notificar el contenido de la presente resolución a la señora BLANCA LUCIA RAMIREZ TORO identificada con C.C. 32.505.396; al correo electrónico jandreitahr21@hotmail.com adjuntando copia de la misma. ARTICULO SEPTIMO: Contra esta decisión no procede recurso alguno, de conformidad con el artículo 833-1 del Estatuto Tributario. ARTICULO OCTAVO: Remitir copia de la presente Resolución a la Subdirección Administrativa y Financiera para lo de su competencia.
-
-                                                             NOTIFÍQUESE Y CÚMPLASE,
-
-
-`;
-    }
-
-    else if (opcionSeleccionada === '3') {
-      textoAMostrar = ``
+    } else if (opcionSeleccionada === '2') {
+      textoAMostrar = `${remicion_viso(expediente_2, Fecha_2, opcionSiNo2)}  `;
+    } else if (opcionSeleccionada === '3') {
+      textoAMostrar = `${constancia_publicacion(
+        Fecha_3,
+        Fecha_acto_3,
+        expediente_3,
+        fijacion_3,
+        des_fijacion_3,
+        cc_3,
+        nombre_3,
+        empresa_3,
+        nombre_nit_3,
+        nombre_enpresa_3
+      )}`;
+    } else if (opcionSeleccionada === '4') {
+      textoAMostrar = ` ${plantila_4(
+        Fecha_4,
+        nombre_4,
+        cc_4,
+        constancia_4,
+        constancia_des_4,
+        opcionSiNo,
+        dias_4
+      )}`;
+    } else if (opcionSeleccionada === '5') {
+      textoAMostrar = `  ${constancia_publicaci5(email)}  `;
+    } else if (opcionSeleccionada === '6') {
+      textoAMostrar = `  ${citacion(opcion_6, numero_6)}  `;
+    } else if (opcionSeleccionada === '8') {
+      textoAMostrar = `  ${documento8(
+        Fecha_8,
+        Fecha_8remi,
+        empresa_8,
+        nit_8,
+        opcion_8,
+        dias_8
+      )}  `;
+    } else if (opcionSeleccionada === '9') {
+      textoAMostrar = ``;
     } else {
       textoAMostrar = ''; // Valor predeterminado o manejo del caso 'undefined'
     }
@@ -269,10 +336,14 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
     // Función para añadir texto con control de páginas
     const addTextWithPageControl = (text: string) => {
-      let lines = doc.splitTextToSize(text, doc.internal.pageSize.width - 2 * margin); // Divide el texto en líneas
+      let lines = doc.splitTextToSize(
+        text,
+        doc.internal.pageSize.width - 2 * margin
+      ); // Divide el texto en líneas
 
       lines.forEach((line: string | string[]) => {
-        if (y > pageHeight - 20) { // 20 es el margen inferior
+        if (y > pageHeight - 20) {
+          // 20 es el margen inferior
           doc.addPage();
           y = 20; // Restablecer Y para la nueva página
         }
@@ -283,8 +354,6 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
     // Añadir texto con control de páginas
     addTextWithPageControl(textoAMostrar);
-
-
 
     // y += 6; doc.text(textoAMostrar, 10, y);
     //     y += 6;
@@ -308,7 +377,6 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     setVisor(doc.output('datauristring'));
   };
 
-
   const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
 
   const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
@@ -317,12 +385,14 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
   const fetchUnidades = async () => {
     try {
-      const url = "/gestor/consecutivos-unidades/unidades_organigrama_actual/get/";
+      const url =
+        '/gestor/consecutivos-unidades/unidades_organigrama_actual/get/';
       const res = await api.get(url);
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      // console.error(error);
+      control_error(error.response.data.detail);
     }
   };
 
@@ -332,17 +402,16 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
   useEffect(() => {
     generarHistoricoBajas();
-
   }, [opcionSeleccionada]);
 
-  const handleChange = (event: { target: { name: any; value: any; }; }) => {
+  const handleChange = (event: any) => {
     setUnidadSeleccionada(event.target.value as string);
     const selectedId = event.target.value;
     setIdUnidadSeleccionada(selectedId);
   };
 
-  const [selectedSerieSubserie, setSelectedSerieSubserie] = useState('');
-  
+  const [selectedSerieSubserie, setSelectedSerieSubserie] = useState(null);
+
   const [seriesSubseries, setSeriesSubseries] = useState<SerieSubserie[]>([]);
   const fetchSeriesSubseries = async () => {
     try {
@@ -350,10 +419,12 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
       const res = await api.get(url);
       const data = res.data.data;
       setSeriesSubseries(data);
-    } catch (error) {
-      console.error(error);
+    } catch (error: any) {
+      // console.error(error);
+      // control_error(error.response.data.detail);
     }
   };
+
   useEffect(() => {
     fetchSeriesSubseries();
   }, [idUnidadSeleccionada]);
@@ -362,15 +433,18 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     fetchSeriesSubseries();
   }, [idUnidadSeleccionada]);
   const [nombreSerieSeleccionada, setNombreSerieSeleccionada] = useState('');
-  const [nombreSubserieSeleccionada, setNombreSubserieSeleccionada] = useState('');
+  const [nombreSubserieSeleccionada, setNombreSubserieSeleccionada] =
+    useState('');
 
-  const handleChangee = (event: { target: { name: any; value: any; }; }) => {
-    setSelectedSerieSubserie(event.target.value as string);
+  const handleChangee = (event: { target: { name: any; value: any } }) => {
+    setSelectedSerieSubserie(event.target.value as any);
 
     const selectedValue = event.target.value;
     setSelectedSerieSubserie(selectedValue);
 
-    const selectedElement = seriesSubseries.find((item) => item.id_cat_serie_und === selectedValue);
+    const selectedElement = seriesSubseries.find(
+      (item) => item.id_cat_serie_und === selectedValue
+    );
 
     if (selectedElement) {
       setNombreSerieSeleccionada(selectedElement.nombre_serie_doc);
@@ -392,6 +466,70 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
   const [telefono, setTelefono] = useState('');
   const [ciudad, setCiudad] = useState('');
 
+  const [expediente_2, setexpediente_2] = useState('');
+  const [Fecha_2, setFecha_2] = useState('');
+  const [opcionSiNo2, setOpcionSiNo2] = useState('');
+  const handleChangeSiNo2 = (event: any) => {
+    setOpcionSiNo2(event.target.value);
+  };
+
+  const [Fecha_3, setFecha_3] = useState('');
+  const [Fecha_acto_3, setFecha_acto3] = useState('');
+  const [expediente_3, setexpediente_3] = useState('');
+  const [fijacion_3, setfijacion_3] = useState('');
+  const [des_fijacion_3, setdes_fijacion_3] = useState('');
+  const [cc_3, setcc_3] = useState('');
+  const [nombre_3, setnombre_3] = useState('');
+
+  const [nombre_enpresa_3, setnombre_enpresa_3] = useState('');
+  const [nombre_nit_3, setnombre_nit_3] = useState('');
+  const [empresa_3, setempresa_3] = useState('Si');
+  const handleChangeSiNo3 = (event: any) => {
+    setempresa_3(event.target.value);
+  };
+  const [Fecha_4, setFecha_4] = useState('');
+  const [nombre_4, setnombre_4] = useState('');
+  const [cc_4, setcc_4] = useState('');
+  const [constancia_4, setconstancia_4] = useState('');
+  const [constancia_des_4, setconstancia_des_4] = useState('');
+  const [dias_4, setdias_4] = useState('');
+
+  const handleInputChangel = (e: { target: { value: any } }) => {
+    const inputValue = e.target.value;
+    // Expresión regular para permitir solo números
+    const numericInput = inputValue.replace(/[^0-9]/g, '');
+    setdias_4(numericInput);
+  };
+
+  const [opcionSiNo, setOpcionSiNo] = useState('');
+  const handleChangeSiNo = (event: any) => {
+    setOpcionSiNo(event.target.value);
+  };
+
+  const [numero_6, setnumero_6] = useState('');
+
+  const [opcion_6, setOpcion_6] = useState('');
+  const handleChange_6 = (event: any) => {
+    setOpcion_6(event.target.value);
+  };
+
+  const [Fecha_8, setFecha_8] = useState('');
+  const [Fecha_8remi, setFecha_8remi] = useState('');
+
+  const [empresa_8, setempresa_8] = useState('');
+  const [nit_8, setnit_8] = useState('');
+  const [opcion_8, setOpcion_8] = useState('');
+  const handleChange_8 = (event: any) => {
+    setOpcion_8(event.target.value);
+  };
+  const [dias_8, setdias_8] = useState('');
+
+  const handleInputChangel_8 = (e: { target: { value: any } }) => {
+    const inputValue = e.target.value;
+    // Expresión regular para permitir solo números
+    const numericInput = inputValue.replace(/[^0-9]/g, '');
+    setdias_8(numericInput);
+  };
 
   const dataURItoBlob = (dataURI: string) => {
     const byteString = atob(dataURI.split(',')[1]);
@@ -406,7 +544,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
 
   const generarArchivo = () => {
     const blob = dataURItoBlob(visor);
-    return new File([blob], "documento.pdf", { type: "application/pdf" });
+    return new File([blob], 'documento.pdf', { type: 'application/pdf' });
   };
   const initialFormData = {
     id_persona_alertar: null,
@@ -414,62 +552,62 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     cod_clase_alerta: String,
     id_persona: null,
     id_unidad_org_lider: undefined,
-
   };
   const [formData, setFormData] = useState(initialFormData);
-  const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
+  const handleInputChange = (event: { target: { name: any; value: any } }) => {
     const { name, value } = event.target;
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-
     }));
   };
-
+  useEffect(() => {
+    generarHistoricoBajas();
+  }, [empresa_3]);
 
   const miVariable = `${formData.id_unidad_org_lider}`;
   const enviarDocumento = async () => {
-
     try {
       const formData = new FormData();
+      const personaseletArrayString = JSON.stringify(personaselet);
+      const perfilseletArrayString = JSON.stringify(perfilselet);
+      const liderseletArrayString = JSON.stringify(lideresUnidad);
 
-      formData.append("radicado", `${consecutivoActual}`);
-      formData.append("ids_destinatarios_personas", `${persona?.id_persona}`);
-      formData.append("ids_destinatarios_unidades", `${miVariable}`);
+      formData.append('radicado', `${consecutivoActual}`);
+      formData.append('id_persona', id_persona.toString());
 
-      formData.append("id_persona", id_persona.toString());
+      formData.append(
+        'ids_destinatarios_personas',
+        `${personaseletArrayString}`
+      );
+      formData.append('id_consecutivo', `${consecutivo_id}`);
+
+      formData.append('ids_destinatarios_unidades', `${liderseletArrayString}`);
+      formData.append(
+        'ids_destinatarios_perfiles',
+        `${perfilseletArrayString}`
+      );
 
       const archivo = generarArchivo();
-      formData.append("archivo", archivo);
-      const url = "/recaudo/formulario/documento_formulario_recuado/";
+      formData.append('archivo', archivo);
+      const url = '/recaudo/formulario/documento_formulario_recuado/';
       const response = await api.post(url, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+          'Content-Type': 'multipart/form-data',
+        },
       });
-      console.log("Documento enviado con éxito", response.data);
-      control_success("Documento enviado con éxito");
-
-    } catch (error) {
-      console.error("Error al enviar el documento", error);
+      console.log('Documento enviado con éxito', response.data);
+      control_success('Documento enviado con éxito');
+    } catch (error: any) {
+      // console.error("Error al enviar el documento", error);}
+      control_error(error.response.data.detail);
     }
   };
 
-
-
-
-
-
   const [persona, set_persona] = useState<Persona | null>();
-  const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
-
-
-
-
-
-
-
-
+  const on_result = async (info_persona: Persona): Promise<void> => {
+    set_persona(info_persona);
+  };
 
   const [lider, set_lider] = useState<UnidadOrganizacional[]>([]);
 
@@ -480,11 +618,12 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
         const res_lider = await api.get(url);
         const alertas_lider = res_lider.data.data;
         set_lider(alertas_lider);
-        console.log("222222222222");
+        console.log('222222222222');
         console.log(alertas_lider);
-        console.log("111111111111");
-      } catch (error) {
-        console.error(error);
+        console.log('111111111111');
+      } catch (error: any) {
+        // console.error(error);
+        control_error(error.response.data.detail);
       }
     };
     void fetch_perfil();
@@ -499,14 +638,18 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
     setselected_button('buscador');
     setFormData(initialFormData);
   };
-  // crear 
+  // crear
 
   useEffect(() => {
     if (persona?.id_persona !== formData.id_persona) {
-      setFormData((prevData) => ({
-        ...prevData,
-        id_persona: persona?.id_persona !== undefined ? persona.id_persona : null,
-      }) as typeof formData); // Utilizamos "as typeof formData" para asegurar la compatibilidad de tipos
+      setFormData(
+        (prevData) =>
+          ({
+            ...prevData,
+            id_persona:
+              persona?.id_persona !== undefined ? persona.id_persona : null,
+          } as typeof formData)
+      ); // Utilizamos "as typeof formData" para asegurar la compatibilidad de tipos
     }
   }, [persona?.id_persona]);
 
@@ -533,58 +676,79 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
   const [is_modal_active, set_is_buscar] = useState<boolean>(false);
 
   const handle_open_buscar = (): void => {
+    handleSubmitRadicado();
+
     set_is_buscar(true);
-    crearConsecutivo()
+    crearConsecutivo();
     // realizarActualizacion();
   };
 
+  const [consecutivo_error, setconsecutivo_error] = useState<any>(null);
 
+  // const handle_close = (): void => {
+  //   set_is_buscar(false);
+  //   enviarDocumento();
+  // };
   const handle_close = (): void => {
     set_is_buscar(false);
-    enviarDocumento();
+    // setConsecutivoActual(null);
+    if (!consecutivo_error) {
+      enviarDocumento();
+      setconsecutivo_error('Documento no enviado ');
+    }
+    setconsecutivo_error(null);
   };
-
 
   async function crearConsecutivo() {
     try {
+      const fechaActual = new Date().toISOString();
       const url = `/gestor/consecutivos-unidades/consecutivo/create/`;
       const data = {
         id_unidad: unidadSeleccionada,
         id_cat_serie_und: selectedSerieSubserie,
-        id_persona: 215,
-        fecha_actual: "2024-01-29T15:30:00"
+        id_persona: id_persona,
+        fecha_actual: fechaActual,
       };
       // Asumiendo que `api` es una instancia de Axios o similar para hacer la petición
       const res = await api.post(url, data);
       console.log('Consecutivo creado con éxito', res.data);
       // Actualizar el DOM o el estado para mostrar el valor de consecutivo
       setConsecutivoActual(res.data?.data?.consecutivo);
-    } catch (error:any) {
+      setConsecutivo_id(res.data?.data?.id_consecutivo);
+    } catch (error: any) {
       console.error('Error al crear el consecutivo', error);
       control_error(error.response.data.detail);
+      setconsecutivo_error(error.response.data.detail);
       // Manejar el error aquí, por ejemplo, mostrando un mensaje al usuario
     }
   }
 
+  const isButtonDisabled = !unidadSeleccionada;
 
-  const isButtonDisabled = !unidadSeleccionada || !selectedSerieSubserie;
+  const [opengeneradordirecciones, setopengeneradordirecciones] =
+    useState(false);
+  const [
+    type_direction, // set_type_direction
+  ] = useState('');
+  const [Fecha_e, setFecha_e] = useState('');
 
+  useEffect(() => {
+    setSeriesSubseries([]);
+  }, [unidadSeleccionada]);
 
   return (
     <>
-
-      {/* <Grid item > 
-        <Button
-          startIcon={<SaveIcon />}
-          color='success'
-          variant='contained'
-          onClick={crearConsecutivo}
-        >Enviar Documento
-        </Button>
-      </Grid> */}
+      <DialogGeneradorDeDirecciones
+        open={opengeneradordirecciones}
+        openDialog={setopengeneradordirecciones}
+        onChange={setFecha_e} // Pasa la función para mostrar la dirección generada
+        type={type_direction}
+      />
       <Grid
         container
-        spacing={2} m={2} p={2}
+        spacing={2}
+        m={2}
+        p={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
@@ -596,13 +760,8 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
         }}
       >
         <Title title="Generación de documento" />
-
-        {/* <select value={opcionSeleccionada} onChange={handleChangeee}>
-          <option value="1">1</option>
-          <option value="2">2</option>
-          <option value="3">3</option>
-
-        </select> */}
+        {/* {Fecha_e} */}
+        {/* {radicadof} */}
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
             <InputLabel id="opcion-select-label">Plantilla</InputLabel>
@@ -612,53 +771,97 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               label="Opción"
               onChange={handleChangeee}
             >
-              <MenuItem value="1">Plantilla 1</MenuItem>
-              <MenuItem value="2">Plantilla 2</MenuItem>
-              <MenuItem value="3">Vacio</MenuItem>
+              <MenuItem value="9">Vacio</MenuItem>
+              {/* <MenuItem value="5">5 </MenuItem> */}
+              <MenuItem value="6">Citación</MenuItem>
+              <MenuItem value="8">Notificación </MenuItem>
+              <MenuItem value="2">Remisión por aviso</MenuItem>
+              <MenuItem value="1">Solicitud de información</MenuItem>
+              <MenuItem value="3">
+                Constancia de publicación de citación
+              </MenuItem>
+              <MenuItem value="4">
+                Constancia de publicación de notificación{' '}
+              </MenuItem>
+              {/* <MenuItem value="7">7</MenuItem> */}
             </Select>
           </FormControl>
         </Grid>
 
-        <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
-          <Grid container
-            item xs={12} marginLeft={2} marginRight={2} marginTop={3}
-            sx={{
+        <Grid item xs={12} sm={4}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="opcion-select-label">Radicado</InputLabel>
+            <Select
+              labelId="Radicado"
+              value={tipos_radicado}
+              label="Opción"
+              onChange={handleradicado}
+            >
+              <MenuItem value="NA">Sin radicado</MenuItem>
+              {tiposRadicado.map((tipo) => (
+                <MenuItem key={tipo.value} value={tipo.value}>
+                  {tipo.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
 
+        {/* <Grid item xs={4}>
+          <Button
+            variant="contained"
+            onClick={() => {
+              setopengeneradordirecciones(true);
+            }}
+          >
+            {' '}
+            Generar dirección
+          </Button>
+        </Grid> */}
+
+        <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl">
+          <Grid
+            container
+            item
+            xs={12}
+            marginLeft={2}
+            marginRight={2}
+            marginTop={3}
+            sx={{
               width: '900px', // Cambia '700px' por el ancho que desees
               height: '900px', // Cambia '500px' por el alto que desees
               position: 'relative',
               background: '#FAFAFA',
               borderRadius: '15px',
-              p: '20px', m: '10px 0 20px 0', mb: '20px',
+              p: '20px',
+              m: '10px 0 20px 0',
+              mb: '20px',
               boxShadow: '0px 3px 6px #042F4A26',
             }}
-
           >
-            <Grid item xs={12} >
+            <Grid item xs={12}>
               <Title title="Numero de radicado" />
-
             </Grid>
-            <Grid item xs={12} marginTop={3} >
+            <Grid item xs={12} marginTop={3}>
               <div>
-                <h3>Radicado : {consecutivoActual}</h3>
+                <h3>Radicado : {radicadof}</h3>
+
+                <h3>N Consecutivo: {consecutivoActual}</h3>
               </div>
             </Grid>
-
           </Grid>
         </Dialog>
 
-        <>
-
-
-          {/* ... (resto de tu JSX) */}
-
-        </>
+        <>{/* ... (resto de tu JSX) */}</>
         {/* miguel
         {id_persona} */}
         {/* {idUnidadSeleccionada} */}
+
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
-            <InputLabel id="unidad-organizacional-select-label">Unidad Organizacional</InputLabel>
+            <InputLabel id="unidad-organizacional-select-label">
+              Unidad Organizacional
+            </InputLabel>
             <Select
               labelId="unidad-organizacional-select-label"
               id="unidad-organizacional-select"
@@ -667,7 +870,11 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               onChange={handleChange}
             >
               {unidades.map((unidad) => (
-                <MenuItem key={unidad.id_unidad_organizacional} value={unidad.id_unidad_organizacional}>
+                <MenuItem
+                  key={unidad.id_unidad_organizacional}
+                  value={unidad.id_unidad_organizacional}
+                  disabled={!unidad.tiene_configuracion} // Deshabilita el MenuItem si tiene_configuracion es false
+                >
                   {unidad.nombre}
                 </MenuItem>
               ))}
@@ -675,10 +882,11 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
           </FormControl>
         </Grid>
 
-
         <Grid item xs={12} sm={4}>
           <FormControl fullWidth size="small">
-            <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
+            <InputLabel id="serie-subserie-select-label">
+              Serie/Subserie
+            </InputLabel>
             <Select
               labelId="serie-subserie-select-label"
               id="serie-subserie-select"
@@ -687,14 +895,22 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               onChange={handleChangee}
             >
               {seriesSubseries.map((item) => (
-                <MenuItem key={item.id_cat_serie_und} value={item.id_cat_serie_und}>
-                  {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
+                <MenuItem
+                  key={item.id_cat_serie_und}
+                  value={`${item.id_cat_serie_und}`}
+                  disabled={!item.tiene_configuracion}
+                >
+                  {item.nombre_serie_doc}{' '}
+                  {item.nombre_subserie_doc
+                    ? `- ${item.nombre_subserie_doc}`
+                    : ''}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Grid>
-
+        {/* id_cat_serie_und */}
+        {/* {selectedSerieSubserie} */}
 
         {/* {nombre}
           {nombre_unidad_organizacional} */}
@@ -709,11 +925,8 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
           />
         </Grid>
 
-
         {opcionSeleccionada === '1' ? (
-
           <>
-
             <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
@@ -721,8 +934,8 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
                 size="small"
                 variant="outlined"
                 label=" Fecha vigencia"
-                value={Fecha_vigencia}
                 InputLabelProps={{ shrink: true }}
+                value={Fecha_vigencia}
                 onChange={(e) => setFecha_vigencia(e.target.value)}
               />
             </Grid>
@@ -763,13 +976,7 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
               />
             </Grid>
           </>
-
-
         ) : null}
-
-
-
-
 
         <Grid item xs={12} sm={4}>
           <TextField
@@ -801,6 +1008,395 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
             onChange={(e) => setCiudad(e.target.value)}
           />
         </Grid>
+
+        {opcionSeleccionada === '2' ? (
+          <>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                value={expediente_2}
+                label="N Expediente"
+                variant="outlined"
+                onChange={(e) => setexpediente_2(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_2}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_2(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  {' '}
+                  procede recurso
+                </InputLabel>
+                <Select
+                  labelId="Procede recurso"
+                  value={opcionSiNo2}
+                  label="procede recurso"
+                  onChange={handleChangeSiNo2}
+                >
+                  <MenuItem value="Si">Sí</MenuItem>
+                  <MenuItem value="No">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </>
+        ) : null}
+
+        {opcionSeleccionada === '3' ? (
+          <>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_3}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_3(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                value={expediente_3}
+                label="N Expediente"
+                variant="outlined"
+                onChange={(e) => setexpediente_3(e.target.value)}
+              />
+            </Grid>
+            {/* <Grid item xs={12} sm={4}>
+              <Switch
+                defaultChecked={empresa_3} // Establece el estado predeterminado del Switch
+                onChange={(event) => setempresa_3(event.target.checked)} // Maneja el cambio de estado del Switch y actualiza el estado
+              />
+            </Grid> */}
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  Persona / Empresa
+                </InputLabel>
+                <Select
+                  labelId="Procede recurso"
+                  value={empresa_3}
+                  label="Persona / Empresa"
+                  onChange={handleChangeSiNo3}
+                >
+                  <MenuItem value="Si">persona</MenuItem>
+                  <MenuItem value="No">empresa</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* {empresa_3} */}
+
+            {empresa_3 === 'Si' ? (
+              <>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={nombre_3}
+                    label="Nombre"
+                    onChange={(e) => setnombre_3(e.target.value)}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={cc_3}
+                    label="N Identificacion    "
+                    onChange={(e) => setcc_3(e.target.value)}
+                  />
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={nombre_enpresa_3}
+                    label="Nombre de empresa"
+                    onChange={(e) => setnombre_enpresa_3(e.target.value)}
+                  />
+                </Grid>
+
+                <Grid item xs={12} sm={4}>
+                  <TextField
+                    fullWidth
+                    size="small"
+                    variant="outlined"
+                    value={nombre_nit_3}
+                    label="Nit de empresa"
+                    onChange={(e) => setnombre_nit_3(e.target.value)}
+                  />
+                </Grid>
+              </>
+            )}
+
+            {empresa_3 ? <></> : <></>}
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                value={fijacion_3}
+                label="Constancio de fijación"
+                onChange={(e) => setfijacion_3(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                value={des_fijacion_3}
+                label="Constancio de desfijación"
+                variant="outlined"
+                onChange={(e) => setdes_fijacion_3(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha del acto administrativo"
+                value={Fecha_acto_3}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_acto3(e.target.value)}
+              />
+            </Grid>
+          </>
+        ) : null}
+        {opcionSeleccionada === '4' ? (
+          <>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_4}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_4(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nombre"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={nombre_4}
+                onChange={(e) => setnombre_4(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Numeor de dias     "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={dias_4}
+                onChange={handleInputChangel}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nit"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={cc_4}
+                onChange={(e) => setcc_4(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  {' '}
+                  procede recurso
+                </InputLabel>
+                <Select
+                  labelId="Procede recurso"
+                  value={opcionSiNo}
+                  label="procede recurso"
+                  onChange={handleChangeSiNo}
+                >
+                  <MenuItem value="Si">Sí</MenuItem>
+                  <MenuItem value="No">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Constancia de fijación "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={constancia_4}
+                onChange={(e) => setconstancia_4(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Constancia de desfijación "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={constancia_des_4}
+                onChange={(e) => setconstancia_des_4(e.target.value)}
+              />
+            </Grid>
+
+            {/* {opcionSiNo} */}
+          </>
+        ) : null}
+        {opcionSeleccionada === '6' ? (
+          <>
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">Artículo </InputLabel>
+                <Select
+                  labelId="Articulo"
+                  value={opcion_6}
+                  label="Confirmación"
+                  onChange={handleChange_6}
+                >
+                  <MenuItem value="artículo 44 CCA">artículo 44 CCA</MenuItem>
+                  <MenuItem value=" artículo 68 CPACA">
+                    {' '}
+                    artículo 68 CPACA
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Numero"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={numero_6}
+                onChange={(e) => setnumero_6(e.target.value)}
+              />
+            </Grid>
+
+            {/* {opcion_6} */}
+          </>
+        ) : null}
+        {opcionSeleccionada === '8' ? (
+          <>
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha"
+                value={Fecha_8}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_8(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                type="date"
+                size="small"
+                variant="outlined"
+                label="Fecha remicion"
+                value={Fecha_8remi}
+                InputLabelProps={{ shrink: true }}
+                onChange={(e) => setFecha_8remi(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nombre de empresa"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={empresa_8}
+                onChange={(e) => setempresa_8(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Nit"
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={nit_8}
+                onChange={(e) => setnit_8(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  procede recurso de reposición
+                </InputLabel>
+                <Select
+                  labelId="procede recurso de reposición"
+                  value={opcion_8}
+                  label="procede recurso de reposición"
+                  onChange={handleChange_8}
+                >
+                  <MenuItem value="si">Si</MenuItem>
+                  <MenuItem value="no ">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                label="Numeor de dias     "
+                variant="outlined"
+                size="small"
+                fullWidth
+                value={dias_8}
+                onChange={handleInputChangel_8}
+                inputProps={{ inputMode: 'numeric', pattern: '[0-9]*' }}
+              />
+            </Grid>
+          </>
+        ) : null}
+
         <Grid item xs={12} sm={12}>
           <TextField
             rows={3}
@@ -813,20 +1409,24 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
             onChange={(e) => setAsunto(e.target.value)}
           />
         </Grid>
-        <Grid item >
-
-          <Button startIcon={<VisibilityIcon />} variant='contained' onClick={generarHistoricoBajas}>Ver borrador </Button>
+        <Grid item>
+          <Button
+            startIcon={<VisibilityIcon />}
+            variant="contained"
+            onClick={generarHistoricoBajas}
+          >
+            Ver borrador{' '}
+          </Button>
         </Grid>
-        <Grid item >
-
+        <Grid item>
           <Button
             startIcon={<SaveIcon />}
-            color='success'
-            variant='contained'
+            color="success"
+            variant="contained"
             onClick={handle_open_buscar}
             disabled={isButtonDisabled}
-
-          >Enviar Documento
+          >
+            Enviar Documento
           </Button>
         </Grid>
         <Grid item xs={12} sm={12}>
@@ -834,9 +1434,20 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
         </Grid>
       </Grid>
 
+      <AlertaDocumento
+        personaselet={personaselet}
+        setpersona={setpersona}
+        perfilselet={perfilselet}
+        setperfilselet={setperfilselet}
+        lideresUnidad={lideresUnidad}
+        setLideresUnidad={setLideresUnidad}
+      />
+
       <Grid
         container
-        spacing={2} m={2} p={2}
+        spacing={2}
+        m={2}
+        p={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
@@ -848,18 +1459,14 @@ dispondrá la terminación anticipada de la facilidad de pago y se iniciará el 
         }}
       >
         <Grid item xs={12} sm={12}>
-          <embed src={visor} type="application/pdf" width="100%" height="1080px" />
+          <embed
+            src={visor}
+            type="application/pdf"
+            width="100%"
+            height="1080px"
+          />
         </Grid>
-
       </Grid>
-
-
-
-
-
-
-
-
     </>
   );
 };

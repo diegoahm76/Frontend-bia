@@ -9,7 +9,6 @@ import {
   DataTableExpandedRows,
   DataTableValueArray,
 } from 'primereact/datatable';
-import { Grid, TableContainer } from '@mui/material';
 interface Level {
   level: number;
   column_id: string;
@@ -100,7 +99,10 @@ const TableRowExpansion = ({
         metaKeySelection={true}
         selectionMode={'single'}
         selection={selectedItem}
-        onSelectionChange={(e) => setSelectedItem(e.value)}
+        onSelectionChange={(e) => {
+          console.log(e.value);
+          setSelectedItem(e.value)
+        }}
         value={products}
         expandedRows={expandedRows}
         onRowToggle={(e) => {

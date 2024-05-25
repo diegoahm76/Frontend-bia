@@ -21,11 +21,13 @@ export const useprogramaHook = (): any => {
     defaultValues: {
       nombre_plan: '',
       nombre_programa: '',
+      numero_programa: '',
       porcentaje_1: 0,
       porcentaje_2: 0,
       porcentaje_3: 0,
       porcentaje_4: 0,
-      id_plan: null,
+      id_eje_estrategico: null,
+      id_sector: null,
       fecha_creacion: '',
       cumplio: false,
     },
@@ -38,12 +40,14 @@ export const useprogramaHook = (): any => {
     reset_programa({
       nombre_plan: '',
       nombre_programa: '',
+      numero_programa: '',
       porcentaje_1: 0,
       porcentaje_2: 0,
       porcentaje_3: 0,
       porcentaje_4: 0,
-      id_plan: null,
-      fecha_creacion: '',
+      id_eje_estrategico: null,
+      id_sector: null,
+      // fecha_creacion: '',
       cumplio: false,
     });
   };
@@ -62,7 +66,7 @@ export const useprogramaHook = (): any => {
   };
 
   // declaracion context
-  const { id_programa, id_plan, fetch_data_programa } =
+  const { id_programa, id_eje_estrategico, fetch_data_programa } =
     useContext(DataContextprograma);
 
   // declaracion redux
@@ -78,7 +82,7 @@ export const useprogramaHook = (): any => {
       data.fecha_creacion = fecha_creacion_format;
       data.id_programa = id_programa;
 
-      data.id_plan = id_plan;
+      data.id_eje_estrategico = id_eje_estrategico;
       await post_programa(data as IProgramas);
       control_success('Se creó correctamente');
       await limpiar_formulario_programa();
@@ -99,7 +103,7 @@ export const useprogramaHook = (): any => {
     try {
       set_is_saving_programa(true);
       data.id_programa = id_programa;
-      data.id_plan = id_plan;
+      data.id_eje_estrategico = id_eje_estrategico;
       const fecha_creacion_format = dayjs(fecha_creacion).format('YYYY-MM-DD');
       data.fecha_creacion = fecha_creacion_format;
       await put_programa((id_programa as number) ?? 0, data as IProgramas);

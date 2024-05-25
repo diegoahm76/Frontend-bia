@@ -10,6 +10,7 @@ import {
   Select,
 } from '@mui/material';
 import { v4 as uuid } from 'uuid';
+import { useEffect, useState } from 'react';
 
 interface IRuleMessage {
   rule: any;
@@ -64,6 +65,10 @@ const FormSelectController = ({
   none_option,
 }: IProps) => {
   const id_select = String(uuid());
+  const [options, set_options] = useState<any[]>([]);
+  useEffect(() => {
+    set_options(select_options);
+  }, [select_options]);
 
   return (
     <>
@@ -98,14 +103,20 @@ const FormSelectController = ({
                     variant="outlined"
                     disabled={disabled}
                     value={value === null ? [] : value}
-                    onChange={onChange}
+                    onChange={(e) => {
+                      onChange(e);
+                      {
+                        (on_change_function ?? null) !== null &&
+                          on_change_function(e.target.value, e.target.name);
+                      }
+                    }}
                     error={
                       !(error == null) ||
                       ((auto_focus ?? false) &&
                         (value === null || value === ''))
                     }
                   >
-                    {select_options.map((option: any) => (
+                    {options.map((option: any) => (
                       <MenuItem
                         key={option[option_key]}
                         value={option[option_key]}
@@ -159,7 +170,7 @@ const FormSelectController = ({
                       {
                         (on_change_function ?? null) !== null &&
                           on_change_function(
-                            select_options.find(
+                            options.find(
                               (option: any) =>
                                 option[option_key] === e.target.value
                             ),
@@ -178,7 +189,7 @@ const FormSelectController = ({
                         <em>None</em>
                       </MenuItem>
                     )}
-                    {select_options.map((option: any) => (
+                    {options.map((option: any) => (
                       <MenuItem
                         key={option[option_key]}
                         value={option[option_key]}

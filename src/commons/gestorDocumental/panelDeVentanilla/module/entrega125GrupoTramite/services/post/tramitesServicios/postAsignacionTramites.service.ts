@@ -13,8 +13,8 @@ export const postAsignacionTramiteGrupo = async (
     control_success('Asignación realizada');
     console.log('response', response);
     return response;
-  } catch (error) {
-    control_error('Error al realizar la asignación, intente nuevamente.');
+  } catch (error: any) {
+    control_error(error?.response?.data?.detail || 'Ha  ocurrido un error en la generación de la asignación');
     return null;
   } finally {
     setLoading(false);

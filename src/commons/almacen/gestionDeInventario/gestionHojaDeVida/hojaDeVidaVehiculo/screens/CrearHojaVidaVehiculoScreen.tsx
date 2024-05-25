@@ -15,6 +15,7 @@ import EspecificacionAdicional from '../components/CaracteristicasAdicionales';
 import { get_marca_service } from '../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { Title } from '../../../../../../components';
 import Mantenimiento_vehicle from '../components/Mantenimiento';
+import dayjs from 'dayjs';
 
 
 
@@ -55,7 +56,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
     form_data.append('tipo_combustible', data.tipo_combustible);
     form_data.append('es_arrendado', data.es_arrendado);
     form_data.append('ultimo_kilometraje', data);
-    form_data.append('fecha_adquisicion', data.fecha_adquisicion);
+    form_data.append('fecha_adquisicion',  dayjs(data.fecha_adquisicion).format('YYYY-MM-DD'));
     form_data.append('numero_motor', data.numero_motor);
     form_data.append('numero_chasis', data.numero_chasis);
     form_data.append('ultimo_kilometraje', data.ultimo_kilometraje);
@@ -67,14 +68,18 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
     form_data.append('observaciones_adicionales', data.observaciones_adicionales
     );
     form_data.append('es_agendable', data.es_agendable);
-    form_data.append('fecha_circulacion', data.fecha_circulacion);
+    if (data.fecha_circulacion !== null) {
+      form_data.append('fecha_circulacion', dayjs(data.fecha_circulacion).format('YYYY-MM-DD'));
+    }
     form_data.append('id_articulo', data.id_articulo);
     form_data.append('doc_identificador_nro', data.doc_identificador_nro
     );
     form_data.append('codigo_bien', data.codigo_bien);
     form_data.append('tipo_vehiculo', data.tipo_vehiculo);
     form_data.append('id_marca', data.id_marca);
+    if (data.ruta_imagen_foto !== null) {
     form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+    }
     if (data.id_hoja_de_vida === null) {
       void dispatch(create_cv_vehicles_service(form_data, navigate));
     } else {

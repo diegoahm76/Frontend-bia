@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 import { useState, type Dispatch, type SetStateAction } from 'react';
 import {
@@ -19,7 +20,7 @@ import FormInputNoController from '../form/FormInputNoController';
 import FormSelectController from '../form/FormSelectController';
 import FormButton from '../form/FormButton';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { useAppDispatch } from '../../../hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks';
 import FormInputFileController from '../form/FormInputFileController';
 import FormDatePickerController from '../form/FormDatePickerController';
 import { v4 as uuid } from 'uuid';
@@ -33,6 +34,7 @@ import AltRouteIcon from '@mui/icons-material/AltRoute';
 import FormCheckboxController from '../form/FormCheckboxController';
 import FormButtonGrid from '../form/FormButtonGrid';
 import FormKeywords from '../form/FormKeywords';
+import { setCurrentPersonaRespuestaUsuario } from '../../../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 interface IProps {
   set_models: any;
   form_filters: any[];
@@ -41,7 +43,7 @@ interface IProps {
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   get_filters_models: any;
   models: any[];
-  columns_model: GridColDef[];
+  columns_model: GridColDef[] | null;
   row_id: string | number;
   set_current_model: any;
   title_table_modal?: string | null;
@@ -68,6 +70,8 @@ const SeleccionarModeloDialogForm = ({
 }: IProps) => {
   const dispatch = useAppDispatch();
   const [selected_row, set_selected_row] = useState([]);
+
+  const { currentPersonaRespuestaUsuario } = useAppSelector((state) => state.ResRequerimientoOpaSlice);
 
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
   const TypeDatum: any = (input: any) => {
@@ -212,7 +216,7 @@ const SeleccionarModeloDialogForm = ({
           xs={form_input.xs}
           md={form_input.md}
           margin={form_input.margin}
-          selected_image={form_input.selected_imagen}
+          selected_image={form_input.selected_image}
           width_image={form_input.width_image}
           height_image={form_input.height_image}
         />
@@ -280,6 +284,11 @@ const SeleccionarModeloDialogForm = ({
     const model = models.find((p) => p[row_id] === selected_row[0]);
     if (model !== undefined) {
       dispatch(set_current_model(model));
+      console.log('model', model);
+      dispatch(setCurrentPersonaRespuestaUsuario({
+        ...currentPersonaRespuestaUsuario,
+        ...model,
+      } as any));
       set_models([]);
       handle_close_select_model();
     }
@@ -367,10 +376,13 @@ const SeleccionarModeloDialogForm = ({
                 sx={{ marginTop: '6px' }}
               >
                 <ButtonGroup style={{ margin: 7 }}>
-                  {download_xls({ nurseries: models, columns: columns_model })}
+                  {download_xls({
+                    nurseries: models,
+                    columns: columns_model == null ? [] : columns_model,
+                  })}
                   {download_pdf({
                     nurseries: models,
-                    columns: columns_model,
+                    columns: columns_model == null ? [] : columns_model,
                     title: title_table_modal,
                   })}
                 </ButtonGroup>

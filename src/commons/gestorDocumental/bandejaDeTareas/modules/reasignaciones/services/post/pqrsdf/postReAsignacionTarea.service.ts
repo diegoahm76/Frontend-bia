@@ -18,12 +18,12 @@ export const postReAsignacionTarea = async (
    setLoading(true);
     const url = `gestor/bandeja-tareas/reasignaciones/tareas/create/`;
     const response = await api.post(url, data);
-    control_success('Se realizó la Reasignación correctamente');
+    control_success('Se realizó la re-asignación correctamente');
     return response;
   } catch (error) {
     showAlert(
       'Atención',
-      'No se pudo realizar la Reasignación, por favor intente nuevamente',
+      'No se pudo realizar la re-asignación, por favor intente nuevamente',
       'error'
     )
     return null;

@@ -14,6 +14,7 @@ import SaveIcon from '@mui/icons-material/Save';
 
 
 interface ConfiguracionBasica {
+    [x: string]: any;
     id_tipo_cobro: any;
     nombre_tipo_cobro: any;
     tipo_renta_asociado: any;
@@ -71,7 +72,7 @@ export const TiposCobro: React.FC = () => {
 
     const columns = [
 
-        { field: 'id_tipo_cobro', headerName: ' Numero ', width: 130, flex: 1 },
+        { field: 'nombre_renta_asociado', headerName: ' Renta asociado ', width: 130, flex: 1 },
         { field: 'nombre_tipo_cobro', headerName: 'Tipo cobro', width: 130, flex: 1 },
         // { field: 'tipo_renta_asociado', headerName: ' tipo_renta_asociado ', width: 130, flex: 1 },
 
@@ -181,6 +182,18 @@ export const TiposCobro: React.FC = () => {
         void fetchRenta();
     }, []);
 
+
+    const getNombreRentaAsociada = (idTipoRentaSeleccionado: any) => {
+        const rentaSeleccionada = Renta.find(renta => renta.id_tipo_renta === idTipoRentaSeleccionado);
+        return rentaSeleccionada ? rentaSeleccionada.nombre_tipo_renta : null;
+    };
+
+    // Modifica cómo renderizas el DataGrid para filtrar las configuraciones basadas en la selección
+    // Asegúrate de que este fragmento se re-evalúe cada vez que `formValues` o `configuraciones` cambien. Esto puede implicar colocarlo directamente en el cuerpo del componente o usar un efecto si es necesario.
+    const nombreRentaAsociada = getNombreRentaAsociada(formValues.tipo_renta_asociado);
+
+    const configuracionesFiltradas = configuraciones.filter(configuracion => configuracion.nombre_renta_asociado === nombreRentaAsociada);
+
     return (
         <>
 
@@ -197,10 +210,28 @@ export const TiposCobro: React.FC = () => {
             >
                 <Title title="Tipos  de cobro " />
                 <Grid container item xs={12} spacing={2} marginTop={2}>
-           
 
-                  
 
+
+                    <Grid item xs={12} sm={4}>
+                        <FormControl fullWidth size="small" variant="outlined">
+                            <InputLabel id="tipo-renta-asociado-label">Tipo Renta Asociado</InputLabel>
+                            <Select
+                                name="tipo_renta_asociado"
+
+                                labelId="tipo-renta-asociado-label"
+                                value={formValues.tipo_renta_asociado}
+                                onChange={handleInputChange}
+                                label="Tipo Renta Asociado"
+                            >
+                                {Renta.map((option) => (
+                                    <MenuItem key={option.id_tipo_renta} value={option.id_tipo_renta}>
+                                        {option.nombre_tipo_renta}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
 
                     <Grid item xs={12} sm={4}>
                         <TextField
@@ -214,40 +245,6 @@ export const TiposCobro: React.FC = () => {
                             value={formValues.nombre_tipo_cobro}
                         />
                     </Grid>
-
-                    {/* <Grid item xs={12} sm={4}>
-                        <TextField
-                            required
-                            fullWidth
-                            size="small"
-                            variant="outlined"
-                            name="tipo_renta_asociado"
-                            onChange={handleInputChange}
-                            label="tipo_renta_asociado"
-                            value={formValues.tipo_renta_asociado}
-                        />
-                    </Grid> */}
-
-     <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" variant="outlined">
-                        <InputLabel id="tipo-renta-asociado-label">Tipo Renta Asociado</InputLabel>
-                        <Select
-                            name="tipo_renta_asociado"
-
-                            labelId="tipo-renta-asociado-label"
-                            value={formValues.tipo_renta_asociado}
-                            onChange={handleInputChange}
-                            label="Tipo Renta Asociado"
-                        >
-                            {Renta.map((option) => (
-                                <MenuItem key={option.id_tipo_renta} value={option.id_tipo_renta}>
-                                    {option.nombre_tipo_renta}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>  
-                </Grid>
-
 
                     <Grid item xs={12} sm={4}>
                         <Button
@@ -280,7 +277,7 @@ export const TiposCobro: React.FC = () => {
                                 autoHeight
                                 pageSize={5}
                                 columns={columns}
-                                rows={configuraciones}
+                                rows={configuracionesFiltradas}
                                 getRowId={(row) => row.id_tipo_cobro}
                             />
                         </div>

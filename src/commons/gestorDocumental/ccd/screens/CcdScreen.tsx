@@ -100,7 +100,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
   }, [ccd_current]);
 
   useEffect(() => {
-    console.log('hello world ccd')
+    console.log('hello world ccd');
     clean_ccd();
   }, []);
 
@@ -439,45 +439,54 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
 
               {/* end new spaces */}
             </Grid>
-            <Stack
-              direction="row"
-              justifyContent="flex-end"
-              spacing={2}
-              sx={{ mt: '20px' }}
-            >
-              <Button
-                color="primary"
-                variant="contained"
-                startIcon={<SearchIcon />}
-                onClick={() => {
-                  set_consulta_ccd_is_active(true);
-                }}
-              >
-                BUSCAR CCD
-              </Button>
 
-              <LoadingButton
-                loading={loadingButton}
-                type="submit"
-                color="success"
-                variant="contained"
-                disabled={ccd_current?.actual}
-                startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
-              >
-                {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
-              </LoadingButton>
-              <Button
-                color="primary"
-                variant="outlined"
-                startIcon={<CleanIcon />}
-                onClick={() => {
-                  clean_ccd();
-                  // clean formulario
-                }}
-              >
-                LIMPIAR CAMPOS
-              </Button>
-            </Stack>
+            <Grid
+              container
+              justifyContent="center"
+              spacing={2}
+              sx={{ my: '20px' }}
+            >
+              <Grid item xs={12} sm={4}>
+                <Button
+                  color="primary"
+                  variant="contained"
+                  startIcon={<SearchIcon />}
+                  onClick={() => {
+                    set_consulta_ccd_is_active(true);
+                  }}
+                  fullWidth
+                >
+                  BUSCAR CCD
+                </Button>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <LoadingButton
+                  loading={loadingButton}
+                  type="submit"
+                  color="success"
+                  variant="contained"
+                  disabled={ccd_current?.actual}
+                  startIcon={ccd_current != null ? <SyncIcon /> : <SaveIcon />}
+                  fullWidth
+                >
+                  {ccd_current != null ? 'ACTUALIZAR CCD' : 'CREAR CCD'}
+                </LoadingButton>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <Button
+                  color="primary"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={() => {
+                    clean_ccd();
+                    // clean formulario
+                  }}
+                  fullWidth
+                >
+                  LIMPIAR CAMPOS
+                </Button>
+              </Grid>
+            </Grid>
           </form>
         </Grid>
       </Grid>
@@ -840,11 +849,11 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     }}
                   >
                     {download_xls({
-                      nurseries: assignments_ccd,
+                      nurseries: assignments_ccd ? [...assignments_ccd].sort((a: any, b: any) => a?.codigo_serie - b?.codigo_serie) : assignments_ccd,
                       columns: columns_asignacion,
                     })}
                     {download_pdf({
-                      nurseries: assignments_ccd,
+                      nurseries: assignments_ccd ? [...assignments_ccd].sort((a: any, b: any) => a?.codigo_serie - b?.codigo_serie) : assignments_ccd,
                       columns: columns_asignacion,
                       title: 'Actividades',
                     })}
@@ -853,7 +862,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                     density="compact"
                     autoHeight
                     // ! se deben realizar cambios de filtro para la seleccion de los datos
-                    rows={assignments_ccd}
+                    rows={assignments_ccd ? [...assignments_ccd].sort((a: any, b: any) => a?.codigo_serie - b?.codigo_serie) : assignments_ccd}
                     sx={{
                       zIndex: 2,
                     }}

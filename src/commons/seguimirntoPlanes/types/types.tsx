@@ -1,4 +1,5 @@
 import type { IPlan } from '../Consultas/types/types';
+import { tipo_indicador } from '../Indicadores/choices/selects';
 
 export interface IPlanes {
   id_plan?: number | null;
@@ -20,10 +21,15 @@ export interface IMode {
 export interface IEjeEstrategico {
   id_eje_estrategico?: number | null;
   nombre_plan?: string;
+  sigla_plan?: string;
   nombre_tipo_eje?: string;
+  nombre_objetivo?: string;
+  nombre_plan_objetivo?: string;
   nombre: string;
   id_plan?: number | null;
-  id_tipo_eje?: number | null;
+  id_programa: number | null;
+  id_objetivo?: number | null;
+  id_tipo_eje?: number | string;
 }
 // Objetivo
 export interface IObjetivo {
@@ -36,19 +42,111 @@ export interface IObjetivo {
 export interface IProgramas {
   id_programa?: number | null;
   nombre_plan?: string;
+  nombre_eje_estrategico?: string;
   nombre_programa: string;
+  numero_programa: string;
   porcentaje_1: number | null;
   porcentaje_2: number | null;
   porcentaje_3: number | null;
   porcentaje_4: number | null;
   cumplio: boolean;
   fecha_creacion: string;
+  id_eje_estrategico?: number | null;
+  id_sector: number | null;
+}
+//Mediciones select
+export interface IMedicion {
+  id_medicion?: number;
+  nombre_medicion?: string;
+  activo?: boolean;
+  item_ya_usado?: boolean;
+  registro_precargado?: boolean;
+}
+
+//Unidad Organizacional select
+export interface IUnidadOrganizacional {
+  nombre: string;
+  id_unidad_organizacional: number;
+}
+
+// Metas PGAR
+export interface IMetasPgar {
+  id_meta_eje?: number | null;
+  nombre_eje_estrategico?: string;
+  nombre_objetivo:        string;
+  nombre_plan?: string;
+  tipo_eje_estrategico:   string;
+  nombre_plan_objetivo:   string;
+  nombre_meta_eje: string;
+  numero_meta_eje: string;
+  fecha_creacion: string;
+  cumplio: boolean;
+  id_eje_estrategico?: number | null;
   id_plan?: number | null;
+  id_objetivo?: number | null;
+}
+// Linea Base PGAR
+export interface ILineaBasePgar {
+  id_linea_base?: number | null;
+  nombre_eje_estrategico?: string;
+  nombre_objetivo?: string;
+  nombre_plan?: string;
+  nombre_meta: string;
+  tipo_eje_estrategico: string;
+  nombre_linea_base: string;
+  fecha_creacion: string;
+  cumplio: boolean;
+  id_meta_eje?: number | null;
+  id_eje_estrategico?: number | null;
+  id_plan?: number | null;
+  id_objetivo?: number | null;
+}
+// Actividad PGAR
+export interface IActividadPgar {
+  id_actividad?: number | null;
+  nombre_eje_estrategico?: string;
+  nombre_meta: string;
+  nombre_linea_base: string;
+  numero_actividad?: string;
+  nombre_actividad: string;
+  nombre_plan?: string;
+  nombre_objetivo?: string;
+  id_linea_base?: number | null;
+  id_meta_eje?: number | null;
+  id_eje_estrategico?: number | null;
+  id_plan?: number | null;
+  id_objetivo?: number | null;
+  fecha_creacion: string;
+  cumplio: boolean;
+}
+// Indicador PGAR
+export interface IIndicadorPgar {
+  id_indicador: number | string;
+  nombre_indicador: string;
+  numero_indicador: string;
+  nombre_linea_base: string;
+  medida: string;
+  tipo_indicador: string;
+  entidad_responsable: string;
+  nombre_eje_estrategico?: string;
+  nombre_meta?: string;
+  nombre_actividad?: string;
+  nombre_plan?: string;
+  id_medicion?: number | string;
+  id_actividad?: number | string;
+  id_plan?: number | string;
+  id_linea_base?: number | string;
+  id_meta_eje?: number | string;
+  id_eje_estrategico?: number | string;
+  id_objetivo?: number | string;
+  id_unidad_organizacional?: number | string;
+  fecha_creacion: string;
+  cumplio: boolean;
 }
 // Proyectos
 export interface IProyectos {
   id_proyecto?: number | null;
-  numero_proyecto: number | null;
+  numero_proyecto: string;
   nombre_programa?: string;
   nombre_plan?: string;
   pondera_1: number | null;
@@ -68,7 +166,7 @@ export interface IProductos {
   nombre_producto: string;
   nombre_plan?: string;
   id_proyecto?: number | null;
-  numero_producto?: number | null;
+  numero_producto? : string;
   id_programa: number | null;
   id_plan: number | null;
   fecha_creacion: string;
@@ -80,7 +178,8 @@ export interface IActividades {
   nombre_producto?: string;
   nombre_actividad?: string;
   id_producto?: number | null;
-  numero_actividad?: number | null;
+  numero_actividad?: string;
+  numero_producto: string;
   id_plan?: number | null;
   nombre_plan?: string;
   nombre_proyecto?: string;
@@ -101,6 +200,7 @@ export interface Indicadores {
   nombre_indicador: string;
   nombre_proyecto?: string;
   nombre_programa?: string;
+  numero_indicador: string;
   tipo_indicador?: string;
   linea_base: string;
   medida: string;
@@ -165,6 +265,7 @@ export interface ISubprogramas {
   id_subprograma?: number | null;
   nombre_subprograma: string;
   nombre_programa?: string;
+  numero_subprograma: string;
   id_programa?: number | null;
 }
 // Fuentes de financiacion indicadores
@@ -176,6 +277,7 @@ export interface IFuentesFinanciacion {
   nombre_proyecto?: string;
   nombre_actividad?: string;
   nombre_producto?: string;
+  nombre_meta: string;
   vano_1: number | null;
   vano_2: number | null;
   vano_3: number | null;
@@ -186,6 +288,7 @@ export interface IFuentesFinanciacion {
   id_proyecto?: number | null;
   id_actividad?: number | null;
   id_producto?: number | null;
+  id_meta: number | null;
 }
 // Detalle Inversion Cuentas
 export interface IDetalleCuentas {
@@ -418,6 +521,14 @@ export interface IPlanesIndex {
   mode: IMode;
   obj_plan: IObjetivo;
   programa: IProgramas;
+  meta_pgar: IMetasPgar;
+  linea_base: ILineaBasePgar;
+  actividad_pgar: IActividadPgar;
+  indicador_pgar: IIndicadorPgar;
+  armonizacion_pgar: any;
+  seguimiento_pgar: any;
+  accion_correctiva: any;
+  tramite: any;
   proyecto: IProyectos;
   producto: IProductos;
   actividad: IActividades;

@@ -7,13 +7,15 @@ import { control_error } from '../../../../helpers';
 import { useAppSelector } from '../../../../hooks';
 import { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import { get_programa_id } from '../services/services';
+import { get_sector } from '../../configuraciones/Request/request';
+import { ISector } from '../../configuraciones/interfaces/interfaces';
 
 interface UserContext {
   // * id
-  id_plan: number | null;
-  set_id_plan: (value: number | null) => void;
-  id_programa : number | null;
-  set_id_programa : (value: number | null) => void;
+  id_eje_estrategico: number | null;
+  set_id_eje_estrategico: (value: number | null) => void;
+  id_programa: number | null;
+  set_id_programa: (value: number | null) => void;
 
   // * rows
   rows_programa: IProgramas[];
@@ -22,28 +24,34 @@ interface UserContext {
   // * select
   tipo_eje_selected: ValueProps[];
   set_tipo_eje_selected: (value: ValueProps[]) => void;
+  sector_selected: ValueProps[];
+  set_sector_selected: (value: ValueProps[]) => void;
 
   // * info
 
   // * fetch
 
   fetch_data_programa: () => Promise<void>;
+  fetch_data_sector: () => Promise<void>;
 }
 
 export const DataContextprograma = createContext<UserContext>({
   // * id
-  id_plan: null,
-  set_id_plan: () => {},
-  id_programa : null,
-  set_id_programa : () => {},
+  id_eje_estrategico: null,
+  set_id_eje_estrategico: () => {},
+  id_programa: null,
+  set_id_programa: () => {},
   // * rows
   rows_programa: [],
   set_rows_programa: () => {},
 
   tipo_eje_selected: [],
   set_tipo_eje_selected: () => {},
+  sector_selected: [],
+  set_sector_selected: () => {},
 
   fetch_data_programa: async () => {},
+  fetch_data_sector: async () => {},
 });
 
 export const UserProviderPrograma = ({
@@ -52,13 +60,18 @@ export const UserProviderPrograma = ({
   children: React.ReactNode;
 }): JSX.Element => {
   // * id
-  const [id_plan, set_id_plan] = React.useState<number | null>(null);
+  const [id_eje_estrategico, set_id_eje_estrategico] = React.useState<number | null>(null);
   const [id_programa, set_id_programa] = React.useState<number | null>(null);
 
   // * select
   const [tipo_eje_selected, set_tipo_eje_selected] = React.useState<
     ValueProps[]
   >([]);
+
+  const [sector_selected, set_sector_selected] = React.useState<ValueProps[]>(
+    []
+  );
+
 
   // * rows
 
@@ -69,26 +82,17 @@ export const UserProviderPrograma = ({
   // * fetch
   //* declaracion context
   // const {
-  //   plan: { id_plan },
+  //   plan: { id_eje_estrategico },
   // } = useAppSelector((state) => state.planes);
 
   const fetch_data_programa = async (): Promise<void> => {
     try {
       set_rows_programa([]);
-      const response = await get_programa_id(id_plan as number);
+      const response = await get_programa_id(id_eje_estrategico as number);
       if (response?.length > 0) {
         const data_programa: IProgramas[] = response.map(
           (item: IProgramas) => ({
-            id_programa: item.id_programa,
-            nombre_plan: item.nombre_plan,
-            nombre_programa: item.nombre_programa,
-            porcentaje_1: item.porcentaje_1,
-            porcentaje_2: item.porcentaje_2,
-            porcentaje_3: item.porcentaje_3,
-            porcentaje_4: item.porcentaje_4,
-            id_plan: item.id_plan,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
 
@@ -101,16 +105,37 @@ export const UserProviderPrograma = ({
     }
   };
 
+  const fetch_data_sector = async (): Promise<void> => {
+    try {
+      const response = await get_sector();
+      if (response?.length > 0) {
+        const data_sector: ValueProps[] | any = response.map(
+          (item: ISector) => ({
+            value: item.id_sector,
+            label: item.nombre_sector,
+          })
+        );
+        set_sector_selected(data_sector);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const value: UserContext = {
     // * id
-    id_plan,
-    set_id_plan,
+    id_eje_estrategico,
+    set_id_eje_estrategico,
     id_programa,
     set_id_programa,
 
     // * select
     tipo_eje_selected,
     set_tipo_eje_selected,
+    sector_selected,
+    set_sector_selected,
 
     // * rows
     rows_programa,
@@ -120,6 +145,7 @@ export const UserProviderPrograma = ({
 
     // * fetch
     fetch_data_programa,
+    fetch_data_sector,
   };
 
   return (

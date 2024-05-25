@@ -13,6 +13,7 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { DataTabla, Persona, initialData, initial_form } from '../interface/IwordFlow';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import { BuscadorPerzonasStiven } from '../components/BuscadorPersonaPersonalizado/BuscadorPerzonas';
 
 export const ConsultarWorkFlow = () => {
     const [data_table, set_data_tabla] = useState<DataTabla[]>(initialData);
@@ -58,14 +59,14 @@ export const ConsultarWorkFlow = () => {
             field: 'Fecha de Radicado',
             headerName: 'Fecha de Radicado',
             flex: 1,
-            renderCell: (params:any) => (
-              <span>
-                {new Date(params.value).toLocaleDateString()}
-                {/* {' '} */}
-                {/* {new Date(params.value).toLocaleTimeString()} */}
-              </span>
+            renderCell: (params: any) => (
+                <span>
+                    {new Date(params.value).toLocaleDateString()}
+                    {/* {' '} */}
+                    {/* {new Date(params.value).toLocaleTimeString()} */}
+                </span>
             ),
-          },        { field: 'Persona Que Radicó', headerName: 'Persona que Radicó', flex: 1 },
+        }, { field: 'Persona Que Radicó', headerName: 'Persona que Radicó', flex: 1 },
         { field: 'Tiempo Para Respuesta', headerName: 'Tiempo Para Respuesta', flex: 1 },
         { field: 'Estado', headerName: 'Estado', flex: 1 },
         {
@@ -131,6 +132,17 @@ export const ConsultarWorkFlow = () => {
     const on_result = async (info_persona: Persona): Promise<void> => {
         set_persona(info_persona);
     };
+    // const handleResult = async (persona?: Persona): Promise<void> => {
+    //     if (persona) {
+    //         // Haz lo que necesites con la información de la persona
+    //         set_persona(persona);
+
+    //     } else {
+    //         // Manejar el caso en el que la persona es undefined
+    //         console.log("No se seleccionó ninguna persona.");
+    //     }
+    // };
+
 
     return (
         <>
@@ -216,9 +228,6 @@ export const ConsultarWorkFlow = () => {
 
 
 
-
-
-
                 <Grid item xs={3}>
                     <FormControl fullWidth style={{ marginTop: 15, width: "100%" }}>
                         <InputLabel id="estado-solicitud-label">Estado Solicitud</InputLabel>
@@ -231,7 +240,7 @@ export const ConsultarWorkFlow = () => {
                             onChange={(e) => handleInputChange("estado_solicitud", e.target.value)}
                         >
                             {choise_estado_data.map((item: string[]) => (
-                                <MenuItem key={item[0]} value={item[0]}>
+                                <MenuItem key={item[0]} value={item[1]}>
                                     {item[1]}
                                 </MenuItem>
                             ))}
@@ -259,7 +268,7 @@ export const ConsultarWorkFlow = () => {
                             void on_result(data);
                         }}
                     />
-
+                    {/* <BuscadorPerzonasStiven onResultt={handleResult} /> */}
                 </Grid>
 
 
@@ -269,31 +278,31 @@ export const ConsultarWorkFlow = () => {
 
 
 
-                <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                    <Button
-                        style={{ width: "90%" }}
-                        variant="contained"
-                        startIcon={<SearchIcon />}
-                        color='primary'
-                        fullWidth
-                        onClick={Peticion_Busqueda_Avanzada}
-                    >
-                        Buscar
-                    </Button>
-                </Grid>
+                    <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+                        <Button
+                            style={{ width: "90%" }}
+                            variant="contained"
+                            startIcon={<SearchIcon />}
+                            color='primary'
+                            fullWidth
+                            onClick={Peticion_Busqueda_Avanzada}
+                        >
+                            Buscar
+                        </Button>
+                    </Grid>
 
-                <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
-                    <Button
-                        color='primary'
-                        style={{ width: "90%" }}
-                        variant="outlined"
-                        onClick={limpiar_formulario}
-                        fullWidth
-                        startIcon={<CleanIcon />}
-                    >
-                        Limpiar
-                    </Button>
-                </Grid>
+                    <Grid item xs={12} sm={4} md={2.4} lg={1.9}>
+                        <Button
+                            color='primary'
+                            style={{ width: "90%" }}
+                            variant="outlined"
+                            onClick={limpiar_formulario}
+                            fullWidth
+                            startIcon={<CleanIcon />}
+                        >
+                            Limpiar
+                        </Button>
+                    </Grid>
 
                 </Grid>
 

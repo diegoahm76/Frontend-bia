@@ -22,9 +22,12 @@ export const useEjeEstrategicoHook = (): any => {
   } = useForm<IEjeEstrategico>({
     defaultValues: {
       nombre_plan: '',
+      nombre_objetivo: '',
+      sigla_plan: '',
       nombre_tipo_eje: '',
       nombre: '',
-      id_tipo_eje: null,
+      id_objetivo: null,
+      id_tipo_eje: '',
     },
   });
 
@@ -35,10 +38,13 @@ export const useEjeEstrategicoHook = (): any => {
     reset_eje_estrategico({
       id_eje_estrategico: null,
       nombre_plan: '',
+      nombre_objetivo: '',
+      sigla_plan: '',
       nombre_tipo_eje: '',
       nombre: '',
+      id_objetivo: null,
       id_plan: null,
-      id_tipo_eje: null,
+      id_tipo_eje: '',
     });
   };
 
@@ -47,23 +53,27 @@ export const useEjeEstrategicoHook = (): any => {
     useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_eje_estrategico } = useContext(DataContextEjeEstrategico);
+  const { id_plan, id_objetivo, fetch_data_eje_estrategico, fetch_data_eje_estrategico_id_obj } = useContext(DataContextEjeEstrategico);
 
   // declaracion redux
   const {
-    plan: { id_plan }, eje_estrategico: { id_eje_estrategico },
+    eje_estrategico: { id_eje_estrategico },
   } = useAppSelector((state) => state.planes);
 
   const onsubmit_eje_estrategico = handleSubmit_eje_estrategico(
     async (data) => {
       try {
-        //  console.log('')(data, 'data');
-        data.id_plan = id_plan;
         set_is_saving_eje_estrategico(true);
+        data.id_plan = id_plan;
+        data.id_objetivo = id_objetivo;
         await post_eje_estrategico(data as IEjeEstrategico);
         control_success('Se creó correctamente');
         await limpiar_formulario_eje_estrategico();
-        await fetch_data_eje_estrategico();
+        if(id_objetivo){
+          await fetch_data_eje_estrategico_id_obj();
+        }else{
+          await fetch_data_eje_estrategico();
+        }
       } catch (error: any) {
         control_error(
           error.response.data.detail ||
@@ -87,7 +97,11 @@ export const useEjeEstrategicoHook = (): any => {
       );
       control_success('Se actualizó correctamente');
       await limpiar_formulario_eje_estrategico();
-      await fetch_data_eje_estrategico();
+      if(id_objetivo){
+        await fetch_data_eje_estrategico_id_obj();
+      }else{
+        await fetch_data_eje_estrategico();
+      }
     } catch (error: any) {
       control_error(
         error.response.data.detail ||

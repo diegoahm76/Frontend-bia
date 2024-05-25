@@ -36,6 +36,15 @@ export const AccionesFinales = ({
   //* handleSumbit
 
   const sendDataByFormData = () => {
+    const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
+      if (a.ruta_soporte && !b.ruta_soporte) {
+        return -1;
+      }
+      if (!a.ruta_soporte && b.ruta_soporte) {
+        return 1;
+      }
+      return 0;
+    });
     if (!Array.isArray(anexosCreados) || anexosCreados.length === 0) {
       console.error('anexosCreados is not an array or is empty');
       return;
@@ -67,7 +76,7 @@ export const AccionesFinales = ({
     );
     formData.append('id_tarea', currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada);
 
-    anexosCreados.forEach((anexo: any, index: number) => {
+    sortedAnexos.forEach((anexo: any, index: number) => {
       formData.append('archivo', anexo.ruta_soporte);
       formData.append(
         'anexo',
@@ -83,7 +92,7 @@ export const AccionesFinales = ({
             nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
             descripcion: anexo?.descripcionMetadatos,
             asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
+            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value.toUpperCase(),
             nro_folios_documento: +anexo?.numero_folios
               ? +anexo?.numero_folios
               : 0,

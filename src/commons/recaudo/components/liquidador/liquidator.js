@@ -42,10 +42,26 @@ function Liquidator(props) {
     // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     setIsVisible(!isVisible);
   };
-  const handleInputChange = (event) => {
-    setFormData({ ...formData, [event.target.name]: event.target.value });
-  };
 
+  useEffect(() => {
+    // Actualizar formData cuando cambian los props
+    const initialFormData = {};
+    props.variables.forEach(variable => {
+      initialFormData[variable] = props.selectedVariables?.[variable] || '';
+    });
+    setFormData(initialFormData);
+  }, [props.selectedVariables, props.variables]);
+
+  // const handleInputChange = (event) => {
+  //   setFormData({ ...formData, [event.target.name]: event.target.value });
+  // };
+ const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: value
+    }));
+  };
   const handleSubmit = (event) => {
     event.preventDefault();
     /**
@@ -89,11 +105,15 @@ function Liquidator(props) {
       return undefined;
     }
   };
-
+  const handleClick = () => {
+    console.log(props.selectedVariables);
+    console.log("2222222"); 
+  };
   return (
     <div className="Liquidator-wrapper">
       <header className="Liquidator-title">
         <h3>Prueba Liquidador</h3>
+        
         <div>Resultado: {textValue && <span>{textValue}</span>}</div>
       </header>
       <div>

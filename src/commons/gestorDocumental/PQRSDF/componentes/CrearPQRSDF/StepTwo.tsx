@@ -36,13 +36,17 @@ import { IObjExhibit } from '../../interfaces/pqrsdf';
 import { v4 as uuid } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { control_error } from '../../store/thunks/pqrsdfThunks';
+import {
+  control_error,
+  get_storage_mediums_service,
+} from '../../store/thunks/pqrsdfThunks';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 interface IProps {
-  control_form: any | null;
+  control_form?: any | null;
+  flag_metadata?: boolean | null;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const StepTwo = () => {
+const StepTwo = ({ flag_metadata }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { representacion_legal } = useAppSelector((state) => state.auth);
@@ -68,6 +72,9 @@ const StepTwo = () => {
   const [add_metadata_is_active, set_add_metadata_is_active] =
     useState<boolean>(false);
   const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
+  useEffect(() => {
+    void dispatch(get_storage_mediums_service());
+  }, []);
 
   const on_submit_exhibit = (data: IObjExhibit): void => {
     //  console.log('')(data, metadata);
@@ -104,7 +111,7 @@ const StepTwo = () => {
     reset({
       ...exhibit,
       cod_medio_almacenamiento:
-        representacion_legal.tipo_sesion === 'E'
+        representacion_legal?.tipo_sesion === 'E'
           ? 'Na'
           : exhibit.cod_medio_almacenamiento,
     });
@@ -198,64 +205,6 @@ const StepTwo = () => {
       }
     }
   }, [file_fisico]);
-
-  useEffect(() => {
-    //  console.log('')(metadata);
-    // if (metadata !== null) {
-    //   if (metadata.asunto !== null && metadata.asunto !== '') {
-    //     dispatch(
-    //       set_exhibit({
-    //         ...exhibit,
-    //         nombre_anexo: get_values('nombre_anexo'),
-    //         orden_anexo_doc: get_values('orden_anexo_doc'),
-    //         medio_almacenamiento: get_values('medio_almacenamiento'),
-    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //         medio_almacenamiento_otros_cual: get_values(
-    //           'medio_almacenamiento_otros_cual'
-    //         ),
-    //         numero_folios: get_values('numero_folios'),
-    //         ya_digitalizado: true,
-    //         exhibit_link: file,
-    //         metadatos: metadata,
-    //       })
-    //     );
-    //   } else {
-    //     dispatch(
-    //       set_exhibit({
-    //         ...exhibit,
-    //         nombre_anexo: get_values('nombre_anexo'),
-    //         orden_anexo_doc: get_values('orden_anexo_doc'),
-    //         medio_almacenamiento: get_values('medio_almacenamiento'),
-    //         cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //         medio_almacenamiento_otros_cual: get_values(
-    //           'medio_almacenamiento_otros_cual'
-    //         ),
-    //         numero_folios: get_values('numero_folios'),
-    //         ya_digitalizado: false,
-    //         exhibit_link: file,
-    //         metadatos: null,
-    //       })
-    //     );
-    //   }
-    // } else {
-    //   dispatch(
-    //     set_exhibit({
-    //       ...exhibit,
-    //       nombre_anexo: get_values('nombre_anexo'),
-    //       orden_anexo_doc: get_values('orden_anexo_doc'),
-    //       medio_almacenamiento: get_values('medio_almacenamiento'),
-    //       cod_medio_almacenamiento: get_values('cod_medio_almacenamiento'),
-    //       medio_almacenamiento_otros_cual: get_values(
-    //         'medio_almacenamiento_otros_cual'
-    //       ),
-    //       numero_folios: get_values('numero_folios'),
-    //       ya_digitalizado: false,
-    //       exhibit_link: file,
-    //       metadatos: null,
-    //     })
-    //   );
-    // }
-  }, [metadata]);
 
   const add_metadata_form = (): void => {
     const nombre_anexo = get_values('nombre_anexo') ?? '';
@@ -482,12 +431,13 @@ const StepTwo = () => {
                 required_rule: { rule: false, message: 'Requerido' },
               },
               label: 'Medio de almacenamiento',
-              disabled: representacion_legal.tipo_sesion === 'E',
+              disabled: representacion_legal?.tipo_sesion === 'E',
               helper_text: '',
               select_options: storage_mediums,
               option_label: 'label',
               option_key: 'key',
               on_change_function: on_change_select,
+              hidden_text: flag_metadata ?? false,
             },
             {
               datum_type: 'input_controller',
@@ -501,10 +451,13 @@ const StepTwo = () => {
               type: 'text',
               disabled: false,
               helper_text: '',
-              hidden_text: !(
-                cual_medio_view ||
-                (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
-              ),
+              hidden_text:
+                flag_metadata ?? false
+                  ? true
+                  : !(
+                      cual_medio_view ||
+                      (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
+                    ),
             },
             {
               datum_type: 'input_controller',
@@ -533,7 +486,9 @@ const StepTwo = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
-              hidden_text: representacion_legal.tipo_sesion === 'E',
+              hidden_text:
+                (flag_metadata ?? false) ||
+                representacion_legal?.tipo_sesion === 'E',
             },
           ]}
         />

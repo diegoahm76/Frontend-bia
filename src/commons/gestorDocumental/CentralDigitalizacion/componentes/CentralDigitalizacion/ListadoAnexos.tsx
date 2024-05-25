@@ -32,6 +32,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { control_error } from '../../store/thunks/centralDigitalizacionThunks';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Title } from '../../../../../components/Title';
+import React from 'react';
 interface IProps {
   control_form: any | null;
 }
@@ -39,6 +40,7 @@ interface IProps {
 const ListadoAnexos = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+
   const {
     exhibits,
     metadata,
@@ -63,7 +65,9 @@ const ListadoAnexos = () => {
     useState<boolean>(false);
 
   useEffect(() => {
-    //  console.log('')(digitization_request);
+    console.log("11111111111111111111");
+
+     console.log(digitization_request);
     if (
       digitization_request.id_solicitud_de_digitalizacion !== null &&
       digitization_request.anexos !== undefined
@@ -71,6 +75,8 @@ const ListadoAnexos = () => {
       dispatch(set_exhibits(digitization_request.anexos));
     }
   }, [digitization_request]);
+
+ 
 
   useEffect(() => {
     //  console.log('')(exhibit);
@@ -123,7 +129,8 @@ const ListadoAnexos = () => {
               'medio_almacenamiento_otros_cual'
             ),
             numero_folios: get_values('numero_folios'),
-            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+             ya_digitalizado: exhibit?.ya_digitalizado,
+            // ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
             exhibit_link: file,
             metadatos:
               exhibit.id_anexo === null
@@ -151,7 +158,8 @@ const ListadoAnexos = () => {
               'medio_almacenamiento_otros_cual'
             ),
             numero_folios: 1,
-            ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            // ya_digitalizado: metadata?.asunto ?? null !== null ? true : false,
+            ya_digitalizado: exhibit?.ya_digitalizado,
             exhibit_link: file_fisico,
             metadatos:
               exhibit.id_anexo === null
@@ -187,7 +195,17 @@ const ListadoAnexos = () => {
       );
     }
   };
+  const [selectedExhibit, setSelectedExhibit] = React.useState(null);
 
+  const selectExhibit = (rowData:any) => {
+    setSelectedExhibit(rowData);
+  };
+  
+  const handleClick = () => {
+    console.log(selectedExhibit);
+  };
+
+  
   const columns_list: GridColDef[] = [
     {
       field: 'descargar',
@@ -198,7 +216,7 @@ const ListadoAnexos = () => {
           {(params.row.metadatos?.archivo?.ruta_archivo ?? null) !== '' &&
             (params.row.metadatos?.archivo?.ruta_archivo ?? null) !== null &&
             typeof (params.row.metadatos?.archivo?.ruta_archivo ?? null) ===
-              'string' && (
+            'string' && (
               <Tooltip title="Ver archivo">
                 <Grid item xs={0.5} md={0.5}>
                   <DownloadButton
@@ -252,6 +270,7 @@ const ListadoAnexos = () => {
         </div>
       ),
     },
+    
     {
       field: 'observacion_digitalizacion',
       headerName: 'Observación',
@@ -274,6 +293,8 @@ const ListadoAnexos = () => {
             <IconButton
               onClick={() => {
                 select_exhibit(params.row);
+                selectExhibit(params.row);
+
               }}
             >
               <Avatar
@@ -328,6 +349,7 @@ const ListadoAnexos = () => {
           <Box sx={{ width: '80%' }}>
             <Grid item xs={12} marginY={2}>
               <Title title="Listado de anexos"></Title>
+              {/* <button onClick={handleClick}>Mostrar Digitalizado</button> */}
             </Grid>
             <Grid item xs={12} md={12} marginTop={2}>
               <DataGrid
@@ -458,6 +480,7 @@ const ListadoAnexos = () => {
           is_modal_active={add_metadata_is_active}
           set_is_modal_active={set_add_metadata_is_active}
           get_values_anexo={get_values}
+          selectedExhibit={selectedExhibit}
         />
       </Grid>
     </>

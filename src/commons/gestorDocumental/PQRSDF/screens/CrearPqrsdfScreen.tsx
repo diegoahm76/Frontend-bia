@@ -23,6 +23,7 @@ import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 
 import {
   initial_state_company,
+  initial_state_filed,
   initial_state_person,
   initial_state_pqr,
   reset_state,
@@ -30,6 +31,7 @@ import {
   set_company,
   set_denuncia,
   set_exhibits,
+  set_filed,
   set_grantor,
   set_on_behalf_of,
   set_person,
@@ -57,6 +59,7 @@ import {
   get_file_categories_service,
   get_file_origin_service,
   get_file_typology_service,
+  get_filed_id_service,
   get_media_types_service,
   get_offices_service,
   get_person_document_service,
@@ -112,12 +115,18 @@ export function CrearPqrsdfScreen(): JSX.Element {
   const { id } = useParams();
 
   useEffect(() => {
+    console.log(representacion_legal);
+  }, [representacion_legal]);
+
+  useEffect(() => {
+    dispatch(set_filed(initial_state_filed));
     if (id !== null && id !== undefined) {
       void dispatch(get_pqrsdf_id_service(id));
       set_action('editar');
     } else {
+      dispatch(set_pqr(initial_state_pqr));
       if (status === 'not-authenticated') {
-        console.log('......');
+        dispatch(logout(''));
         dispatch(
           checking_anonimous_authentication(
             'solicitud.anonima',
@@ -143,7 +152,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         dispatch(set_exhibits([]));
         set_action('crear');
         console.log(userinfo);
-        if (representacion_legal.tipo_sesion === 'E') {
+        if (representacion_legal?.tipo_sesion === 'E') {
           dispatch(
             set_type_applicant({
               id: 'T',
@@ -152,7 +161,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
             })
           );
           if (on_behalf_of.id === null) {
-            if (representacion_legal.cod_relacion_con_el_titular === 'MP') {
+            if (representacion_legal?.cod_relacion_con_el_titular === 'MP') {
               dispatch(
                 set_on_behalf_of({
                   id: 'P',
@@ -168,7 +177,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
                 )
               );
             } else if (
-              representacion_legal.cod_relacion_con_el_titular === 'AP'
+              representacion_legal?.cod_relacion_con_el_titular === 'AP'
             ) {
               dispatch(
                 set_on_behalf_of({
@@ -179,8 +188,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
               );
               void dispatch(
                 get_person_document_service(
-                  representacion_legal.representacion.tipo_documento ?? 'CC',
-                  representacion_legal.representacion.numero_documento ?? '',
+                  representacion_legal?.representacion.tipo_documento ?? 'CC',
+                  representacion_legal?.representacion.numero_documento ?? '',
                   false
                 )
               );
@@ -200,8 +209,8 @@ export function CrearPqrsdfScreen(): JSX.Element {
               );
               void dispatch(
                 get_company_document_service(
-                  representacion_legal.representacion.tipo_documento ?? 'NIT',
-                  representacion_legal.representacion.numero_documento
+                  representacion_legal?.representacion.tipo_documento ?? 'NIT',
+                  representacion_legal?.representacion.numero_documento
                 )
               );
             }
@@ -257,11 +266,11 @@ export function CrearPqrsdfScreen(): JSX.Element {
         set_pqr({
           ...pqr,
           cod_forma_presentacion:
-            representacion_legal.tipo_sesion === 'E'
+            representacion_legal?.tipo_sesion === 'E'
               ? 'E'
               : pqr.cod_forma_presentacion,
           id_medio_solicitud:
-            representacion_legal.tipo_sesion === 'E'
+            representacion_legal?.tipo_sesion === 'E'
               ? 2
               : pqr.id_medio_solicitud,
         })
@@ -395,11 +404,11 @@ export function CrearPqrsdfScreen(): JSX.Element {
     reset_pqrsdf({
       ...pqr,
       cod_forma_presentacion:
-        representacion_legal.tipo_sesion === 'E'
+        representacion_legal?.tipo_sesion === 'E'
           ? 'E'
           : pqr.cod_forma_presentacion,
       id_medio_solicitud:
-        representacion_legal.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud,
+        representacion_legal?.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud,
     });
     if (pqr.id_PQRSDF !== null && pqr.id_PQRSDF !== undefined) {
       if ('anexos' in pqr) {
@@ -411,7 +420,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         }
       } else {
         set_step(0);
-        console.log(pqr);
         void dispatch(get_pqrsdf_id_service(pqr.id_PQRSDF));
       }
       if (pqr.cod_tipo_PQRSDF === 'D') {
@@ -466,6 +474,11 @@ export function CrearPqrsdfScreen(): JSX.Element {
           },
         ]);
       }
+      if (pqr.id_radicado !== null) {
+        if (filed.id_radicado === null) {
+          void dispatch(get_filed_id_service(pqr.id_radicado ?? 0));
+        }
+      }
       set_action('editar');
     } else {
       set_action('crear');
@@ -496,9 +509,19 @@ export function CrearPqrsdfScreen(): JSX.Element {
           aux_items.push({
             ...elemento,
             orden_anexo_doc: index,
-            ya_digitalizado: elemento.metadatos === null ? false : true,
+            ya_digitalizado:
+              elemento.metadatos === null
+                ? false
+                : elemento.metadatos.cod_origen_archivo === 'F'
+                ? false
+                : true,
           });
-          ya_digitalizado = elemento.metadatos === null ? false : true;
+          ya_digitalizado =
+            elemento.metadatos === null
+              ? false
+              : elemento.metadatos.cod_origen_archivo === 'F'
+              ? false
+              : true;
         });
 
         const data_edit: any = {
@@ -527,7 +550,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         };
         form_data.append('pqrsdf', JSON.stringify(data_edit));
         aux_items.forEach((elemento) => {
-          console.log(elemento);
           if (elemento.id_anexo === null) {
             form_data.append(
               `archivo-create-${elemento.nombre_anexo}`,
@@ -552,7 +574,7 @@ export function CrearPqrsdfScreen(): JSX.Element {
         });
         form_data.append(
           'isCreateForWeb',
-          representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
+          representacion_legal?.tipo_sesion === 'E' ? 'True' : 'False'
         );
 
         void dispatch(edit_pqrsdf_service(form_data, navigate));
@@ -562,7 +584,6 @@ export function CrearPqrsdfScreen(): JSX.Element {
         );
       }
     } else {
-      console.log(data, exhibits);
       set_action('crear');
       const fecha = new Date(data.fecha_registro ?? '').toISOString();
       let folios: number = 0;
@@ -573,9 +594,19 @@ export function CrearPqrsdfScreen(): JSX.Element {
         aux_items.push({
           ...elemento,
           orden_anexo_doc: index,
-          ya_digitalizado: elemento.metadatos === null ? false : true,
+          ya_digitalizado:
+            elemento.metadatos === null
+              ? false
+              : elemento.metadatos.cod_origen_archivo === 'F'
+              ? false
+              : true,
         });
-        ya_digitalizado = elemento.metadatos === null ? false : true;
+        ya_digitalizado =
+          elemento.metadatos === null
+            ? false
+            : elemento.metadatos.cod_origen_archivo === 'F'
+            ? false
+            : true;
       });
       const data_edit: any = {
         ...data,
@@ -641,13 +672,14 @@ export function CrearPqrsdfScreen(): JSX.Element {
           elemento.exhibit_link
         );
       });
-      form_data.append(
-        'id_persona_guarda',
-        type_applicant.id === 'A' ? 0 : userinfo.id_persona
-      );
+      form_data.append('id_persona_guarda', userinfo.id_persona);
       form_data.append(
         'isCreateForWeb',
-        representacion_legal.tipo_sesion === 'E' ? 'True' : 'False'
+        representacion_legal?.tipo_sesion === 'E'
+          ? 'True'
+          : type_applicant.id === 'A'
+          ? 'True'
+          : 'False'
       );
       console.log(status);
       if (status === 'authenticated') {

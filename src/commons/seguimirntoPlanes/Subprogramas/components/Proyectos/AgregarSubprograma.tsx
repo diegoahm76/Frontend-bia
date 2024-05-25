@@ -37,6 +37,7 @@ export const AgregarSubprograma: React.FC = () => {
         id_subprograma: subprograma.id_subprograma,
         nombre_subprograma: subprograma.nombre_subprograma,
         nombre_programa: subprograma.nombre_programa,
+        numero_subprograma: subprograma.numero_subprograma,
         id_programa: subprograma.id_programa,
       });
     }
@@ -96,10 +97,10 @@ export const AgregarSubprograma: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6}></Grid>
+              {/* <Grid item xs={12} sm={6}></Grid> */}
             </>
           ) : null}
-          <Grid item xs={12}>
+          <Grid item xs={12} sm={6}>
             <Controller
               name="nombre_subprograma"
               control={control_subprograma}
@@ -125,7 +126,52 @@ export const AgregarSubprograma: React.FC = () => {
               )}
             />
           </Grid>
-          <Grid container spacing={2} justifyContent="flex-end">
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numero_subprograma"
+              control={control_subprograma}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Número del subprograma"
+                  variant="outlined"
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_subprograma.numero_subprograma}
+                  helperText={
+                    errors_subprograma.numero_subprograma
+                      ? 'Es obligatorio ingresar un número de subprograma'
+                      : 'Ingrese un número de subprograma'
+                  }
+                />
+              )}
+            />
+          </Grid>
+
+          <Grid container spacing={2} my={1} justifyContent="flex-end">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                disabled={false}
+                onClick={() => {
+                  limpiar_formulario_subprograma();
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: false,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Cerrar
+              </Button>
+            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

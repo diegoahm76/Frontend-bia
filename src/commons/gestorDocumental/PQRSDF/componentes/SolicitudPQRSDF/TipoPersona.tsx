@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useState } from 'react';
 
 import { api } from '../../../../../api/axios';
@@ -24,6 +25,7 @@ import {
   get_person_document_service,
   get_persons_service,
 } from '../../store/thunks/pqrsdfThunks';
+import { setCurrentPersonaRespuestaUsuario } from '../../../TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const TipoPersona = () => {
   const dispatch = useAppDispatch();
@@ -48,6 +50,10 @@ const TipoPersona = () => {
   const [aux_document_types, set_aux_document_types] = useState<
     IObjDocumentType[]
   >([]);
+
+    //* states from redux
+    const { currentPersonaRespuestaUsuario } = useAppSelector((state) => state.ResRequerimientoOpaSlice);
+
 
   // useEffect(() => {
   //   // void dispatch(get_document_types_service());

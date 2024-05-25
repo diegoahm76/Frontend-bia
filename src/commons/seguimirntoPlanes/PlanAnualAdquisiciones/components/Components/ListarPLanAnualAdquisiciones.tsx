@@ -35,97 +35,113 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'NOMBRE PLAN',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_intervalo',
       headerName: 'NOMBRE INTERVALO',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_modalidad',
       headerName: 'NOMBRE MODALIDAD',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 1
     },
     {
       field: 'codigo_modalidad',
       headerName: 'CODIGO MODALIDAD',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_fuente',
       headerName: 'NOMBRE FUENTE',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_estado',
       headerName: 'NOMBRE ESTADO',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_unidad',
       headerName: 'NOMBRE UNIDAD',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_ubicacion',
       headerName: 'NOMBRE UBICACION',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'email_persona_responsable',
       headerName: 'EMAIL PERSONA RESPONSABLE',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'telefono_persona_responsable',
       headerName: 'TELEFONO PERSONA RESPONSABLE',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 1
     },
     {
       field: 'persona_responsable',
       headerName: 'PERSONA RESPONSABLE',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'descripcion',
       headerName: 'DESCRIPCION',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'mes_inicio',
       headerName: 'MES INICIO',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'mes_oferta',
       headerName: 'MES OFERTA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'duracion',
       headerName: 'DURACION',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'valor_total_estimado',
       headerName: 'VALOR TOTAL ESTIMADO',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 1,
       valueFormatter: (params) => {
         const valorTotalEstimado = Number(params.value);
         return valorTotalEstimado.toLocaleString('es-AR', {
@@ -140,7 +156,8 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
       field: 'valor_vigencia_actual',
       headerName: 'VALOR VIGENCIA ACTUAL',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 1,
       valueFormatter: (params) => {
         const valorVigenciaActual = Number(params.value);
         return valorVigenciaActual.toLocaleString('es-AR', {
@@ -155,27 +172,31 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
       field: 'vigencia_futura',
       headerName: 'VIGENCIA FUTURA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'decreto_paa',
       headerName: 'DECRETO PAA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueGetter: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'suministro_paa',
       headerName: 'SUMINISTRO PAA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueGetter: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 300,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -321,6 +342,7 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
                   // rowHeight={150}
                   rowsPerPageOptions={[10]}
                   getRowId={() => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>
@@ -342,7 +364,7 @@ export const ListarPLanAnualAdquisiciones: React.FC = () => {
                 );
               }}
             >
-              Agregar Plan Anueal De Adquisiciones
+              Agregar PAA
             </Button>
           </Grid>
         </Grid>

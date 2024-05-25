@@ -9,6 +9,7 @@ import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/
 import {
   setActionssToManagePermissionsOpas,
   setCurrentElementPqrsdComplementoTramitesYotros,
+  setListaElementosComplementosRequerimientosOtros,
 } from '../../../../../../../toolkit/store/PanelVentanillaStore';
 import { columnsOpas } from './columnsOpas/columnsOpas';
 import RemoveDoneIcon from '@mui/icons-material/RemoveDone';
@@ -18,6 +19,9 @@ import { ModalOpa as ModalOpaInformacion } from '../../../../../Atom/Opas/ModalO
 import { useContext } from 'react';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import Swal from 'sweetalert2';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
+import { getComplementosAsociadosOpas } from '../../../../../../../toolkit/thunks/opas/complementos/getComplementosOpas.service';
 
 export const ElementoOPAS = (): JSX.Element => {
   // ? dispatch necesario
@@ -33,20 +37,21 @@ export const ElementoOPAS = (): JSX.Element => {
 
   //* context necesario
 
-  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
+  const { handleOpenModalOne, handleThirdLoading } = useContext(
+    ModalAndLoadingContext
+  );
 
   // ? set actions OPAS, button selected
 
   const setActionsOpas = (opa: any) => {
-
     if (
-      opa?.estado_actual_solicitud === 'EN GESTION' ||
+      opa?.estado_actual === 'EN GESTION' ||
       opa?.estado_asignacion_grupo === 'ACEPTADO'
     ) {
       void Swal.fire({
         title: 'Opps...',
         icon: 'error',
-        text: `Esta OPA ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        text: `Esta OPA ya se encuentra en gestión y / o asignada a líder de unidad, no se pueden hacer acciones sobre ella`,
         showConfirmButton: true,
       });
       return;
@@ -59,56 +64,115 @@ export const ElementoOPAS = (): JSX.Element => {
       text: 'Seleccionaste un elemento que se utilizará en los procesos de este módulo. Se mantendrá seleccionado hasta que elijas uno diferente, realices otra búsqueda o reinicies el módulo.',
       showConfirmButton: true,
     });
-/*
+
+    /*
+    {
+    "tipo_solicitud": "OPA",
+    "nombre_proyecto": "Opción 2",
+    "nombre_opa": "Aprovechamiento forestal de árboles en riesgo",
+    "nombre_completo_titular": "SeguridadNombre  SeguridadApellido ",
+    "costo_proyecto": 0,
+    "pagado": false,
+    "cantidad_predios": null,
+    "cantidad_anexos": 0,
+    "radicado": "UNICO-2023-00256",
+    "fecha_radicado": "2023-12-22T16:34:14.674486",
+    "sede": null,
+    "requiere_digitalizacion": true,
+    "estado_actual": "EN VENTANILLA CON PENDIENTES",
+    "estado_asignacion_grupo": null,
+    "persona_asignada": null,
+    "unidad_asignada": null,
+    "tiene_anexos": false
+}
+    */
+
+    /*
+
+const actionsOpas: any[] = [
+  {
+    id: 'Dig',
+  },
+  {
+    id: 'AsigGrup'
+  },
+  {
+    id: 'Jurídica'
+  },
+];
+*/
+  //* inicio should disable
     const shouldDisable = (actionId: string) => {
+      const isNoSeleccionado = !opa;
       const isAsigGrup = actionId === 'AsigGrup';
       const isDig = actionId === 'Dig';
+      const isJuridica = actionId === 'Jurídica';
+
       const hasAnexos = opa.cantidad_anexos > 0;
       const requiresDigitalization = opa.requiere_digitalizacion;
-      const isRadicado = opa.estado_solicitud === 'RADICADO';
+
+      const isRadicado = opa.estado_actual === 'RADICADO';
       const isEnVentanillaSinPendientes =
-        opa.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+        opa.estado_actual === 'EN VENTANILLA SIN PENDIENTES';
       const isEnVentanillaConPendientes =
-        opa.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+        opa.estado_actual === 'EN VENTANILLA CON PENDIENTES';
+      const isGestion = opa.estado_actual === 'EN GESTION';
+      const pendienteRevisionJuridica = opa.estado_asignacion_grupo === 'PENDIENTE DE REVISIÓN JURIDICA DE VENTANILLA';
+      const revisadoPorJuridicaDeVentanilla = opa.estado_asignacion_grupo === 'REVISADO POR JURIDICA DE VENTANILLA';
+      if (isNoSeleccionado) {
+        return true;
+      }
 
-      // Primer caso
+      //?  primer caso
       if (isRadicado && !hasAnexos) {
-        return isDig;
+        return !(actionId === 'Jurídica'); // || actionId === 'AsigGrup'
       }
-
-      // Segundo caso
+      // ? segundo caso
       if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return false;
+        return !(
+          actionId === 'Jurídica'
+        );
       }
-
-      // Tercer caso
+      // ? tercer caso
       if (isRadicado && hasAnexos && requiresDigitalization) {
-        return isAsigGrup;
+        return !(/*actionId === 'Jurídica' ||*/ actionId === 'Dig');
       }
-
-      // Cuarto caso
+      // ? cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-        return false;
+        return !(
+          actionId === 'Jurídica' // ||
+          //actionId === 'Dig' ||
+          // actionId === 'AsigGrup'
+        );
       }
-
-      // Quinto caso
+      // ? quinto caso
       if (isEnVentanillaSinPendientes && requiresDigitalization) {
-        return isAsigGrup;
+        return !(actionId === 'Dig');
       }
 
-      // Sexto caso
+      // ? sexto caso
       if (isEnVentanillaConPendientes) {
-        return isAsigGrup;
+        return !(actionId === 'Dig' /*|| actionId === 'Jurídica'*/);
       }
 
-      // Caso por defecto
-      return actionId === 'Dig' && !(requiresDigitalization && hasAnexos);
+      if(pendienteRevisionJuridica){
+        return !(actionId === 'Jurídica');
+      }
+
+      if(revisadoPorJuridicaDeVentanilla){
+        return !(actionId === 'Jurídica' || actionId === 'AsigGrup')
+      }
+
+      if (isGestion) {
+        return true;
+      }
     };
     const actionsOPAS = actionsOpas.map((action: any) => ({
       ...action,
       disabled: shouldDisable(action.id),
     }));
-    dispatch(setActionssToManagePermissionsOpas(actionsOPAS));*/
+    // * fim should disable
+    dispatch(setActionssToManagePermissionsOpas(actionsOpas));
   };
 
   //* const columns with actions
@@ -127,7 +191,7 @@ export const ElementoOPAS = (): JSX.Element => {
             color="primary"
           />
         );
-      }
+      },
     },
     {
       headerName: 'Requiere digitalización',
@@ -188,6 +252,47 @@ export const ElementoOPAS = (): JSX.Element => {
       renderCell: (params: any) => {
         return (
           <>
+            <Tooltip
+              title={`Ver complementos relacionados a pqrsdf con asunto ${params?.row?.asunto}`}
+            >
+              <IconButton
+                onClick={() => {
+                  (async () => {
+                    try {
+                      const res = await getComplementosAsociadosOpas(
+                        params.row.id_solicitud_tramite,
+                        handleThirdLoading
+                      );
+                      dispatch(
+                        setListaElementosComplementosRequerimientosOtros(res)
+                      );
+                    } catch (error) {
+                      console.error(error);
+                      // Handle error appropriately
+                    }
+                  })();
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <KeyboardDoubleArrowDownIcon
+                    sx={{
+                      color: 'info.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+
             <Tooltip title="Ver información asociada a OPA">
               <IconButton
                 onClick={() => {

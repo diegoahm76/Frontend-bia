@@ -36,6 +36,15 @@ export const AccionesFinales = ({
   //* handleSumbit
 
   const sendDataByFormData = () => {
+    const sortedAnexos = [...anexosCreados].sort((a: any, b: any) => {
+      if (a.ruta_soporte && !b.ruta_soporte) {
+        return -1;
+      }
+      if (!a.ruta_soporte && b.ruta_soporte) {
+        return 1;
+      }
+      return 0;
+    });
     const formData = new FormData(); // Use FormData instead of a normal object
     //  console.log('')(anexosCreados);
     formData.append(
@@ -47,7 +56,7 @@ export const AccionesFinales = ({
       })
     );
 
-    anexosCreados.forEach((anexo: any, index: number) => {
+    sortedAnexos.forEach((anexo: any, index: number) => {
       console.log('anexo', anexo);
 
       if (anexo?.ruta_soporte) {
@@ -63,11 +72,11 @@ export const AccionesFinales = ({
           meta_data: {
             tiene_replica_fisica:
               anexo?.tieneReplicaFisicaMetadatos?.value === 'Si' ? true : false,
-            cod_origen_archivo: anexo?.origenArchivoMetadatos?.value,
+            cod_origen_archivo: anexo?.origenArchivoMetadatos?.value.toUpperCase(),
             nombre_original_archivo: 'Archivo', // ? se debe cambiar por el nombre del archivo que se suba en el input 'archivo'
             descripcion: anexo?.descripcionMetadatos,
             asunto: anexo?.asuntoMetadatos,
-            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value,
+            cod_categoria_archivo: anexo?.categoriaArchivoMetadatos?.value.toUpperCase(),
             nro_folios_documento: anexo?.numero_folios,
             id_tipologia_doc: anexo?.tipologiasDocumentalesMetadatos?.value
               ? anexo?.tipologiasDocumentalesMetadatos?.value
@@ -87,12 +96,7 @@ export const AccionesFinales = ({
       setInfoReset({});
       dispatch(resetItems());
 
-      Swal.fire({
-        title: 'Solicitud enviada',
-        icon: 'success',
-        showConfirmButton: false,
-        timer: 1500,
-      });
+    
     });
   };
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { api } from '../../../../../api/axios';
 import { type Persona } from '../../../../../interfaces/globalModels';
@@ -22,10 +22,16 @@ import {
 import {
   control_error,
   get_digitalization_requests_service,
+  get_digitalization_requests_service_otros,
+  get_Opas
 } from '../../store/thunks/centralDigitalizacionThunks';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { OpcionOtrosContext } from '../../context/BusquedaOtrosDigitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DigitalizacionesPendientes = () => {
+
+  const { set_opcion_otros } = useContext(OpcionOtrosContext)
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const {
@@ -52,6 +58,9 @@ const DigitalizacionesPendientes = () => {
       }
     }
   };
+
+
+
   const columns_list: GridColDef[] = [
     {
       field: 'nombre_tipo_solicitud',
@@ -97,7 +106,7 @@ const DigitalizacionesPendientes = () => {
     {
       field: 'titular',
       headerName: 'Titular',
-      width: 250,
+      minWidth: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -133,7 +142,6 @@ const DigitalizacionesPendientes = () => {
           <Tooltip title="Desarrollar">
             <IconButton
               onClick={() => {
-                //  console.log('')(params);
                 dispatch(set_edit_digitization(true));
                 dispatch(set_digitization_request(params.row));
               }}
@@ -157,12 +165,62 @@ const DigitalizacionesPendientes = () => {
         </>
       ),
     },
+    // {
+    //   field: 'acciones',
+    //   headerName: 'Acciones',
+    //   width: 90,
+    //   renderCell: (params) => (
+    //     <>
+    //       {tipo_solicitud && (
+    //       <Tooltip title="Desarrollar">
+    //       <IconButton
+    //         onClick={() => {
+    //           dispatch(set_edit_digitization(true));
+    //           dispatch(set_digitization_request(params.row));
+    //         }}
+    //         href={`/#/app/gestor_documental/digitalizacion_opas/digitalizacion_opas`}
+    //       >
+        
+    //          <PlaylistAddCheckIcon/>
+          
+    //       </IconButton>
+    //     </Tooltip>
+    //       )}
+    //       {!tipo_solicitud && (
+    //         <Tooltip title="Desarrollar">
+    //           <IconButton
+    //             onClick={() => {
+    //               dispatch(set_edit_digitization(true));
+    //               dispatch(set_digitization_request(params.row));
+    //             }}
+    //             href={`/#/app/gestor_documental/central_digitalizacion/anexos/${params.row.id_solicitud_de_digitalizacion}`}
+    //           >
+    //             <Avatar
+    //               sx={{
+    //                 width: 24,
+    //                 height: 24,
+    //                 background: '#fff',
+    //                 border: '2px solid',
+    //               }}
+    //               variant="rounded"
+    //             >
+    //               <EditIcon
+    //                 sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+    //               />
+    //             </Avatar>
+    //           </IconButton>
+    //         </Tooltip>
+    //       )}
+    //     </>
+    //   ),
+    // },
   ];
 
+  const tipo_solicitud = get_values('tipo_solicitud') ?? '';
+  const estado_solicitud = get_values('estado_solicitud') ?? '';
+  const numero_radicado = get_values('numero_radicado') ?? '';
   const on_submit = (data: any): void => {
-    const tipo_solicitud = get_values('tipo_solicitud') ?? '';
-    const estado_solicitud = get_values('estado_solicitud') ?? '';
-    const numero_radicado = get_values('numero_radicado') ?? '';
+
     if (
       tipo_solicitud === '' &&
       estado_solicitud === '' &&
@@ -176,10 +234,9 @@ const DigitalizacionesPendientes = () => {
         numero_radicado?: string;
       } = {};
 
-      // Verificar y agregar propiedad al objeto solo si el valor no es una cadena vacía
-      if (tipo_solicitud !== '') {
-        params.tipo_solicitud = tipo_solicitud;
-      }
+      //Verificar y agregar propiedad al objeto solo si el valor no es una cadena vacía
+
+
 
       if (estado_solicitud !== '') {
         params.estado_solicitud = estado_solicitud;
@@ -188,6 +245,22 @@ const DigitalizacionesPendientes = () => {
       if (numero_radicado !== '') {
         params.numero_radicado = numero_radicado;
       }
+
+      if (tipo_solicitud === "OTROS") {
+        void dispatch(get_digitalization_requests_service_otros(params));
+        set_opcion_otros(tipo_solicitud)
+        // console.log("si se pudo");
+        return;
+      }
+      if (tipo_solicitud === "OPAS") {
+        void dispatch(get_Opas(params));
+        return;
+      }
+      if (tipo_solicitud !== '') {
+        params.tipo_solicitud = tipo_solicitud;
+        console.log(params, tipo_solicitud, params.tipo_solicitud);
+      }
+
       void dispatch(get_digitalization_requests_service(params));
     }
   };
@@ -253,8 +326,8 @@ const DigitalizacionesPendientes = () => {
             {
               datum_type: 'button',
 
-              xs: 12,
-              md: 3,
+              // xs: 12,
+              // md: 3,
               on_click_function: handle_submit(on_submit),
               label: 'BUSCAR',
               variant_button: 'contained',
@@ -277,6 +350,7 @@ const DigitalizacionesPendientes = () => {
           }
         />
       </Grid>
+      {/* {tipo_solicitud} */}
     </>
   );
 };

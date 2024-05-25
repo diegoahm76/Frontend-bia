@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import { type TablasAmortizacion, type Obligacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
+import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
 interface RootState {
   plan_pagos: {
@@ -36,7 +37,7 @@ export const TablaLiquidacionResumen: React.FC = () => {
   }).format(intereses)
 
   useEffect(() => {
-    if(plan_pagos.data_cartera_modificada !== undefined){
+    if (plan_pagos.data_cartera_modificada !== undefined) {
       set_lista(plan_pagos.data_cartera_modificada.obligaciones)
     }
   }, [plan_pagos])
@@ -72,9 +73,9 @@ export const TablaLiquidacionResumen: React.FC = () => {
           currency: "COP",
         }).format(params.value)
         return (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {precio_cop}
-        </div>
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
         )
       },
     },
@@ -108,9 +109,9 @@ export const TablaLiquidacionResumen: React.FC = () => {
           currency: "COP",
         }).format(params.value)
         return (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {precio_cop}
-        </div>
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
         )
       },
     },
@@ -124,9 +125,9 @@ export const TablaLiquidacionResumen: React.FC = () => {
           currency: "COP",
         }).format(params.value)
         return (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {precio_cop}
-        </div>
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
         )
       },
     },
@@ -135,7 +136,7 @@ export const TablaLiquidacionResumen: React.FC = () => {
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
-    for(let i=0; i<lista.length; i++){
+    for (let i = 0; i < lista.length; i++) {
       sub_capital = sub_capital + parseFloat(lista[i].monto_inicial)
       sub_intereses = sub_intereses + parseFloat(lista[i].valor_intereses)
       set_capital(sub_capital)
@@ -162,7 +163,15 @@ export const TablaLiquidacionResumen: React.FC = () => {
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
-                  <DataGrid
+
+
+                  <RenderDataGrid
+                    title="Datos de liquidación"
+                    rows={lista}
+                    columns={columns}
+                  />
+
+                  {/* <DataGrid
                     autoHeight
                     disableSelectionOnClick
                     rows={lista}
@@ -171,7 +180,7 @@ export const TablaLiquidacionResumen: React.FC = () => {
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => faker.database.mongodbObjectId()}
-                  />
+                  /> */}
                 </Box>
               </Grid>
               <Stack

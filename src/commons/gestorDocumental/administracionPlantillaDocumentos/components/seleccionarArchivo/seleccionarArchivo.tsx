@@ -71,13 +71,15 @@ export const SeleccionarArchivo: React.FC = () => {
 
 
   return (
-    
+
       <Grid
         container
+        spacing={2}
         sx={{
           position: 'relative',
           background: '#FAFAFA',
           borderRadius: '15px',
+          margin: '10px 0 20px 0',
           p: '20px',
           mb: '20px',
           boxShadow: '0px 3px 6px #042F4A26',
@@ -86,10 +88,10 @@ export const SeleccionarArchivo: React.FC = () => {
         <Grid item xs={12}>
           <Title title="Seleccionar Archivos" />
         </Grid>
-
         <Grid item xs={12} md={4}>
           <TextField
-            style={{ width: '95%', marginTop: 20 }}
+            margin="dense"
+            size="small"
             variant="outlined"
             label="Nombre de la Plantilla"
             fullWidth
@@ -100,18 +102,20 @@ export const SeleccionarArchivo: React.FC = () => {
         </Grid>
         <Grid item  xs={12} md={8}>
           <TextField
-            style={{ width: '95%', marginTop: 20 }}
+            size="small"
+            fullWidth
+            margin='dense'
+            multiline
             label="Descripción"
             name="descripcion"
             value={form.descripcion||""}
             onChange={HandleCompletarDatos}
           />
         </Grid>
- 
+
         {file_nombre && form.borrar_text === 1 && (
-          <Grid item xs={12} sm={7} >
+          <Grid item xs={12} md={8} >
             <TextField
-              style={{ marginTop: 14, width: '95%' }}
               variant="outlined"
               disabled
               size="small"
@@ -124,9 +128,8 @@ export const SeleccionarArchivo: React.FC = () => {
         )}
 
         {fileExtension && form.borrar_text === 1 && (
-          <Grid item xs={12} sm={5}>
+          <Grid item xs={12} md={4}>
             <TextField
-              style={{ marginTop: 14, width: '92%' }}
               variant="outlined"
               disabled
               size="small"
@@ -134,41 +137,41 @@ export const SeleccionarArchivo: React.FC = () => {
               value={fileExtension ?? ''}
               fullWidth
             />
-          </Grid> 
+          </Grid>
         )}
         <Grid
           container
-          style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 50 }}
+          style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}
         >
-
-          <Button
-            style={{ marginTop: 10, width: 180 }}
-            fullWidth
-            component="label"
-            variant="outlined"
-            startIcon={<CloudUploadIcon />}
-            htmlFor="file-upload"
-          >
-            {form.archivo ? (
-              <>
-                Quitar
-                <IconButton
-                  size="small"
-                  onClick={handleRemoveFile}
-                  sx={{ marginLeft: '8px' }}
-                >
-                  <DeleteIcon fontSize="small" />
-                </IconButton>
-              </>
-            ) : (
-              'Seleccionar Documento'
-            )}
-            <VisuallyHiddenInput
-              type="file"
-              id="file-upload"
-              onChange={handleFileChange}
-            />
-          </Button>
+          <Grid item xs={12} md={3}>
+            <Button
+              fullWidth
+              size="medium"
+              component="label"
+              variant="outlined"
+              startIcon={<CloudUploadIcon />}
+              htmlFor="file-upload"
+            >
+              {form.archivo ? (
+                <>
+                  Quitar
+                  <IconButton
+                    size="small"
+                    onClick={handleRemoveFile}
+                  >
+                    <DeleteIcon fontSize="small" />
+                  </IconButton>
+                </>
+              ) : (
+                'Seleccionar Documento'
+              )}
+              <VisuallyHiddenInput
+                type="file"
+                id="file-upload"
+                onChange={handleFileChange}
+              />
+            </Button>
+          </Grid>
 
         </Grid>
       </Grid>

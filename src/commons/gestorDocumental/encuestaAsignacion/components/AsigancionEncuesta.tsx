@@ -49,7 +49,7 @@ export const AsigancionEncuesta: React.FC = () => {
     const columns = [
         { field: 'nombre_completo', headerName: 'Nombre Completo', width: 350, felx: 1, },
         { field: 'nombre_encuesta', headerName: 'Nombre Encuesta', width: 350, felx: 1, },
-        { field: 'usuario', headerName: 'usuario', width: 350, felx: 1, },
+        { field: 'usuario', headerName: 'Usuario', width: 350, felx: 1, },
 
         // { field: 'acciones', headerName: 'Acciones', width: 200, felx: 1, },usuario
         {

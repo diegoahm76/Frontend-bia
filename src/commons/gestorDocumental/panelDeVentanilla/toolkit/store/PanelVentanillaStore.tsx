@@ -6,6 +6,7 @@ import DevicesIcon from '@mui/icons-material/Devices';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+import PaidIcon from '@mui/icons-material/Paid';
 
 // ? icons necesarios para los botones de acciones de tramites y servicios
 import BalanceIcon from '@mui/icons-material/Balance';
@@ -57,7 +58,7 @@ const actionsTramitesYServicios: any[] = [
     id: 'Jurídica',
     icon: <BalanceIcon />,
     name: 'Revisión jurídica',
-    path: '', // pendiente por definir
+    path: '/app/gestor_documental/juridica/tramites', // pendiente por definir
     disabled: false,
   },
   {
@@ -72,6 +73,13 @@ const actionsTramitesYServicios: any[] = [
     icon: <DevicesIcon />,
     name: 'Enviar solicitud de digitalización',
     path: '', // pendiente por definir
+    disabled: false,
+  },
+  {
+    id: 'Pay',
+    icon: <PaidIcon />,
+    name: 'Liquidación',
+    path: '/app/gestor_documental/liquidacion/activacion', // pendiente por definir
     disabled: false,
   },
 ];
@@ -95,7 +103,7 @@ const actionsOpas: any[] = [
     id: 'Jurídica',
     icon: <BalanceIcon />,
     name: 'Revisión jurídica',
-    path: '', // pendiente por definir
+    path: '/app/gestor_documental/juridica/servicios', // pendiente por definir
     disabled: false,
   },
 ];
@@ -150,12 +158,12 @@ export const PanelVentanillaSlice = createSlice({
       state.actionsComplementos = action.payload;
     },
     //* mandejo de acciones para tramites y servicios
-    /* setActionssToManagePermissionsTramitesYServicios: (
+    setActionssToManagePermissionsTramitesYServicios: (
       state,
       action: PayloadAction<any>
     ) => {
       state.actionsTramitesYServicios = action.payload;
-    },*/
+    },
     //* mandejo de acciones para opas
     setActionssToManagePermissionsOpas: (state, action: PayloadAction<any>) => {
       state.actionsOpas = action.payload;
@@ -216,6 +224,8 @@ export const {
   setActionssToManagePermissionsOpas,
   // ? acciones sobre lo botones de otros
   setActionsOtros,
+  // tramites
+  setActionssToManagePermissionsTramitesYServicios,
   // ? acciones sobre lista de elementos de pqrsdf, trámites y servicios y otros
   setListaElementosPqrsfTramitesUotrosBusqueda,
   // ? acciones sobre lista de complementos, derequerimientos y otros

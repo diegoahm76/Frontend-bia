@@ -14,6 +14,7 @@ import { miEstilo } from '../../Encuesta/interfaces/types';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { Dialog, Button, Grid, IconButton } from '@mui/material';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { MiniMap } from 'reactflow';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -87,9 +88,9 @@ export const BandejaEmail: React.FC<IProps> = ({ handleEnd, handleBack, steps, a
     };
 
     const columns = [
-        { field: 'Asunto', headerName: 'Asunto', width: 130, flex: 1 },
-        { field: 'Remitente', headerName: 'Remitente', width: 130, flex: 1 },
-        { field: 'Fecha', headerName: 'Fecha', width: 130, flex: 1 },
+        { field: 'Asunto', headerName: 'Asunto', minWidth: 700},
+        { field: 'Remitente', headerName: 'Remitente', minWidth: 500},
+        { field: 'Fecha', headerName: 'Fecha', minWidth: 180, renderCell: (params: any) => (new Date(params.row.Fecha).toLocaleString())},
         {
             field: 'Mensaje',
             headerName: 'Mensaje',
@@ -142,10 +143,7 @@ export const BandejaEmail: React.FC<IProps> = ({ handleEnd, handleBack, steps, a
             )
         },
     ];
-    const handleClick = () => {
-        console.log(Email);
-        console.log("2222222");
-    };
+ 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const handle_close = (): void => {
@@ -174,17 +172,6 @@ export const BandejaEmail: React.FC<IProps> = ({ handleEnd, handleBack, steps, a
                 <Grid item xs={12} sm={12}>
                     <Title title="Buzón de Email" />
                 </Grid>
-                {/* {totalPaginas}
-                sssss */}
-                {/* <h1>{currentNumber}</h1> */}
-
-
-                {/* <div>
-                    <button onClick={handleClick}>consola  </button>
-                </div> */}
-            
-
-
                 <Dialog
                     keepMounted
                     aria-describedby="alert-dialog-slide-description"

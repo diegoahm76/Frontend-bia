@@ -21,7 +21,7 @@ export const getOpasPanVen = async (
       ? encodeURIComponent(formatDateUse(new Date(fecha_fin)))
       : '';
 
-    const url = `/gestor/panel_ventanilla/opas/tramite/get/?fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&radicado=${radicado}&estado_actual_solicitud=${estado_actual_solicitud}&nombre_proyecto=${nombre_proyecto}&nombre_titular=${nombre_titular}`;
+    const url = `/gestor/panel_ventanilla/opas/tramite/get/?fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&radicado=${radicado}&estado_actual_solicitud=${estado_actual_solicitud}&nombre_titular=${nombre_titular}&nombre_opa=${nombre_proyecto}`;
     const { data } = await api.get(url);
     if (data?.data?.length) {
       console.log(data?.data);

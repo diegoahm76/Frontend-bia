@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Title } from '../../../../components/Title';
 import { EncabezadoRegistro } from '../componentes/EncabezadoRegistro';
 import { TablaObligacionesRegistro } from '../componentes/TablaObligacionesRegistro';
 import { DialogoRegistro } from '../componentes/DialogoRegistro';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
-import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel } from "@mui/material";
-import { Save, CloudUpload } from '@mui/icons-material';
+import { Grid, Box, FormControl, InputLabel, Select, MenuItem, TextField, Stack, Button, Checkbox, FormGroup, FormControlLabel, Tooltip, IconButton } from "@mui/material";
+import { Save, CloudUpload, Delete } from '@mui/icons-material';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { use_form } from '../../../../hooks/useForm';
@@ -18,6 +19,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { control_error } from '../../../../helpers';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 interface RootStateDeudor {
   deudores: {
@@ -82,14 +84,14 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
   const [valor_bien, set_valor_bien] = useState(0);
   const [valores_bienes, set_valores_bienes] = useState(Array<number>);
-  const [archivo_bien, set_archivo_bien] = useState({});
   const [archivos_bienes, set_archivos_bienes] = useState(Array<File>);
+  const [archivo_bien, set_archivo_bien] = useState<File | null>(null);
   const [nombre_archivo_bien, set_nombre_archivo_bien] = useState('');
   const [ubicaciones_bienes, set_ubicaciones_bienes] = useState(Array<number>);
   const [respuesta_registro, set_respuesta_registro] = useState<RespuestaRegistroFacilidad>();
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
-  const { form_files, name_files, handle_change_file } = useFormFiles({});
+  const { form_files, name_files, handle_change_file, handle_delete_file } = useFormFiles({});
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
   const { solicitud_facilidad } = useSelector((state: RootStateSolicitud) => state.solicitud_facilidad);
@@ -98,24 +100,33 @@ export const RegistroFacilidadPago: React.FC = () => {
     set_date_abono(date);
   };
 
+  // const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  //   const selected_file =
+  //     event.target.files != null ? event.target.files[0] : null;
+  //   if (selected_file != null) {
+  //     set_archivo_bien(selected_file);
+  //     set_nombre_archivo_bien(selected_file.name);
+  //   }
+  // };
   const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const selected_file =
-      event.target.files != null ? event.target.files[0] : null;
-    if (selected_file != null) {
-      set_archivo_bien(selected_file);
-      set_nombre_archivo_bien(selected_file.name);
-    }
+    const selected_file = event.target.files != null ? event.target.files[0] : null;
+    set_archivo_bien(selected_file);
+    set_nombre_archivo_bien(selected_file ? selected_file.name : '');
   };
 
+  const eliminarArchivoSeleccionado = () => {
+    set_archivo_bien(null); // Restablece el archivo a null
+    set_nombre_archivo_bien(''); // Restablece el nombre del archivo a una cadena vacía
+  };
   useEffect(() => {
-    if(respuesta_registro !== undefined){
+    if (respuesta_registro !== undefined) {
       set_modal(true)
     }
   }, [respuesta_registro])
 
   useEffect(() => {
     const arr_ids = [];
-    for(let i=0; i<obligaciones.length; i++){
+    for (let i = 0; i < obligaciones.length; i++) {
       arr_ids.push(obligaciones[i].id);
     }
     set_obligaciones_ids(arr_ids);
@@ -151,14 +162,16 @@ export const RegistroFacilidadPago: React.FC = () => {
   }, [])
 
   useEffect(() => {
-    let count:number = 0;
-    const arr:number[] = []
-    for (let i=0; i<limite; i++){
+    let count: number = 0;
+    const arr: number[] = []
+    for (let i = 0; i < limite; i++) {
       count = count + 1
       arr.push(count)
     }
     set_arr_periodicidad(arr);
   }, [limite])
+
+
 
   const columns_bienes: GridColDef[] = [
     {
@@ -191,9 +204,9 @@ export const RegistroFacilidadPago: React.FC = () => {
           currency: "COP",
         }).format(params.value)
         return (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {precio_cop}
-        </div>
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {precio_cop}
+          </div>
         )
       },
     },
@@ -207,24 +220,25 @@ export const RegistroFacilidadPago: React.FC = () => {
         </div>
       ),
     },
-    {
-      field: 'documento_soporte',
-      headerName: 'Doc. Impuestos',
-      width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          <Button
-            color='primary'
-            variant='outlined'
-            size='small'
-            onClick={() => {}}
-          >
-            Ver Documento
-          </Button>
-        </div>
-      ),
-    },
+    // {
+    //   field: 'documento_soporte',
+    //   headerName: 'Doc. Impuestos',
+    //   width: 150,
+    //   renderCell: (params) => (
+    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //       <Button
+    //         color='primary'
+    //         variant='outlined'
+    //         size='small'
+    //         onClick={() => { }}
+    //       >
+    //         Ver Documento
+    //       </Button>
+    //     </div>
+    //   ),
+    // },
   ];
+
 
   return (
     <>
@@ -251,6 +265,7 @@ export const RegistroFacilidadPago: React.FC = () => {
           >
             <Grid container spacing={2}>
               <Grid item xs={11} sm={5}>
+                <Tooltip title={`Carga Documento Solicitud`}>
                   <Button
                     variant="outlined"
                     fullWidth
@@ -259,18 +274,34 @@ export const RegistroFacilidadPago: React.FC = () => {
                     startIcon={<CloudUpload />}
                   >
                     {name_files.documento_soporte !== undefined ? name_files.documento_soporte : 'Carga Documento Solicitud'}
-                      <input
-                        hidden
-                        type="file"
-                        required
-                        autoFocus
-                        style={{ opacity: 0 }}
-                        name='documento_soporte'
-                        onChange={handle_change_file}
-                      />
+                    <input
+                      hidden
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      name='documento_soporte'
+                      onChange={handle_change_file}
+                    />
                   </Button>
-                </Grid>
-                <Grid item xs={11} sm={5}>
+                </Tooltip>
+              </Grid>
+
+              {name_files.documento_soporte && (
+                <Tooltip title={`Eliminar Documento Solicitud`}>
+                  <Grid item>
+                    <IconButton
+                      color="error"
+                      onClick={() => handle_delete_file('documento_soporte')}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                </Tooltip>
+              )}
+
+              <Grid item xs={11} sm={5}>
+                <Tooltip title={`Carga Soporte Consignación`}>
                   <Button
                     variant="outlined"
                     fullWidth
@@ -279,48 +310,62 @@ export const RegistroFacilidadPago: React.FC = () => {
                     startIcon={<CloudUpload />}
                   >
                     {name_files.consignacion_soporte !== undefined ? name_files.consignacion_soporte : 'Carga Soporte Consignación'}
-                      <input
-                        hidden
-                        type="file"
-                        required
-                        autoFocus
-                        style={{ opacity: 0 }}
-                        name='consignacion_soporte'
-                        onChange={handle_change_file}
-                      />
+                    <input
+                      hidden
+                      type="file"
+                      required
+                      autoFocus
+                      style={{ opacity: 0 }}
+                      name='consignacion_soporte'
+                      onChange={handle_change_file}
+                    />
                   </Button>
-                </Grid>
-                <Grid item xs={11} sm={5}>
-                  <FormControl size='small' fullWidth>
-                    <InputLabel>Calidad en que actúa la persona</InputLabel>
-                    <Select
-                      label="Calidad en que actúa la persona"
-                      defaultValue={""}
-                      onChange={(event: event) => {
-                        const { value } = event.target
-                        set_persona(parseInt(value))
-                      }}
+                </Tooltip>
+              </Grid>
+
+              {name_files.consignacion_soporte && (
+                <Tooltip title={`Eliminar Soporte Consignación`}>
+                  <Grid item>
+                    <IconButton
+                      color="error"
+                      onClick={() => handle_delete_file('consignacion_soporte')}
                     >
-                      <MenuItem value='1'>Persona Natural</MenuItem>
-                      <MenuItem value='2'>Persona Juridica / Apoderado</MenuItem>
-                      <MenuItem value='3'>Deudor Solidario Natural</MenuItem>
-                      <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={11} sm={5}>
-                  <TextField
-                    required
-                    label="Valor Abonado"
-                    helperText='Escribe el Valor Abonado'
-                    size="small"
-                    fullWidth
-                    onChange={on_input_change}
-                    name='valor_abonado'
-                    type='number'
-                  />
-                </Grid>
-                <Grid item xs={11} sm={5}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                </Tooltip>
+              )}
+              <Grid item xs={11} sm={5}>
+                <FormControl size='small' fullWidth>
+                  <InputLabel>Calidad en que actúa la persona</InputLabel>
+                  <Select
+                    label="Calidad en que actúa la persona"
+                    defaultValue={""}
+                    onChange={(event: event) => {
+                      const { value } = event.target
+                      set_persona(parseInt(value))
+                    }}
+                  >
+                    <MenuItem value='1'>Persona Natural</MenuItem>
+                    <MenuItem value='2'>Persona Juridica / Apoderado</MenuItem>
+                    <MenuItem value='3'>Deudor Solidario Natural</MenuItem>
+                    <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={11} sm={5}>
+                <TextField
+                  required
+                  label="Valor Abonado"
+                  helperText='Escribe el Valor Abonado'
+                  size="small"
+                  fullWidth
+                  onChange={on_input_change}
+                  name='valor_abonado'
+                  type='number'
+                />
+              </Grid>
+              <Grid item xs={11} sm={5}>
                 <FormControl size='small' fullWidth>
                   <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale={esLocale}>
                     <DatePicker
@@ -370,14 +415,16 @@ export const RegistroFacilidadPago: React.FC = () => {
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad'}
+                      <Tooltip title={`Carga Documento de Identidad`}>
+
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad'}
                           <input
                             hidden
                             type="file"
@@ -387,8 +434,23 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_identidad'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
+
+
                     </Grid>
+                    {name_files.documento_identidad && (
+                      <Tooltip title={`Eliminar  Documento de Identidad`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_identidad')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
                     <Grid item xs={12} sm={5}>
                       <TextField
                         label="Dirección Notificación"
@@ -447,14 +509,16 @@ export const RegistroFacilidadPago: React.FC = () => {
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad Apoderado'}
+                      <Tooltip title={`Carga Documento de Identidad Apoderado`}>
+
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento de Identidad Apoderado'}
                           <input
                             hidden
                             type="file"
@@ -464,17 +528,31 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_identidad'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+                    {name_files.documento_identidad && (
+                      <Tooltip title={`Eliminar Documento de Identidad Apoderado`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_identidad')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo :'Carga Documento Poder'}
+                      <Tooltip title={`Carga Documento Poder`}>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Documento Poder'}
                           <input
                             hidden
                             type="file"
@@ -484,17 +562,32 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_respaldo'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+
+                    {name_files.documento_respaldo && (
+                      <Tooltip title={`Eliminar  Documento Poder`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_respaldo')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
+                      <Tooltip title={`Carga Cert. Existencia y Representación Legal`}>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
                             hidden
                             type="file"
@@ -504,8 +597,25 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='certificado_legal'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+
+                    {name_files.certificado_legal && (
+                      <Tooltip title={`Eliminar  Cert. Existencia y Representación Legal`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('certificado_legal')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
+
+
+
                     <Grid item xs={12} sm={5}>
                       <TextField
                         label="Dirección Notificación"
@@ -561,14 +671,16 @@ export const RegistroFacilidadPago: React.FC = () => {
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento Deudor Solidario'}
+                      <Tooltip title={`Carga Documento Deudor Solidario`}>
+
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento Deudor Solidario'}
                           <input
                             hidden
                             type="file"
@@ -578,17 +690,32 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_identidad'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+
+                    {name_files.documento_identidad && (
+                      <Tooltip title={`Eliminar Documento Deudor Solidario`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_identidad')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
+                      <Tooltip title={`Carga Documento Deudor Solidario`}>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
                           <input
                             hidden
                             type="file"
@@ -598,8 +725,24 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_respaldo'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+                    {name_files.documento_respaldo && (
+                      <Tooltip title={`Eliminar  Oficio Respaldando Deuda`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_respaldo')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
+
+
+
                     <Grid item xs={12} sm={5}>
                       <TextField
                         label="Dirección Notificación"
@@ -655,14 +798,15 @@ export const RegistroFacilidadPago: React.FC = () => {
                 >
                   <Grid container spacing={2}>
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento Deudor Solidario'}
+                      <Tooltip title={`Carga Documento Deudor Solidario`}>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_identidad !== undefined ? name_files.documento_identidad : 'Carga Documento Deudor Solidario'}
                           <input
                             hidden
                             type="file"
@@ -672,17 +816,34 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_identidad'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+
+                    {name_files.documento_identidad && (
+                      <Tooltip title={`Eliminar Documento Deudor Solidario`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_identidad')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
+
+
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
+                      <Tooltip title={`Carga Oficio Respaldando Deuda`}>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_respaldo !== undefined ? name_files.documento_respaldo : 'Carga Oficio Respaldando Deuda'}
                           <input
                             hidden
                             type="file"
@@ -692,17 +853,34 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_respaldo'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+
+                    {name_files.documento_respaldo && (
+                      <Tooltip title={`Eliminar Oficio Respaldando Deuda`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_respaldo')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
+
+
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
+                      <Tooltip title={`Carga Cert. Existencia y Representación Legal`}>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.certificado_legal !== undefined ? name_files.certificado_legal : 'Carga Cert. Existencia y Representación Legal'}
                           <input
                             hidden
                             type="file"
@@ -712,8 +890,21 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='certificado_legal'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
                     </Grid>
+                    {name_files.certificado_legal && (
+                      <Tooltip title={`Eliminar Cert. Existencia y Representación Legal`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('certificado_legal')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
                     <Grid item xs={12} sm={5}>
                       <TextField
                         label="Dirección Notificación"
@@ -777,37 +968,46 @@ export const RegistroFacilidadPago: React.FC = () => {
                     onChange={(event: event) => {
                       const { value } = event.target
                       set_num_periodicidad(parseInt(value))
-                      if(value === '1') {
+                      if (value === '1') {
                         set_periodicidad('meses')
                         set_limite(60)
                       }
-                      if(value === '3') {
+                      if (value === '3') {
                         set_periodicidad('trimestres')
                         set_limite(20)
                       }
-                      if(value === '6') {
+                      if (value === '6') {
                         set_periodicidad('semestres')
                         set_limite(10)
                       }
-                      if(value === '12') {
+                      if (value === '12') {
                         set_periodicidad('años')
                         set_limite(5)
+
+                      }
+                      if (value === '2') {
+                        set_periodicidad('bimestra')
+                        set_limite(30)
                       }
                     }}
                   >
-                    <MenuItem value="1">Mensual</MenuItem>
-                    <MenuItem value="3">Trimestral</MenuItem>
-                    <MenuItem value="6">Semestral</MenuItem>
                     <MenuItem value="12">Anual</MenuItem>
+                    <MenuItem value="6">Semestral</MenuItem>
+                    <MenuItem value="3">Trimestral</MenuItem>
+                    <MenuItem value="2">Bimestral</MenuItem>
+                    <MenuItem value="1">Mensual</MenuItem>
+
                   </Select>
                 </FormControl>
               </Grid>
+
+
               <Grid item xs={12} sm={5}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel>{periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}</InputLabel>
+                  <InputLabel>{periodicidad !== '' ? `Plazo (${periodicidad})` : 'Plazo'}</InputLabel>
                   <Select
                     required
-                    label={periodicidad !== '' ? `Plazo (${periodicidad})`: 'Plazo'}
+                    label={periodicidad !== '' ? `Plazo (${periodicidad})` : 'Plazo'}
                     name='cuota'
                     defaultValue={""}
                     onChange={(event: event) => {
@@ -816,7 +1016,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                     }}
                   >
                     {
-                      arr_periodicidad.map((count)=>(
+                      arr_periodicidad.map((count) => (
                         <MenuItem key={count} value={count}>{count}</MenuItem>
                       ))
                     }
@@ -825,9 +1025,9 @@ export const RegistroFacilidadPago: React.FC = () => {
               </Grid>
               {
                 periodicidad === 'años' && plazo > 1 ||
-                periodicidad === 'semestres' && plazo > 2 ||
-                periodicidad === 'trimestres' && plazo > 4 ||
-                periodicidad === 'meses' && plazo > 12 ? (
+                  periodicidad === 'semestres' && plazo > 2 ||
+                  periodicidad === 'trimestres' && plazo > 4 ||
+                  periodicidad === 'meses' && plazo > 12 ? (
                   <>
                     <Grid item xs={12} sm={5} direction="row" rowSpacing={2}>
                       <FormControl size="small" fullWidth>
@@ -847,14 +1047,15 @@ export const RegistroFacilidadPago: React.FC = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={11} sm={5}>
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        size='medium'
-                        component="label"
-                        startIcon={<CloudUpload />}
-                      >
-                        {name_files.documento_garantia !== undefined ? name_files.documento_garantia : 'Carga Garantía Ofrecida'}
+                      <Tooltip title={`Carga Garantía Ofrecida`}>
+                        <Button
+                          variant="outlined"
+                          fullWidth
+                          size='medium'
+                          component="label"
+                          startIcon={<CloudUpload />}
+                        >
+                          {name_files.documento_garantia !== undefined ? name_files.documento_garantia : 'Carga Garantía Ofrecida'}
                           <input
                             hidden
                             type="file"
@@ -864,20 +1065,36 @@ export const RegistroFacilidadPago: React.FC = () => {
                             name='documento_garantia'
                             onChange={handle_change_file}
                           />
-                      </Button>
+                        </Button>
+                      </Tooltip>
+
+
                     </Grid>
+                    {name_files.documento_garantia && (
+                      <Tooltip title={`Eliminar Garantía Ofrecida`}>
+                        <Grid item>
+                          <IconButton
+                            color="error"
+                            onClick={() => handle_delete_file('documento_garantia')}
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </Grid>
+                      </Tooltip>
+                    )}
                   </>
                 ) : null
               }
               <Grid item xs={11} sm={5}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  size='medium'
-                  component="label"
-                  startIcon={<CloudUpload />}
-                >
-                  {name_files.documento_no_enajenacion !== undefined ? name_files.documento_no_enajenacion : 'Carga Documento No Enajenación'}
+                <Tooltip title={`Carga Documento No Enajenación`}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    size='medium'
+                    component="label"
+                    startIcon={<CloudUpload />}
+                  >
+                    {name_files.documento_no_enajenacion !== undefined ? name_files.documento_no_enajenacion : 'Carga Documento No Enajenación'}
                     <input
                       hidden
                       type="file"
@@ -887,24 +1104,37 @@ export const RegistroFacilidadPago: React.FC = () => {
                       name='documento_no_enajenacion'
                       onChange={handle_change_file}
                     />
-                </Button>
+                  </Button>
+                </Tooltip>
               </Grid>
+              {name_files.documento_no_enajenacion && (
+                <Tooltip title={`Eliminar Documento No Enajenación`}>
+                  <Grid item>
+                    <IconButton
+                      color="error"
+                      onClick={() => handle_delete_file('documento_no_enajenacion')}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Grid>
+                </Tooltip>
+              )}
             </Grid>
           </Box>
         </Grid>
       </Grid>
-          <Grid
-          container
-          sx={{
-            position: 'relative',
-            background: '#FAFAFA',
-            borderRadius: '15px',
-            mb: '20px',
-            mt: '20px',
-            p: '20px',
-            boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
+      <Grid
+        container
+        sx={{
+          position: 'relative',
+          background: '#FAFAFA',
+          borderRadius: '15px',
+          mb: '20px',
+          mt: '20px',
+          p: '20px',
+          boxShadow: '0px 3px 6px #042F4A26',
+        }}
+      >
         <h3>Relación de bienes</h3>
         <Grid item xs={12}>
           <Box
@@ -914,7 +1144,7 @@ export const RegistroFacilidadPago: React.FC = () => {
           >
             <Grid container spacing={2} marginBottom={3}>
               <Grid item xs={12} sm={5} >
-              <FormControl size="small" fullWidth>
+                <FormControl size="small" fullWidth>
                   <InputLabel>Tipo Bien</InputLabel>
                   <Select
                     label="Tipo Bien"
@@ -978,14 +1208,15 @@ export const RegistroFacilidadPago: React.FC = () => {
                 />
               </Grid>
               <Grid item xs={12} sm={5}>
-                <Button
-                  variant="outlined"
-                  fullWidth
-                  size='medium'
-                  component="label"
-                  startIcon={<CloudUpload />}
-                >
-                  {nombre_archivo_bien !== '' ? nombre_archivo_bien : 'Carga el Documento Impuesto'}
+                <Tooltip title={`Carga el Documento Impuesto`}>
+                  <Button
+                    variant="outlined"
+                    fullWidth
+                    size='medium'
+                    component="label"
+                    startIcon={<CloudUpload />}
+                  >
+                    {nombre_archivo_bien !== '' ? nombre_archivo_bien : 'Carga el Documento Impuesto'}
                     <input
                       hidden
                       type="file"
@@ -995,8 +1226,20 @@ export const RegistroFacilidadPago: React.FC = () => {
                       name='documento_soporte_bien'
                       onChange={handle_file_bienes}
                     />
-                </Button>
+                  </Button>
+                </Tooltip> 
               </Grid>
+              {nombre_archivo_bien && (
+                <Grid item>
+                  <IconButton
+                    color="error"
+                    onClick={eliminarArchivoSeleccionado}
+                   >
+                    <DeleteIcon />
+
+                  </IconButton>
+                </Grid> 
+              )} 
               <Grid item xs={12} sm={3.1}>
                 <Button
                   color='primary'
@@ -1074,82 +1317,82 @@ export const RegistroFacilidadPago: React.FC = () => {
             noValidate
             autoComplete="off"
           >
-              <Grid item xs={12} sm={15} mb='20px'>
-                <TextField
-                  multiline
-                  required
-                  rows={4}
-                  label="Observación"
-                  helperText="Escribe una observación"
-                  size="small"
-                  fullWidth
-                  name='observaciones'
-                  onChange={on_input_change}
-                />
-              </Grid>
-              <FormGroup>
-                <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
-                <FormControlLabel
-                  control={<Checkbox
-                    name='notificaciones'
-                    onChange={(event: check) => {
-                      const { checked } = event.target
-                      set_autorizacion_notificacion(checked)
-                    }}
-                  />}
-                  label="Autorizar notificación por correo electrónico" />
-              </FormGroup>
-              <Stack
-                direction="row"
-                justifyContent="right"
-                spacing={2}
-                sx={{ mb: '20px', mt: '20px' }}
-              >
-                <Button
-                  color='primary'
-                  variant='contained'
-                  startIcon={<Save />}
-                  onClick={() => {
-                      const post_registro = async (): Promise<void> => {
-                        try {
-                          const { data: { data: res_registro } } = await post_registro_fac_pago({
-                            ...form_state,
-                            id_deudor: deudores.id,
-                            id_tipo_actuacion: persona,
-                            fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
-                            periodicidad: num_periodicidad,
-                            cuotas: plazo,
-                            fecha_abono: dayjs(date_abono).format('YYYY-MM-DD'),
-                            documento_no_enajenacion: form_files.documento_no_enajenacion,
-                            consignacion_soporte: form_files.consignacion_soporte,
-                            documento_soporte: form_files.documento_soporte,
-                            id_funcionario: 1,
-                            notificaciones: autorizacion_notificacion,
-                            documento_garantia: form_files.documento_garantia,
-                            ids_obligaciones: obligaciones_ids,
-                            documento_deudor1: form_files.documento_identidad,
-                            documento_deudor2: form_files.documento_respaldo,
-                            documento_deudor3: form_files.certificado_legal,
-                            id_tipo_bienes: tipos_bienes,
-                            identificaciones: identificaciones_bienes,
-                            direcciones: direcciones_bienes,
-                            valores: valores_bienes,
-                            documentos_soporte_bien: archivos_bienes,
-                            id_ubicaciones: ubicaciones_bienes,
-                          })
-                          set_respuesta_registro(res_registro ?? {});
-                        } catch (error: any) {
-                          // throw new Error(error);
-                          control_error(error.response.data.detail);
-
-                        }
-                      }
-                      void post_registro();
+            <Grid item xs={12} sm={15} mb='20px'>
+              <TextField
+                multiline
+                required
+                rows={4}
+                label="Observación"
+                helperText="Escribe una observación"
+                size="small"
+                fullWidth
+                name='observaciones'
+                onChange={on_input_change}
+              />
+            </Grid>
+            <FormGroup>
+              <FormControlLabel control={<Checkbox />} label="Aceptar términos y condiciones" />
+              <FormControlLabel
+                control={<Checkbox
+                  name='notificaciones'
+                  onChange={(event: check) => {
+                    const { checked } = event.target
+                    set_autorizacion_notificacion(checked)
                   }}
-                >
-                  Enviar Solicitud
-                </Button>
-              </Stack>
+                />}
+                label="Autorizar notificación por correo electrónico" />
+            </FormGroup>
+            <Stack
+              direction="row"
+              justifyContent="right"
+              spacing={2}
+              sx={{ mb: '20px', mt: '20px' }}
+            >
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<Save />}
+                onClick={() => {
+                  const post_registro = async (): Promise<void> => {
+                    try {
+                      const { data: { data: res_registro } } = await post_registro_fac_pago({
+                        ...form_state,
+                        id_deudor: deudores.id,
+                        id_tipo_actuacion: persona,
+                        fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
+                        periodicidad: num_periodicidad,
+                        cuotas: plazo,
+                        fecha_abono: dayjs(date_abono).format('YYYY-MM-DD'),
+                        documento_no_enajenacion: form_files.documento_no_enajenacion,
+                        consignacion_soporte: form_files.consignacion_soporte,
+                        documento_soporte: form_files.documento_soporte,
+                        id_funcionario: 1,
+                        notificaciones: autorizacion_notificacion,
+                        documento_garantia: form_files.documento_garantia,
+                        ids_obligaciones: obligaciones_ids,
+                        documento_deudor1: form_files.documento_identidad,
+                        documento_deudor2: form_files.documento_respaldo,
+                        documento_deudor3: form_files.certificado_legal,
+                        id_tipo_bienes: tipos_bienes,
+                        identificaciones: identificaciones_bienes,
+                        direcciones: direcciones_bienes,
+                        valores: valores_bienes,
+                        documentos_soporte_bien: archivos_bienes,
+                        id_ubicaciones: ubicaciones_bienes,
+                      })
+                      set_respuesta_registro(res_registro ?? {});
+                    } catch (error: any) {
+                      // throw new Error(error);
+                      control_error(error.response.data.detail);
+
+                    }
+                  }
+                  void post_registro();
+                }}
+              >
+                Enviar Solicitud
+              </Button>
+            </Stack>
           </Box>
         </Grid>
       </Grid>

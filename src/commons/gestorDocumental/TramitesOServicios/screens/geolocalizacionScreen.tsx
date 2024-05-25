@@ -10,10 +10,10 @@ import { useEffect, useState } from 'react';
 const icono: string = require('../../../recursoHidrico/estaciones/assets/icons/locate.svg').default;
 const icon_locate = new L.Icon({
   iconUrl: icono,
-  iconSize: [30, 30],
+  iconSize: [35, 35],
 });
 const map_style = {
-  height: "25vh",
+  height: "400px",
   width: "100%"
 };
 interface IProps {
@@ -28,15 +28,16 @@ export const Geolocalizacion: React.FC<IProps> = (props: IProps) => {
     if(props.coordenada_x !== "" && props.coordenada_y !== ""){
       set_position([parseFloat(props.coordenada_x),parseFloat(props.coordenada_y)]);
     }
-  },[props.coordenada_x, props.coordenada_y])
+  },[props])
 
-  useEffect(() => {
+  /*useEffect(() => {
+    console.log(props);
       console.log(position);
-  },[position]);
+  },[position]);*/
   
   return (
     <>
-        <Grid item xs={12} sx={{ marginTop: '10px' }}>
+        <Grid item xs={12} sx={{ marginTop: '1.8rem' }}>
           <MapContainer
             center={position}
             zoom={10}

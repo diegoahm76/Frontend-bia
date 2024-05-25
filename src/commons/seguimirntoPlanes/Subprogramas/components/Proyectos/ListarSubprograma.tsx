@@ -30,19 +30,21 @@ export const ListarSubprograma: React.FC = () => {
       field: 'nombre_subprograma',
       headerName: 'NOMBRE SUBPROGRAMA',
       sortable: true,
-      width: 200,
+      minWidth: 200,
+      flex: 2
     },
     {
       field: 'nombre_programa',
       headerName: 'NOMBRE DEL PROGRAMA',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 2
     },
     {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -83,13 +85,13 @@ export const ListarSubprograma: React.FC = () => {
     },
   ];
 
-  const { rows_subprogramas, fetch_data_subprogramas } = useContext(
+  const { rows_subprogramas, id_programa, fetch_data_subprogramas } = useContext(
     DataContextSubprogramas
   );
 
-  const {
-    programa: { id_programa },
-  } = useAppSelector((state) => state.planes);
+  // const {
+  //   programa: { id_programa },
+  // } = useAppSelector((state) => state.planes);
 
   //  console.log('')('id_programa', id_programa);
 
@@ -150,12 +152,13 @@ export const ListarSubprograma: React.FC = () => {
                   pageSize={10}
                   rowsPerPageOptions={[10]}
                   getRowId={(row) => uuidv4()}
+                  getRowHeight={() => 'auto'}
                 />
               </>
             </Box>
           </Grid>
         </>
-        <Grid container spacing={2} justifyContent="flex-end">
+        <Grid container spacing={2} my={1} justifyContent="flex-end">
           <Grid item>
             <Button
               variant="outlined"

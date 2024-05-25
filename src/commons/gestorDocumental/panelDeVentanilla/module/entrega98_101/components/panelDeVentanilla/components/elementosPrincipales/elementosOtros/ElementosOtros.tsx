@@ -23,7 +23,6 @@ import { ModalAndLoadingContext } from '../../../../../../../../../../context/Ge
 import { useContext, useState } from 'react';
 import { getHistoricoOtrosByRadicado } from '../../../../../../../toolkit/thunks/otros/getHistoricoOtrosByRadicado.service';
 import { PanelVentanillaContext } from '../../../../../../../context/PanelVentanillaContext';
-import { getAnexosOtros } from '../../../../../../../toolkit/thunks/otros/anexos/getAnexosOtros.service';
 
 export const ElementosOtros = (): JSX.Element => {
   //* redux states
@@ -36,11 +35,9 @@ export const ElementosOtros = (): JSX.Element => {
   const { handleOpenModalOne, handleGeneralLoading } = useContext(
     ModalAndLoadingContext
   );
-  const {
-    setRadicado,
-    setValue,
-    setAnexos,
-  } = useContext(PanelVentanillaContext);
+  const { setRadicado, setValue, setAnexos } = useContext(
+    PanelVentanillaContext
+  );
   //* dispatch necesario
   const dispatch = useAppDispatch();
 
@@ -73,7 +70,7 @@ export const ElementosOtros = (): JSX.Element => {
       void Swal.fire({
         title: 'Opps...',
         icon: 'error',
-        text: `Esta PQRSDF ya se encuentra en gestión, no se pueden hacer acciones sobre ella`,
+        text: `Este otro ya se encuentra en gestión, no se pueden hacer acciones sobre él`,
         showConfirmButton: true,
       });
       return;
@@ -87,44 +84,96 @@ export const ElementosOtros = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    /*    const shouldDisable = (actionId: string) => {
+    /*
+  {
+    "tipo_solicitud": "OTROS",
+    "nombre_completo_titular": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
+    "asunto": "Prueba",
+    "cantidad_anexos": 1,
+    "radicado": "UNICO-2024-00017",
+    "fecha_radicado": "2024-01-17T14:46:20.563888",
+    "requiere_digitalizacion": false,
+    "estado_solicitud": "RADICADO",
+    "estado_asignacion_grupo": null,
+    "persona_asignada": null,
+    "persona_recibe": null,
+    "numero_solicitudes_digitalizacion": 0,
+    "nro_folios_totales": 1,
+    "unidad_asignada": null,
+    "es_pqrsdf": false,
+    "persona_interpone": "SUPERUSUARIO 1er NOMBRE SUPERUSUARIO 1er APELL",
+    "cod_relacion_titular": "MP",
+    "relacion_titular": "Misma persona",
+    "medio_solicitud": "Instalaciones de la Corporación",
+    "cod_forma_presentacion": "E",
+    "forma_presentacion": "Escrita",
+    "fecha_registro": "2023-12-13T14:01:32.664712",
+    "descripcion": "Prueba 1",
+    "nombre_sucursal": null,
+    "nombre_sucursal_recepcion_fisica": null,
+    "fecha_envio_definitivo_digitalizacion": null,
+    "fecha_digitalizacion_completada": null,
+    "fecha_inicial_estado_actual": "2023-12-13T14:01:32.664712",
+}
+    */
+
+    /*
+const actionsOtros = [
+  {
+    id: 'DigOtro',
+  },
+  {
+    id: 'AsigGrupOtro',
+  },
+];
+*/
+
+    const shouldDisable = (actionId: string) => {
+      const isNoSeleccionado = !otro;
       const isAsigGrup = actionId === 'AsigGrupOtro';
       const isDig = actionId === 'DigOtro';
       const hasAnexos = otro.cantidad_anexos > 0;
       const requiresDigitalization = otro.requiere_digitalizacion;
       const isRadicado = otro.estado_solicitud === 'RADICADO';
       const isEnVentanillaSinPendientes =
-      otro.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
+        otro.estado_solicitud === 'EN VENTANILLA SIN PENDIENTES';
       const isEnVentanillaConPendientes =
-      otro.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
+        otro.estado_solicitud === 'EN VENTANILLA CON PENDIENTES';
       const isEnGestion = otro.estado_solicitud === 'EN GESTION';
+
+      // ? validacion
+      if (isNoSeleccionado) {
+        return true;
+      }
+
+      //?  primer caso
+      if (isRadicado && !hasAnexos) {
+        return !(actionId === 'AsigGrupOtro');
+      }
+      // ? segundo caso
+      if (isRadicado && hasAnexos && !requiresDigitalization) {
+        return !(actionId === 'AsigGrupOtro' /*|| actionId === 'DigOtro'*/);
+      }
+      // ? tercer caso
+      if (isRadicado && hasAnexos && requiresDigitalization) {
+        return !(actionId === 'DigOtro');
+      }
+      // ? cuarto caso
+      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
+        return !(/*actionId === 'DigOtro' ||*/ actionId === 'AsigGrupOtro');
+      }
+      // ? quinto caso
+      if (isEnVentanillaSinPendientes && requiresDigitalization) {
+        return !(actionId === 'DigOtro');
+      }
+
+      // ? sexto caso
+      if (isEnVentanillaConPendientes) {
+        return !(actionId === 'DigOtro');
+      }
 
       if (isEnGestion) {
         return true;
-      }
-
-      if (isRadicado && !hasAnexos && isDig) {
-        return true;
-      }
-
-      if (isRadicado && hasAnexos && !requiresDigitalization) {
-        return isAsigGrup;
-      }
-
-      if (isRadicado && hasAnexos && requiresDigitalization) {
-        return isDig;
-      }
-
-      if (isEnVentanillaSinPendientes && !requiresDigitalization) {
-        return isAsigGrup;
-      }
-
-      if (isEnVentanillaSinPendientes && requiresDigitalization) {
-        return isDig;
-      }
-
-      if (isEnVentanillaConPendientes) {
-        return isAsigGrup;
       }
 
       return actionId === 'DigOtro' && !(requiresDigitalization && hasAnexos);
@@ -135,7 +184,7 @@ export const ElementosOtros = (): JSX.Element => {
       disabled: shouldDisable(action.id),
     }));
 
-    dispatch(setActionsOtros(actionsOtrosNew));*/
+    dispatch(setActionsOtros(actionsOtrosNew));
   };
 
   // ? columns config
@@ -300,7 +349,12 @@ export const ElementosOtros = (): JSX.Element => {
   return (
     <>
       <RenderDataGrid
-        rows={[...listaElementosPqrsfTramitesUotros, ...listaElementosPqrsfTramitesUotros ]?? []}
+        rows={
+          [
+            ...listaElementosPqrsfTramitesUotros,
+            ...listaElementosPqrsfTramitesUotros,
+          ] ?? []
+        }
         columns={columns ?? []}
         title={`Lista de solicitudes de ${listaElementosPqrsfTramitesUotros[0]?.tipo_solicitud}`}
         aditionalElement={

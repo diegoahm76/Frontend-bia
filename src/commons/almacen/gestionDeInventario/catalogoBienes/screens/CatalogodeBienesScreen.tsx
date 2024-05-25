@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Column } from 'primereact/column';
 import { TreeTable } from 'primereact/treetable';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,7 +13,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/lara-light-indigo/theme.css';
 import Button from '@mui/material/Button';
-import { Grid, Stack, Box, Tooltip, IconButton, Avatar } from '@mui/material';
+import { Grid, Stack, Box, Tooltip, IconButton, Avatar, CircularProgress, LinearProgress } from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import CrearBienDialogForm from '../components/CrearBienDialogForm';
 import {
@@ -36,7 +36,24 @@ export const CatalogodeBienesScreen: React.FC = () => {
 
   const [add_bien_is_active, set_add_bien_is_active] = useState<boolean>(false);
   const { nodo, code_bien, current_nodo } = useAppSelector((state) => state.bien);
+  const is_solicitud_realizada_ref = useRef(false);
 
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (nodo?.length === 0) {
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 15000);
+
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(false);
+    }
+  }, [nodo]);
+  
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (node: INodo, Column: any) => {
     return (
@@ -119,10 +136,13 @@ export const CatalogodeBienesScreen: React.FC = () => {
       </>
     );
   };
+
   useEffect(() => {
-    void dispatch(get_bienes_service());
-  
-  }, []);
+    if (!is_solicitud_realizada_ref.current) {    
+      void dispatch(get_bienes_service());
+      is_solicitud_realizada_ref.current = true;
+    }
+  },[]);
 
 
 
@@ -138,8 +158,6 @@ export const CatalogodeBienesScreen: React.FC = () => {
    //  console.log('')(data) 
   void dispatch(get_code_bien_service(data.bien?.id_bien, data.bien?.nivel_jerarquico + 1)) 
   }
-
-
     
   return (
     <>
@@ -158,6 +176,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           <Title title="Catálogo de bienes " />
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
             <Button
+              disabled={Object.keys(nodo).length !== 0 ? true : false}
               variant="outlined"
               startIcon={<AddIcon style={{ fontSize: '20px' }} />}
               onClick={() => {
@@ -176,7 +195,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           </Stack>
           <Grid item>
             <Box sx={{ width: '100%' }}>
-              <TreeTable value={nodo} filterMode="strict">
+              <TreeTable value={nodo} filterMode="strict" loading={loading} loadingIcon={<CircularProgress />}>
                 <Column
                   expander
                   body={(row) =>

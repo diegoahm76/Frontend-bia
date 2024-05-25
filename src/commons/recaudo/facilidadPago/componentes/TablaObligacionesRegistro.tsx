@@ -1,4 +1,5 @@
-import { Grid, Box } from '@mui/material';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Grid, Box, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
 import { type Obligacion } from '../interfaces/interfaces';
@@ -6,6 +7,7 @@ import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 import { TenerEncuenta } from './TenerEncuenta';
 import { useState } from 'react';
+import InfoIcon from '@mui/icons-material/Info';
 
 interface RootState {
   obligaciones: {
@@ -102,10 +104,12 @@ export const TablaObligacionesRegistro: React.FC = () => {
     },
   ];
   const [is_modal_active, set_is_buscar] = useState<boolean>(true);
-
+  const handleClick = () => {
+    set_is_buscar(true);
+  };
   return (
     <>
-    <TenerEncuenta is_modal_active={is_modal_active}  set_is_modal_active={set_is_buscar} />
+      <TenerEncuenta is_modal_active={is_modal_active} set_is_modal_active={set_is_buscar} />
       <Grid
         container
         sx={{
@@ -117,6 +121,13 @@ export const TablaObligacionesRegistro: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        <Grid item >
+          <IconButton color='primary' onClick={handleClick}>
+            <InfoIcon />
+          </IconButton>
+        </Grid>
+
+
 
         <Grid item xs={12}>
           <Grid item>

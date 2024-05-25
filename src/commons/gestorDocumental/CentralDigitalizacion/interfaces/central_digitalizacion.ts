@@ -98,6 +98,7 @@ export interface IObjExhibit {
   ya_digitalizado?: boolean | null;
   observacion_digitalizacion?: string | null;
   exhibit_link?: string | IObjFile | null;
+  ruta_archivo?: string | IObjFile | null;
   id_docu_de_arch_exp?: number | null;
   metadatos: IObjMetaData | null;
 }
@@ -114,7 +115,7 @@ export interface IObjMetaData {
   tiene_replica_fisica?: boolean | null;
 
   tiene_tipologia?: boolean | null;
-
+  ya_digitalizado?: boolean | null;
   nro_folios_documento?: number | null;
   origen_archivo?: string | null;
   cod_origen_archivo?: string | number | null;
@@ -124,6 +125,8 @@ export interface IObjMetaData {
   medio_almacenamiento?: string | null;
   palabras_clave_doc?: string | null;
   id_archivo_en_sistema?: number | null;
+  id_archivo_sistema?: number | null;
+
   archivo?: IObjFile | null;
 
   id_tipologia_doc?: number | null;

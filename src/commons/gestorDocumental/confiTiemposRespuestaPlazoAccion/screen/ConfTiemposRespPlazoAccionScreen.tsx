@@ -145,7 +145,7 @@ const ConfiguracionTiemposRespScreen = () => {
                 margin="dense"
                 fullWidth
                 size="small"
-                label="Observacón de la Configuración"
+                label="Observación de la Configuración"
                 variant="outlined"
                 disabled={false}
                 defaultValue={value}

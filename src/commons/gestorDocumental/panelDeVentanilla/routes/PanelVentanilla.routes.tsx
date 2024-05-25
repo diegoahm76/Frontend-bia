@@ -71,6 +71,19 @@ const routes = [
     path: 'complemento_info/:id',
     component: () => <VistaComplemento />,
   },
+
+
+  // tramite
+  {
+    path: '---',
+    component: () => <></>,
+  },
+  // opa
+  {
+    path: '---',
+    component: () => <></>,
+  },
+
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

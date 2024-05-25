@@ -89,6 +89,7 @@ export const AgregarIndicacdor: React.FC = () => {
         nombre_plan: indicador.nombre_plan,
         nombre_indicador: indicador.nombre_indicador,
         nombre_proyecto: indicador.nombre_proyecto,
+        numero_indicador: indicador.numero_indicador,
         linea_base: indicador.linea_base,
         medida: indicador.medida,
         tipo_indicador: indicador.tipo_indicador,
@@ -251,6 +252,32 @@ export const AgregarIndicacdor: React.FC = () => {
                     errors_indicador.nombre_indicador
                       ? 'Es obligatorio ingresar un nombre'
                       : 'Ingrese un nombre'
+                  }
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="numero_indicador"
+              control={control_indicador}
+              rules={{ required: true }}
+              render={({ field: { onChange, value } }) => (
+                <TextField
+                  fullWidth
+                  size="small"
+                  label="Numero indicador"
+                  variant="outlined"
+                  multiline
+                  value={value}
+                  disabled={false}
+                  required={true}
+                  onChange={onChange}
+                  error={!!errors_indicador.numero_indicador}
+                  helperText={
+                    errors_indicador.numero_indicador
+                      ? 'Es obligatorio ingresar un número de indicador'
+                      : 'Ingrese un número de indicador'
                   }
                 />
               )}

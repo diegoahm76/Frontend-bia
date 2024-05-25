@@ -20,7 +20,7 @@ export const useProyectoHook = (): any => {
   } = useForm<IProyectos>({
     defaultValues: {
       nombre_proyecto: '',
-      numero_proyecto: 0,
+      numero_proyecto: '',
       nombre_programa: '',
       pondera_1: 0,
       pondera_2: 0,
@@ -38,14 +38,14 @@ export const useProyectoHook = (): any => {
   const limpiar_formulario_proyecto = async () => {
     reset_proyecto({
       nombre_proyecto: '',
-      numero_proyecto: 0,
+      numero_proyecto: '',
       nombre_programa: '',
       pondera_1: 0,
       pondera_2: 0,
       pondera_3: 0,
       pondera_4: 0,
       id_plan: 0,
-      fecha_creacion: '',
+      // fecha_creacion: '',
       cumplio: false,
     });
   };

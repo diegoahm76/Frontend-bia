@@ -109,17 +109,7 @@ export const UserProviderActividades = ({
       if (response?.length > 0) {
         const data_actividad: IActividades[] = response.map(
           (item: IActividades) => ({
-            id_actividad: item.id_actividad,
-            numero_actividad: item.numero_actividad,
-            nombre_actividad: item.nombre_actividad,
-            id_producto: item.id_producto,
-            nombre_producto: item.nombre_producto,
-            id_plan: item.id_plan,
-            nombre_plan: item.nombre_plan,
-            id_programa: item.id_programa,
-            id_proyecto: item.id_proyecto,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+           ...item,
           })
         );
 
@@ -139,17 +129,7 @@ export const UserProviderActividades = ({
       if (response?.length > 0) {
         const data_actividad: IActividades[] = response.map(
           (item: IActividades) => ({
-            id_actividad: item.id_actividad,
-            numero_actividad: item.numero_actividad,
-            nombre_actividad: item.nombre_actividad,
-            id_producto: item.id_producto,
-            nombre_producto: item.nombre_producto,
-            id_plan: item.id_plan,
-            nombre_plan: item.nombre_plan,
-            id_programa: item.id_programa,
-            id_proyecto: item.id_proyecto,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
 
@@ -169,15 +149,7 @@ export const UserProviderActividades = ({
       if (response?.length > 0) {
         const data_proyecto: IProductos[] = response.map(
           (item: IProductos) => ({
-            id_producto: item.id_producto,
-            numero_producto: item.numero_producto,
-            nombre_producto: item.nombre_producto,
-            id_proyecto: item.id_proyecto,
-            nombre_proyecto: item.nombre_proyecto,
-            id_plan: item.id_plan,
-            id_programa: item.id_programa,
-            fecha_creacion: item.fecha_creacion,
-            cumplio: item.cumplio,
+            ...item,
           })
         );
 

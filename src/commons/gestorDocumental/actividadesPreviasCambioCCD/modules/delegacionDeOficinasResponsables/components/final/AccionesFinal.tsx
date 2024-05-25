@@ -27,39 +27,37 @@ export const AccionesFinal = (): JSX.Element => {
   if (!ccdOrganigramaCurrentBusquedaOfiResp) return <></>;
 
   const handleSubmit = async () => {
-    const oficinasNuevas = Object.values(oficinasNuevaSeleccionadas).map(
+    const oficinasNuevas = Object.values(oficinasNuevaSeleccionadas)?.map(
       (oficina: any) => ({
         idComparacion: oficina?.id_unidad_organizacional,
         id_unidad_nueva: oficina?.value,
       })
-    );
+    ).filter(Boolean);
 
     const oficinasActuales = grilladoDeOficinas?.oficinasActuales.map(
       (oficina: any) => ({
         idComparacion: oficina?.id_unidad_organizacional,
         id_unidad_actual: oficina?.id_unidad_organizacional,
       })
-    );
+    ).filter(Boolean);
 
     const oficinasDelegadas = oficinasNuevas
       .map((oficinaNueva: any) => {
         const oficinaActual = oficinasActuales?.find(
           (oficinaActual: any) =>
-            oficinaActual.idComparacion === oficinaNueva.idComparacion
+            oficinaActual?.idComparacion === oficinaNueva?.idComparacion
         );
 
-        if (!oficinaNueva?.id_unidad_nueva) return null;
+        if (!oficinaNueva?.id_unidad_nueva) return undefined;
 
         return oficinaActual
           ? {
               id_unidad_actual: oficinaActual.id_unidad_actual,
               id_unidad_nueva: oficinaNueva.id_unidad_nueva,
             }
-          : null;
+          : undefined;
       })
       .filter(Boolean);
-
-    //* unidades responsable inicial
 
     const unidadesPadreUnidas = grilladoDeOficinas?.unidadActual?.map(
       (unidadActual: any, index: number) => {
@@ -70,9 +68,7 @@ export const AccionesFinal = (): JSX.Element => {
           id_unidad_nueva: unidadNueva?.id_unidad_organizacional,
         };
       }
-    );
-
-    //  console.log('')('envío de unidades', oficinasDelegadas);
+    ).filter(Boolean);
 
     postDelegaciones({
       delegaciones: {
@@ -81,10 +77,12 @@ export const AccionesFinal = (): JSX.Element => {
         oficinas_delegadas: [...oficinasDelegadas],
       },
       setLoading: setLoadingButton,
-    }).then((res) => {
+    }).then(() => {
       reset_states_asi_ofi_resp();
       dispatch(setOficinasNuevaSeleccionadas([]));
       dispatch(setGrilladoOficinas([]));
+    }).catch((error) => {
+      console.error('Error al enviar delegaciones:', error);
     });
   };
 

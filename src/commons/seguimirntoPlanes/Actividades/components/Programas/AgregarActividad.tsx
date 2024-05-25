@@ -84,6 +84,7 @@ export const AgregarActividad: React.FC = () => {
         numero_actividad: actividad.numero_actividad,
         nombre_plan: actividad.nombre_plan,
         nombre_producto: actividad.nombre_producto,
+        numero_producto: actividad.numero_producto,
         id_plan: actividad.id_plan,
         id_producto: actividad.id_producto,
         id_programa: actividad.id_programa,
@@ -166,6 +167,26 @@ export const AgregarActividad: React.FC = () => {
                   )}
                 />
               </Grid>{' '}
+              {/* numero_producto */}
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="numero_producto"
+                  control={control_actividad}
+                  rules={{ required: false }}
+                  render={({ field: { onChange, value } }) => (
+                    <TextField
+                      fullWidth
+                      size="small"
+                      label="Numero del producto"
+                      variant="outlined"
+                      value={value}
+                      disabled={true}
+                      required={true}
+                      onChange={onChange}
+                    />
+                  )}
+                />
+              </Grid>
             </>
           ) : null}
           <Grid item xs={12} sm={6}>
@@ -211,12 +232,12 @@ export const AgregarActividad: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  // error={!!errors_actividad.numero_actividad}
-                  // helperText={
-                  //   errors_actividad.numero_actividad
-                  //     ? 'Es obligatorio ingresar un nombre'
-                  //     : 'Ingrese un nombre'
-                  // }
+                  error={!!errors_actividad.numero_actividad}
+                  helperText={
+                    errors_actividad.numero_actividad
+                      ? 'Es obligatorio ingresar un número de actividad'
+                      : 'Ingrese un número de actividad'
+                  }
                 />
               )}
             />
@@ -319,6 +340,25 @@ export const AgregarActividad: React.FC = () => {
             </LocalizationProvider>
           </Grid>
           <Grid container spacing={2} justifyContent="flex-end">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                disabled={false}
+                onClick={() => {
+                  limpiar_formulario_actividad();
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: false,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Cerrar
+              </Button>
+            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

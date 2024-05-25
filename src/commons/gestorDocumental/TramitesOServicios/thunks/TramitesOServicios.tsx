@@ -3,6 +3,7 @@ import { type AxiosError, } from 'axios';
 // Reducers
 import { toast, type ToastContent } from 'react-toastify';
 import { api } from '../../../../api/axios';
+import Swal from 'sweetalert2';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -46,7 +47,7 @@ export const tipos_tramites: any = () => {
 export const tramites_servicios: any = () => {
   return async () => {
     try {
-      const { data } = await api.get(`tramites/opa/tramites/get-list/O/`);
+      const { data } = await api.get(`tramites/opa/tramites/get-list/OP/`);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -107,7 +108,21 @@ export const create_tramite_servicio: any = (tramite: any) => {
 export const cargar_anexos_opas: any = (id_tramite: any, documentos: any) => {
   return async () => {
     try {
-      const { data } = await api.put(`tramites/opa/tramites/anexos/update/${id_tramite}/`,documentos);
+      console.log(documentos);
+      const { data } = await api.put(`tramites/opa/tramites/anexos-metadatos/update/${id_tramite}/`,documentos);
+      control_success(data.detail);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+    };
+  };
+
+export const cargar_anexos_opas_metadatos: any = (id_tramite: any, documentos: any) => {
+  return async () => {
+    try {
+      const { data } = await api.put(`tramites/opa/tramites/anexos-metadatos/update/${id_tramite}/`,documentos);
       control_success(data.detail);
       return data;
     } catch (error: any) {
@@ -116,12 +131,23 @@ export const cargar_anexos_opas: any = (id_tramite: any, documentos: any) => {
     }
   };
 };
+
+
+
+
+
+
 // Paso 3. Radicación de OPA
 export const radicar_opa: any = (id_tramite: any) => {
   return async () => {
     try {
       const { data } = await api.post(`tramites/opa/tramites/radicar/create/${id_tramite}/`);
-      control_success(data.detail);
+      await Swal.fire({
+        title: 'Radicación de trámite OPA',
+        text: data.detail,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+      });
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

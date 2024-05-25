@@ -190,12 +190,12 @@ export const AgregarProyecto: React.FC = () => {
                   disabled={false}
                   required={true}
                   onChange={onChange}
-                  // error={!!errors_proyecto.numero_proyecto}
-                  // helperText={
-                  //   errors_proyecto.numero_proyecto
-                  //     ? 'Es obligatorio ingresar un nombre'
-                  //     : 'Ingrese un nombre'
-                  // }
+                  error={!!errors_proyecto.numero_proyecto}
+                  helperText={
+                    errors_proyecto.numero_proyecto
+                      ? 'Es obligatorio ingresar un número de proyecto'
+                      : 'Ingrese un número de proyecto'
+                  }
                 />
               )}
             />
@@ -210,7 +210,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 1"
+                  label="Valor Año 1"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -236,7 +236,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 2"
+                  label="Valor Año 2"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -262,7 +262,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 3"
+                  label="Valor Año 3"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -288,7 +288,7 @@ export const AgregarProyecto: React.FC = () => {
                   fullWidth
                   size="small"
                   type="number"
-                  label="Año 4"
+                  label="Valor Año 4"
                   variant="outlined"
                   value={value}
                   disabled={false}
@@ -412,7 +412,26 @@ export const AgregarProyecto: React.FC = () => {
               />
             </LocalizationProvider>
           </Grid>
-          <Grid container spacing={2} justifyContent="flex-end">
+          <Grid container spacing={2} my={1} justifyContent="flex-end">
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                disabled={false}
+                onClick={() => {
+                  limpiar_formulario_proyecto();
+                  dispatch(
+                    set_current_mode_planes({
+                      ver: true,
+                      crear: false,
+                      editar: false,
+                    })
+                  );
+                }}
+              >
+                Cerrar
+              </Button>
+            </Grid>
             <Grid item>
               <Button
                 variant="outlined"

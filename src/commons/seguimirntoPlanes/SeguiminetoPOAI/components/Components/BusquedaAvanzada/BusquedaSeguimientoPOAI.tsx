@@ -48,91 +48,106 @@ export const BusquedaSeguimientoPOAI: React.FC = () => {
       field: 'nombre_programa',
       headerName: 'NOMBRE PROGRAMA',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_proyecto',
       headerName: 'NOMBRE PROYECTO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_producto',
       headerName: 'NOMBRE PRODUCTO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'NOMBRE ACTIVIDAD',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_unidad',
       headerName: 'NOMBRE UNIDAD',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_indicador',
       headerName: 'NOMBRE INDICADOR',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_meta',
       headerName: 'NOMBRE META',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'codigo_modalidad',
       headerName: 'CODIGO MODALIDAD',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'concepto',
       headerName: 'CONCEPTO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'sector',
       headerName: 'SECTOR',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'nombre_fuente',
       headerName: 'NOMBRE FUENTE',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'objeto_contrato',
       headerName: 'OBJETO CONTRATO',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'ubicacion',
       headerName: 'UBICACION',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'porcentaje_pto',
       headerName: 'PORCENTAJE PTO',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'valor_total',
       headerName: 'VALOR TOTAL',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params) => {
         const valorTotal = Number(params.value);
         return valorTotal.toLocaleString('es-AR', {
@@ -147,19 +162,22 @@ export const BusquedaSeguimientoPOAI: React.FC = () => {
       field: 'numero_cdp_paa',
       headerName: 'NUMERO CDP PAA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'numero_rp_paa',
       headerName: 'NUMERO RP PAA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'valor_seguimiento_banco_paa',
       headerName: 'VALOR SEGUIMIENTO BANCO PAA',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1,
       valueFormatter: (params) => {
         const valorSeguimiento = Number(params.value);
         return valorSeguimiento.toLocaleString('es-AR', {
@@ -174,7 +192,7 @@ export const BusquedaSeguimientoPOAI: React.FC = () => {
       field: 'acciones',
       headerName: 'ACCIONES',
       sortable: true,
-      width: 200,
+      minWidth: 120,
       flex: 1,
       renderCell: (params) => (
         <>
@@ -657,6 +675,7 @@ export const BusquedaSeguimientoPOAI: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={() => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

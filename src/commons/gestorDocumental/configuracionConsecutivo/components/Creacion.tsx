@@ -15,6 +15,7 @@ import { Button, ButtonGroup, Dialog, Divider, FormControl, FormControlLabel, Gr
 import EditIcon from '@mui/icons-material/Edit';
 import { download_xls } from "../../../../documentos-descargar/XLS_descargar";
 import { download_pdf } from "../../../../documentos-descargar/PDF_descargar";
+import { RenderDataGrid } from "../../tca/Atom/RenderDataGrid/RenderDataGrid";
 
 export interface UnidadOrganizaciona {
     nombre: string;
@@ -26,19 +27,30 @@ interface FormData {
     agno_consecutivo: any;
     cantidad_digitos: any;
     consecutivo_inicial: any;
+    id_catalogo_serie_unidad: any;
 }
-
+export interface SerieSubserie {
+    id_cat_serie_und: number;
+    id_serie_doc: number;
+    cod_serie_doc: string;
+    nombre_serie_doc: string;
+    id_subserie_doc: number | null;
+    cod_subserie_doc: string | null;
+    nombre_subserie_doc: string | null;
+}
 interface UnidadConfiguracion {
-    implementar: any;
-    agno_consecutivo: number;
-    cantidad_digitos: any;
-    nombre_unidad: string;
-    persona_configura: any;
-    consecutivo_actual: any;
-    consecutivo_inicial: any;
-    fecha_consecutivo_actual: any;
     id_config_tipo_consec_agno: number;
-    fecha_inicial_config_implementacion: any;
+     cantidad_digitos:number;
+    consecutivo_actual:number;
+    consecutivo_inicial:number;
+    fecha_consecutivo_actual:any;
+    fecha_inicial_config_implementacion:any;
+    id_catalogo_serie_unidad:number;
+    id_persona_config_implementacion:number
+    id_persona_consecutivo_actual:any;
+    id_unidad:number;
+    implementar:any;
+    nombre_unidad:string; 
 };
 
 
@@ -49,6 +61,7 @@ export const Creacion: React.FC = () => {
         agno_consecutivo: "",
         cantidad_digitos: "",
         consecutivo_inicial: "",
+        id_catalogo_serie_unidad: "",
     };
 
 
@@ -66,7 +79,7 @@ export const Creacion: React.FC = () => {
     const handleInputChange = (event: any) => {
         const target = event.target as HTMLInputElement;
         const { name, value } = target;
-        const numericFields = ['agno_consecutivo', 'consecutivo_inicial', 'cantidad_digitos'];
+        const numericFields = ['agno_consecutivo', 'consecutivo_inicial', 'cantidad_digitos','id_catalogo_serie_unidad'];
 
         // Verifica si el campo es numérico y si el valor es numérico o vacío
         const isNumericField = numericFields.includes(name);
@@ -123,13 +136,17 @@ export const Creacion: React.FC = () => {
             const url = `/gestor/consecutivos-unidades/config_tipo_consec_agno/get/${formData.agno_consecutivo}/${formData.id_unidad}/`;
             const res = await api.get(url);
             const unidadesConfigData = res.data.data;
-            setUnidadesConfig([unidadesConfigData]);
+            // Asegúrate de que unidadesConfigData es un array antes de asignarlo
+            setUnidadesConfig(Array.isArray(unidadesConfigData) ? unidadesConfigData : []);
+            
         } catch (error) {
             console.error(error);
         }
     };
+    
     useEffect(() => {
         setUnidadesConfig([]);
+
         fetchUnidadesConfig();
     }, [formData.agno_consecutivo, formData.id_unidad]);
 
@@ -138,14 +155,33 @@ export const Creacion: React.FC = () => {
     const handle_close = (): void => {
         setIsModalOpen(false)
     };
+
+
     const columns = [
-        { field: 'consecutivo_inicial', headerName: 'Consecutivo inicial', width: 200, flex: 1, },
-        { field: 'persona_configura', headerName: 'Persona configura', width: 200, flex: 1, },
-        { field: 'cantidad_digitos', headerName: 'Cantidad dígitos', width: 200, flex: 1, },
-        { field: 'agno_consecutivo', headerName: 'Año consecutivo', width: 200, flex: 1, },
-        { field: 'implementar', headerName: 'Implementar', width: 200, flex: 1, },
-        { field: 'fecha_inicial_config_implementacion', headerName: 'Fecha inicial de configuración', width: 200, flex: 1, },
+        { field: 'nombre_unidad', headerName: 'Nombre de unidad', minWidth: 300, },
+        { field: 'persona_configura', headerName: 'Persona configura', minWidth: 300, },
+        { field: 'agno_consecutivo', headerName: 'Año consecutivo', minWidth: 300, },
+
+        { field: 'consecutivo_inicial', headerName: 'Consecutivo inicial', minWidth: 250, },
+        { field: 'cantidad_digitos', headerName: 'Cantidad dígitos', minWidth: 250, },
+        { field: 'implementar', headerName: 'Implementar', minWidth: 300, },
+        // { field: 'fecha_inicial_config_implementacion', headerName: 'Fecha inicial de configuración', minWidth: 300, },
+
         {
+            field: 'fecha_inicial_config_implementacion',
+            headerName: 'Fecha inicial de configuración',
+            minWidth: 200,
+            valueFormatter: (params: { value: string | number | Date }) => {
+              const date = new Date(params.value);
+              const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(
+                date.getMonth() + 1
+              )
+                .toString()
+                .padStart(2, '0')}-${date.getFullYear()}`;
+              return formattedDate;
+            },
+          },
+           {
             field: 'Editar',
             headerName: 'Editar',
             width: 150,
@@ -171,8 +207,8 @@ export const Creacion: React.FC = () => {
     ];
     const [updateData, setUpdateData] = useState({
         implementar: false,
-        consecutivo_inicial: 1,
-        cantidad_digitos: 2,
+        consecutivo_inicial: "",
+        cantidad_digitos: "",
     });
 
     // const handleUpdateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -206,26 +242,42 @@ export const Creacion: React.FC = () => {
         }
     };
 
-    // const updateUnidadesConfig = async () => {
-    //     try {
-    //         const url = `/gestor/consecutivos-unidades/config_tipo_consec_agno/update/${selectedEmail?.id_config_tipo_consec_agno}/`;
-    //         const data = {
-    //             implementar: false,
-    //             consecutivo_inicial: 1,
-    //             cantidad_digitos: 2,
-    //         };
-    //         const res = await api.put(url, data);
-    //         console.log('Configuración actualizada con éxito', res.data); 
-    //         fetchUnidadesConfig();
-    //     } catch (error: any) {
-    //         console.error('Error al actualizar la configuración', error);
-    //         control_error(error.response.data.detail); 
-    //     }
-    // };
+     
     const getCurrentYearAndNext = () => {
         const currentYear = new Date().getFullYear();
         return [currentYear, currentYear + 1];
     };
+
+
+    const [seriesSubseries, setSeriesSubseries] = useState<SerieSubserie[]>([]);
+    const fetchSeriesSubseries = async () => {
+        try {
+            const url = `/gestor/consecutivos-unidades/serie_subserio_unidad/get/${formData.id_unidad}/`;
+            const res = await api.get(url);
+            const data = res.data.data;
+            setSeriesSubseries(data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchSeriesSubseries();
+    }, [formData.id_unidad]);
+
+
+    useEffect(() => {
+        setSeriesSubseries([]) 
+   
+    }, [formData.id_unidad]);
+
+
+
+    const handleClicdk = () => {
+        console.log(unidadesConfig);
+        fetchUnidadesConfig()
+    };
+
     return (
         <>
             <Grid container
@@ -233,8 +285,10 @@ export const Creacion: React.FC = () => {
                 sx={miEstilo}
             >
                 <Title title="Configuración de consecutivo " />
-
-
+{/* 
+ <Button variant="contained" onClick={handleClicdk}>
+                Mi Botón
+            </Button> */}
 
                 <Dialog
                     keepMounted
@@ -310,7 +364,23 @@ export const Creacion: React.FC = () => {
                     </Grid>
                 </Dialog>
 
-
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small" variant="outlined">
+                        <InputLabel>Año consecutivo</InputLabel>
+                        <Select
+                            label="Año consecutivo"
+                            name="agno_consecutivo"
+                            value={formData.agno_consecutivo}
+                            onChange={handleInputChange}
+                        >
+                            {getCurrentYearAndNext().map((year) => (
+                                <MenuItem key={year} value={year}>
+                                    {year}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
 
                 {/* {selectedEmail?.id_config_tipo_consec_agno} */}
                 <Grid item xs={12} sm={4}>
@@ -333,7 +403,25 @@ export const Creacion: React.FC = () => {
                         </Select>
                     </FormControl>
                 </Grid>
+                <Grid item xs={12} sm={4}>
+                    <FormControl fullWidth size="small">
+                        <InputLabel id="serie-subserie-select-label">Serie/Subserie</InputLabel>
+                        <Select
+                            labelId="serie-subserie-select-label"
+                            name="id_catalogo_serie_unidad"
+                            label="Serie/Subserie"
+                            value={formData.id_catalogo_serie_unidad}
+                            onChange={handleInputChange}
 
+                        >
+                            {seriesSubseries.map((item) => (
+                                <MenuItem key={item.id_cat_serie_und} value={`${item.id_cat_serie_und}`}>
+                                    {item.nombre_serie_doc} {item.nombre_subserie_doc ? `- ${item.nombre_subserie_doc}` : ''}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Grid>
                 {/* <Grid item xs={12} sm={4}>
                     <TextField
                         fullWidth
@@ -346,23 +434,16 @@ export const Creacion: React.FC = () => {
 
                     />
                 </Grid> */}
-                <Grid item xs={12} sm={4}>
-                    <FormControl fullWidth size="small" variant="outlined">
-                        <InputLabel>Año consecutivo</InputLabel>
-                        <Select
-                            label="Año consecutivo"
-                            name="agno_consecutivo"
-                            value={formData.agno_consecutivo}
-                            onChange={handleInputChange}
-                        >
-                            {getCurrentYearAndNext().map((year) => (
-                                <MenuItem key={year} value={year}>
-                                    {year}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
-                </Grid>
+              
+
+
+                
+
+
+
+
+
+
                 {/* {formData.agno_consecutivo} */}
                 {/* <Grid item xs={12} sm={4}>
                     <TextField
@@ -405,7 +486,6 @@ export const Creacion: React.FC = () => {
 
                     />
                 </Grid>
-
                 <Grid item xs={12} sm={4}>
                     <FormControlLabel
                         control={
@@ -419,10 +499,11 @@ export const Creacion: React.FC = () => {
                         label="Implementar"
                     />
                 </Grid>
+               
                 <Grid container
                     direction="row"
                     justifyContent="flex-end"
-                    alignItems="center" item xs={12} sm={4}>
+                    alignItems="center" item xs={12}  >
 
                     <Grid item >
                         <Button color='success'
@@ -443,7 +524,7 @@ export const Creacion: React.FC = () => {
                         marginLeft: 'auto',
                     }}
                 />
-                <Grid container
+                {/* <Grid container
                     direction="row"
                     justifyContent="flex-end"
                     alignItems="center" item xs={12} sm={12} >
@@ -459,11 +540,15 @@ export const Creacion: React.FC = () => {
                     </Grid>
 
 
-                </Grid>
+                </Grid> */}
 
 
-
-                <Grid item xs={12} marginTop={2}>
+                <RenderDataGrid
+                        title='Configuraciones '
+                        columns={columns ?? []}
+                        rows={unidadesConfig ?? []}
+                    />
+                {/* <Grid item xs={12} marginTop={2}>
                     <DataGrid
                         autoHeight
                         density="compact"
@@ -473,7 +558,7 @@ export const Creacion: React.FC = () => {
                         rows={unidadesConfig}
                         getRowId={(row) => row.id_config_tipo_consec_agno}
                     />
-                </Grid>
+                </Grid> */}
             </Grid>
 
 

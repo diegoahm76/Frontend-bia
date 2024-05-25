@@ -68,6 +68,11 @@ import { complemento_pqrsdf_slice } from "../commons/gestorDocumental/complement
 import { BandejaTareasSlice } from '../commons/gestorDocumental/bandejaDeTareas/toolkit/store/BandejaDeTareasStore';
 import { RequerimientoUsarioSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/requerimientosUsuario/toolkit/slice/RequerimientoUsarioSlice';
 import { ResSolicitudUsarioSlice } from '../commons/gestorDocumental/PQRSDF/componentes/respuestaSolicitudUsuario/toolkit/slice/ResSolicitudUsarioSlice';
+import { RequerimientoUsarioOpasSlice } from '../commons/gestorDocumental/bandejaDeTareas/modules/OPAS/requerimientosUsuarioOpas/toolkit/slice/RequerimientoUsarioOpasSlice';
+import { ReportesGeneralesGestorSlice } from '../commons/gestorDocumental/ReportesGeneralesGestorDocumental/toolkit/ReportesGeneralesGestorSlice';
+import { notificaciones_slice } from '../commons/Transversales/modules/notificaciones/store/slice/notificacionesSlice';
+import { ResRequerimientoOpaSlice } from '../commons/gestorDocumental/TramitesOServicios/respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
+import { VitalSlice } from '../commons/gestorDocumental/integracionVital/toolkit/store/VitalStore';
 
 
 const persist_config = {
@@ -173,6 +178,13 @@ const app_reducers = combineReducers({
   //* respuesta solciitud usuario
   ResSolicitudUsarioSlice: ResSolicitudUsarioSlice.reducer,
   //* respuesta solciitud usuario
+  //* requerimiento al usuario opas
+  RequerimientoUsarioOpasSlice: RequerimientoUsarioOpasSlice.reducer,
+  // ? reportes generales gestor slice
+  ReportesGeneralesGestorSlice: ReportesGeneralesGestorSlice.reducer,
+  ResRequerimientoOpaSlice: ResRequerimientoOpaSlice.reducer,
+  notificaciones_slice: notificaciones_slice.reducer,
+  VitalSlice: VitalSlice.reducer,
 });
 
 const persist_reducer = persistReducer(persist_config, app_reducers);

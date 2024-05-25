@@ -10,6 +10,13 @@ import { ReasignacionProvider } from '../modules/reasignaciones/context/Reasigna
 import { MainReasignacionesScreen } from '../modules/reasignaciones/screen/MainReasignacionesScreen';
 import { VistaComplementoTarea } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/VistaComplementoTarea';
 import { MainScreenSeguimientoTarea } from '../modules/seguimientoTarea/screen/MainScreenSeguimientoTarea';
+import { VistaTareasOtros } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/otros/VistaTareasOtros';
+import { VistaTareasTramites } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/tramites/VistaTareaTramites';
+import { VistaTareasOpas } from '../mainModule/bandejaDeTareas/components/bandejaDeTareas/components/vistaAtoms/opas/VistaTareasOpas';
+import { RequerimientoAlUsuarioOPASProvider } from '../modules/OPAS/requerimientosUsuarioOpas/context/RequerimientoUsarioOpasContext';
+import { RequerimientoUsuarioOpasScreen } from '../modules/OPAS/requerimientosUsuarioOpas/screen/RequerimientoUsuarioOpasScreen';
+import { RespuestaOpaUsuario } from '../modules/OPAS/respuestaOpaUsuario/screen/RespuestaOpaUsuario';
+import { ModuleInfoTareaComplementoOpa } from '../mainModule/bandejaDeTareas/Atom/ModuleInfoTareaComplementoOpa';
 
 const routes = [
   {
@@ -55,6 +62,46 @@ const routes = [
   {
     path: 'info_complemento/:id_complemento_usu_pqr',
     component: () => <VistaComplementoTarea />,
+  },
+
+  // tarea de solicitude de otros
+  {
+    path: 'info_tarea_otros/:id_OTROS',
+    component: () => <VistaTareasOtros />,
+  },
+  {
+    path: 'info_tarea_tramite/:id_tramite',
+    component: () => <VistaTareasTramites />,
+  },
+  {
+    path: 'info_tarea_complemento_tramite/:idComplementoUsu_PQR',
+    component: () => <VistaTareasTramites />,
+  },
+  {
+    path: 'info_tarea_opas/:id_tramite',
+    component: () => <VistaTareasOpas />,
+  },
+  {
+    path: 'info_tarea_complemento_opa/',
+    component: () => <ModuleInfoTareaComplementoOpa />,
+  },
+
+  //* respuesta y requerimiento opas
+  {
+    path: 'requerimiento_a_usuario_opas/',
+    component: () => (
+      <RequerimientoAlUsuarioOPASProvider>
+        <RequerimientoUsuarioOpasScreen />
+      </RequerimientoAlUsuarioOPASProvider>
+    ),
+  },
+  {
+    path: 'respuesta_opas/',
+    component: () => (
+      <RequerimientoAlUsuarioOPASProvider>
+        <RespuestaOpaUsuario />
+      </RequerimientoAlUsuarioOPASProvider>
+    ),
   },
 ];
 

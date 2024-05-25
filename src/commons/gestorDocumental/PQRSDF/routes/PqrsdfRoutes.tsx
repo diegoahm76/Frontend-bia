@@ -5,6 +5,8 @@ import { ImpresionRadicadoScreen } from '../screens/ImpresionRadicadoScreen';
 import { SolicitudUsuarioScreen } from '../componentes/respuestaSolicitudUsuario/screen/SolicitudUsuarioScreen';
 import { ResSolicitudUsuarioProvider } from '../componentes/respuestaSolicitudUsuario/context/ResSolicitudUsarioContext';
 import { ResProvider } from '../componentes/respuestaSolicitudUsuario/context/ResContext';
+import { MainResReqPqrsdfScreen } from '../componentes/respuestaRequerimientoPQRSDF/screen/MainResReqPqrsdfScreen';
+import { BandejaTareasProvider } from '../../bandejaDeTareas/mainModule/context/BandejaTareasContext';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const PqrsdfRoutes: React.FC = () => {
@@ -21,6 +23,14 @@ export const PqrsdfRoutes: React.FC = () => {
               <SolicitudUsuarioScreen />
             </ResSolicitudUsuarioProvider>
           </ResProvider>
+        }
+      />
+      <Route
+        path="responder_solicitud/:id?"
+        element={
+          <BandejaTareasProvider>
+            <MainResReqPqrsdfScreen />
+          </BandejaTareasProvider>
         }
       />
       <Route path="/*" element={<Navigate to={'/'} />} />

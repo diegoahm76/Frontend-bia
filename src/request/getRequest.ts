@@ -118,3 +118,33 @@ export const search_avanzada = async ({
     }&nombre_comercial=${nombre_comercial ?? ''}`
   );
 };
+
+export const get_bandeja_tareas = async (
+  tipo_documento?: string,
+  identificacion?: string,
+  primer_nombre?: string,
+  primer_apellido?: string,
+  razon_social?: string,
+  nombre_comercial?: string
+): Promise<
+  AxiosResponse<ResponseServer<any[]>>
+> => {
+  let url = `/gestor/bandeja-tareas/persona/bandeja/tareas/?tipo_documento=${tipo_documento}`
+  if(identificacion) url += `&identificacion=${identificacion}`
+  if(primer_nombre) url += `&primer_nombre=${primer_nombre}`
+  if(primer_apellido) url += `&primer_apellido=${primer_apellido}`
+  if(razon_social) url += `&razon_social=${razon_social}`
+  if(nombre_comercial) url += `&nombre_comercial=${nombre_comercial}`
+  return await api.get<ResponseServer<any[]>>(
+    url
+  );
+};
+
+export const create_asignacion_documento = async (
+  data: any
+): Promise<AxiosResponse<ResponseServer<any>>> => {
+  return await api.post<ResponseServer<any>>(
+    '/gestor/bandeja-tareas/asginacion/documentos/create/',
+    data
+  );
+};

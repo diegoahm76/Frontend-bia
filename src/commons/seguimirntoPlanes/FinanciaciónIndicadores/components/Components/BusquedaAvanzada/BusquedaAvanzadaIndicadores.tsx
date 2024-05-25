@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
@@ -16,21 +17,26 @@ import {
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { DataGrid, type GridColDef } from '@mui/x-data-grid';
+import {
+  DataGrid,
+  GridValueFormatterParams,
+  type GridColDef,
+} from '@mui/x-data-grid';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import { v4 as uuidv4 } from 'uuid';
 
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useAppDispatch } from '../../../../../../hooks';
 import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import { set_current_mode_planes } from '../../../../store/slice/indexPlanes';
-import { search_indicadores } from '../../../../Indicadores/services/services';
-import { IBusquedaIndicador } from '../../../../Indicadores/components/Programas/BusquedaAvanzada/types';
+import { search_metas } from '../../../../Indicadores/services/services';
 import { DataContextFuentesFinanciacion } from '../../../context/context';
+import { IBusquedaMetas } from '../../../../MetasPorIndicador/components/Indicadores/BusquedaAvanzada/types';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaIndicadores: React.FC = () => {
@@ -74,18 +80,23 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       width: 250,
     },
     {
-      field: 'nombre_medicion',
-      headerName: 'Nombre de Medición',
+      field: 'nombre_meta',
+      headerName: 'Nombre de la Meta',
       sortable: true,
       width: 150,
     },
     {
-      field: 'nombre_tipo',
-      headerName: 'Nombre de Tipo',
+      field: 'unidad_meta',
+      headerName: 'Unidad de Meta',
+      sortable: true,
+      width: 100,
+    },
+    {
+      field: 'porcentaje_meta',
+      headerName: 'Porcentaje de Meta',
       sortable: true,
       width: 150,
     },
-
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
@@ -94,10 +105,33 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
-      field: 'fecha_creacion',
-      headerName: 'Fecha de Creación',
+      field: 'fecha_creacion_meta',
+      headerName: 'Fecha de Creación de Meta',
       sortable: true,
-      width: 150,
+      width: 200,
+    },
+    // {
+    //   field: 'avance_fisico',
+    //   headerName: 'Avance Físico',
+    //   sortable: true,
+    //   width: 150,
+    // },
+    {
+      field: 'valor_meta',
+      headerName: 'VALOR META',
+      sortable: true,
+      width: 300,
+      valueFormatter: (params: GridValueFormatterParams) => {
+        const inversion = Number(params.value); // Convertir a número
+        const formattedInversion = inversion.toLocaleString('es-AR', {
+          style: 'currency',
+          currency: 'ARS',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2,
+        });
+
+        return formattedInversion;
+      },
     },
     {
       field: 'acciones',
@@ -116,6 +150,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               set_id_producto(params.row.id_producto);
               set_id_actividad(params.row.id_actividad);
               set_id_indicador(params.row.id_indicador);
+              set_id_meta(params.row.id_meta);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -131,6 +166,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                 nombre_producto: params.row.nombre_producto,
                 nombre_actividad: params.row.nombre_actividad,
                 nombre_indicador: params.row.nombre_indicador,
+                nombre_meta: params.row.nombre_meta,
               });
               handle_close();
             }}
@@ -171,12 +207,13 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       nombre_producto: '',
       nombre_actividad: '',
       nombre_indicador: '',
+      nombre_meta: '',
     },
   });
 
   const [is_search, set_is_search] = useState(false);
   const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<IBusquedaIndicador[]>([]);
+  const [rows, set_rows] = useState<IBusquedaMetas[]>([]);
 
   const handle_click_open = (): void => {
     set_open_dialog(true);
@@ -186,6 +223,18 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     // reset();
     set_open_dialog(false);
   };
+
+  const clean_form_advance_search = () => {
+    reset({
+      nombre_plan: '',
+      nombre_programa: '',
+      nombre_proyecto: '',
+      nombre_producto: '',
+      nombre_actividad: '',
+      nombre_indicador: '',
+      nombre_meta: '',
+    });
+  }
 
   const dispatch = useAppDispatch();
 
@@ -197,19 +246,21 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       nombre_producto,
       nombre_actividad,
       nombre_indicador,
+      nombre_meta,
     }) => {
       set_is_search(true);
       try {
         set_rows([]);
         const {
           data: { data },
-        } = await search_indicadores({
+        } = await search_metas({
           nombre_plan,
           nombre_programa,
           nombre_proyecto,
           nombre_producto,
           nombre_actividad,
           nombre_indicador,
+          nombre_meta,
         });
 
         if (data?.length > 0) {
@@ -232,6 +283,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
+    set_id_meta,
   } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
@@ -258,7 +310,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Indicadores" />
+          <Title title="Metas" />
         </Grid>
         <Grid item xs={12}>
           <Divider />
@@ -368,6 +420,26 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               <TextField
                 fullWidth
                 label="Nombre indicador"
+                value={value}
+                onChange={onChange}
+                size="small"
+                margin="dense"
+                disabled={true}
+              />
+            )}
+          />
+        </Grid>
+        {/* nombre_meta */}
+        <Grid item xs={12} sm={6} md={3}>
+          <Controller
+            name="nombre_meta"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <TextField
+                fullWidth
+                label="Nombre meta"
                 value={value}
                 onChange={onChange}
                 size="small"
@@ -558,7 +630,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              <Grid item xs={12} sm={6} md={3} container gap={2} justifyContent="end">
                 <LoadingButton
                   type="submit"
                   variant="contained"
@@ -572,7 +644,17 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                 >
                   Buscar
                 </LoadingButton>
+                <Button
+                  color="inherit"
+                  variant="outlined"
+                  startIcon={<CleanIcon />}
+                  onClick={clean_form_advance_search}
+                >
+                  Limpiar
+                </Button>
               </Grid>
+              {/* <Grid item xs={12} lg={2} container>
+              </Grid> */}
               {rows.length > 0 && (
                 <>
                   <Grid item xs={12}>
@@ -603,6 +685,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                         pageSize={10}
                         rowsPerPageOptions={[10]}
                         getRowId={() => uuidv4()}
+                        getRowHeight={() => 'auto'}
                       />
                     </Box>
                   </Grid>

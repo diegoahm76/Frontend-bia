@@ -6,7 +6,7 @@ import { ConslitaOtrosExterno } from '../components/conslitaOtrosExterno';
 export const Consulta_OtrosExterno_Routes: React.FC = () => {
     return (
         <Routes>
-            <Route path="/ConsultaOtrosExterno" element={<ConslitaOtrosExterno/>} />
+            {/* <Route path="/ConsultaOtrosExterno" element={<ConslitaOtrosExterno/>} /> */}
             <Route path="/*" element={<Navigate to={'/'} />} />
         </Routes>
     );

@@ -20,12 +20,12 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
   rows,
   columns,
   title,
-  aditionalElement
+  aditionalElement,
 }: dataGridTypesWithAdditionalElement): JSX.Element => {
   return (
-    <Grid container sx={containerStyles}>
-      <Grid item xs={12}>
-        <Title title={title} />
+    <Grid container sx={rows.length > 0 ? containerStyles : {}}>
+      {rows.length > 0 && <Grid item xs={12}>
+        {title && <Title title={title} />}
         <Box sx={{ mt: '20px', mb: '20px' }}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -33,10 +33,10 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                 style={{
                   margin: 7,
                   display: 'flex',
-                  justifyContent: 'flex-end'
+                  justifyContent: 'flex-end',
                 }}
               >
-                {download_xls({ nurseries: rows , columns  })}
+                {download_xls({ nurseries: rows, columns })}
                 {download_pdf({ nurseries: rows, columns, title })}
               </ButtonGroup>
 
@@ -46,9 +46,9 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                   autoHeight
                   rows={rows ?? []}
                   columns={columns ?? []}
-                  pageSize={10}
+                  pageSize={11}
                   rowHeight={75}
-                  rowsPerPageOptions={[10]}
+                  rowsPerPageOptions={[11]}
                   experimentalFeatures={{ newEditingApi: true }}
                   getRowId={() => {
                     try {
@@ -65,7 +65,7 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
           </Grid>
         </Box>
         {aditionalElement}
-      </Grid>
+      </Grid>}
     </Grid>
   );
 };

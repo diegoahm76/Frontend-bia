@@ -21,6 +21,12 @@ import { ReasignacionContext } from '../../context/ReasignacionContext';
 import { resetBandejaDeTareasFull } from '../../../../toolkit/store/BandejaDeTareasStore';
 import { postReAsignacionTarea } from '../../services/post/pqrsdf/postReAsignacionTarea.service';
 import { getReAsignacionesTareasPqrsdf } from '../../services/reasignaciones/pqrsdf/getReAsignacionesTaskPqrsdf.service';
+import { getReAsignacionesTareasOtros } from '../../services/reasignaciones/otros/getReasignacionesTareasOtros.service';
+import { postReAsignacionTareaOtros } from '../../services/post/otros/postReasignacionTareaOtros.service';
+import { getReAsignacionesTareasTramites } from '../../services/reasignaciones/tramitesServicios/getReasignaTram.service';
+import { postReAsignacionTareaTramite } from '../../services/post/tramitesServicios/postReasTram.service';
+import { getReAsignacionesTareasOpas } from '../../services/reasignaciones/opas/getReasignacionesTareasOpas.service';
+import { postReAsignacionTareaOpas } from '../../services/post/opas/postReasignacionesOpas.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -50,12 +56,24 @@ export const AccionesFinales = (): JSX.Element => {
 
   const handleClick = async () => {
     if (
+      currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_asignacion_tarea ===
+      'Rechazado'
+    ) {
+      showAlert(
+        'Opss!',
+        'Una tarea rechazada no se puede reasignar',
+        'warning'
+      );
+      return;
+    }
+
+    if (
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
       'Respondida por el propietario de la bandeja de tareas'
     ) {
       showAlert(
         'Opss!',
-        'Esta PQRSDF ya ha sido respondida, por lo que no se puede reasignar',
+        'Esta solicitud de otros ya ha sido respondida, por lo que no se puede reasignar',
         'warning'
       );
       return;
@@ -102,42 +120,52 @@ export const AccionesFinales = (): JSX.Element => {
         );
         break;
       case 'Responder Trámite':
-        // Call the service for Tramites y Servicios
-        /*  res = await postAsignacionGrupoTramitesYServicios(
+      case 'Responder Tramite':
+      case 'RESPONDER TRÁMITE':
+      case 'RESPONDER TRAMITE':
+        res = await postReAsignacionTareaTramite(
           {
-            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-            id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_persona_a_quien_se_reasigna: currentGrupo?.value,
+            comentario_reasignacion: comentario,
           },
           handleSecondLoading
-        );*/
+        );
         break;
-      case 'Otros':
+      case 'RESPONDER OTRO':
+      case 'RESPONDER OTROS':
+      case 'Responder Otros':
+      case 'Responder Otro':
         // Call the service for Otros
-        /*  res = await postAsignacionGrupoOtros(
+        res = await postReAsignacionTareaOtros(
           {
-            id_pqrsdf: currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-            id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_persona_a_quien_se_reasigna: currentGrupo?.value,
+            comentario_reasignacion: comentario,
           },
           handleSecondLoading
-        );*/
+        );
         break;
-      case 'OPA':
+      case 'RESPONDER OPA':
+      case 'Responder Opa':
+      case 'Responder OPA':
         // Call the service for OPA
         showAlert(
           'Estimado usuario:',
           'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
           'warning'
         );
-        /*res = await postAsignacionGrupoOPA(
-            {
-              id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
-              id_persona_asignada: liderAsignado?.id_persona,
-              id_und_org_seccion_asignada: currentGrupo?.value,
-            },
-            handleSecondLoading
-          );*/
+        res = await postReAsignacionTareaOpas(
+          {
+            id_tarea_asignada:
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            id_persona_a_quien_se_reasigna: currentGrupo?.value,
+            comentario_reasignacion: comentario,
+          },
+          handleSecondLoading
+        );
         break;
       default:
         // Default service call or no service call
@@ -164,29 +192,29 @@ export const AccionesFinales = (): JSX.Element => {
           );
           break;
         case 'Responder Trámite':
-          // Fetch the assignments for Tramites y Servicios
-          /*asignaciones = await getAsignacionesTramitesYServicios(
-            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
+        case 'Responder Tramite':
+        case 'RESPONDER TRÁMITE':
+        case 'RESPONDER TRAMITE':
+          asignaciones = await getReAsignacionesTareasTramites(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
             handleGeneralLoading
-          );*/
-          break;
-        case 'Otros':
-        // Fetch the assignments for Otros
-        /* asignaciones = await getAsignacionesOtros(
-            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-            handleGeneralLoading
-          );*/
-        case 'OPA':
-          showAlert(
-            'Atención',
-            'No hay servicio aún para ver las asignaciones de las OPA, así que no hay asignaciones de opa por el momento',
-            'warning'
           );
-          // Fetch the assignments for OOpas
-          /* asignaciones = await getAsignacionesOPas(
-              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_PQRSDF,
-              handleGeneralLoading
-            );*/
+          break;
+        case 'RESPONDER OTRO':
+        case 'RESPONDER OTROS':
+        case 'Responder Otros':
+          asignaciones = await getReAsignacionesTareasOtros(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            handleGeneralLoading
+          );
+          break;
+        case 'RESPONDER OPA':
+        case 'Responder Opa':
+        case 'Responder OPA':
+          asignaciones = await getReAsignacionesTareasOpas(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            handleGeneralLoading
+          );
           break;
         default:
           // Default fetch call or no fetch call

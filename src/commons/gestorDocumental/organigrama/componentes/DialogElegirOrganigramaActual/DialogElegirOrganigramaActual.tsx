@@ -1,4 +1,3 @@
-
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,7 +12,7 @@ import {
   Divider,
   Skeleton,
   type SelectChangeEvent,
-  TextField
+  TextField,
 } from '@mui/material';
 import SaveIcon from '@mui/icons-material/Save';
 import { Title } from '../../../../../components/Title';
@@ -25,17 +24,19 @@ import { control_error } from '../../../../../helpers';
 import {
   cambio_organigrama_actual,
   get_organigramas_posibles,
-  get_organigrama_actual
+  get_organigrama_actual,
 } from '../../store/thunks/organigramThunks';
 import {
   organigramas_choise_adapter,
-  ccds_choise_adapter
+  ccds_choise_adapter,
 } from '../../adapters/organigrama_adapters';
 import dayjs from 'dayjs';
 import type { CCD, FormValues, OrgActual, keys_object } from './types/types';
 import { initial_state } from './utils/constanst';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { showAlert } from '../../../../../utils/showAlert/ShowAlert';
 
 const fecha_actual = dayjs().format('YYYY-MM-DD');
 
@@ -48,16 +49,16 @@ const DialogElegirOrganigramaActual = () => {
   const [list_organigrams, set_list_organigrams] = useState<IList[]>([
     {
       label: '',
-      value: 0
-    }
+      value: 0,
+    },
   ]);
   const [data_ccds_posibles, set_data_ccds_posibles] = useState<CCD[]>([]);
   const [ccd_selected, set_ccd_selected] = useState<string>('');
   const [list_ccds, set_list_ccds] = useState<IList[]>([
     {
       label: '',
-      value: 0
-    }
+      value: 0,
+    },
   ]);
   const [data_asociada_ccd, set_data_asociada_ccd] = useState<CCD | undefined>(
     initial_state
@@ -70,7 +71,7 @@ const DialogElegirOrganigramaActual = () => {
     getValues: get_values_elegir_organigrama_actual,
     setValue: set_value_elegir_organigrama_actual,
     reset: reset_elegir_organigrama_actual,
-    formState: { errors: errors_elegir_organigrama_actual }
+    formState: { errors: errors_elegir_organigrama_actual },
   } = useForm<FormValues>();
 
   const handle_close_crear_organigrama = (): void => {
@@ -83,31 +84,34 @@ const DialogElegirOrganigramaActual = () => {
   const on_submit = async (data: FormValues): Promise<void> => {
     const data_cambio: any = {
       justificacion: get_values_elegir_organigrama_actual('justificacion'),
-      organigrama: get_values_elegir_organigrama_actual('organigrama'),
-      id_ccd: get_values_elegir_organigrama_actual('ccd')
+      id_organigrama: +get_values_elegir_organigrama_actual('organigrama'),
+      id_ccd: +get_values_elegir_organigrama_actual('ccd'),
     };
 
- /*   if(!get_values_elegir_organigrama_actual('ccd')){
-      delete data_cambio.id_ccd;
-    }
-*/
-
-    //  console.log('')(data_cambio);
+    // console.log(data_cambio);
     await dispatch(cambio_organigrama_actual(data_cambio));
     handle_close_crear_organigrama();
   };
 
   // 1.0 Ejecutar funcion para traer data organigramas posibles y organigrama actual
   useEffect(() => {
-    void get_data_selects();
+    const info =
+      'Este módulo puede operar de dos formas: 1. Si no hay un organigrama actual, es necesario elegir uno para activarlo como el actual.2. Si ya existe un organigrama actual, se debe seleccionar uno nuevo para establecerlo como el actual. Además, se debe elegir un cuadro de clasificación documental vinculado a ese organigrama.';
+
+    const info2 =
+      'La modificación en la estructura organizativa es un proceso que no se puede revertir, por lo tanto, es necesario ser cauteloso al seleccionar la información. Además, es importante tener en cuenta que al cambiar la estructura organizativa, se heredan los permisos de la estructura anterior.';
+
+    showAlert('Información!', info, 'info').then(() => {
+      showAlert('Ten en cuenta!', info2, 'info');
+    });
   }, []);
 
-  // 1.1 Traer data
-/*  const get_data_selects = async (): Promise<void> => {
+  const get_data_selects = async (): Promise<void> => {
+    console.log('ejecutando funcion');
     set_loading(true);
     try {
       const response_org_actual = await dispatch(get_organigrama_actual());
-      //  console.log('')(response_org_actual)
+      console.log('response_org_actual', response_org_actual.data);
       if (response_org_actual.data) {
         set_organigrama_actual(response_org_actual.data);
         const response_orgs = await dispatch(get_organigramas_posibles());
@@ -115,46 +119,18 @@ const DialogElegirOrganigramaActual = () => {
           await organigramas_choise_adapter(response_orgs.data);
         set_list_organigrams(res_organigramas_adapter);
       } else {
-        control_error('Sin organigramas disponibles para activación');
+        const response_orgs = await dispatch(get_organigramas_posibles());
+        const res_organigramas_adapter: IList[] =
+          await organigramas_choise_adapter(response_orgs.data);
+        set_list_organigrams(res_organigramas_adapter);
+        control_error('No hay organigrama actual');
       }
     } catch (err) {
       control_error(err);
     } finally {
       set_loading(false);
     }
-  }; */
-
-  const get_data_selects = async (): Promise<void> => {
-  set_loading(true);
-  try {
-    const response_org_actual = await dispatch(get_organigrama_actual());
-    if (response_org_actual.data) {
-      set_organigrama_actual(response_org_actual.data);
-      const response_orgs = await dispatch(get_organigramas_posibles());
-      const res_organigramas_adapter: IList[] = await organigramas_choise_adapter(response_orgs.data);
-      set_list_organigrams(res_organigramas_adapter);
-    } else {
-      const response_orgs = await dispatch(get_organigramas_posibles());
-      const res_organigramas_adapter: IList[] = await organigramas_choise_adapter(response_orgs.data);
-      set_list_organigrams(res_organigramas_adapter);
-      control_error('No hay organigrama actual');
-    }
-  } catch (err) {
-    control_error(err);
-  } finally {
-    set_loading(false);
-  }
-};
-
-
-  // 2. Seleccionar organigrama
-  useEffect(() => {
-    if (organigram_selected !== undefined && organigram_selected !== '') {
-      // Traer listado de ccds segun organigrama seleccionado
-      void get_data_selects();
-      void get_list_ccds(organigram_selected);
-    }
-  }, [organigram_selected]);
+  };
 
   // 3. Traer ccds segun organigrama seleccionado
   const get_list_ccds = async (
@@ -167,6 +143,14 @@ const DialogElegirOrganigramaActual = () => {
     );
     set_list_ccds(res_ccds_adapter);
   };
+
+  // 2. Seleccionar organigrama
+  useEffect(() => {
+    // if (organigram_selected !== undefined && organigram_selected !== '') {
+      void get_data_selects();
+      void get_list_ccds(organigram_selected);
+    //}
+  }, [organigram_selected]);
 
   // 4. Filtrar ccd seleccionado para mostrar datos de trd y tca
   useEffect(() => {
@@ -204,13 +188,13 @@ const DialogElegirOrganigramaActual = () => {
         borderRadius: '15px',
         p: '20px',
         mb: '20px',
-        boxShadow: '0px 3px 6px #042F4A26'
+        boxShadow: '0px 3px 6px #042F4A26',
       }}
     >
       <Box
         sx={{
           width: '100%',
-          height: '100%'
+          height: '100%',
         }}
         component="form"
         // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -404,7 +388,7 @@ const DialogElegirOrganigramaActual = () => {
                   required
                   multiline
                   inputProps={{
-                    maxLength: 255
+                    maxLength: 255,
                   }}
                   type="textarea"
                   rows="3"
@@ -417,7 +401,7 @@ const DialogElegirOrganigramaActual = () => {
                     errors_elegir_organigrama_actual.justificacion?.message
                   }
                   {...register_elegir_organigrama_actual('justificacion', {
-                    required: 'Este campo es obligatorio'
+                    required: 'Este campo es obligatorio',
                   })}
                 />
               )}

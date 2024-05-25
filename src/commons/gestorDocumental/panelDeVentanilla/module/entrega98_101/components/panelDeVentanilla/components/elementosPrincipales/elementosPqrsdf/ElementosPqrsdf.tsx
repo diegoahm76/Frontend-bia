@@ -145,7 +145,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       // * cuarto caso
       if (isEnVentanillaSinPendientes && !requiresDigitalization) {
         return !(
-          actionId === 'Dig' ||
+          // actionId === 'Dig' ||
           actionId === 'AsigGrup' ||
           actionId === 'AsigPer'
         );

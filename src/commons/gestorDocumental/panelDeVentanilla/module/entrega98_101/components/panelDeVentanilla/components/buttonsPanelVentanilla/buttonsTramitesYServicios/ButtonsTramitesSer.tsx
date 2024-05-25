@@ -9,6 +9,7 @@ import Swal from 'sweetalert2';
 import { withValidation } from '../functions/validationAction';
 import { useNavigate } from 'react-router-dom';
 import { postDigitalizacionOpas } from '../../../../../../../toolkit/thunks/opas/postDigitalizacionOpas.service';
+import { postDigitalizacionTramites } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/postDigitalizacionTramites.service';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsTramites: React.FC = (): JSX.Element => {
@@ -27,9 +28,9 @@ export const ButtonsTramites: React.FC = (): JSX.Element => {
   // ? MANEJO DE ACCIONES PARA OPAS ----------------------
 
   const sendDigitalizationRequest = async () => {
-   /* const { id_solicitud_tramite } =
+   const { id_solicitud_tramite } =
       currentElementPqrsdComplementoTramitesYotros;
-    await postDigitalizacionOpas(id_solicitud_tramite);*/
+    await postDigitalizacionTramites(id_solicitud_tramite);
   };
 
   const handleDigitalizacion = withValidation(async () => {
@@ -43,12 +44,11 @@ export const ButtonsTramites: React.FC = (): JSX.Element => {
       denyButtonColor: '#d33',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        alert('siuuuuu el bicho CR7')
-        // await sendDigitalizationRequest();
+        await sendDigitalizationRequest();
       } else if (result.isDenied) {
         showAlert(
           'Opps...',
-          'Haz decidido no enviar la solicitud de digitalización.',
+          'Haz decidido no enviar la solicitud de digitalización del trámite.',
           'info'
         );
       }
@@ -63,6 +63,11 @@ export const ButtonsTramites: React.FC = (): JSX.Element => {
     console.log('ir a revisión jurídica')
   );
 
+  const handleLiquidacion = withValidation(() =>
+    console.log('ir a revisión jurídica')
+  );
+
+
   interface action {
     [key: string]: any;
   }
@@ -71,6 +76,7 @@ export const ButtonsTramites: React.FC = (): JSX.Element => {
     Dig: handleDigitalizacion,
     AsigGrup: handleAsignacionGrupo,
     Jurídica: handleAsignacionJurídica,
+    Pay: handleLiquidacion,
   };
 
   const handleClickActionsGeneral = (action: any) => {

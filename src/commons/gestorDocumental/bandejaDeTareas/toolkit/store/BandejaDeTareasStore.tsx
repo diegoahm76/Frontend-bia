@@ -10,6 +10,8 @@ import PreviewIcon from '@mui/icons-material/Preview';
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import { Action } from '../types/toolkit.types';
 import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
+import ArchiveIcon from '@mui/icons-material/Archive';
+
 // Update import paths in ParteInicial, AccionesFinales, StepperRequerimientoUsuario, FormParte2, RequerimientoUsuarioScreen, FormParte1, ElementosPqrsdf, and FormParte3
 //* todos inicialmente deben tener el disabled en true ya que sobre todos los elementos no se puede permitir ciertas acciones dependiendo lo que incluye el elemento
 
@@ -28,6 +30,16 @@ const actionsTareasPQRSDF: Action[] = [
     path: '/app/gestor_documental/Pqrsdf/Respuesta_pqrsdf',
     disabled: false,
   },
+
+  {
+    id: 'Archivado_PQR',
+    icon: <DriveFileMoveIcon />,
+    name: 'archivado',
+    path: '/app/gestor_documental/archivado',
+    disabled: false,
+  },
+
+
   {
     id: 'Reasignar',
     icon: <PersonAddAlt1Icon />,
@@ -62,30 +74,29 @@ const actionsTramitesYServicios: Action[] = [
   {
     id: 'InfoSolictud',
     icon: <ContactPageIcon />,
-    name: 'Ver información resumida de la tarea',
+    name: 'Ver información resumida de la tarea (trámite o servicio)',
     path: '',
     disabled: false,
   },
   {
     id: 'Reasignar',
     icon: <PersonAddAlt1Icon />,
-    name: 'Reasignar',
+    name: 'Reasignar tarea',
     //* posiblememenet sea la misma ruta que la de pqrsdf
     path: '/app/gestor_documental/bandeja_tareas/reasignacion_tarea/',
     disabled: false,
   },
-  {
-    id: 'RequerimientoUsuario',
-    icon: <SendIcon />,
-    name: 'Enviar requerimiento al usuario',
-    //* definir la ruta
-    path: '',
-    disabled: false,
-  },
+  /* {
+     id: 'RequerimientoUsuario',
+     icon: <SendIcon />,
+     name: 'Enviar requerimiento al usuario',
+     path: '',
+     disabled: false,
+   },*/
   {
     id: 'VerRespuestasRequerimientosOSolicitudesAlUsuario',
     icon: <PreviewIcon />,
-    name: 'Ver respuestas a requerimientos o solicitudes al usuario',
+    name: 'Ver respuestas de requerimientos al usuario',
     path: '',
     disabled: false,
   },
@@ -99,6 +110,8 @@ const actionsOtros: Action[] = [
     path: '',
     disabled: false,
   },
+
+
   {
     id: 'Reasignar',
     icon: <PersonAddAlt1Icon />,
@@ -108,10 +121,10 @@ const actionsOtros: Action[] = [
     disabled: false,
   },
   {
-    id: 'Archivar',
-    icon: <DriveFileMoveIcon />,
-    name: 'Archivar',
-    path: '',
+    id: 'Archivado_OTROS',
+    icon: <ArchiveIcon />,
+    name: 'archivado',
+    path: '/app/gestor_documental/archivado',
     disabled: false,
   },
 ];
@@ -121,19 +134,28 @@ const newActions = [
     id: 'RespondeSolicitud',
     icon: <ReplyAllIcon />,
     name: 'Responder OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/respuesta_opas/',
     disabled: false,
   },
   {
     id: 'RequerimientoUsuario',
     icon: <SendIcon />,
     name: 'Enviar requerimiento al usuario sobre OPA',
-    path: '',
+    path: '/app/gestor_documental/bandeja_tareas/requerimiento_a_usuario_opas/',
+    disabled: false,
+  },
+  {
+    id: 'Archivado_OPAS',
+    icon: <ArchiveIcon />,
+    name: 'archivado',
+    path: '/app/gestor_documental/archivado',
     disabled: false,
   },
 ];
 
 const actionsOpas: Action[] = [
+
+  
   ...actionsTareasPQRSDF.filter(
     (action) => !newActions.find((newAction) => newAction.id === action.id)
   ),
@@ -150,6 +172,7 @@ const initialState: any = {
 
   currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas: null,
   listaTareasPqrsdfTramitesUotrosUopas: [],
+  data_expediente: null,
 
   //* informacion de tarea
   infoTarea: null,
@@ -206,6 +229,10 @@ export const BandejaTareasSlice = createSlice({
       state.infoTarea = action.payload;
     },
 
+    setDataExpediente: (state, action: PayloadAction<any>) => {
+      state.data_expediente = action.payload;
+    },
+
     // ? -- función para limpiar todos los estados que se encuentran en el slice y que se usan en el módulo
     resetBandejaDeTareasFull: (state) => {
       // state.actionsTareasPQRSDF = [];
@@ -217,13 +244,23 @@ export const BandejaTareasSlice = createSlice({
 
       state.infoTarea = null;
     },
+    resetBandejaDeTareas: (state) => {
+     
+      state.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas = null;
+     
+    },
+
+
+
   },
 });
 
 export const {
   setActionssTareasPQRSDF,
-  // setActionsTareasTramites,
-
+  setActionsTareasOtros,
+  setActionsTareasTramites,
+  setActionsTareasOpas,
+  resetBandejaDeTareas,
   // ? lista de las tareas tras la busqueda
   setListaTareasPqrsdfTramitesUotrosUopas,
   // ? elemento actual de la tarea
@@ -231,5 +268,6 @@ export const {
   // ? reset de todos los estados del slice
   // ? set info tarea
   setInfoTarea,
+  setDataExpediente,
   resetBandejaDeTareasFull,
 } = BandejaTareasSlice.actions;

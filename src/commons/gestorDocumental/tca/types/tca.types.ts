@@ -15,7 +15,7 @@ export interface dataGridTypes {
   /**
    * The title of the data grid.
    */
-  title: string;
+  title?: string;
   /**
    * An optional additional element to be displayed alongside the data grid.
    */

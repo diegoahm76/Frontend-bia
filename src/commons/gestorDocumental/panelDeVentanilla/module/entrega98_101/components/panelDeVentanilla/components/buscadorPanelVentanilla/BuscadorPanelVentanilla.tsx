@@ -71,25 +71,18 @@ export const BuscadorPanelVentanilla = (): JSX.Element => {
       radicado,
       fecha_inicio,
       fecha_fin,
-
       nombre_titular,
       asunto_proyecto,
       pago_tramite,
       expediente,
       estado_actual_solicitud,
     } = watch_busqueda_panel_ventanilla;
-    showAlert(
-      'Estimado usuario!',
-      'Esta funcionalidad de TRAMITE se encuentra en construcción, se realiza parte de la interacción de manera simulada ',
-      'warning'
-    );
     const res = await getGrilladoTramitesPanelVentanilla(
       handleSecondLoading,
       radicado,
       fecha_inicio,
       fecha_fin,
       nombre_titular,
-      radicado,
       asunto_proyecto,
       pago_tramite?.value,
       expediente,

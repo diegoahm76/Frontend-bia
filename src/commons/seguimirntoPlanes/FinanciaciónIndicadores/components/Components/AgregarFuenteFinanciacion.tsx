@@ -1,11 +1,18 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Button, Grid, MenuItem, TextField } from '@mui/material';
+import {
+  Alert,
+  Button,
+  Grid,
+  MenuItem,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { Title } from '../../../../../components/Title';
 import { Controller } from 'react-hook-form';
 import { LoadingButton } from '@mui/lab';
 import SaveIcon from '@mui/icons-material/Save';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { set_current_mode_planes } from '../../../store/slice/indexPlanes';
 import { useFuenteFinanciacionHook } from '../../hooks/useFuenteFinanciacionHook';
 import { DataContextFuentesFinanciacion } from '../../context/context';
@@ -33,17 +40,26 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
   const { mode, fuente_financiacion } = useAppSelector((state) => state.planes);
 
   const {
+    cuencas_selected,
+    id_indicador,
+    rows_metas,
     set_id_proyecto,
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
-    cuencas_selected,
     fetch_data_cuencas,
+    fetch_data_metas_id_indicador,
   } = useContext(DataContextFuentesFinanciacion);
 
   useEffect(() => {
     fetch_data_cuencas();
   }, []);
+
+  useEffect(() => {
+    if (id_indicador) {
+      fetch_data_metas_id_indicador();
+    }
+  }, [id_indicador]);
 
   useEffect(() => {
     if (mode.crear) {
@@ -86,6 +102,7 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
   useEffect(() => {
     set_value_fuente('valor_total', valor_total);
   }, [valor_total]);
+
 
   return (
     <>
@@ -409,6 +426,17 @@ export const AgregarFuenteFinanciacion: React.FC = () => {
               )}
             />
           </Grid>
+          {/* {valorTotalValido ? (
+            <Grid item xs={12}>
+              <Grid container justifyContent="center" textAlign="center">
+                <Alert icon={false} severity="error">
+                  <Typography>
+                    El total de la fuente supera el valor de la meta
+                  </Typography>
+                </Alert>
+              </Grid>
+            </Grid>
+          ) : null} */}
           {/* <Grid item xs={12} sm={6}>
             <Controller
               name="id_indicador"

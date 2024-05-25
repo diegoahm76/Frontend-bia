@@ -15,7 +15,9 @@ import {
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { eliminar_codigo_unspsc, get_codigo_unspsc } from '../Request/request';
+import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import { eliminar_codigo_unspsc, get_codigo_unspsc, get_codigo_unspsc_pag } from '../Request/request';
 import type { ICodigoUnspsc } from '../interfaces/interfaces';
 import Swal from 'sweetalert2';
 import { control_error, control_success } from '../../../../helpers';
@@ -33,19 +35,22 @@ export const CodigosUNSPSCScreen: React.FC = () => {
       field: 'codigo_unsp',
       headerName: 'CÓDIGO UNSPSC',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'nombre_producto_unsp',
       headerName: 'NOMBRE PRODUCTO UNSPSC',
       sortable: true,
-      width: 300,
+      minWidth: 300,
+      flex: 1,
     },
     {
       field: 'activo',
       headerName: 'ESTADO',
       sortable: true,
-      width: 120,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => {
         return params.row.activo === true ? (
           <Chip
@@ -67,7 +72,8 @@ export const CodigosUNSPSCScreen: React.FC = () => {
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 200,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -121,7 +127,10 @@ export const CodigosUNSPSCScreen: React.FC = () => {
   const [codigo, set_codigo] = useState<ICodigoUnspsc>();
   const [is_crear, set_is_crear] = useState<boolean>(false);
   const [is_editar, set_is_editar] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [codeSearch, setCodeSearch] = useState('');
+  const [nameSearch, setNameSearch] = useState('');
 
   const handle_open_crear = (): void => {
     set_is_crear(true);
@@ -130,11 +139,18 @@ export const CodigosUNSPSCScreen: React.FC = () => {
     set_is_editar(true);
   };
 
+  const clean_search = () => {
+    setNameSearch('');
+    setCodeSearch('');
+    get_traer();
+  }
+
   const get_traer = async () => {
     try {
-      setSearchTerm('');
-      const response = await get_codigo_unspsc();
-      const datos = response.map((datos: ICodigoUnspsc) => ({
+      if(nameSearch || codeSearch) setPage(1);
+      const response = await get_codigo_unspsc_pag(page, nameSearch, codeSearch);
+      setCount(response.count);
+      const datos = response.results.map((datos: ICodigoUnspsc) => ({
         id_codigo: datos.id_codigo,
         codigo_unsp: datos.codigo_unsp,
         nombre_producto_unsp: datos.nombre_producto_unsp,
@@ -142,7 +158,7 @@ export const CodigosUNSPSCScreen: React.FC = () => {
         registro_precargado: datos.registro_precargado,
         item_ya_usado: datos.item_ya_usado,
       }));
-      set_rows(filterRows(datos, ''));
+      set_rows([...datos]);
     } catch (error: any) {
       control_error(
         error.response.data.detail || 'Algo paso, intente de nuevo'
@@ -191,7 +207,7 @@ export const CodigosUNSPSCScreen: React.FC = () => {
 
   useEffect(() => {
     void get_traer();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -210,12 +226,11 @@ export const CodigosUNSPSCScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Grid item xs={12}>
-          <Title title="Configuraciones básicas códigoS UNSPSC" />
+        <Grid item xs={12} sx={{my: 2}}>
+          <Title title="Configuraciones básicas códigos UNSPSC" />
         </Grid>
         <Grid item xs={12}>
           <Button
-            sx={{ mb: '20px' }}
             variant="outlined"
             onClick={handle_open_crear}
             startIcon={<AddIcon />}
@@ -224,40 +239,70 @@ export const CodigosUNSPSCScreen: React.FC = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          {rows.length > 0 && (
-            <>
-              <ButtonGroup
-                style={{
-                  margin: 7,
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                }}
-              >
-                {download_xls({ nurseries: rows, columns })}
-                {download_pdf({
-                  nurseries: rows,
-                  columns,
-                  title: 'CREAR',
-                })}
-              </ButtonGroup>
+          <Grid item xs={12} sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem', marginBottom: '10px' }}>
+            <Grid style={{display: 'flex', gap: '1rem'}}>
               <TextField
                 label="Buscar código UNSPSC"
                 size="small"
                 variant="outlined"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                style={{ marginBottom: '20px' }}
+                value={codeSearch}
+                onChange={(e) => setCodeSearch(e.target.value)}
               />
-              <DataGrid
-                autoHeight
-                rows={filterRows(rows, searchTerm)}
-                columns={columns}
-                getRowId={(row) => row.id_codigo}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
+              <TextField
+                label="Buscar nombre UNSPSC"
+                size="small"
+                variant="outlined"
+                value={nameSearch}
+                onChange={(e) => setNameSearch(e.target.value)}
               />
-            </>
-          )}
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<SearchIcon />}
+                onClick={() => {
+                  get_traer();
+                }}
+              >
+                Buscar
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<CleanIcon />}
+                sx={{display: 'flex', justifyContent: 'end'}}
+                onClick={clean_search}
+              >
+              </Button>
+            </Grid>
+            <ButtonGroup
+              style={{
+                margin: 7,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {download_xls({ nurseries: rows, columns })}
+              {download_pdf({
+                nurseries: rows,
+                columns,
+                title: 'CREAR',
+              })}
+            </ButtonGroup>
+          </Grid>
+          <DataGrid
+            autoHeight
+            rows={rows}
+            columns={columns}
+            getRowId={(row) => row.id_codigo}
+            rowCount={count}
+            pageSize={10}
+            paginationMode="server"
+            rowsPerPageOptions={[10]}
+            onPageChange={async (newPage: number) => {
+              setPage(newPage + 1);
+            }}
+            getRowHeight={() => 'auto'}
+          />
         </Grid>
         <Grid item xs={12}>
           <Stack

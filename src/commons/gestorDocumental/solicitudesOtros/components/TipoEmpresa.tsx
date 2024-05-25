@@ -28,6 +28,8 @@ import BuscarModelo from '../../../../components/partials/getModels/BuscarModelo
 const TipoEmpresaOtros = () => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
+  const { representacion_legal } = useAppSelector((state) => state.auth);
+
   const {
     control: control_tipo_empresa,
     reset: reset_empresa,
@@ -79,9 +81,6 @@ const TipoEmpresaOtros = () => {
       person_types.filter((objeto: IObjListType) => objeto.key === 'J')
     );
   }, [document_types, person_types]);
-  useEffect(() => {
-    //  console.log('')(company);
-  }, [company]);
 
   const columns_personas: GridColDef[] = [
     {
@@ -187,7 +186,7 @@ const TipoEmpresaOtros = () => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Tipo de documento',
-              disabled: false,
+              disabled: representacion_legal.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: aux_document_types,
               option_label: 'nombre',
@@ -204,7 +203,9 @@ const TipoEmpresaOtros = () => {
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Número de documento',
               type: 'number',
-              disabled: (document_type.cod_tipo_documento ?? null) === null,
+              disabled:
+                (document_type.cod_tipo_documento ?? null) === null ||
+                representacion_legal.tipo_sesion === 'E',
               helper_text: 'Digite para buscar',
               on_blur_function: search_person,
             },

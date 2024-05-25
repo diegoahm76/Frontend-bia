@@ -7,4 +7,5 @@ export const choicesTipoDeTarea = [
   { value: 'Rtra', label: 'Responder Trámite', idTipoSolicitud: 2 },
   { value: 'ROtros', label: 'Responder Otro', idTipoSolicitud: 3 },
   { value: 'ROpas', label: 'Responder OPA', idTipoSolicitud: 4 },
+  {value: 'Documentos', label: 'Documentos', idTipoSolicitud: 5, }
 ];

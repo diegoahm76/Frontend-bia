@@ -43,8 +43,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
   const [selected_departamento, setselected_departamento] = useState('');
   const [departamentos, set_departamentos] = useState<Departamento[]>([]);
   const [municipios_noti, set_municipios_noti] = useState<Municipios[]>([]);
-  const [opengeneradordirecciones, setopengeneradordirecciones] =
-    useState(false);
+  const [opengeneradordirecciones, setopengeneradordirecciones] = useState(false);
 
 
   const [selected_departamento_noti, setselected_departamento_noti] =
@@ -374,12 +373,10 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
 
   const [error] = useState<any>('');
   const is_error = error !== '';
-  const [
-    type_direction,
-    // set_type_direction
+  const [  type_direction, // set_type_direction
   ] = useState('');
   //  console.log('')(is_error);
-  const [  type_directionn,
+  const [type_directionn,
     // set_type_direction
   ] = useState('');
   //  console.log('')(is_error);
@@ -418,9 +415,9 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
       });
     }
   };
-  const [  ,    setdireccion_generada,  ] = useState('');
+  const [, setdireccion_generada,] = useState('');
 
-  const [  ,  set_direccion_generada_activa,  ] = useState(false);
+  const [, set_direccion_generada_activa,] = useState(false);
 
   const mostrardireccion_generada = (direccion: any): void => {
     setdireccion_generada(direccion);
@@ -502,7 +499,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
         </Grid>
         <Grid item xs={12} sm={4}>
           <FormControl required size="small" fullWidth>
-            <InputLabel shrink={true}>pais</InputLabel>
+            <InputLabel shrink={true}>País</InputLabel>
             <Select
               label="país"
               name="pais_sucursal_exterior"
@@ -594,7 +591,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label="dirección  "
+            label="Dirección  "
             fullWidth
             required
             InputLabelProps={{
@@ -609,7 +606,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label=" direccion sucursal georeferenciada lat  "
+            label="Dirección sucursal georeferenciada lat  "
             fullWidth
             required
             InputLabelProps={{
@@ -624,7 +621,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label=" direccion sucursal georeferenciada lon  "
+            label="Dirección sucursal georeferenciada lon  "
             fullWidth
             required
             InputLabelProps={{
@@ -647,6 +644,8 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
             Generar dirección
           </Button>
         </Grid>
+
+
       </Grid>
       <Grid
         container
@@ -735,7 +734,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
           <TextField
             variant="outlined"
             size="small"
-            label="dirección notificación  "
+            label="Dirección notificación  "
             fullWidth
             InputLabelProps={{
               shrink: true,

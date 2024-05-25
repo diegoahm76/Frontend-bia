@@ -69,8 +69,13 @@ import { ImpresionRadicadoScreen } from '../../PQRSDF/screens/ImpresionRadicadoS
 import {
   get_attorney_document_service,
   get_company_document_service,
+  get_filed_id_service,
   get_person_document_service,
 } from '../../PQRSDF/store/thunks/pqrsdfThunks';
+import {
+  initial_state_filed,
+  set_filed,
+} from '../../PQRSDF/store/slice/pqrsdfSlice';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearComplementoPqrsdfScreen(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -109,6 +114,8 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
   const { id } = useParams();
 
   useEffect(() => {
+    dispatch(set_filed(initial_state_filed));
+
     if (id !== null && id !== undefined) {
       const params = {
         id_PQRSDF: id,
@@ -332,6 +339,12 @@ export function CrearComplementoPqrsdfScreen(): JSX.Element {
         set_step(0);
         // void dispatch(get_complemento_pqrsdf_id_service(pqr.id_PQRSDF));servicio para consultar complemento por id
       }
+      if (complement_pqr.idComplementoUsu_PQR !== null) {
+        if (filed.id_radicado === null) {
+          void dispatch(get_filed_id_service(complement_pqr.id_radicado ?? 0));
+        }
+      }
+
       set_action('editar');
     } else {
       set_action('crear');

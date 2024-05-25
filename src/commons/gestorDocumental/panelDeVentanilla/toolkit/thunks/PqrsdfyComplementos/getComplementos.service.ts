@@ -8,7 +8,6 @@ export const getComplementosAsociadosPqrsdf = async (
   handleThirdLoading: React.Dispatch<React.SetStateAction<boolean>>
 ): Promise<any[]> => {
   try {
-    ('gestor/panel_ventanilla/complementos/get/10/');
     handleThirdLoading(true);
     const url = `gestor/panel_ventanilla/complementos/get/${encodeURIComponent(
       idPqrsd

@@ -6,18 +6,24 @@ import { Pqr, TipoPQRSDF } from "../interface/types";
 
 
 
+
 const cargarAsignaciones = async ({
     setAsignaciones,
     formData
-}: {
+  }: {
     setAsignaciones: any,
     formData: any,
-}): Promise<any> => {
+  }): Promise<any> => {
     try {
         const response = await api.get(`/gestor/pqr/consulta-estado-pqrsdf/?tipo_solicitud=${formData.tipo_solicitud}&tipo_pqrsdf=${formData.pqrs}&radicado=${formData.radicado}&fecha_radicado_desde=${formData.fecha_desde}&fecha_radicado_hasta=${formData.fecha_hasta}&estado_solicitud=${formData.estado}`);
         if (response.data.success) {
-            setAsignaciones(response?.data?.data);
-
+            // Filtra las asignaciones para incluir solo las que tienen los estados deseados
+            const asignacionesFiltradas = response.data.data.filter((asignacion:any) => 
+              ['RESPONDIDA', 'EN GESTION', 'RADICADO'].includes(asignacion.Estado)
+            );
+  
+            setAsignaciones(asignacionesFiltradas); // Actualiza el estado con las asignaciones filtradas
+  
             control_success("Datos encontrados")
         }
     } catch (error: any) {
@@ -25,7 +31,28 @@ const cargarAsignaciones = async ({
         // control_error(error.response.data.detail);
         showAlert("Opss", `${error?.response?.data?.detail}`, "error")
     }
-};
+  };
+
+// const cargarAsignaciones = async ({
+//     setAsignaciones,
+//     formData
+// }: {
+//     setAsignaciones: any,
+//     formData: any,
+// }): Promise<any> => {
+//     try {
+//         const response = await api.get(`/gestor/pqr/consulta-estado-pqrsdf/?tipo_solicitud=${formData.tipo_solicitud}&tipo_pqrsdf=${formData.pqrs}&radicado=${formData.radicado}&fecha_radicado_desde=${formData.fecha_desde}&fecha_radicado_hasta=${formData.fecha_hasta}&estado_solicitud=${formData.estado}`);
+//         if (response.data.success) {
+//             setAsignaciones(response?.data?.data);
+
+//             control_success("Datos encontrados")
+//         }
+//     } catch (error: any) {
+//         console.error('Error al cargar las asignaciones de encuesta', error);
+//         // control_error(error.response.data.detail);
+//         showAlert("Opss", `${error?.response?.data?.detail}`, "error")
+//     }
+// };
 
 // Efecto para cargar los datos del pqrs
 

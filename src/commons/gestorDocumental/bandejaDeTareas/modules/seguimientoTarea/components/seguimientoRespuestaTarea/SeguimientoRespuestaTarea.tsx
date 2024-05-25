@@ -20,8 +20,12 @@ import { Loader } from '../../../../../../../utils/Loader/Loader';
 import { useAppSelector } from '../../../../../../../hooks';
 import { Title } from '../../../../../../../components';
 import { formatDate } from '../../../../../../../utils/functions/formatDate';
-import { getRespuestaTarea } from '../../services/getRespuestaTarea.service';
+import {
+  getRespuestaTarea,
+  getRespuestaTareaOpa,
+} from '../../services/pqrsdf/getRespuestaTarea.service';
 import { columnsRespuesta } from './columnsRespuesta';
+import { showAlert } from '../../../../../../../utils/showAlert/ShowAlert';
 export const SeguimientoRespuestaTarea = (): JSX.Element => {
   //* redux states
   const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
@@ -53,12 +57,48 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
   //* useEffe ct para traer las reasignaciones de la tarea
   useEffect(() => {
     (async () => {
+      if (!currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas) {
+        showAlert('Advertencia', 'No se ha seleccionado una tarea', 'warning');
+        navigate('/app/gestor_documental/bandeja_tareas/');
+        return;
+      }
+
+      const tipo =
+        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo_tarea ||
+        currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.tipo;
+
       try {
-        const dataSeguimientos = await getRespuestaTarea(
-          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
-          handleSixthLoading
-        );
-        setListaRespuesta(dataSeguimientos);
+        switch (tipo) {
+          case 'RESPONDER PQRSDF':
+          case 'Responder PQRSDF':
+            const dataSeguimientos = await getRespuestaTarea(
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_pqrsdf,
+              handleSixthLoading
+            );
+            setListaRespuesta(dataSeguimientos);
+            /* void getReAsignacionesTareasPqrsdf(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            handleGeneralLoading
+          ).then((res) => {
+            setListaAsignaciones(res);
+          });*/
+            break;
+          case 'RESPONDER OPA':
+          case 'Responder Opa':
+          case 'Responder OPA':
+            const dataSeguimientosRespuestaOpa = await getRespuestaTareaOpa(
+              currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tramite,
+              handleSixthLoading
+            );
+            console.log('dataSeguimientosRespuestaOpa', dataSeguimientosRespuestaOpa);
+            setListaRespuesta(dataSeguimientosRespuestaOpa);
+
+            // Call the service for OPA
+            break;
+          default:
+            // Default service call or no service call
+            break;
+        }
       } catch (error) {
         console.log(error);
       }
@@ -102,7 +142,7 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Tarea respondida - respuesta a la PQRSDF relacionada" />
+          <Title title="Tarea respondida - respuesta a la tarea relacionada" />
 
           <section
             style={{
@@ -114,12 +154,20 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
                 return (
                   <Accordion
                     ref={
-                      expanded === item?.id_respuesta_pqr ? accordionRef : null
+                      expanded === item?.id_respuesta_pqr ||
+                      expanded === item?.id_respuesta_opa
+                        ? accordionRef
+                        : null
                     }
                     style={{ marginBottom: '1rem' }}
-                    key={item?.id_respuesta_pqr}
-                    expanded={expanded === item?.id_respuesta_pqr}
-                    onChange={handleChange(item?.id_respuesta_pqr)}
+                    key={item?.id_respuesta_pqr || item?.id_respuesta_opa}
+                    expanded={
+                      expanded === item?.id_respuesta_pqr ||
+                      expanded === item?.id_respuesta_opa
+                    }
+                    onChange={handleChange(
+                      item?.id_respuesta_pqr || item?.id_respuesta_opa
+                    )}
                   >
                     <AccordionSummary
                       expandIcon={
@@ -130,16 +178,18 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
                         />
                       }
                       aria-controls={`${item?.fecha_respuesta}-content`}
-                      id={`${item?.id_respuesta_pqr}-header`}
+                      id={`${
+                        item?.id_respuesta_pqr || item?.id_respuesta_opa
+                      }-header`}
                     >
                       <Typography>
-                        <b>Fecha de respuesta de la PQRSDF:</b>{' '}
+                        <b>Fecha de respuesta de la tarea:</b>{' '}
                         {formatDate(item?.fecha_respuesta)}
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                       <RenderDataGrid
-                        title="Información de la respuesta de PQRSDF"
+                        title="Información de la respuesta de tarea"
                         columns={columnsRespuesta ?? []}
                         rows={
                           /*[
@@ -151,7 +201,9 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
                             ...listaRespuesta,
                           ]*/
                           listaRespuesta.filter(
-                            (el) => el.id_respuesta_pqr === expanded
+                            (el) =>
+                              el.id_respuesta_pqr === expanded ||
+                              el?.id_respuesta_opa === expanded
                           ) ?? []
                         }
                       />
@@ -170,7 +222,8 @@ export const SeguimientoRespuestaTarea = (): JSX.Element => {
                   fontSize: '1.25rem',
                 }}
               >
-                No se ha encontrado información relacionada a la respuesta de la tarea - PQRSDF
+                No se ha encontrado información relacionada a la respuesta de la
+                tarea
               </Typography>
             )}
           </section>

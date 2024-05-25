@@ -5,14 +5,13 @@ import { DataGrid } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
-import { Persona } from '../../../../../recaudo/WorkFlowPQRSDF/interface/IwordFlow';
 import { api } from '../../../../../../api/axios';
 import { Title } from '../../../../../../components/Title';
-import { BuscadorPersona } from '../../../../ventanilla/registroPersonas/BuscadorPersonaV';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
 import { RadicadoData, ejemploData, initial_data } from '../interface/IBUsquedaAvanzadaRadicado';
 import { BuscadorPerzonasStiven } from '../../BuscadorPersonaPersonalizado/BuscadorPerzonas';
+import { Persona } from '../../../interface/IwordFlow';
 
 
 
@@ -228,7 +227,7 @@ export const ConsultarRadicadosTable = () => {
                     </Grid>
                 )}
 
-                <Grid item xs={9} style={{ marginTop: 0 }}>
+                <Grid item xs={9} style={{ marginTop: 25 }}>
   
                 <BuscadorPerzonasStiven onResultt={handleResult} />
                   </Grid>

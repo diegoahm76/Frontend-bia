@@ -1,17 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-/*
-   {
-    "medio_almacenamiento": "No Aplica",
-    "nombre_anexo": "Policia",
-    "orden_anexo_doc": 1,
-    "cod_medio_almacenamiento": "Na",
-    "medio_almacenamiento_otros_Cual": null,
-    "numero_folios": 0,
-    "ya_digitalizado": false,
-    "observacion_digitalizacion": null,
-    "id_docu_arch_exp": null
-}
-*/
 
 export const columnsModalOpas = [
   {

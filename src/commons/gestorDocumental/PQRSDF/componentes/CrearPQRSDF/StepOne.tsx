@@ -57,11 +57,11 @@ const StepOne = ({ control_form, reset }: IProps) => {
     reset({
       ...pqr,
       cod_forma_presentacion:
-        representacion_legal.tipo_sesion === 'E'
+        representacion_legal?.tipo_sesion === 'E'
           ? 'E'
           : pqr.cod_forma_presentacion,
       id_medio_solicitud:
-        representacion_legal.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud,
+        representacion_legal?.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud,
     });
   }, []);
 
@@ -148,7 +148,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Forma de presentación',
-              disabled: representacion_legal.tipo_sesion === 'E',
+              disabled: representacion_legal?.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: presentation_types,
               option_label: 'label',
@@ -163,7 +163,7 @@ const StepOne = ({ control_form, reset }: IProps) => {
               default_value: '',
               rules: { required_rule: { rule: true, message: 'Requerido' } },
               label: 'Medio de solicitud',
-              disabled: representacion_legal.tipo_sesion === 'E',
+              disabled: representacion_legal?.tipo_sesion === 'E',
               helper_text: 'Debe seleccionar campo',
               select_options: media_types,
               option_label: 'label',

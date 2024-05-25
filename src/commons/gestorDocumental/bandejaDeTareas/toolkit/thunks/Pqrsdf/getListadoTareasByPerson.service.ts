@@ -12,7 +12,7 @@ export const getListadoTareasByPerson = async (
   estado_de_la_tarea: string = '',
   fecha_inicio: string = '',
   fecha_fin: string = '',
-  mostrar_respuesta_con_req_pendientes: boolean = false,
+  mostrar_respuesta_con_req_pendientes: string = '',
   radicado: string = ''
 ) => {
   try {
@@ -30,7 +30,7 @@ export const getListadoTareasByPerson = async (
     )}&estado_tarea=${encodeURIComponent(
       estado_de_la_tarea
     )}&fecha_inicio=${formattedFechaInicio}&fecha_fin=${formattedFechaFin}&mostrar_requerimiento=${encodeURIComponent(
-      mostrar_respuesta_con_req_pendientes
+      mostrar_respuesta_con_req_pendientes === 'True' ? 'True' : mostrar_respuesta_con_req_pendientes === '' ? '' : 'False'
     )}&radicado=${encodeURIComponent(radicado)}`;
     const { data } = await api.get(url);
 
@@ -50,7 +50,7 @@ export const getListadoTareasByPerson = async (
     showAlert(
       'Opps...',
       'Ha ocurrido un error al buscar las tareas y/o no hay tareas asignadas a este usuario',
-      'error'
+      'warning'
     );
     return [];
   } finally {

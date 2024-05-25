@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { useForm } from 'react-hook-form';
@@ -29,7 +30,7 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: true,
+        value: '',
         label: '',
       },
       radicado: '',
@@ -62,7 +63,7 @@ export const useBandejaTareas = () => {
         label: '',
       },
       mostrar_respuesta_con_req_pendientes:{
-        value: true,
+        value: '',
         label: '',
       },
 
@@ -206,3 +207,5 @@ export const useBandejaTareas = () => {
     watchExeManejoModalMetadatos,
   };
 };
+
+

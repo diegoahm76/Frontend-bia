@@ -109,11 +109,14 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     return (
 
         <>
-            <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl"
-            >
+            <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl" >
                 {/* <button onClick={() => //  console.log('')(tiposCobro)}>Mostrar zonahidrica en la consola</button> */}
                 <Grid container
-                    item xs={12} marginLeft={2} marginRight={2} marginTop={3}
+                    item
+                    xs={12}
+                    marginLeft={2}
+                    marginRight={2}
+                    marginTop={3}
                     sx={{
                         position: 'relative',
                         background: '#FAFAFA',
@@ -130,9 +133,9 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 required
                                 fullWidth
                                 size="small"
-                                variant="outlined"
                                 label="Variable"
                                 name="variables"
+                                variant="outlined"
                                 onChange={handleInputChange}
                                 value={formValues.variables}
                             >
@@ -148,9 +151,9 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 required
                                 fullWidth
                                 size="small"
-                                variant="outlined"
-                                label="valor"
                                 name="valor"
+                                label="valor"
+                                variant="outlined"
                                 onChange={handleInputChange}
                                 value={formValues.valor}
                             />
@@ -161,8 +164,8 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 fullWidth
                                 size="small"
                                 variant="outlined"
-                                label="descripccion"
                                 name="descripccion"
+                                label="descripccion"
                                 onChange={handleInputChange}
                                 value={formValues.descripccion}
                             />
@@ -191,21 +194,21 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                             </LocalizationProvider>
                         </Grid> */}
 
-  <Grid item xs={12} sm={4}>
+                        <Grid item xs={12} sm={4}>
                             <TextField
                                 fullWidth
                                 type="date"
                                 size="small"
-                                name="fecha_inicio"
                                 variant="outlined"
+                                name="fecha_inicio"
                                 label="fecha inicio"
+                                onChange={handleInputChange}
                                 value={formValues.fecha_inicio}
                                 InputLabelProps={{ shrink: true }}
-                                onChange={handleInputChange}
                             />
                         </Grid>
 
-                        
+
                         <Grid item xs={12} sm={4}>
                             <TextField
                                 fullWidth
@@ -215,25 +218,35 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 variant="outlined"
                                 label="fecha fin"
                                 value={formValues.fecha_fin}
-                                InputLabelProps={{ shrink: true }}
                                 onChange={handleInputChange}
+                                InputLabelProps={{ shrink: true }}
                             />
                         </Grid>
 
+                        <Grid
+                            item
+                            xs={7}
+                            container
+                            direction="row"
+                            alignItems="center"
+                            justifyContent="flex-end"
+                        >
+                            <Grid item  >
+                                <Button
+                                    color="success"
+                                    variant="contained"
+                                    startIcon={<SaveIcon />}
+                                    onClick={() => { handleSubmitCrear(); }}
+                                >
+                                    Guardar
+                                </Button>
+                            </Grid>
 
-                      
-
-
-                        <Grid item xs={12} sm={4}>
-                            <Button
-                                color="success"
-                                variant="contained"
-                                startIcon={<SaveIcon />}
-                                onClick={() => { handleSubmitCrear(); }}
-                            >
-                                Guardar
-                            </Button>
                         </Grid>
+
+
+
+
                     </Grid>
                 </Grid>
             </Dialog>

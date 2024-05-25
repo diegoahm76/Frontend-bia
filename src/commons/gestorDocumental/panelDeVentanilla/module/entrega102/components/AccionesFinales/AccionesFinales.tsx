@@ -73,11 +73,26 @@ export const AccionesFinales = (): JSX.Element => {
     switch (tipo) {
       case 'PQRSDF':
         // Call the service for PQRSDF
-        res = await postAsignacionGrupoPQRSDF(
+        console.log(
+          'somos la información para el post de la asignación y respectiva creación del expediente',
           {
-            id_pqrsdf: currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_pqrsdf:
+              currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
             id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
+            id_catalogo_serie_subserie:
+              currentGrupo?.currentSerie?.id_cat_serie_und,
+            // id_serie:  currentGrupo?.currentSerie,
+          }
+        );
+       res = await postAsignacionGrupoPQRSDF(
+          {
+            id_pqrsdf:
+              currentElementPqrsdComplementoTramitesYotros?.id_PQRSDF,
+            id_persona_asignada: liderAsignado?.id_persona,
+            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
+            id_catalogo_serie_subserie:
+              currentGrupo?.currentSerie?.id_cat_serie_und,
           },
           handleSecondLoading
         );
@@ -99,7 +114,9 @@ export const AccionesFinales = (): JSX.Element => {
           {
             id_otros: currentElementPqrsdComplementoTramitesYotros?.id_otros,
             id_persona_asignada: liderAsignado?.id_persona,
-            id_und_org_seccion_asignada: currentGrupo?.value,
+            id_und_org_seccion_asignada: currentGrupo?.grupoSelected?.value,
+            id_catalogo_serie_subserie:
+              currentGrupo?.currentSerie?.id_cat_serie_und,
           },
           handleSecondLoading
         );
@@ -108,7 +125,7 @@ export const AccionesFinales = (): JSX.Element => {
         // Call the service for OPA
         showAlert(
           'Estimado usuario:',
-          'No hay servicio aún para asignar la OPA, así que no se realiza asignacion por el momento',
+          'No hay servicio aún para asignar la OPA, así que no se realiza asignacion de este elemento',
           'warning'
         );
         /*res = await postAsignacionGrupoOPA(

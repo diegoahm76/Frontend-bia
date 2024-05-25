@@ -144,6 +144,13 @@ export const ListarFuentesFinanciacion: React.FC = () => {
           <IconButton
             size="small"
             onClick={() => {
+              console.log(params.row);
+              set_id_plan(params.row.id_plan);
+              set_id_programa(params.row.id_programa);
+              set_id_proyecto(params.row.id_proyecto);
+              set_id_producto(params.row.id_producto);
+              set_id_actividad(params.row.id_actividad);
+              set_id_indicador(params.row.id_indicador);
               dispatch(
                 set_current_mode_planes({
                   ver: true,
@@ -178,9 +185,18 @@ export const ListarFuentesFinanciacion: React.FC = () => {
     },
   ];
 
-  const { rows_fuentes, fetch_data_fuente_financiacion } = useContext(
-    DataContextFuentesFinanciacion
-  );
+  const {
+    rows_fuentes,
+    id_meta,
+    set_id_plan,
+    set_id_programa,
+    set_id_proyecto,
+    set_id_producto,
+    set_id_actividad,
+    set_id_indicador,
+    // fetch_data_fuente_financiacion,
+    fetch_data_fuente_financiacion_indicadores,
+  } = useContext(DataContextFuentesFinanciacion);
 
   // const {
   //   indicador: { id_indicador },
@@ -190,9 +206,9 @@ export const ListarFuentesFinanciacion: React.FC = () => {
 
   useEffect(() => {
     // if (id_indicador) {
-    fetch_data_fuente_financiacion();
+      fetch_data_fuente_financiacion_indicadores();
     // }
-  }, []);
+  }, [id_meta]);
 
   return (
     <>

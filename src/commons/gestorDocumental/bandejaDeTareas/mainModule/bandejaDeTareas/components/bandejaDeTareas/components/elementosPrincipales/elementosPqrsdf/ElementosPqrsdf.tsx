@@ -7,6 +7,7 @@ import { RenderDataGrid } from '../../../../../../../../tca/Atom/RenderDataGrid/
 import { columnsPqrsdf } from './columnsPqrsdf/columnsPqrsdf';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TaskIcon from '@mui/icons-material/Task';
+import TextSnippetIcon from '@mui/icons-material/TextSnippet';
 import DownloadDoneIcon from '@mui/icons-material/DownloadDone';
 import ClearIcon from '@mui/icons-material/Clear';
 import CommentIcon from '@mui/icons-material/Comment';
@@ -34,8 +35,9 @@ import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAle
 import { ModalRejectTask } from '../../../utils/tareaPqrsdf/ModalRejectTask';
 import { ModalSeeRejectedTask } from '../../../utils/tareaPqrsdf/ModalSeeRejectedTask';
 import { getDetalleDeTarea } from '../../../../../services/servicesStates/pqrsdf/detalleDeTarea/getDetalleDeTarea.service';
+import CallMadeIcon from '@mui/icons-material/CallMade';
 
-const iconStyles = {
+export const iconStyles = {
   color: 'white',
   width: '25px',
   height: '25px',
@@ -90,7 +92,9 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       });
 
       if (result.isConfirmed) {
-        const res = await putAceptarTarea(row.id_tarea_asignada);
+        const res = await putAceptarTarea(
+          row.id_tarea_asignada /*row.id_pqrsdf*/
+        );
         console.log(res);
 
         const listadoTareas = await getListadoTareasByPerson(
@@ -118,6 +122,13 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
     }
   };
 
+  const handle_template = (): void => {
+    // set_obligaciones_from_liquidacion(obligaciones_gestor);
+    // set_is_from_liquidacion(true);
+    // set_id_deudor(obligaciones.id_deudor);
+    navigate('/app/gestor_documental/bandeja_tareas');
+  }
+
   const handleRejectClick = (_row: any) => {
     dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
     handleOpenModalNuevo(true);
@@ -137,168 +148,158 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       showConfirmButton: true,
     });
 
-    const shouldDisable = (actionId: string) => {
-     /* const isVerInfo = actionId === 'InfoSolictud';
-      const isResponder = actionId === 'RespondeSolicitud';
-      const isEnviarReq = actionId === 'RequerimientoUsuario';
-      const isReasignar = actionId === 'Reasignar';
-      const isVerRespReq =
-        actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario';
-      const isSegRespTarea = actionId === 'SeguimientoARespuesta';*/
+    // const shouldDisable = (actionId: string) => {
+    //   if (!tareaPQRSDF) {
+    //     return true; // No se ha seleccionado ninguna tarea
+    //   }
 
-      if (!tareaPQRSDF) {
-        return true; // No se ha seleccionado ninguna tarea
-      }
+    //   const isNoSeleccionado = !tareaPQRSDF;
+    //   const isEstadoAsignacionNoDefinido =
+    //     tareaPQRSDF.estado_asignacion_tarea === null ||
+    //     tareaPQRSDF.estado_asignacion_tarea === '';
+    //   const isEstadoAsignacionRechazada =
+    //     tareaPQRSDF.estado_asignacion_tarea === 'Rechazado';
+    //   const isEstadoAsignacionAceptada =
+    //     tareaPQRSDF.estado_asignacion_tarea === 'Aceptado';
+    //   const isEstadoTareaEnProcesoRespuesta =
+    //     tareaPQRSDF.estado_tarea === 'En proceso de respuesta';
+    //   const isTareaRespondida =
+    //     tareaPQRSDF.estado_tarea ===
+    //     'Respondida por el propietario de la bandeja de tareas';
+    //   const isEstadoTareaRespondida = tareaPQRSDF.respondida_por;
+    //   const isEstadoTareaDelegada = tareaPQRSDF.estado_tarea === 'Delegada';
+    //   const isEstadoReasignacionEnEspera =
+    //     tareaPQRSDF.estado_reasignacion_tarea === null ||
+    //     tareaPQRSDF.estado_reasignacion_tarea === '' ||
+    //     tareaPQRSDF.estado_reasignacion_tarea === 'En espera';
+    //   const isEstadoReasignacionRechazada =
+    //     tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
+    //   const isEstadoReasignacionAceptada =
+    //     tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
 
-      const isNoSeleccionado = !tareaPQRSDF;
-      const isEstadoAsignacionNoDefinido =
-        tareaPQRSDF.estado_asignacion_tarea === null ||
-        tareaPQRSDF.estado_asignacion_tarea === '';
-      const isEstadoAsignacionRechazada =
-        tareaPQRSDF.estado_asignacion_tarea === 'Rechazado';
-      const isEstadoAsignacionAceptada =
-        tareaPQRSDF.estado_asignacion_tarea === 'Aceptado';
-      const isEstadoTareaEnProcesoRespuesta =
-        tareaPQRSDF.estado_tarea === 'En proceso de respuesta';
-      const isTareaRespondida =
-        tareaPQRSDF.estado_tarea ===
-        'Respondida por el propietario de la bandeja de tareas';
-      const isEstadoTareaRespondida = tareaPQRSDF.respondida_por;
-      const isEstadoTareaDelegada = tareaPQRSDF.estado_tarea === 'Delegada';
-      const isEstadoReasignacionEnEspera =
-        tareaPQRSDF.estado_reasignacion_tarea === null ||
-        tareaPQRSDF.estado_reasignacion_tarea === '' ||
-        tareaPQRSDF.estado_reasignacion_tarea === 'En espera';
-      const isEstadoReasignacionRechazada =
-        tareaPQRSDF.estado_reasignacion_tarea === 'Rechazado';
-      const isEstadoReasignacionAceptada =
-        tareaPQRSDF.estado_reasignacion_tarea === 'Aceptado';
+    //   const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
 
-      const hasReqPendientes = tareaPQRSDF.requerimientos_pendientes_respuesta;
+    //   if (isNoSeleccionado) {
+    //     return true;
+    //   }
 
-      if (isNoSeleccionado) {
-        return true;
-      }
+    //   if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
+    //     return actionId !== 'InfoSolictud';
+    //   }
 
-      if (isEstadoAsignacionNoDefinido || isEstadoAsignacionRechazada) {
-        return actionId !== 'InfoSolictud';
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     !hasReqPendientes
+    //   ) {
+    //     //* se habilita todo
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        !hasReqPendientes
-      ) {
-        //* se habilita todo
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     hasReqPendientes
+    //   ) {
+    //     //* se deshabilita la opción de responder solicitud
+    //     return !(
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        hasReqPendientes
-      ) {
-        //* se deshabilita la opción de responder solicitud
-        return !(
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     isEstadoReasignacionEnEspera
+    //   ) {
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'InfoSolictud' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario'
+    //     );
+    //   }
 
-      if (isEstadoAsignacionAceptada && isEstadoTareaRespondida) {
-        return true;
-      }
+    //   if (isEstadoAsignacionAceptada && isTareaRespondida) {
+    //     return !(
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionEnEspera
-      ) {
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario'
-        );
-      }
+    //   //* septimo caso
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     isEstadoReasignacionAceptada
+    //   ) {
+    //     return !(
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (isEstadoAsignacionAceptada && isTareaRespondida) {
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   //* octavo caso
 
-      //* septimo caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionAceptada
-      ) {
-        return !(
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaEnProcesoRespuesta &&
+    //     isEstadoReasignacionRechazada
+    //   ) {
+    //     //* se habilitan todos botones -
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      //* octavo caso
+    //   //* noveno caso
+    //   if (
+    //     isEstadoAsignacionAceptada &&
+    //     isEstadoTareaDelegada &&
+    //     isEstadoReasignacionRechazada
+    //   ) {
+    //     //* se habilitan todos botones -
+    //     return !(
+    //       actionId === 'RespondeSolicitud' ||
+    //       actionId === 'RequerimientoUsuario' ||
+    //       actionId === 'Reasignar' ||
+    //       actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
+    //       actionId === 'SeguimientoARespuesta' ||
+    //       actionId === 'InfoSolictud'
+    //     );
+    //   }
 
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaEnProcesoRespuesta &&
-        isEstadoReasignacionRechazada
-      ) {
-        //* se habilitan todos botones -
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //* REVISAR EL ESTADO DE ARCHIVADO
+    //   if (isTareaRespondida) {
+    //     return !(actionId === 'InfoSolictud');
+    //   }
 
-      //* noveno caso
-      if (
-        isEstadoAsignacionAceptada &&
-        isEstadoTareaDelegada &&
-        isEstadoReasignacionRechazada
-      ) {
-        //* se habilitan todos botones -
-        return !(
-          actionId === 'RespondeSolicitud' ||
-          actionId === 'RequerimientoUsuario' ||
-          actionId === 'Reasignar' ||
-          actionId === 'VerRespuestasRequerimientosOSolicitudesAlUsuario' ||
-          actionId === 'SeguimientoARespuesta' ||
-          actionId === 'InfoSolictud'
-        );
-      }
+    //   return !(actionId === 'InfoSolictud');
+    // };
 
-      return !(actionId === 'InfoSolictud');
-    };
+    // const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
+    //   ...action,
+    //   disabled: shouldDisable(action.id),
+    // }));
 
-    const actionsPQRSDF = actionsTareasPQRSDF.map((action: any) => ({
-      ...action,
-      disabled: shouldDisable(action.id),
-    }));
-
-    dispatch(setActionssTareasPQRSDF(actionsPQRSDF));
+    dispatch(setActionssTareasPQRSDF(actionsTareasPQRSDF));
   };
 
   //* columns -------------------------------------------------------
@@ -309,7 +310,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Requerimientos pendientes de respuesta',
       field: 'requerimientos_pendientes_respuesta',
       minWidth: 280,
-      renderCell: (params: any) => {
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
         return (
           <Chip
             size="small"
@@ -323,7 +324,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Días para respuesta',
       field: 'dias_para_respuesta',
       minWidth: 250,
-      renderCell: (params: any) => {
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
         switch (true) {
           case params.row.dias_para_respuesta >= 7:
             return (
@@ -376,7 +377,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
       headerName: 'Estado asignación de tarea',
       field: 'estado_asignacion_tarea',
       minWidth: 220,
-      renderCell: (params: any) => {
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
         switch (params.row.estado_asignacion_tarea) {
           case null:
             return (
@@ -516,6 +517,37 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+            <Tooltip title="Ir a módulo de generador de documentos">
+              <IconButton
+                sx={{
+                  marginLeft: '30px',
+                }}
+                onClick={() => {
+                  navigate('/app/gestor_documental/documentos');
+                  dispatch(
+                    setCurrentTareaPqrsdfTramitesUotrosUopas(params.row)
+                  );
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 30,
+                    height: 30,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <CallMadeIcon
+                    sx={{
+                      color: 'success.main',
+                      width: '20px',
+                      height: '20px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           </>
         );
       },
@@ -547,7 +579,7 @@ export const ListaElementosPqrsdf = (): JSX.Element => {
               variant="contained"
               color="primary"
             >
-              Quitar selección de Tarea
+              Quitar selección de tarea de pqrsdf
             </Button>
           ) : null
         }

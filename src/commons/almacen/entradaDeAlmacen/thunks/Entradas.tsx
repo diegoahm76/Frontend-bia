@@ -35,10 +35,16 @@ const control_success = (message: ToastContent) =>
   });
 
 // Crear entrada
-export const crear_entrada_bien: any = (form_data: crear_entrada) => {
+export const crear_entrada_bien: any = (dataCreate: crear_entrada, archivo: any) => {
   return async () => {
     try {
-      const { data } = await api.post('almacen/bienes/entradas/create/', form_data);
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const formData = new FormData();
+      formData.append('info_entrada', JSON.stringify(dataCreate.info_entrada));
+      formData.append('info_items_entrada', JSON.stringify(dataCreate.info_items_entrada))
+      formData.append('archivo_soporte', JSON.stringify(archivo))
+
+      const { data } = await api.post('almacen/bienes/entradas/create/', formData);
       control_success('La entrada se creo correctamente');
       return data;
     } catch (error: any) {
@@ -171,6 +177,18 @@ export const obtener_bienes: any = () => {
   };
 };
 
+export const obtener_bienes_por_pagina: any = (pagina: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get('almacen/bienes/entradas/search-bienes/?page=' + pagina);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 // Obtiene listado de estados
 export const obtener_estados: any = () => {
   return async () => {
@@ -205,6 +223,19 @@ export const obtener_articulo_codigo: any = (codigo_bien: number) => {
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Obtener bienes por params
+export const obtener_entradas_filtros: any = (codigo_bien: number,nombre: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/bienes/entradas/search-bienes/?codigo_bien=${codigo_bien}&nombre=${nombre}`);
+      return data;
+    } catch (error: any) {
+      control_error(error?.response.data.detail);
       return error as AxiosError;
     }
   };

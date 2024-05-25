@@ -8,6 +8,7 @@ import type {
   IActividades,
   IProductos,
   IProyectos,
+  IMetaIndicador,
 } from '../../types/types';
 import { control_error } from '../../../../helpers';
 // import { useAppSelector } from '../../../../hooks';
@@ -17,6 +18,8 @@ import {
   get_producto_id_proyecto,
   get_actividades_id_producto,
   get_proyectos,
+  get_metas_id_indicador,
+  get_fuente_financiancion_by_meta_id,
 } from '../services/services';
 import type { ValueProps } from '../../../recursoHidrico/Instrumentos/interfaces/interface';
 import type { Cuenca } from '../../configuraciones/interfaces/interfaces';
@@ -30,16 +33,20 @@ interface UserContext {
   id_producto: number | null;
   id_actividad: number | null;
   id_indicador: number | null;
+  id_meta: number | null;
   set_id_plan: (value: number | null) => void;
   set_id_programa: (value: number | null) => void;
   set_id_proyecto: (value: number | null) => void;
   set_id_producto: (value: number | null) => void;
   set_id_actividad: (value: number | null) => void;
   set_id_indicador: (value: number | null) => void;
+  set_id_meta: (value: number | null) => void;
 
   // * rows
   rows_fuentes: IFuentesFinanciacion[];
   set_rows_fuentes: (value: IFuentesFinanciacion[]) => void;
+  rows_metas: IMetaIndicador[];
+  set_rows_metas: (value: IMetaIndicador[]) => void;
 
   // * select
   cuencas_selected: ValueProps[];
@@ -57,11 +64,13 @@ interface UserContext {
   // * fetch
 
   fetch_data_fuente_financiacion: () => Promise<void>;
+  fetch_data_fuente_financiacion_indicadores: () => Promise<void>;
   fetch_data_cuencas: () => Promise<void>;
   fetch_data_indicadores: () => Promise<void>;
   fetch_data_proyectos: () => Promise<void>;
   fetch_data_productos: () => Promise<void>;
   fetch_data_actividades: () => Promise<void>;
+  fetch_data_metas_id_indicador: () => Promise<void>;
 }
 
 export const DataContextFuentesFinanciacion = createContext<UserContext>({
@@ -72,14 +81,20 @@ export const DataContextFuentesFinanciacion = createContext<UserContext>({
   id_producto: null,
   id_actividad: null,
   id_indicador: null,
+  id_meta: null,
+
   set_id_plan: () => {},
   set_id_programa: () => {},
   set_id_proyecto: () => {},
   set_id_producto: () => {},
   set_id_actividad: () => {},
   set_id_indicador: () => {},
+  set_id_meta: () => {},
+
   rows_fuentes: [],
   set_rows_fuentes: () => {},
+  rows_metas: [],
+  set_rows_metas: () => {},
 
   cuencas_selected: [],
   set_cuencas_selected: () => {},
@@ -93,11 +108,13 @@ export const DataContextFuentesFinanciacion = createContext<UserContext>({
   set_actividades_selected: () => {},
 
   fetch_data_fuente_financiacion: async () => {},
+  fetch_data_fuente_financiacion_indicadores: async () => {},
   fetch_data_cuencas: async () => {},
   fetch_data_indicadores: async () => {},
   fetch_data_proyectos: async () => {},
   fetch_data_productos: async () => {},
   fetch_data_actividades: async () => {},
+  fetch_data_metas_id_indicador: async () => {},
 });
 
 export const UserProviderFuentesFinanciacion = ({
@@ -112,6 +129,7 @@ export const UserProviderFuentesFinanciacion = ({
   const [id_producto, set_id_producto] = React.useState<number | null>(null);
   const [id_actividad, set_id_actividad] = React.useState<number | null>(null);
   const [id_indicador, set_id_indicador] = React.useState<number | null>(null);
+  const [id_meta, set_id_meta] = React.useState<number | null>(null);
   // * select
   const [cuencas_selected, set_cuencas_selected] = React.useState<ValueProps[]>(
     []
@@ -137,6 +155,8 @@ export const UserProviderFuentesFinanciacion = ({
     IFuentesFinanciacion[]
   >([]);
 
+  const [rows_metas, set_rows_metas] = React.useState<IMetaIndicador[]>([]);
+
   // * info
 
   // * fetch
@@ -151,23 +171,33 @@ export const UserProviderFuentesFinanciacion = ({
       if (response?.length > 0) {
         const data_fuentes: IFuentesFinanciacion[] = response.map(
           (item: IFuentesFinanciacion) => ({
-            id_fuente: item.id_fuente,
-            nombre_fuente: item.nombre_fuente,
-            nombre_indicador: item.nombre_indicador,
-            nombre_cuenca: item.nombre_cuenca,
-            vano_1: item.vano_1,
-            vano_2: item.vano_2,
-            vano_3: item.vano_3,
-            vano_4: item.vano_4,
-            valor_total: item.valor_total,
-            id_cuenca: item.id_cuenca,
-            id_indicador: item.id_indicador,
+            ...item,
           })
         );
 
         set_rows_fuentes(data_fuentes);
       }
     } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
+  const fetch_data_fuente_financiacion_indicadores = async (): Promise<void> => {
+    try {
+      console.log(id_meta)
+      const response = await get_fuente_financiancion_by_meta_id(id_meta || 0);
+      if (response?.length > 0) {
+        const data_fuentes: IFuentesFinanciacion[] = response.map(
+          (item: any) => ({
+            ...item,
+          })
+        );
+        set_rows_fuentes(data_fuentes);
+      }
+    } catch (error: any) {
+      set_rows_fuentes([]);
       control_error(
         error.response?.data?.detail || 'Algo paso, intente de nuevo'
       );
@@ -269,6 +299,25 @@ export const UserProviderFuentesFinanciacion = ({
     }
   };
 
+  const fetch_data_metas_id_indicador = async (): Promise<void> => {
+    try {
+      set_rows_metas([]);
+      const response = await get_metas_id_indicador(id_indicador!);
+      if (response?.length > 0) {
+        const data_metas: IMetaIndicador[] = response.map(
+          (item: IMetaIndicador) => ({
+            ...item,
+          })
+        );
+        set_rows_metas(data_metas);
+      }
+    } catch (error: any) {
+      control_error(
+        error.response?.data?.detail || 'Algo paso, intente de nuevo'
+      );
+    }
+  };
+
   const value: UserContext = {
     // * id
     id_plan,
@@ -277,13 +326,15 @@ export const UserProviderFuentesFinanciacion = ({
     id_producto,
     id_actividad,
     id_indicador,
+    id_meta,
     set_id_plan,
     set_id_programa,
     set_id_proyecto,
     set_id_producto,
     set_id_actividad,
     set_id_indicador,
-    
+    set_id_meta,
+
     // * select
     cuencas_selected,
     set_cuencas_selected,
@@ -299,16 +350,20 @@ export const UserProviderFuentesFinanciacion = ({
     // * rows
     rows_fuentes,
     set_rows_fuentes,
+    rows_metas,
+    set_rows_metas,
 
     // * info
 
     // * fetch
     fetch_data_fuente_financiacion,
+    fetch_data_fuente_financiacion_indicadores,
     fetch_data_cuencas,
     fetch_data_indicadores,
     fetch_data_proyectos,
     fetch_data_productos,
     fetch_data_actividades,
+    fetch_data_metas_id_indicador,
   };
 
   return (

@@ -23,7 +23,7 @@ import type { AxiosError } from 'axios';
 import { control_success } from '../../../recursoHidrico/requets/Request';
 import { CustomSelect } from '../../../../components';
 import dayjs from 'dayjs';
-import { auth_url } from '../../api/auth';
+import { DEFAULT_AUTH_URL_BETA, DEFAULT_AUTH_URL_PROD } from '../../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DesbloqueodeUsuario: React.FC = () => {
@@ -43,7 +43,10 @@ export const DesbloqueodeUsuario: React.FC = () => {
     email: '',
     fecha_nacimiento: '',
     redirect_url:
-      `${auth_url}/auth/cambiar_contrasena?desbloquear=true`,
+    (process.env.NODE_ENV === 'production'
+      ? process.env.REACT_APP_AUTH_URL_BETA || `${DEFAULT_AUTH_URL_BETA}`
+      : process.env.REACT_APP_AUTH_URL_PROD || `${DEFAULT_AUTH_URL_PROD}`
+    ) + '/auth/cambiar_contrasena?desbloquear=true',
   });
   const [tipo_documento_opt, set_tipo_documento_opt] = useState<IList[]>([]);
   const [tipo_documento, set_tipo_documento] = useState('');

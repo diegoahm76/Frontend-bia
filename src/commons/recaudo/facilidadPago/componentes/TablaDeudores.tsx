@@ -248,7 +248,7 @@ export const TablaDeudores: React.FC = () => {
                 obligaciones.length !== 0 ? (
                   <>
 
-                    <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_active}  set_is_modal_active={set_is_buscar}/>
+                    {/* <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_active}  set_is_modal_active={set_is_buscar}/> */}
                   </>
                 ): <p>.</p>
               }

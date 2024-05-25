@@ -1,20 +1,22 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from '@mui/material';
+import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import Select from 'react-select';
+import { getRequestStatesOpas } from '../services/getRequestStatesOpas.service';
 export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
   const { control_busqueda_panel_ventanilla } = props;
 
   // ? useState Necesario
-  // const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
+  const [requestStatuses, setRequestStatuses] = useState<any[]>([]);
 
   //* se debe establecer un useEffect ya que cada vez que se recargeue el elemento se deben filtrar de diferente manera los elementos
-  /* useEffect(() => {
-    void getRequestStates().then((res: any) => {
+  useEffect(() => {
+    void getRequestStatesOpas().then((res: any) => {
       //  console.log('')(res);
       setRequestStatuses(res);
     });
-  }, []);*/
+  }, []);
 
   // ?
 
@@ -179,7 +181,7 @@ export const BuscadorTramitesYservicios = (props: any): JSX.Element => {
                   //  console.log('')(selectedOption);
                   onChange(selectedOption);
                 }}
-                options={[] as any[]}
+                options={requestStatuses as any[]}
                 placeholder="Seleccionar"
               />
               <label>

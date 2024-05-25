@@ -13,6 +13,8 @@ import { useNavigate } from 'react-router-dom';
 import { ModalAndLoadingContext } from '../../../../../../../../../../context/GeneralContext';
 import { ModalInfoTarea } from '../../../utils/tareaPqrsdf/ModalInfoTarea';
 import { ModalRespuestaReqReasigna } from '../../../utils/tareaPqrsdf/RespuestaReqReasignaciones/ModalRespuestaReqReasigna';
+import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
+import Swal from 'sweetalert2';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const ButtonsTareaOtros: React.FC = (): JSX.Element => {
@@ -42,13 +44,43 @@ export const ButtonsTareaOtros: React.FC = (): JSX.Element => {
 
   const handleReasignar = withValidation(() => console.log('Reasignar'));
 
-  const handleArchivar = withValidation(() => console.log('Archivando tarea'));
+  const handleArchivar = withValidation(async () => {
+    await Swal.fire({
+      title: '¿Está seguro de archivar la solicitud de otros?',
+      text: 'Se enviará la solicitud de otros al archivo (central/general).',
+      showDenyButton: true,
+      confirmButtonText: `Si, archivar`,
+      denyButtonText: `No, cancelar`,
+      confirmButtonColor: '#3085d6',
+      denyButtonColor: '#d33',
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // await sendDigitalizationRequest();
+        showAlert(
+          'Solicitud de otros archivada',
+          'La solicitud de otros ha sido archivada.',
+          'success'
+        );
+      } else if (result.isDenied) {
+        showAlert(
+          'Opps...',
+          'Haz decidido no archivar la solicitud de otros.',
+          'info'
+        );
+      }
+    });
+  });
 
   interface action {
     [key: string]: any;
   }
+  const handleArchivado = withValidation(() =>
+    console.log(' Archivado ')
+  );
 
   const actionHandlers: action = {
+    Archivado_OTROS: handleArchivado, 
+
     InfoSolictud: handleInfoSolicitud,
     // RespondeSolicitud: handleRespondeSolicitud,
     Reasignar: handleReasignar,

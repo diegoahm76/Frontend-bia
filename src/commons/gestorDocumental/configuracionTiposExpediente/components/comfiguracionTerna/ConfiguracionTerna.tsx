@@ -311,7 +311,7 @@ export const ConfiguracionTerna: React.FC = () => {
     <Grid item xs={12} sm={6}>
       <TextField
         style={{ width: '95%', marginTop: 10 }}
-        label={`Cantidad de numeros`}
+        label={`Cantidad de Dígitos`}
         variant="outlined"
         size="small"
         fullWidth

@@ -1,25 +1,30 @@
-/* eslint-disable @typescript-eslint/prefer-optional-chain */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { Avatar, IconButton } from '@mui/material';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { useRef } from 'react';
 import type { DownloadButtonProps } from './types/types';
-import { baseURL } from '../../api/axios';
+import { DEFAULT_BETA_DOWNLOAD_FILES_URL, DEFAULT_PROD_DOWNLOAD_FILES_URL, baseURL } from '../../api/axios';
 
 export const IconButtonDownLoad = ({
-  fileUrl,
-  fileName,
-  condition,
+  fileUrl = '', // default value if null or undefined
+  fileName = '', // default value if null or undefined
+  condition = true, // default value if null or undefined
 }: DownloadButtonProps) => {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   const handleDownload = () => {
-    if (linkRef.current != null) {
+    if (linkRef.current) {
       linkRef.current.click();
     }
+  };
+
+  const getDownloadUrl = () => {
+    const baseUrl =
+      process.env.NODE_ENV === 'development'
+        ? process.env.REACT_APP_DOWNLOAD_FILES_BETA || DEFAULT_BETA_DOWNLOAD_FILES_URL
+        : process.env.REACT_APP_DOWNLOAD_FILES_PROD || DEFAULT_PROD_DOWNLOAD_FILES_URL;
+
+    return fileUrl ? `${baseUrl}${fileUrl}` : ''; // return empty string if fileUrl is null or undefined
   };
 
   return (
@@ -27,17 +32,9 @@ export const IconButtonDownLoad = ({
       <a
         target="_blank"
         rel="noopener noreferrer"
-        href={
-          fileUrl && fileUrl.includes(baseURL)
-            ? fileUrl
-            : `${
-                process.env.NODE_ENV === 'development'
-                  ? process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
-                    'https://back-end-bia-beta.up.railway.app'
-                  : process.env.REACT_APP_DOWNLOAD_FILES_PROD ||
-                   'https://bia.cormacarena.gov.co'
-              }${fileUrl}`
-        }
+
+        href={getDownloadUrl()}
+
         ref={linkRef}
         style={{ display: 'none' }}
         download={fileName}

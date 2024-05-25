@@ -20,7 +20,7 @@ export const useProductoHook = (): any => {
   } = useForm<IProductos>({
     defaultValues: {
       nombre_producto: '',
-      numero_producto: 0,
+      numero_producto: '',
       nombre_proyecto: '',
       id_plan: null,
       id_programa: null,
@@ -36,12 +36,12 @@ export const useProductoHook = (): any => {
   const limpiar_formulario_producto = async () => {
     reset_producto({
       nombre_producto: '',
-      numero_producto: 0,
+      numero_producto: '',
       nombre_proyecto: '',
       id_plan: null,
       id_programa: null,
       id_producto: null,
-      fecha_creacion: '',
+      // fecha_creacion: '',
       cumplio: false,
     });
   };

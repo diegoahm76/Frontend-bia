@@ -33,8 +33,8 @@ import {
   set_action_admin_users,
   set_user_info,
 } from '../store';
-import { auth_url } from '../../auth/api/auth';
 import { control_warning } from '../../almacen/configuracion/store/thunks/BodegaThunks';
+import { DEFAULT_AUTH_URL_BETA, DEFAULT_AUTH_URL_PROD } from '../../../api/axios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error2 = (
@@ -202,7 +202,9 @@ export const use_admin_users = () => {
         }
         data_create_user.append(
           'redirect_url',
-          `${auth_url}/auth/cambiar_contrasena/`
+          process.env.NODE_ENV === 'production'
+            ? `${DEFAULT_AUTH_URL_BETA}/auth/cambiar_contrasena/`
+            : `${DEFAULT_AUTH_URL_PROD}/auth/cambiar_contrasena/`
         );
         data_create_user.append('profile_img', file_image ?? '');
 

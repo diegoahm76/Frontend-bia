@@ -20,9 +20,10 @@ export const useActividadHook = (): any => {
   } = useForm<IActividades>({
     defaultValues: {
       nombre_actividad: '',
-      numero_actividad: 0,
+      numero_actividad: '',
       nombre_plan: '',
       nombre_producto: '',
+      numero_producto: '',
       id_plan: 0,
       id_producto: 0,
       id_programa: 0,
@@ -38,9 +39,10 @@ export const useActividadHook = (): any => {
   const limpiar_formulario_actividad = async () => {
     reset_actividad({
       nombre_actividad: '',
-      numero_actividad: 0,
+      numero_actividad: '',
       nombre_plan: '',
       nombre_producto: '',
+      numero_producto: '',
       id_plan: 0,
       id_producto: 0,
       id_programa: 0,

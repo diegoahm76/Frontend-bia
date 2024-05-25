@@ -18,9 +18,10 @@ import {
   TextField,
   InputLabel,
   Modal,
+  Switch,
   // TextareaAutosize
 } from "@mui/material"
-import { DataGrid, type GridColDef } from "@mui/x-data-grid";
+import { DataGrid, GridRowId, type GridColDef } from "@mui/x-data-grid";
 import { type Dispatch, useEffect, useRef, useState, type SetStateAction } from 'react';
 import { javascriptGenerator } from 'blockly/javascript';
 import { VisualBlockEditor } from "../visual-block-editor";
@@ -39,11 +40,31 @@ import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 
 import './AgregarEditarOpciones.css';
 import { Title } from "../../../../components";
-import { control_success } from "../../../../helpers";
+import { control_error, control_success } from "../../../../helpers";
+// import { control_success } from "../../../../helpers";
+// import { control_error } from '../../../almacen/gestionDeInventario/movimientos/store/thunks/entregaThunks';
 
 interface Rows {
   id: number;
   nombre: string;
+  variable: any;
+}
+interface TipoCobro {
+  id_tipo_cobro: number;
+  nombre_tipo_cobro: string;
+  tipo_renta_asociado: any;
+}
+interface TipoRenta {
+  id_tipo_renta: number;
+  nombre_tipo_renta: string;
+  tipo_cobro_asociado: any;
+  tipo_renta_asociado: any
+}
+interface ConfiguracionBasica {
+  id_variables: any;
+  nombre: any;
+  tipo_cobro: any;
+  tipo_renta: any;
 }
 interface Variable {
   id_valores_variables: number;
@@ -54,6 +75,8 @@ interface Variable {
   valor: any;
 }
 interface IProps {
+  borar: any;
+  select_variable: any;
   opciones_liquidaciones: OpcionLiquidacion[];
   id_opcion_liquidacion: string;
   form_data: { variable: string, nombre_opcion_liquidacion: string, estado: string };
@@ -66,6 +89,8 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const AgregarEditarOpciones = ({
+  borar,
+  select_variable,
   opciones_liquidaciones,
   id_opcion_liquidacion,
   form_data,
@@ -75,7 +100,6 @@ export const AgregarEditarOpciones = ({
   set_form_data
 
 }: IProps): JSX.Element => {
-  const [row, set_row] = useState<Rows[]>([]);
   const [variables, set_variables] = useState<string[]>([]);
   const [configNotify, setConfigNotify] = useState({ open: false, message: '' });
   const [open, setOpen] = useState(false);
@@ -85,18 +109,27 @@ export const AgregarEditarOpciones = ({
   const [notification_info, set_notification_info] = useState({ type: '', message: '' });
   const primaryWorkspace = useRef<any>();
 
+  const [row, set_row] = useState<Rows[]>([]);
+  const [selectedVariables, setSelectedVariables] = useState<{ [key: string]: string | null }>(
+    variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {})
+  );
+
   useEffect(() => {
     if (id_opcion_liquidacion) {
-      const opcion_liquidacion: OpcionLiquidacion = opciones_liquidaciones.filter(opc_liquidacion => opc_liquidacion.id === Number(id_opcion_liquidacion))[0];
-      const new_rows: Rows[] = Object.keys(opcion_liquidacion?.variables).map((key, index) => ({
-        id: index,
-        nombre: key,
-      }));
-      set_row(new_rows);
-      set_variables(Object.keys(opcion_liquidacion.variables));
-      Blockly.serialization.workspaces.load(JSON.parse(opcion_liquidacion.bloques), primaryWorkspace.current);
+      const opcion_liquidacion: OpcionLiquidacion | undefined = opciones_liquidaciones.find(opc => opc.id === Number(id_opcion_liquidacion));
+      if (opcion_liquidacion) {
+        const new_rows: Rows[] | any = Object.keys(opcion_liquidacion.variables).map((key, index) => ({
+          id: index,
+          nombre: key,
+          valor: opcion_liquidacion.variables[key],  // Asigna el valor existente o una cadena vacía si no hay valor
+        }));
+        set_row(new_rows);
+        set_variables(Object.keys(opcion_liquidacion.variables));
+        Blockly.serialization.workspaces.load(JSON.parse(opcion_liquidacion.bloques), primaryWorkspace.current);
+      }
     }
-  }, [id_opcion_liquidacion]);
+  }, [id_opcion_liquidacion, opciones_liquidaciones]);  // Asegura incluir todas las dependencias necesarias
+
 
   const handle_id_opcion_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
     set_id_opcion_liquidacion(event.target.value);
@@ -118,6 +151,17 @@ export const AgregarEditarOpciones = ({
     set_form_data({ ...form_data, [name]: value });
   };
 
+  const [formValues, setFormValues] = useState<ConfiguracionBasica>({
+    id_variables: "",
+    nombre: "",
+    tipo_cobro: "",
+    tipo_renta: "",
+  });
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormValues({ ...formValues, [name]: value });
+  };
   const generateCode = () => {
     // //  console.log('')("primaryWorkspace.current:", primaryWorkspace.current)
     // const code = javascriptGenerator.workspaceToCode(primaryWorkspace.current);
@@ -153,17 +197,20 @@ export const AgregarEditarOpciones = ({
 
   const handleSubmit = (event: any) => {
     if (/\b(var)\b/.test(form_data.variable)) {
-      set_notification_info({
-        type: 'warning',
-        message: `El nombre de la variable var es una palabra reservada que no se debe usar.
-        Por favor ingrese otro nombre diferente.`,
-      });
+      // set_notification_info({
+      //   type: 'warning',
+      //   message: `El nombre de la variable var es una palabra reservada que no se debe usar.
+      //   Por favor ingrese otro nombre diferente.`,
+      // });
+      control_error("El nombre de la variable var es una palabra reservada que no se debe usar. Por favor ingrese otro nombre diferente  ")
       set_open_notification_modal(true);
       return;
     }
 
     if (variables.includes(form_data.variable)) {
-      set_notification_info({ type: 'warning', message: `Ya existe la variable ${form_data.variable}` });
+      // set_notification_info({ type: 'warning', message: `Ya existe la variable ${form_data.variable}` });
+      control_error(`Ya existe la variable ${form_data.variable}`)
+
       set_open_notification_modal(true);
       return;
     }
@@ -185,6 +232,7 @@ export const AgregarEditarOpciones = ({
       nombre: form_data.variable.replace(/\s/g, '_'),
       tipo: 'Tipo nuevo',
       opciones: '',
+      variable: ""
     };
 
     set_row([...row, newRow]);
@@ -193,14 +241,16 @@ export const AgregarEditarOpciones = ({
   const handle_test_click = (event: any) => {
     event.preventDefault();
     if (variables.length === 0) {
-      set_notification_info({ type: 'warning', message: 'No hay variables para procesar.' });
+      // set_notification_info({ type: 'warning', message: 'No hay variables para procesar.' });
+      control_error("No hay variables para procesar. ")
       set_open_notification_modal(true);
       setEnableTest(false);
       return;
     }
 
     if (primaryWorkspace?.current?.getAllBlocks()?.length === 0) {
-      set_notification_info({ type: 'warning', message: 'No hay un diseño para procesar.' });
+      // set_notification_info({ type: 'warning', message: 'No hay un diseño para procesar.' });
+      control_error("No hay un diseño para procesar. ")
       set_open_notification_modal(true);
       setEnableTest(false);
       return;
@@ -213,31 +263,38 @@ export const AgregarEditarOpciones = ({
   // POST Crear opción liquidación
   const handle_post_opcion_liquidacion = () => {
     if (variables.length === 0) {
-      set_notification_info({
-        type: 'warning',
-        message: `No hay variables.
-        Asegúrese de agregar por lo menos una variable.`
-      });
+      // set_notification_info({
+      //   type: 'warning',
+      //   message: `No hay variables.
+      //   Asegúrese de agregar por lo menos una variable.`
+
+      // });
+      control_error("No hay variables. Asegúrese de agregar por lo menos una variable.")
       set_open_notification_modal(true);
       return;
     }
 
     if (primaryWorkspace?.current?.getAllBlocks()?.length === 0) {
-      set_notification_info({
-        type: 'error',
-        message: `No hay un diseño.
-        Asegúrese de agregar una combinación de bloques.`
-      });
+      // set_notification_info({
+      //   type: 'error',
+      //   message: `No hay un diseño.
+      //   Asegúrese de agregar una combinación de bloques.`
+      // });
+      control_error(`No hay un diseño.
+      Asegúrese de agregar una combinación de bloques.`)
+
       set_open_notification_modal(true);
       return;
     }
 
     if (form_data.nombre_opcion_liquidacion === '' || form_data.estado === '') {
-      set_notification_info({
-        type: 'warning',
-        message: `Estos campos no pueden estar vacíos.
-        Asegúrese de escribir un nombre y de seleccionar un estado.`,
-      });
+      // set_notification_info({
+      //   type: 'warning',
+      //   message: `Estos campos no pueden estar vacíos.
+      //   Asegúrese de escribir un nombre y de seleccionar un estado.`,
+      // });
+      control_error(`Estos campos no pueden estar vacíos.
+      Asegúrese de escribir un nombre y de seleccionar un estado.`)
       set_open_notification_modal(true);
       return;
     }
@@ -248,23 +305,24 @@ export const AgregarEditarOpciones = ({
         nombre: form_data.nombre_opcion_liquidacion,
         funcion: generateCode(),
         estado: form_data.estado,
-        variables: variables.reduce((acumulador, valor) => {
-          if (selectedVariableNames.includes(valor)) {
-            return { ...acumulador, [valor]: selectedVariable };
-          }
-          return { ...acumulador, [valor]: '' };
-        }, {}),
-
+        variables: Object.keys(selectedVariables).reduce((acumulador, nombreVariable) => ({
+          ...acumulador,
+          [nombreVariable]: selectedVariables[nombreVariable],
+        }), {}),
+        tipo_renta: formValues.tipo_renta,
+        tipo_cobro: formValues.tipo_cobro,
         bloques: JSON.stringify(json),
       })
         .then((response) => {
-          set_notification_info({ type: 'success', message: `Se editó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
+          // set_notification_info({ type: 'success', message: `Se editó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
+          control_success(`Se editó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".`)
           set_open_notification_modal(true);
           set_refresh_page(true);
         })
-        .catch((error) => {
+        .catch((error: any) => {
           //  console.log('')(error);
-          set_notification_info({ type: 'error', message: `Hubo un error.` });
+          // set_notification_info({ type: 'error', message: `Hubo un error.` });
+          control_error(error.response.data.detail);
           set_open_notification_modal(true);
         });
     } else {
@@ -272,40 +330,70 @@ export const AgregarEditarOpciones = ({
         nombre: form_data.nombre_opcion_liquidacion,
         funcion: generateCode(),
         estado: form_data.estado,
-        variables: variables.reduce((acumulador, valor) => {
-          if (selectedVariableNames.includes(valor)) {
-            return { ...acumulador, [valor]: selectedVariable };
-          }
-          return { ...acumulador, [valor]: '' };
-        }, {}),
+        variables: Object.keys(selectedVariables).reduce((acumulador, nombreVariable) => ({
+          ...acumulador,
+          [nombreVariable]: selectedVariables[nombreVariable],
+        }), {}),
+        tipo_renta: formValues.tipo_renta,
+        tipo_cobro: formValues.tipo_cobro,
+
         bloques: JSON.stringify(json),
       })
         .then((response) => {
-          set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
+          // set_notification_info({ type: 'success', message: `Se creó correctamente la opción de liquidación "${form_data.nombre_opcion_liquidacion}".` });
+          control_success(` Se creó correctamente la opción de liquidación ${form_data.nombre_opcion_liquidacion} `)
           set_open_notification_modal(true);
           set_refresh_page(true);
         })
-        .catch((error) => {
-          set_notification_info({ type: 'error', message: error.response.data?.nombre[0] ?? 'Hubo un error' });
+        .catch((error: any) => {
+          // set_notification_info({ type: 'error', message: error.response.data?.nombre[0] ?? 'Hubo un error' });
+          control_error(error.response.data.detail);
           set_open_notification_modal(true);
         });
     }
   }
+  const [activeSwitches, setActiveSwitches] = useState<{ [key in GridRowId]: boolean }>({});
 
+  const handleSwitchChange = (id: GridRowId, isChecked: boolean) => {
+    if (isChecked) {
+      setActiveSwitches({ [id]: true });
+    } else {
+      setActiveSwitches(prev => {
+        const newState = { ...prev };
+        delete newState[id];
+        return newState;
+      });
+    }
+  };
   const column: GridColDef[] = [
     {
       field: 'nombre',
       headerName: 'Nombre',
-      width: 200
+      flex: 1,
     },
 
     {
       field: 'acciones',
       headerName: 'Acciones',
-      width: 100,
+      flex: 1,
       renderCell: (params) => (
         <>
+
           <IconButton
+            color="error"
+            onClick={() => {
+              const updatedRow = row.filter((item) => item.id !== params.id);
+              set_row(updatedRow);
+              removeVariable(params.row.nombre)
+            }}
+            disabled={borar}
+          >
+            <RemoveCircleOutlinedIcon />
+          </IconButton>
+
+
+          {/* <IconButton
+
             onClick={() => {
               const updatedRow = row.filter((item) => item.id !== params.id);
               set_row(updatedRow);
@@ -326,58 +414,150 @@ export const AgregarEditarOpciones = ({
                 sx={{ width: '18px', height: '18px' }}
               />
             </Avatar>
-          </IconButton>
+          </IconButton> */}
+
           <IconButton
             color="primary"
+            onClick={() => {
+              handleOpenModal(params.row.nombre),
+                handleSwitchChange(params.id, !activeSwitches[params.id])
+              setIsModalOpen(true)
+            }}
             aria-label="Ver"
-            onClick={() => handleOpenModal(params.row.nombre)}
           >
+
             <PlaylistAddCheckIcon />
           </IconButton>
+
+
         </>
       ),
     },
+    {
+      field: 'valor',
+      headerName: 'Valor',
+      flex: 1,
+      editable: false,  // Puedes hacer esta columna editable si lo deseas
+    },
+
+    // {
+    //   field: 'valor variable',
+    //   headerName: 'valor variable',
+    //   width: 400,
+    //   renderCell: (params) => (
+    //     <>
+    //       {activeSwitches[params.id] ?
+    //         <>
+    //           <Grid container spacing={2} >
+    //             <Grid item xs={12} sm={7}>
+    //               <FormControl size="small" fullWidth>
+    //                 <InputLabel>Valor variable</InputLabel>
+    //                 <Select
+    //                   value={searchTerm}
+    //                   onChange={(event) => {
+    //                     handleSelectChange(event);
+    //                     setSearchTerm(event.target.value as string);
+    //                   }}
+    //                   label="Valor variable"
+    //                 >
+    //                   {valores.map((variable) => (
+    //                     <MenuItem key={variable.id_valores_variables} value={variable.valor}>
+    //                       {variable.nombre_variable}
+    //                     </MenuItem>
+    //                   ))}
+    //                 </Select>
+    //               </FormControl>
+    //             </Grid>
+    //             <Grid item >
+    //               <Button color='success'
+    //                 variant='contained'
+    //                 startIcon={<SaveIcon />}
+    //                 onClick={handleSave}>
+    //               </Button>
+    //             </Grid>
+    //           </Grid>
+    //         </> : ''}
+    //     </>
+    //   ),
+    // },
+
   ];
 
 
-  //
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedVariableName, setSelectedVariableName] = useState("");
-  
-  // const handleOpenModal = (variableName: any) => {
-  //   setSelectedVariableName(variableName);
-  //   setIsModalOpen(true);
-  // };
+
+
   const [selectedVariableNames, setSelectedVariableNames] = useState<string[]>([]);
 
-  const handleSave = () => {
-    setSelectedVariableNames((prevSelected) => {
-      // Agrega la variable seleccionada si no está ya en la lista
-      if (!prevSelected.includes(selectedVariableName)) {
-        return [...prevSelected, selectedVariableName];
-      }
-      return prevSelected;
-    });
-    control_success("Variable asignada ");
-    setIsModalOpen(false);
+  // const handleSave = () => {
+  //   const updatedRows = row.map(r => {
+  //     if (r.nombre === selectedVariableName) {  // Comprueba si el nombre de la variable coincide
+  //       return { ...r, valor: selectedVariables[selectedVariableName] };  // Actualiza el valor de la variable
+  //     }
+  //     return r;
+  //   });
+  //   set_row(updatedRows);  // Establece el estado actualizado
 
-    // Aquí puedes cerrar el modal o realizar otras acciones necesarias
+  //   setActiveSwitches({ [0]: false });
+  //   setSelectedVariableNames(prev => {
+  //     if (!prev.includes(selectedVariableName)) {
+  //       return [...prev, selectedVariableName];
+  //     }
+  //     return prev;
+  //   });
+  //   control_success("Variable asignada ");
+  //   setIsModalOpen(false);
+  // };
+  const handleSave = () => {
+    const updatedRows = row.map(r => {
+      // Comprueba si el nombre de la variable coincide y si existe un valor seleccionado para actualizar
+      if (r.nombre === selectedVariableName && selectedVariables[selectedVariableName] !== undefined) {
+        return { ...r, valor: selectedVariables[selectedVariableName] };  // Actualiza el valor de la variable
+      }
+      return r;  // Devuelve la fila sin cambios si no es la variable seleccionada o no hay valor nuevo definido
+    });
+
+    set_row(updatedRows);  // Establece el estado actualizado de las filas
+
+    setActiveSwitches({ [0]: false });
+    setSelectedVariableNames(prev => {
+      if (!prev.includes(selectedVariableName)) {
+        return [...prev, selectedVariableName];
+      }
+      return prev;
+    });
+    control_success("Variable asignada");
+    setIsModalOpen(false);
   };
+
 
   const handleOpenModal = (variableName: any) => {
     setSelectedVariableName(variableName); // Asumiendo que tienes una función para esto
-    setIsModalOpen(true);
+    // setIsModalOpen(true);
   };
-
 
 
   const [valores, setvalores] = useState<Variable[]>([]);
   const [selectedVariable, setSelectedVariable] = useState<any>(null);
 
-  const handleSelectChange = (event: SelectChangeEvent<number>) => {
-    setSelectedVariable(event.target.value as number);
+
+
+  useEffect(() => {
+    setSelectedVariables(variables.reduce((acc, variableName) => ({ ...acc, [variableName]: null }), {}));
+  }, [variables]);
+
+
+  const handleSelectChange = (event: SelectChangeEvent) => {
+    const value = event.target.value; // El valor que el usuario asigna a la variable seleccionada
+    setSelectedVariables(prev => ({
+      ...prev,
+      [selectedVariableName]: value,
+    }));
   };
+
+
+
 
   const fetchVariables = async () => {
     try {
@@ -393,8 +573,11 @@ export const AgregarEditarOpciones = ({
   }, []);
 
   const handleClick = () => {
-    console.log(row);
+    console.log( borar);
     console.log("2222222");
+ 
+
+
 
   };
 
@@ -409,16 +592,54 @@ export const AgregarEditarOpciones = ({
     // control_success("Variable asignada ");
 
   };
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
+
+  const fetchTiposRenta = async () => {
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
+      setTiposRenta(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener los tipos de renta", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposRenta();
+  }, []);
+
+
+  const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
+
+  const fetchTiposCobro = async () => {
+    try {
+      const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
+      setTiposCobro(res.data.data);
+    } catch (error) {
+      console.error("Error al obtener los tipos de renta", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchTiposCobro();
+  }, []);
+
+
 
   return (
     <>
+
       <>
+
+        {/* <Button color='success'
+          variant='contained'
+          onClick={handleClick}>CONSOLE </Button> */}
+
         {/* INICIO TEST */}
+
         <Grid container spacing={2} sx={{ my: '10px' }}>
 
-          {/* <div>
-            <button onClick={handleClick}>consola  </button>
-          </div>  */}
           <Dialog
             keepMounted
             aria-describedby="alert-dialog-slide-description"
@@ -448,11 +669,14 @@ export const AgregarEditarOpciones = ({
               {/* <h2>{selectedVariableName}</h2> */}
               <Grid item xs={12} sm={12}>
                 <FormControl size="small" fullWidth>
-                  <InputLabel>Selecciona opción variable</InputLabel>
+                  <InputLabel>Valor variable</InputLabel>
                   <Select
-                    value={selectedVariable}
-                    onChange={handleSelectChange}
-                    label="Selecciona opción variable"
+                    value={searchTerm}
+                    onChange={(event) => {
+                      handleSelectChange(event);
+                      setSearchTerm(event.target.value as string);
+                    }}
+                    label="Valor variable"
                   >
                     {valores.map((variable) => (
                       <MenuItem key={variable.id_valores_variables} value={variable.valor}>
@@ -474,7 +698,68 @@ export const AgregarEditarOpciones = ({
           </Dialog>
 
 
-          <Grid item xs={12} sm={4.5}>
+
+
+
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              select
+              required
+              fullWidth
+              size="small"
+              variant="outlined"
+              label="Tipo de renta"
+              name="tipo_renta"
+              onChange={handleInputChange}
+              value={formValues.tipo_renta}
+            >
+              {tiposRenta.map((tipo) => (
+                <MenuItem key={tipo.id_tipo_renta} value={tipo.id_tipo_renta}>
+                  {tipo.nombre_tipo_renta}
+                </MenuItem>
+              ))}
+            </TextField>
+          </Grid>
+
+          <Grid item xs={12} sm={4}>
+            <TextField
+              select
+              required
+              fullWidth
+              size="small"
+              variant="outlined"
+              label="Tipo cobro"
+              name="tipo_cobro"
+              onChange={handleInputChange}
+              value={formValues.tipo_cobro}
+            >
+              {tiposCobro
+                .filter(tipoCobro => tipoCobro.tipo_renta_asociado === formValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
+                .map((tipoCobro) => (
+                  <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
+                    {tipoCobro.nombre_tipo_cobro}
+                  </MenuItem>
+                ))}
+            </TextField>
+          </Grid>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+          {/* <Grid item xs={12} sm={4.5}>
             <FormControl size="small" fullWidth>
               <InputLabel>Selecciona opción liquidación</InputLabel>
               <Select
@@ -497,11 +782,11 @@ export const AgregarEditarOpciones = ({
                 ))}
               </Select>
             </FormControl>
-          </Grid>
+          </Grid> */}
 
 
 
-          <Grid item xs={12} sm={4.5}>
+          <Grid item xs={12} sm={4}>
             <TextField
               label="Ingresa una variable"
               name="variable"
@@ -516,7 +801,8 @@ export const AgregarEditarOpciones = ({
           </Grid>
           <Grid item xs={12} sm={3}>
             <Button
-              disabled={!form_data.variable}
+            
+              disabled={!form_data.variable || borar }
               variant="contained" color="primary" onClick={handleSubmit}
               startIcon={<Add />}
               fullWidth
@@ -633,6 +919,7 @@ export const AgregarEditarOpciones = ({
             <Liquidator
               setNotifications={setNotifications}
               variables={variables}
+              selectedVariables={selectedVariables}
               generateCode={generateCode}
               preview
               handle_close={setOpen}
@@ -640,11 +927,11 @@ export const AgregarEditarOpciones = ({
           </div>
         </Modal>
       )}
-      <NotificationModal
+      {/* <NotificationModal
         open_notification_modal={open_notification_modal}
         set_open_notification_modal={set_open_notification_modal}
         notification_info={notification_info}
-      />
+      /> */}
 
 
 

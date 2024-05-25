@@ -1,7 +1,7 @@
 import { Chip, Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { type AuthSlice } from '../../../auth/interfaces';
@@ -14,18 +14,24 @@ import FormStepper from '../../../../components/partials/form/FormStepper';
 import {
   control_error,
   get_digitalization_request_id_service,
+  get_digitalization_request_id_service_otros,
+  get_digitalization_opas,
   get_list_request_status_service,
   get_request_types_service,
   response_request_service,
+  response_request_opas_service,
+  response_request_service_otros,
 } from '../store/thunks/centralDigitalizacionThunks';
 import SolicitudSeleccionada from '../componentes/CentralDigitalizacion/SolicitudSeleccionada';
 import ListadoAnexos from '../componentes/CentralDigitalizacion/ListadoAnexos';
 import { useParams } from 'react-router-dom';
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import AssignmentLate from '@mui/icons-material/AssignmentLate';
+import { OpcionOtrosContext } from '../context/BusquedaOtrosDigitalizacion';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function ListadoAnexosScreen(): JSX.Element {
+   const { opcion_otros } = useContext(OpcionOtrosContext);
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
@@ -42,14 +48,26 @@ export function ListadoAnexosScreen(): JSX.Element {
 
   const { id } = useParams();
 
-  const initial_values = (): void => {};
+  const initial_values = (): void => { };
 
   useEffect(() => {
+
     if (id !== null && id !== undefined) {
+      if (digitization_request.nombre_tipo_solicitud === "OTROS") {
+        void dispatch(get_digitalization_request_id_service_otros(id));
+        return ;
+      } 
+      
+
+
+    if (digitization_request.nombre_tipo_solicitud === "OPAS") {
+      void dispatch(get_digitalization_opas(id));
+    } else if (id !== null && id !== undefined) {
       void dispatch(get_digitalization_request_id_service(id));
-    }
+    };
     void dispatch(get_request_types_service());
     void dispatch(get_list_request_status_service());
+  }
   }, []);
 
   useEffect(() => {
@@ -67,7 +85,28 @@ export function ListadoAnexosScreen(): JSX.Element {
     }
   }, [exhibits]);
   const responder_digitalizacion_completa = (): void => {
+
+    if(opcion_otros==="OTROS"){
+
+      const observacion = get_values('observacion_digitalización') ?? '';
+    
+      const params = {
+        id_solicitud_de_digitalizacion:digitization_request.id_solicitud_de_digitalizacion,
+        observacion_digitalizacion: observacion,
+        digitalizacion_completada: true,
+      };
+  
+      void dispatch(response_request_service_otros(params));
+
+      return
+    }
+
+
+
+
+
     const observacion = get_values('observacion_digitalización') ?? '';
+
     const params = {
       id_solicitud_de_digitalizacion:
         digitization_request.id_solicitud_de_digitalizacion,
@@ -75,10 +114,40 @@ export function ListadoAnexosScreen(): JSX.Element {
       digitalizacion_completada: true,
       id_persona_digitalizo: userinfo.id_persona,
     };
+    if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-    void dispatch(response_request_service(params));
+      void dispatch(response_request_opas_service(params));
+    } else {
+
+      void dispatch(response_request_service(params));
+    }
   };
+
+
+
   const responder_digitalizacion_incompleta = (): void => {
+
+    if(opcion_otros==="OTROS"){
+
+
+      const observacion = get_values('observacion_digitalización') ?? '';
+      if (observacion === '') {
+        control_error('Debe diligenciar la observacion de digitalización');
+      } else {
+        const params = {
+          id_solicitud_de_digitalizacion:digitization_request.id_solicitud_de_digitalizacion,
+          observacion_digitalizacion: observacion,
+          digitalizacion_completada: false,
+        
+        };
+  
+        void dispatch(response_request_service_otros(params));
+      }
+return 
+    }
+
+
+
     const observacion = get_values('observacion_digitalización') ?? '';
     if (observacion === '') {
       control_error('Debe diligenciar la observacion de digitalización');
@@ -90,10 +159,24 @@ export function ListadoAnexosScreen(): JSX.Element {
         digitalizacion_completada: false,
         id_persona_digitalizo: userinfo.id_persona,
       };
+      if (digitization_request.nombre_tipo_solicitud === "OPAS") {
 
-      void dispatch(response_request_service(params));
+        void dispatch(response_request_opas_service(params));
+      } else {
+
+        void dispatch(response_request_service(params));
+      }
     }
   };
+
+
+
+
+
+
+
+
+
 
   return (
     <>
@@ -113,7 +196,6 @@ export function ListadoAnexosScreen(): JSX.Element {
             title={`Digitalización de ${digitization_request.nombre_tipo_solicitud} - N° Radicado ${digitization_request.numero_radicado}`}
           ></Title>
         </Grid>
-
         {digitization_request.id_solicitud_de_digitalizacion !== null && (
           <SolicitudSeleccionada
             control_solicitud={control_solicitud}

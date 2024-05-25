@@ -20,6 +20,7 @@ export const useSubprogramaHook = (): any => {
     defaultValues: {
       nombre_subprograma: '',
       nombre_programa: '',
+      numero_subprograma: '',
     },
   });
 
@@ -30,19 +31,23 @@ export const useSubprogramaHook = (): any => {
     reset_subprograma({
       nombre_subprograma: '',
       nombre_programa: '',
+      numero_subprograma: '',
     });
   };
 
   // saving
-  const [is_saving_subprograma, set_is_saving_subprograma] = useState<boolean>(false);
+  const [is_saving_subprograma, set_is_saving_subprograma] =
+    useState<boolean>(false);
 
   // declaracion context
-  const { fetch_data_subprogramas } = useContext(DataContextSubprogramas);
+  const { id_programa, fetch_data_subprogramas } = useContext(
+    DataContextSubprogramas
+  );
 
   // declaracion redux
   const {
     subprograma: { id_subprograma },
-    programa: { id_programa },
+    // programa: { id_programa },
   } = useAppSelector((state) => state.planes);
 
   const onsubmit_subprograma = handleSubmit_subprograma(async (data) => {

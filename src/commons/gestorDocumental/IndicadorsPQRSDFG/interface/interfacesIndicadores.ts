@@ -7,10 +7,13 @@ export interface PQRSDFDataAtencionaQqrsdf {
     porcentaje_respondidos: number;
     porcentaje_no_respondidos: number;
     rango_cumplimiento: string;
+    title: string; // Nuevo campo para el título
+
   }
   
   export const initialPQRSDFData: PQRSDFDataAtencionaQqrsdf = {
     num_pqrsdf_recibidos: 0,
+    title:"", // Nuevo campo para el título
     num_pqrsdf_respondidos: 0,
     num_pqrsdf_no_respondidos: 0,
     porcentaje_respondidos: 0.0,

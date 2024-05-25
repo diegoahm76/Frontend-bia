@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { toast, type ToastContent } from 'react-toastify';
-import { api } from '../../../api/axios';
+import { api, DEFAULT_BETA_URL, DEFAULT_PROD_URL } from '../../../api/axios';
 import { control_error } from '../../../helpers/controlError';
 import { type ResponseServer } from '../../../interfaces/globalModels';
 import type {
@@ -22,10 +22,10 @@ import axios from 'axios';
 
 export const alertas = axios.create({
   baseURL:
-    process.env.NODE_ENV === 'development'
+    process.env.NODE_ENV === 'production'
       ? process.env.REACT_APP_BETA_URL ||
-        'https://back-end-bia-beta.up.railway.app/api/'
-      : process.env.REACT_APP_PROD_URL || 'https://bia.cormacarena.gov.co/api/',
+        `${DEFAULT_BETA_URL}`
+      : process.env.REACT_APP_PROD_URL || `${DEFAULT_PROD_URL}`,
 });
 export const control_success = (message: ToastContent): any =>
   toast.success(message, {

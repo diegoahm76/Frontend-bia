@@ -2,26 +2,29 @@
 import { type GridValueGetterParams } from "@mui/x-data-grid";
 import { formatDate } from "../../../../../../../../../../../utils/functions/formatDate";
 
-export const columnsStatic = [
+const columnsStatic = [
   {
     headerName: "Tipo de complemento",
     field: "tipo",
-    minWidth: 250,
+    minWidth: 400,
+    renderCell: (params: GridValueGetterParams) => params.value ? params.value : 'N/A'
   },
   {
     headerName: "Titular",
     field: "titular",
-    minWidth: 230,
+    minWidth: 400,
   },
   {
     headerName: "Asunto",
     field: "asunto",
-    minWidth: 200,
+    minWidth: 400,
+    renderCell: (params: GridValueGetterParams) => params.value ? params.value : 'N/A'
   },
   {
     headerName: "Cantidad de anexos",
     field: "cantidad_anexos",
     minWidth: 200,
+    renderCell: (params: GridValueGetterParams) => params.value ? params.value : 'N/A'
   },
   {
     headerName: "Radicado",
@@ -41,3 +44,19 @@ export const columnsStatic = [
     renderCell: (params: GridValueGetterParams) => params.value ? formatDate(params.value) : 'N/A'
   },
 ]
+
+const newColumnsStatic = columnsStatic.filter(column => column.field !== 'titular');
+
+const columnsTramites = [
+  ...newColumnsStatic,
+  {
+    headerName: "Nombre del titular",
+    field: "nombre_completo_titular",
+    minWidth: 400,
+  }
+]
+
+export {
+  columnsStatic,
+  columnsTramites
+}

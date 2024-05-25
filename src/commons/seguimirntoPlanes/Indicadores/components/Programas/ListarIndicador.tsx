@@ -33,6 +33,12 @@ export const ListarIndicador: React.FC = () => {
       width: 300,
     },
     {
+      field: 'numero_indicador',
+      headerName: 'NUMERO INDICADOR',
+      sortable: true,
+      width: 300,
+    },
+    {
       field: 'nombre_plan',
       headerName: 'NOMBRE PLAN',
       sortable: true,

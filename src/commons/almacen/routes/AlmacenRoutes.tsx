@@ -17,6 +17,23 @@ import RechazoSolicitudScreen from '../registroSolicitudesAlmacen/despacho/scree
 import EntregaScreen from '../gestionDeInventario/movimientos/screens/entregasOtrasScreen';
 import { ControlDeInventariosRoutes } from '../controlDeInventario/routes/ControlDeInventariosRoutes';
 import { TablerosControlAlmacenRoutes } from '../tablerosControlAlmacen/routes/TablerosControlAlmacenRoutes';
+import SolicitudViaje from '../solicitudDeViaje/screens/SolicitudViaje';
+import AsignacionVehiculos from '../asignacionDeVehiculos/screens/AsignacionVehiculos';
+import InspeccionVehiculos from '../inspeccionVehiculos/screens/InspeccionVehiculos';
+import BitacoraViajes from '../bitacoraViaje/screens/BitacoraViajes';
+import AgendamientoVehiculos from '../agendamientoVehiculos/screens/AgendamientoVehiculos';
+import NovedadesInspeccionVehiculos from '../revisionDeInspeccion/screens/NovedadesInspeccionVehiculos';
+import BajaActivos from '../bajaDeActivos/screens/BajaActivos';
+import SolicitudActivos from '../solicitudDeActivos/screens/SolicitudActivos';
+import AutorizacionSolicitudActivos from '../autorizacion_solicitud_activos/screens/AutorizacionSolicitudActivos';
+import SalidaEspecialActivos from '../salida_especial_activos/screens/SalidaEspecialActivos';
+import DevolucionActivos from '../devolucion_activos/screens/DevolucionActivos';
+import DespachoActivos from '../despacho_activos/screens/DespachoActivos';
+import ReasingnacionResponsable from '../reasignacion_responsable/screens/ReasignacionResponsable';
+import AutorizarDespachos from '../autorizarDespachos/screens/AutorizarDespachos';
+import DespachosAutorizados from '../despachosAutorizados/screens/DespachosAutorizados';
+import AutorizarSolicitudViajes from '../autorizar_solicitud_viajes/screens/AutorizarSolicitudViajes';
+import GeneradorCodigoBarras from '../generador_codigo_barras/screens/GeneradorCodigoBarras';
 
 // import { ProgramacionManteniento } from "../gestionDeInventario/gestionHojaDeVida/mantenimiento/ProgramacionManteniento";
 
@@ -79,6 +96,74 @@ export const AlmacenRoutes: React.FC = () => {
       <Route
         path="rechazo_solicitudes/*"
         element={<RechazoSolicitudScreen />}
+      />
+      <Route
+        path="solicitud_viajes/*"
+        element={<SolicitudViaje />}
+      />
+      <Route
+        path="asignacion_vehiculos/*"
+        element={<AsignacionVehiculos />}
+      />
+      <Route
+        path="inspeccion_vehiculos/*"
+        element={<InspeccionVehiculos />}
+      />
+      <Route
+        path="bitacora_viajes/*"
+        element={<BitacoraViajes />}
+      />
+      <Route
+        path="agendamiento_vehiculos/*"
+        element={<AgendamientoVehiculos />}
+      />
+      <Route
+        path="autorizar_solicitud_viajes/*"
+        element={<AutorizarSolicitudViajes />}
+      />
+      <Route
+        path="revision_inspeccion/*"
+        element={<NovedadesInspeccionVehiculos />}
+      />
+      <Route
+        path="baja_activos/*"
+        element={<BajaActivos />}
+      />
+      <Route
+        path="solicitud_activos/*"
+        element={<SolicitudActivos />}
+      />
+      <Route
+        path="autorizacion_solicitud_activos/*"
+        element={<AutorizacionSolicitudActivos />}
+      />
+      <Route
+        path="salida_especial_activos/*"
+        element={<SalidaEspecialActivos />}
+      />
+      <Route
+        path="devolucion_activos/*"
+        element={<DevolucionActivos />}
+      />
+      <Route
+        path="despacho_activos/*"
+        element={<DespachoActivos />}
+      />
+      <Route
+        path="reasignacion_responsable/*"
+        element={<ReasingnacionResponsable />}
+      />
+      <Route
+        path="autorizar_despachos/*"
+        element={<AutorizarDespachos />}
+      />
+      <Route
+        path="despachos_autorizados/*"
+        element={<DespachosAutorizados />}
+      />
+      <Route
+        path="generador_codigo_barras/*"
+        element={<GeneradorCodigoBarras />}
       />
       <Route
         path="otras_entregas/*"

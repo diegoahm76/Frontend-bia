@@ -226,7 +226,7 @@ export const ConfiguracionTernañosiguiente: React.FC = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Title title="Configuración9 de Terna Año Siguiente" />
+          <Title title="Configuración de Terna Año Siguiente" />
         </Grid>
 
         <Grid container style={{ marginTop: 10 }}>

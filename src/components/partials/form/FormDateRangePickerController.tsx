@@ -86,7 +86,7 @@ const FormDateRangePickerController = ({
             render={({ field: { onChange, value }, fieldState: { error } }) => (
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Grid container>
+                  <Grid container  spacing={2}>
                     <Grid item xs={6} md={6}>
                       <DatePicker
                         disabled={disabled}

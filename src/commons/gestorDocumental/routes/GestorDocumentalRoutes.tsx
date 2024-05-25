@@ -7,23 +7,18 @@ import { TcaRoutes } from '../tca/routes/TcaRoutes';
 import { VentanillaRoutes } from '../ventanilla/routes/VentanillaRoutes';
 import { Page404 } from '../../../screens/404';
 import { DepositosRoutes } from '../deposito/router/DepositosRoutes';
-
 import { ConfigYDatosBasicosRoutes } from '../configYdatosBasicos/ConfigYDatosBasicosRoutes';
 import DialogCcdActual from '../organigrama/componentes/DialogElegirCcdActual/DialogElegirCcdActual';
-
 import { Alertas_gestor_Routes } from '../alertasgestor/routes/AlertasRoutes';
 import { PQR_Configuracion_Routes } from '../configuracionTiposQQR/routes/rutasConfiguracionTiposPQR';
 import { AdministracionPlantillaDocumentos_Routes } from '../administracionPlantillaDocumentos/routes/rutasAdimistracionPlantillaDocumentos';
 import { Confi_Encuasta_Routes } from '../confiAlerta/routes/Confi_encuesta';
 import { InfoEncuesta } from '../InfoEncuesta/routes/InfoEncuesta';
 import { Encuasta_Routes as Encuesta } from '../Encuesta/routes/Encuasta_Routes';
-
 import { ConfiguracionMediosSolicitud_routes } from '../configuracionMediosSolicitud/routes/RutasConfiguracionMediosSolicitud';
 import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { Reubicacion_Expediantes_Routes } from '../ReubicacionExpediente/routes/Reubicacion_Routes';
-
 import { ConfiguracionMetadatosRoutes } from '../configuracionMetadatos/router/MetadatosRoutes';
-import { CierreExpedientesRoutes } from '../Expedientes/cierreExpediente/routes/CierreExpedientesRoutes';
 import { ArchivoFisicoRoutes } from '../archivoFisico/routes/ArchivoFisicoRoute';
 import { ConfiguracionTiposExpedientes_Routes } from '../configuracionTiposExpediente/routes/rutasConfiguracionTiposExpedientes';
 import { ConfiTiempoRespuestaRoutes } from '../confiTiemposRespuestaPlazoAccion/routes/ConfiTiempoRespuestaRoute';
@@ -32,7 +27,6 @@ import { Encuasta_Routess as EncuestaRoutes } from '../encuestaAsignacion/routes
 import { Encuasta_encuestas_Routes } from '../InternoEncuestas/routes/Interno_Routes';
 import { PqrsdfRoutes } from '../PQRSDF/routes/PqrsdfRoutes';
 import { CentralDigitalizacionRoutes } from '../CentralDigitalizacion/routes/CentralDigitalizacionRoutes';
-// import { ExpedientesRoutes } from '../Expedientes/router/ExpedientesRouter';
 import { PanelVentanillaRoutes } from '../panelDeVentanilla/routes/PanelVentanilla.routes';
 import { SolicitudesOtrosRoutes } from '../solicitudesOtros/routes/SolicitudesOtrosRoute';
 import { TramitesServiciosRouter } from '../TramitesOServicios/router/TramitesServiciosRouter';
@@ -40,7 +34,6 @@ import { ComplementoPqrsdfRoutes } from '../complementoPQRSDF/routes/Complemento
 import { BandejaTareasRoutes } from '../bandejaDeTareas/routes/BandejaTareas.routes';
 import { RutesWorkFlowPQRSDF } from '../WorkFlowPQRSDF/routes/RutesWorkFlowPQRSDF';
 import { Consulta_Solicitud_Routes } from '../consultaSolicitud/routes/ConsultaSolicitud';
-import { Consulta_estadoPQR_Routes } from '../consultaEstadoPQR/routes/ConsultaEstadoPQR';
 import { Consulta_ExternoPQR_Routes } from '../consultarEstadoExternoPQR/routes/ConsultaExternoPQR';
 import { Consulta_AnonimoPQR_Routes } from '../consultaAnonimoPQR/routes/ConsultaAnonimo';
 import { Consulta_Otros_Routes } from '../consltaOtros/routes/ConsiltaOtros';
@@ -51,7 +44,22 @@ import { ConsecutivoConfi } from '../configuracionConsecutivo/routes/Consecutivo
 import { RutesIndicadores } from '../IndicadorsPQRSDFG/routes/RutesIndicadores';
 import { RutasCentralDigitalizacionOtros } from '../centraldigitalizacionOtros/routes/RutasCentralDigitalizacionOtros';
 import { RutasTransferenciaDocumental } from '../transferenciaDocumental/routes/RutasTransferenciaDocumental';
- 
+import { ConsultaEstadoSolicitudes } from '../consulltaEstadoSolicitudes/routes/ConsultaEstadoSolicitudes.routes';
+import { Digitalizacion_opas_Routes } from '../digitalizacionOpas/routes/OpasRutes';
+import { Ejemplo } from './components/Ejemplo';
+import { RutesTramitesServicos } from '../TramitesServicios/routes/RutasTramitesServicos';
+import { ReporGenGestorMainScreen } from '../ReportesGeneralesGestorDocumental/screen/ReporGenGestorMainScreen';
+import { ChartDataProvider } from '../ReportesGeneralesGestorDocumental/context/DataChartContext';
+import { ReportIndicadoresPqrsdf } from '../ReportesIndicadoresPqrsdf/screen/ReportIndicadoresPqrsdf';
+import { ChartDataProviderPQRSDF } from '../ReportesIndicadoresPqrsdf/context/DataChartContext';
+import { MainViweVital } from '../integracionVital/screen/MainVital';
+import { ModalAndLoadingProvider } from '../../../context/GeneralContext';
+import { PanelVentanillaProvider } from '../integracionVital/context/PanelVentanillaContext';
+import { RouteArchibo } from '../ArchivadosOtros/routes/RouteArchibo';
+import { LiquidacionRutesPago } from '../Liquidacion_dos/routes/LiquidacionRutes';
+import { Facturacion } from '../../recaudo/screens/Facturacion';
+import { GeneradorDocumentos } from '../../recaudo/screens/GeneradorDocumentos';
+
 const routes = [
   {
     path: 'organigrama/',
@@ -142,6 +150,11 @@ const routes = [
     name: 'encuesta',
     component: () => <Encuesta />,
   },
+  {
+    path: 'archivado/',
+    name: 'archivado',
+    component: () => <RouteArchibo />,
+  },
 
   {
     path: 'Reubicacion_Expedientes/',
@@ -152,6 +165,12 @@ const routes = [
     path: 'encuesta_asignacion/',
     name: 'encuesta_asignacion',
     component: () => <EncuestaRoutes />,
+  },
+  {
+    path: 'documentos/',
+    name: 'documentos',
+    component: () => <GeneradorDocumentos />,
+    // component: () => <Facturacion />,
   },
 
 
@@ -207,6 +226,11 @@ const routes = [
     component: () => <RutesWorkFlowPQRSDF />,
   },
   {
+    path: 'juridica/',
+    name: 'juridica',
+    component: () => <RutesTramitesServicos />,
+  },
+  {
     path: 'indicadores_pqrsdf/',
     name: 'indicadores_pqrsdf',
     component: () => <RutesIndicadores />,
@@ -217,9 +241,14 @@ const routes = [
     component: () => <SolicitudesOtrosRoutes />,
   },
   {
-    path: 'tramites/',
+    path: 'tramites',
     name: 'tramites',
     component: () => <TramitesServiciosRouter />,
+  },
+  {
+    path: 'digitalizacion_opas/',
+    name: 'digitalizacion_opas',
+    component: () => <Digitalizacion_opas_Routes />,
   },
 
   {
@@ -237,28 +266,28 @@ const routes = [
     name: 'consecutivo_configuracion',
     component: () => <ConsecutivoConfi />,
   },
-  
+
   {
     path: 'Reportes_PQRSDF/',
     name: 'Reportes_PQRSDF',
     component: () => <Consulta_Solicitud_Routes />,
   },
-   {
+  {
     path: 'Consulta_AnonimoPQR/',
     name: 'Consulta_AnonimoPQR',
     component: () => <Consulta_AnonimoPQR_Routes />,
   },
   {
-    path: 'consulta_estadopqr/',
-    name: 'consulta_estadopqr',
-    component: () => <Consulta_estadoPQR_Routes />,
+    path: 'consulta_estado/',
+    name: 'consulta_estado',
+    component: () => <ConsultaEstadoSolicitudes />,
   },
   {
     path: 'ConsultaExternoPQR/',
     name: 'ConsultaExternoPQR',
     component: () => <Consulta_ExternoPQR_Routes />,
   },
- 
+
   {
     path: 'ConsultaOtros/',
     name: 'ConsultaOtros',
@@ -269,7 +298,7 @@ const routes = [
     name: 'ConsultaOtrosExterno',
     component: () => <Consulta_OtrosExterno_Routes />,
   },
-  
+
   {
     path: 'Eliminacion_Documental/',
     name: 'Eliminacion_Documental',
@@ -284,22 +313,67 @@ const routes = [
     path: 'transferencia_documental/',
     name: 'transferencia_documental',
     component: () => <RutasTransferenciaDocumental />,
-  }
+  },
+  {
+    path: 'ejemploResponsive/',
+    name: 'ejemploResponsive',
+    component: () => <Ejemplo />,
+  },
 
+  // ? reportes generales del gestor documental
+  {
+    path: 'reportes_generales_gestor_documental/',
+    name: 'reportes_generales_gestor_documental',
+    component: () => (
+      <ChartDataProvider>
+        <ReporGenGestorMainScreen />
+      </ChartDataProvider>
+    ),
+  },
+  {
+    path: 'reportes_pqrsdf_gestor_documental/',
+    name: 'reportes_pqrsdf_gestor_documental',
+    component: () => (
+      <ChartDataProviderPQRSDF>
+        <ReportIndicadoresPqrsdf />
+      </ChartDataProviderPQRSDF>
+    ),
+  },
+  {
+    path: 'vital/',
+    name: 'vital',
+    component: () => (
+      <>
+        {' '}
+        <ModalAndLoadingProvider>
+          <PanelVentanillaProvider>
+            <MainViweVital />
+          </PanelVentanillaProvider>
+        </ModalAndLoadingProvider>
+      </>
+    ),
+  },
+  {
+    path: 'liquidacion/',
+    name: 'liquidacion',
+    component: () => <LiquidacionRutesPago />,
+  },
 ];
+
+
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestorDocumentalRoutes: React.FC = () => {
   return (
-      <Routes>
-        {routes.map((route) => (
-          <Route
-            key={route.path}
-            path={`${route.path}/${route.path === '/' ? '' : '*'}`}
-            element={route.component()}
-          />
-        ))}
-        <Route path="/*" element={<Page404 />} />
-      </Routes>
+    <Routes>
+      {routes.map((route) => (
+        <Route
+          key={route.path}
+          path={`${route.path}/${route.path === '/' ? '' : '*'}`}
+          element={route.component()}
+        />
+      ))}
+      <Route path="/*" element={<Page404 />} />
+    </Routes>
   );
 };

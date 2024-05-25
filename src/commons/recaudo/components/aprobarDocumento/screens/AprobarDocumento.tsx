@@ -11,6 +11,7 @@ import { Registro } from '../interfaces/IAprobarDocumento';
 import { handleActionClick } from '../AcionesFinalesUpDate/Update.service';
 import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom"; // Asumo que estás utilizando react-router
+import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 
 
 
@@ -23,14 +24,10 @@ export const AprobarDocumento = () => {
     const [aprobadoFilter, setAprobadoFilter] = useState<boolean|null>(false);
     const [data_table, set_data_tabla] = useState<Registro[]>([]);
     const navigate = useNavigate();
+const [activador,set_activador]=useState(false);
 
 
 
-
-
-    const Actualizar_tabla = () => {
-        Peticion_Busqueda_Avanzada();
-    };
 
 
 
@@ -97,9 +94,25 @@ export const AprobarDocumento = () => {
             },
         },
         {
+            field: 'ruta_archivo',
+            headerName: 'Documento Anexo',
+            width: 110,
+            flex: 1,
+            renderCell: (params: any) => (
+              params.value ? (
+                <DownloadButton
+                  condition={false}
+                  fileUrl={params.value.ruta_archivo}
+                  fileName={params.value.nombre_de_Guardado}
+                />
+              ) : null
+            ),
+          },
+          
+        {
             field: 'acciones',
             headerName: 'Acciones',
-            flex: 2,
+            flex: 1,
             renderCell: (params: any) => (
                 <>
                     <Button
@@ -127,6 +140,7 @@ export const AprobarDocumento = () => {
     //         console.error(error);
     //     }
     // };
+
     const Peticion_Busqueda_Avanzada = async (): Promise<void> => {
         try {
             let url = '/recaudo/formulario/ver_formulario/';
@@ -145,11 +159,20 @@ export const AprobarDocumento = () => {
         } catch (error) {
             console.error(error);
         }
+        
     };
     
     
+    const Actualizar_tabla = () => {
+        Peticion_Busqueda_Avanzada();
+        set_activador(!activador);
+    };
+
     
-    
+    useEffect(() => {
+        Peticion_Busqueda_Avanzada();
+    }, [activador]);
+
 
 
     useEffect(() => {

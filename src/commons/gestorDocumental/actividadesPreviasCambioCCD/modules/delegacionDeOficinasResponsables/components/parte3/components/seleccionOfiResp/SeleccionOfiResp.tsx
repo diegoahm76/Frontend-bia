@@ -113,7 +113,7 @@ export const SeleccionOfiResp = (): JSX.Element => {
     {
       headerName: 'Selección nuevo oficina responsable',
       field: 'oficinasNuevas',
-      minWidth: 300,
+      minWidth: 400,
       renderCell: (params: any) =>
         params.row.actual ? (
           <div
@@ -138,7 +138,7 @@ export const SeleccionOfiResp = (): JSX.Element => {
                 styles={{
                   container: (provided) => ({
                     ...provided,
-                    width: '200px',
+                    width: '300px',
                     height: '30px',
                     zIndex: 999999,
                     borderRadius: '5px',
@@ -150,7 +150,6 @@ export const SeleccionOfiResp = (): JSX.Element => {
                   ]
                 }
                 onChange={(selectedOption) => {
-                  //  console.log('')(selectedOption);
                   onChange(params.row.id_unidad_organizacional, selectedOption);
                 }}
                 menuPortalTarget={document.body}

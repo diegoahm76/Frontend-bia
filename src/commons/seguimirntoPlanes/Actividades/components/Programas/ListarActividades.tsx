@@ -29,55 +29,71 @@ export const ListarActividades: React.FC = () => {
       field: 'nombre_plan',
       headerName: 'Nombre del Plan',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
-      width: 250,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
-      width: 250,
+      minWidth: 350,
+      flex: 2
     },
     {
       field: 'nombre_producto',
       headerName: 'Nombre del Producto',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
+    },
+    {
+      field: 'numero_producto',
+      headerName: 'Número de Producto',
+      sortable: true,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'numero_actividad',
       headerName: 'Número de Actividad',
       sortable: true,
-      width: 100,
+      minWidth: 120,
+      flex: 1
     },
     {
       field: 'nombre_actividad',
       headerName: 'Nombre de la Actividad',
       sortable: true,
-      width: 250,
+      minWidth: 250,
+      flex: 1
     },
     {
       field: 'fecha_creacion',
       headerName: 'Fecha de Creación',
       sortable: true,
-      width: 150,
+      minWidth: 150,
+      flex: 1
     },
     {
       field: 'cumplio',
       headerName: '¿Cumplió?',
       sortable: true,
-      width: 100,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (params.value ? 'Sí' : 'No'),
     },
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
-      width: 250,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params) => (
         <>
           <IconButton
@@ -160,43 +176,40 @@ export const ListarActividades: React.FC = () => {
         }}
         // justifyContent="flex-end"
       >
-        {rows_actividad.length > 0 && (
-          <>
-            <Grid item xs={12}>
-              <Title title="Listado de actividades" />
-              {/* <Typography>Listado de actividades</Typography> */}
-            </Grid>
-            <Grid item xs={12}>
-              <Box sx={{ width: '100%' }}>
-                <ButtonGroup
-                  style={{
-                    margin: 7,
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  {download_xls({ nurseries: rows_actividad, columns })}
-                  {download_pdf({
-                    nurseries: rows_actividad,
-                    columns,
-                    title: 'Listado de actividades',
-                  })}
-                </ButtonGroup>
-                <DataGrid
-                  density="compact"
-                  autoHeight
-                  rows={rows_actividad}
-                  columns={columns}
-                  pageSize={10}
-                  rowsPerPageOptions={[10]}
-                  getRowId={(row) => uuidv4()}
-                />
-              </Box>
-            </Grid>
-          </>
-        )}
+        <Grid item xs={12}>
+          <Title title="Listado de actividades" />
+          {/* <Typography>Listado de actividades</Typography> */}
+        </Grid>
+        <Grid item xs={12}>
+          <Box sx={{ width: '100%' }}>
+            <ButtonGroup
+              style={{
+                margin: 7,
+                display: 'flex',
+                justifyContent: 'flex-end',
+              }}
+            >
+              {download_xls({ nurseries: rows_actividad, columns })}
+              {download_pdf({
+                nurseries: rows_actividad,
+                columns,
+                title: 'Listado de actividades',
+              })}
+            </ButtonGroup>
+            <DataGrid
+              density="compact"
+              autoHeight
+              rows={rows_actividad}
+              columns={columns}
+              pageSize={10}
+              rowsPerPageOptions={[10]}
+              getRowId={(row) => uuidv4()}
+              getRowHeight={() => 'auto'}
+            />
+          </Box>
+        </Grid>
 
-        <Grid container justifyContent="flex-end">
+        <Grid container my={1} justifyContent="flex-end">
           <Grid item>
             <Button
               variant="outlined"

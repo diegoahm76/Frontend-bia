@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { Grid } from '@mui/material';
 import { Title } from '../../../../components/Title';
-import { ListarProgramas } from '../components/Proyectos/ListarProgramas';
 import { useAppDispatch, useAppSelector } from '../../../../hooks';
 import { AgregarSubprograma } from '../components/Proyectos/AgregarSubprograma';
 import { useEffect } from 'react';
 import { ListarSubprograma } from '../components/Proyectos/ListarSubprograma';
 import { set_current_mode_planes } from '../../store/slice/indexPlanes';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { BusquedaPrograma } from '../components/BusquedaAvanzada copy/BusquedaPrograma';
+import { BusquedaSubprograma } from '../components/BusquedaAvanzada copy/BusquedaSubprograma';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const SubprogremasScreen: React.FC = () => {
@@ -46,7 +47,7 @@ export const SubprogremasScreen: React.FC = () => {
           <Title title="Subprogramas " />
         </Grid>
       </Grid>
-      <ListarProgramas />
+      <BusquedaPrograma />
       {mode.ver ? <ListarSubprograma /> : null}
       {mode.crear || mode.editar ? <AgregarSubprograma /> : null}
       <Grid
@@ -65,6 +66,7 @@ export const SubprogremasScreen: React.FC = () => {
         }}
         justifyContent="flex-end"
       >
+        <BusquedaSubprograma />
         <Grid item>
           <ButtonSalir />
         </Grid>

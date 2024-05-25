@@ -168,6 +168,8 @@ export const Destinatario: FC<Props> = ({ selectedOption }): JSX.Element => {
         id_persona: null,
         id_unidad_org_lider: null,
     };
+
+    
     const [formData, setFormData] = useState(initialFormData);
     const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;

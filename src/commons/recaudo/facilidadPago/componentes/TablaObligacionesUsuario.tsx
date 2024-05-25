@@ -128,6 +128,10 @@ export const TablaObligacionesUsuario: React.FC = () => {
     set_total(capital + intereses);
   }, [selected, capital, intereses]);
 
+  useEffect(() => {
+    console.log(lista_obligaciones);
+  }, [lista_obligaciones])
+
   const columns: GridColDef[] = [
     {
       field: 'checkbox',
@@ -227,7 +231,7 @@ export const TablaObligacionesUsuario: React.FC = () => {
     },
   ];
 
-  return (      
+  return (
         <>
           <Grid
             container

@@ -22,14 +22,20 @@ import {
 import { setCurrentTareaPqrsdfTramitesUotrosUopas } from '../../../../../../toolkit/store/BandejaDeTareasStore';
 import { getInfoTareaRechazada } from '../../../../services/servicesStates/pqrsdf/rechazarTarea/getInfoTareaRechazada.service';
 import { control_success } from '../../../../../../../../../helpers';
+import { getInfoTareaRechazadaOtros } from '../../../../services/servicesStates/otros/getInfoTaskRejectedOtros.service';
+import { showAlert } from '../../../../../../../../../utils/showAlert/ShowAlert';
+import { getInfoTareaRechazadaTramites } from '../../../../services/servicesStates/tramites/getInfoRejectedTaskTramite.service';
+import { getInfoTareaRechazadaOpas } from '../../../../services/servicesStates/opas/getInfoOpaRechazada.service';
 
 export const ModalSeeRejectedTask: FC = (): JSX.Element => {
   //* dispatch declaration
   const dispatch = useAppDispatch();
 
   //* redux states
-  const { currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas } =
-    useAppSelector((state) => state.BandejaTareasSlice);
+  const {
+    currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas,
+    listaTareasPqrsdfTramitesUotrosUopas,
+  } = useAppSelector((state) => state.BandejaTareasSlice);
 
   //* context declaration
   const { openModalNuevoNumero2, handleOpenModalNuevoNumero2 } = useContext(
@@ -39,19 +45,64 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
   //* useState
   const [infoTareaRechazada, setInfoTareaRechazada] = useState('');
 
-useEffect(() => {
-  if (!openModalNuevoNumero2) return;
+  interface TaskType {
+    getInfoRejectedTask: (
+      id_tarea_asignada: number,
+      handleOpenModalNuevoNumero2: React.Dispatch<React.SetStateAction<boolean>>
+    ) => Promise<any>;
+  }
 
-  (async () => {
-    try {
-      const justificación = await getInfoTareaRechazada(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada, handleOpenModalNuevoNumero2);
-      setInfoTareaRechazada(justificación);
-      control_success('Se ha obtenido la justificación del rechazo de la tarea');
-    } catch (error) {
-      console.error(error);
-    }
-  })();
-}, [openModalNuevoNumero2]);
+  const TASK_TYPES: Record<string, TaskType> = {
+    'RESPONDER PQRSDF': {
+      getInfoRejectedTask: getInfoTareaRechazada,
+    },
+    'RESPONDER OTRO': {
+      getInfoRejectedTask: getInfoTareaRechazadaOtros,
+    },
+     'RESPONDER TRÁMITE': {
+      getInfoRejectedTask: getInfoTareaRechazadaTramites,
+     },
+     'RESPONDER OPA': {
+      getInfoRejectedTask: getInfoTareaRechazadaTramites,
+     },
+    // Agrega aquí los nuevos tipos de tareas
+    // agregar luego para tramites y para opas
+  };
+
+  useEffect(() => {
+    if (!openModalNuevoNumero2) return;
+
+    (async () => {
+      try {
+        const { tipo_tarea } = listaTareasPqrsdfTramitesUotrosUopas[0] || {};
+        const taskType = TASK_TYPES[tipo_tarea];
+
+        if (!taskType || !taskType.getInfoRejectedTask) {
+          showAlert(
+            'Opss..',
+            'No se pudo hacer la petición para obtener la información de la justificación del rechazo, ha ocurrido un error, por favor intente de nuevo',
+            'error'
+          );
+        }
+
+        const getJustificacion = await taskType.getInfoRejectedTask(
+          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+          handleOpenModalNuevoNumero2
+        );
+
+        setInfoTareaRechazada(getJustificacion);
+        control_success(
+          'Se ha obtenido la justificación del rechazo de la tarea'
+        );
+      } catch (error) {
+        showAlert(
+          'Opss..',
+          'No se pudo encontrar la información de la justificación del rechazo, ha ocurrido un error, por favor intente de nuevo',
+          'error'
+        );
+      }
+    })();
+  }, [openModalNuevoNumero2]);
   return (
     <>
       <Dialog

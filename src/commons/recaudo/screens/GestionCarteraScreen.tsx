@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import { type SyntheticEvent, useState, useEffect, useContext } from 'react';
 import { Avatar, Box, Grid, IconButton, type SelectChangeEvent, Tab, Tooltip, Chip, Pagination, Stack, TextField, Button } from "@mui/material"
@@ -19,6 +20,11 @@ import { CreateProcesoModal } from '../components/GestionCartera/modal/CreatePro
 import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
 import { EtapaProcesoConext } from '../components/GestionCartera/Context/EtapaProcesoContext';
 import { toast } from 'react-toastify';
+import { control_error, control_success } from '../../../helpers';
+import RefreshIcon from '@mui/icons-material/Refresh';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
+import { showAlert } from '../../../utils/showAlert/ShowAlert';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -60,23 +66,71 @@ export const GestionCarteraScreen: React.FC = () => {
   const [open_create_proceso_modal, set_open_create_proceso_modal] = useState(false);
   const [valores_proceso, set_valores_proceso] = useState<ValoresProceso[][]>([]);
   const [subetapas, set_subetapas] = useState<AtributoEtapa[]>([]);
-  const { set_etapa_proceso } = useContext(EtapaProcesoConext);
+  const { is_from_liquidacion, set_etapa_proceso, set_is_from_liquidacion } = useContext(EtapaProcesoConext);
+  const [cobro_persuasivo_active, set_cobro_persuasivo_active] = useState<boolean>(false);
+  const [cobro_coactivo_active, set_cobro_coactivo_active] = useState<boolean>(false);
 
   const [filtered_nombres, set_filtered_nombres] = useState<string>('');
   const [filtered_apellidos, set_filtered_apellidos] = useState<string>('');
   const [filtered_identificacion, set_filtered_identificacion] = useState<string>('');
+  const [datos, set_datos] = useState<string>('');
 
   const columns_carteras: GridColDef[] = [
     {
       field: 'id',
       headerName: 'ID Cartera',
-      minWidth: 90,
+      minWidth: 9220,
       flex: 1,
+    },
+    {
+      field: 'tipo_renta',
+      headerName: 'Tipo Renta',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
+    },
+    {
+      field: 'Resolucion ',
+      headerName: 'Resolucion   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo Resolucion';
+      }
+    },
+    {
+      field: 'Periodo ',
+      headerName: 'Periodo   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin Periodo';
+      }
+    },
+    {
+      field: 'Expediente ',
+      headerName: 'Expediente   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin Expediente';
+      }
+    },
+    {
+      field: 'Descuento ',
+      headerName: 'Descuento   ',
+      minWidth: 200,
+      flex: 1,
+      valueGetter: (params) => {
+        return params.value ?? 'Sin tipo renta';
+      }
     },
     {
       field: 'id_deudor',
       headerName: 'Nit Deudor',
-      minWidth: 90,
+      minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
         if (!params.value) {
@@ -106,13 +160,13 @@ export const GestionCarteraScreen: React.FC = () => {
     {
       field: 'fecha_facturacion',
       headerName: 'Fecha factura',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'numero_factura',
       headerName: 'Número Factura',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
@@ -127,7 +181,7 @@ export const GestionCarteraScreen: React.FC = () => {
     {
       field: 'proceso_cartera',
       headerName: 'Etapas',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
         if (!params.value) {
@@ -139,43 +193,35 @@ export const GestionCarteraScreen: React.FC = () => {
     {
       field: 'id_categoria',
       headerName: 'Subetapas',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
         return categorias.find((categoria) => categoria.id === params.row.proceso_cartera[0]?.id_categoria)?.categoria ?? 'Sin subetapa activa';
       }
     },
-    {
-      field: 'tipo_renta',
-      headerName: 'Tipo Renta',
-      minWidth: 100,
-      flex: 1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin tipo renta';
-      }
-    },
+
     {
       field: 'monto_inicial',
       headerName: 'Saldo Capital',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'valor_intereses',
       headerName: 'Saldo Intereses',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'codigo_contable',
       headerName: 'Código contable',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
       field: 'valor_sancion',
       headerName: 'Valor sanción',
-      minWidth: 100,
+      minWidth: 200,
       flex: 1,
     },
     {
@@ -206,11 +252,12 @@ export const GestionCarteraScreen: React.FC = () => {
                   set_id_cartera(params.row.id);
                   set_position_tab('2');
                   set_data_complemet(params.row);
-
+                  set_datos(params.row);
                   set_etapa_proceso((prevEtapa: any) => ({
                     ...prevEtapa,
                     mostrar_modal: true,
                   }));
+                  set_is_from_liquidacion(false);
 
 
                 }}
@@ -241,6 +288,34 @@ export const GestionCarteraScreen: React.FC = () => {
   ];
 
   useEffect(() => {
+    if(id_etapa){
+      //TODO: Utilizar servicio para traer la etapa y comparar, el id puede cambiar en el futuro
+      (id_etapa == 13 || id_etapa == 14)
+        ? set_cobro_persuasivo_active(true)
+        : set_cobro_persuasivo_active(false);
+
+      (id_etapa == 14)
+        ? set_cobro_coactivo_active(true)
+        : set_cobro_coactivo_active(false);
+
+      // api.get(`recaudo/procesos/etapas/${id_etapa}`)
+      //   .then((response) => {
+      //     console.log(response.data)
+      //   })
+      //   .catch((error) => {
+      //      console.log('')(error);
+      //   })
+    }
+  }, [id_etapa]);
+
+  useEffect(() => {
+    if(is_from_liquidacion){
+      set_cobro_persuasivo_active(true);
+      set_position_tab('3');
+    }
+  }, [is_from_liquidacion])
+
+  useEffect(() => {
     api.get('recaudo/procesos/procesos-sin-finalizar')
       .then((response) => {
         set_procesos(response.data.data);
@@ -267,7 +342,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_count(response.data.count);
       })
       .catch((error) => {
-      console.log(error);
+        console.log(error);
       })
       .finally(() => {
         set_loading(false);
@@ -287,6 +362,7 @@ export const GestionCarteraScreen: React.FC = () => {
   useEffect(() => {
     if (id_etapa) {
       const new_flujos_proceso = flujos_proceso.filter(flujo => flujo.id_etapa_origen.id === id_etapa);
+      console.log(flujos_proceso);
       set_flujos_destino(new_flujos_proceso);
     } else {
       set_flujos_destino(flujos_proceso);
@@ -428,7 +504,7 @@ export const GestionCarteraScreen: React.FC = () => {
     }
   };
 
-  
+
   const mover_subetapa_actual = (): void => {
     if (id_subetapa_destino) {
       api.post(`recaudo/procesos/actualizar-categoria-proceso/${id_proceso}/`, {
@@ -645,6 +721,38 @@ export const GestionCarteraScreen: React.FC = () => {
   const handle_pagination_change = (event: React.ChangeEvent<unknown>, value: number): void => {
     set_current_page((value - 1) * 10);
   };
+  const [loadingg, setLoading] = useState(false);
+  function handleClick() {
+    setLoading(true);
+    unifiedSearchSubmit();
+    fetchHistorico();
+  }
+
+
+  const unifiedSearchSubmit = async () => {
+      showAlert(
+        'Opps...',
+        'Esto puede tardar algunos minutos',
+        'info'
+      );
+  };
+
+
+  const fetchHistorico = async (): Promise<void> => {
+    try {
+      const url = "/recaudo/configuracion_baisca/cronjop/";
+      const res = await api.get(url);
+      // const HistoricoData: Historico[] = res.data?.data || [];
+      // setHistorico(HistoricoData);
+      control_success("Datos actualizados ");
+      setLoading(false)
+    } catch (error: any) {
+      // console.error(error);
+      setLoading(false)
+
+      control_error(error.response.data.detail);
+    }
+  };
 
   return (
     <>
@@ -669,7 +777,9 @@ export const GestionCarteraScreen: React.FC = () => {
               <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <TabList onChange={handle_tablist_change}>
                   <Tab label="Gestion Cartera" value="1" />
-                  <Tab label="Editar Cartera" value="2" />
+                  <Tab label="Editar Cartera" value="2" disabled={is_from_liquidacion || !datos}/>
+                  {/* {cobro_persuasivo_active && <Tab label="Proceso cobro Persuasivo" value="3" disabled={false}/>}
+                  {cobro_coactivo_active && <Tab label="Proceso Cobro Coactivo" value="4" disabled={false}/>} */}
                 </TabList>
               </Box>
 
@@ -710,6 +820,7 @@ export const GestionCarteraScreen: React.FC = () => {
                     variant='contained'
                     color='primary'
                     startIcon={<SearchIcon />}
+                    sx={{ height: 'fit-content' }}
                   >
                     Buscar
                   </Button>
@@ -718,10 +829,31 @@ export const GestionCarteraScreen: React.FC = () => {
                     variant='outlined'
                     color='primary'
                     startIcon={<ClearIcon />}
+                    sx={{ height: 'fit-content' }}
                     onClick={clear_filter}
                   >
                     Limpiar
                   </Button>
+
+                  {/* <Grid item xs={12} sm={4.1}>
+
+                  </Grid> */}
+
+                  <Grid sx={{display: 'flex', justifyContent: 'end', width: '40%'}}>
+                    <LoadingButton
+                      color="success"
+                      onClick={handleClick}
+                      loading={loadingg}
+                      loadingPosition="start"
+                      startIcon={<SettingsInputAntennaIcon />}
+                      sx={{ height: 'fit-content' }}
+                      variant="contained"
+                    >
+                      Actualizar base de datos
+                    </LoadingButton>
+                  </Grid>
+
+
                 </Box>
                 <DataGrid
                   density='standard'
@@ -758,6 +890,7 @@ export const GestionCarteraScreen: React.FC = () => {
 
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 <EditarCartera
+                  datos={datos}
                   id_flujo_destino={id_flujo_destino}
                   selected_proceso={selected_proceso}
                   flujos_destino={flujos_destino}
@@ -772,6 +905,16 @@ export const GestionCarteraScreen: React.FC = () => {
                 />
 
               </TabPanel>
+              {/* {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
+                  <DocumentoPagoPersuasivo
+                    datos={datos}
+                  ></DocumentoPagoPersuasivo>
+              </TabPanel>}
+              {cobro_coactivo_active && <TabPanel value="4" sx={{ p: '20px 0' }}>
+                  <ProcesoPagoCoactivo
+                    datos={datos}
+                  ></ProcesoPagoCoactivo>
+              </TabPanel>} */}
             </TabContext>
           </Box>
         </Grid>
@@ -780,17 +923,17 @@ export const GestionCarteraScreen: React.FC = () => {
 
 
 
-      <SeccionEnvio_MSM_CORREO_F
+      {position_tab !== '1' && <SeccionEnvio_MSM_CORREO_F
         selected_proceso={selected_proceso}
 
-      />
+      />}
 
 
 
 
       <TabContext value={position_tab}>
         <TabPanel value="2" sx={{ p: '20px 0' }}>
-          <CobroCoactivo
+          {/* <CobroCoactivo
             rows_atributos={atributos_etapa}
             input_values={input_values}
             input_files={input_files}
@@ -800,7 +943,7 @@ export const GestionCarteraScreen: React.FC = () => {
             handle_file_change={handle_file_change}
             handle_post_valores_sin_archivo={handle_post_valores_sin_archivo}
             handle_post_valores_con_archivo={handle_post_valores_con_archivo}
-          />
+          /> */}
         </TabPanel>
       </TabContext>
 
@@ -812,6 +955,8 @@ export const GestionCarteraScreen: React.FC = () => {
       />
 
       <NotificationModal
+        id_etapa_destino={Number(id_etapa_destino)}
+        set_position_tab={set_position_tab}
         open_notification_modal={open_notification_modal}
         set_open_notification_modal={set_open_notification_modal}
         notification_info={notification_info}

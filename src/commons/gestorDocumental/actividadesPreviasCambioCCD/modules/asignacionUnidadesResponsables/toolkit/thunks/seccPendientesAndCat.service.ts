@@ -134,6 +134,14 @@ export const GET_SERIES_ASOCIADA_UNIDAD_SIN_RESPONSABLE = async ({
 
     const returnedData = data.data.coincidencias || [];
 
+    if (returnedData.length > 0) {
+      control_success('Catálogo de series encontradas' || data?.detail);
+      return returnedData;
+    }
+
+    control_warning('No hay catálago de series asociadas a esta unidad, seleccione una unidad diferente para continuar');
+
+
     return returnedData;
   } catch (error: any) {
     //  console.log('')(error?.response?.status);
@@ -171,7 +179,7 @@ export const GET_UNIDADES_ORGNAIZACIONALES_UNIDADES_RESP = async ({
       control_success('Unidades organizacionales encontradas' || data?.detail);
       return data?.data;
     }
-
+    control_warning('No hay unidades organizacionales, seleccione una unidad diferente para continuar');
     return [];
   } catch (error: any) {
     //  console.log('')(error?.response?.status);

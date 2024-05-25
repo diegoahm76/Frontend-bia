@@ -22,6 +22,7 @@ import type {
 } from '../../interfaces/organigrama';
 import { api } from '../../../../../api/axios';
 import { control_warning } from '../../../../almacen/configuracion/store/thunks/BodegaThunks';
+import { showAlert } from '../../../../../utils/showAlert/ShowAlert';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const control_error = (message: ToastContent) =>
@@ -75,7 +76,7 @@ export const get_organigrams_service = (): any => {
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-      return error as AxiosError;
+      return [];
     }
   };
 };
@@ -395,18 +396,28 @@ export const cambio_organigrama_actual: any = (
 ) => {
   return async (dispatch: Dispatch<any>) => {
     try {
-      const { data } = await api.put(
-        'transversal/organigrama/change-actual-organigrama/',
-        data_cambio
-      );
+      const new_url = `transversal/organigrama/activacion/activar-organigrama/`;
+      // const old_url = 'transversal/organigrama/change-actual-organigrama/'
+      const { data } = await api.put(new_url, data_cambio);
       control_success('Proceso exitoso');
-      control_warning(
-        'No olvides asignar los líderes a las unidades organizacionales del nuevo organigrama actual'
-      );
+
+      showAlert(
+        'Atención!!',
+        'El organigrama actual ha sido cambiado',
+        'success'
+      ).then(() => {
+        showAlert(
+          'Atención!!',
+          '1.Recuerda asignar los líderes a las unidades del nuevo organigrama, 2.Recuerde trasladar las personas del organigrama anterior al actual, (si ya realizó el proceso omite el mensaje)',
+          'info'
+        );
+      });
       dispatch(get_organigrams_service());
       return data;
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      console.log(error?.response?.data);
+      showAlert('Atención!!', error.response.data.detail, 'warning');
+      // control_error(error.response.data.detail);
       return error as AxiosError;
     }
   };
@@ -418,6 +429,13 @@ export const get_organigrama_actual: any = () => {
       // const old_url = 'transversal/organigrama/get-organigrama-actual/';
       const new_url = `transversal/organigrama/activacion/get-organigrama-actual/`;
       const { data } = await api.get(new_url);
+
+      console.log(data);
+
+      if (data?.success) {
+        control_success(data.detail);
+      }
+
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

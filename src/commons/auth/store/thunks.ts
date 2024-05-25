@@ -24,10 +24,12 @@ export const checking_authentication: (
   return async (dispatch: Dispatch<any>) => {
     dispatch(checking_credentials());
 
-    const { ok, data, error_message, is_blocked } = await login_post({
-      nombre_de_usuario,
-      password,
-    });
+    const user_data = {
+      nombre_de_usuario: nombre_de_usuario.trim(),
+      password: password.trim(),
+    };
+
+    const { ok, data, error_message, is_blocked } = await login_post(user_data);
     // Se limpia los permisos que vienen del back
     if (data?.permisos !== undefined) {
       data.permisos.length = 0;
@@ -64,7 +66,6 @@ export const checking_authentication: (
       data?.userinfo.tipo_persona === 'N' &&
       data?.userinfo.tipo_usuario === 'I'
     ) {
-
       // para este caso mostramos el dialog
       dispatch(open_dialog_entorno());
 
@@ -118,19 +119,21 @@ export const checking_anonimous_authentication: (
       }
     );
 
-   
-      dispatch(get_persmisions_user(data?.userinfo.id_usuario ?? 0, 'C'));
-      dispatch(setRepresentacionLegal({
-        "cod_relacion_con_el_titular": "MP"
-    }));
+    dispatch(get_persmisions_user(data?.userinfo.id_usuario ?? 0, 'C'));
+
     // dispatch(set_authenticated());
-    
 
     // Enviamos los datos del usuario al store del login
+    console.log(data);
     dispatch(login(data));
+    dispatch(
+      setRepresentacionLegal({
+        cod_relacion_con_el_titular: 'MP',
+        tipo_sesion: 'E',
+      })
+    );
   };
 };
-
 
 export const get_persmisions_user: (
   id_usuario: number,
