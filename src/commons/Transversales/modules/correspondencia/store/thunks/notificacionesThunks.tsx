@@ -95,6 +95,32 @@ const map_list = (
 
   return list_aux;
 };
+export const add_pqrsdf_service = (pqrsdf: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      console.log(pqrsdf);
+      const { data } = await api.post(
+        `gestor/notificaciones/create-notificacion-manual/`,
+        pqrsdf
+      );
+      console.log(data);
+
+      control_success(data.detail);
+      // if (navigate_flag ?? true) {
+      //   navigate(
+      //     `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
+      //   );
+      // }
+
+      // dispatch(set_pqr(data.data));
+      return data;
+    } catch (error: any) {
+      console.log('add_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
 // obtener radicados filtro pqrsdf
 export const get_solicitudes_notificacion = (params: any): any => {
@@ -315,6 +341,47 @@ export const aceptar_rechazar_asignacion_tarea_service = (
     }
   };
 };
+export const actualizar_solicitud_service = (
+  id_solicitud: any,
+  id_estado: string,
+  id_funcionario: number
+): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.put(
+        `gestor/notificaciones/update-estado-notificacion/${id_solicitud}/`,
+        {
+          estado_notificacion_correspondencia: id_estado,
+        }
+      );
+      console.log(data);
+
+      dispatch(
+        get_solicitudes_notificacion_funcionario({
+          funcionario_asignado: id_funcionario,
+          flag: 'CD',
+        })
+      );
+      if (data.succes) {
+        control_success(data.detail);
+      } else {
+        control_error(
+          'No se encontrarón solicitudes con la busquedad ingresada'
+        );
+      }
+      return data;
+    } catch (error: any) {
+      console.log('get_filings_service');
+      showAlert(
+        'Opps!',
+        error.response.data.detail ||
+          'Ha ocurrido un error, por favor intente de nuevo',
+        'error'
+      );
+      return error as AxiosError;
+    }
+  };
+};
 export const actualizar_tarea_service = (
   id_solicitud: any,
   id_estado: string,
@@ -323,7 +390,7 @@ export const actualizar_tarea_service = (
   return async (dispatch: Dispatch<any>) => {
     try {
       const { data } = await api.put(
-        `gestor/notificaciones/update-tarea/${id_solicitud}/`,
+        `gestor/notificaciones/update-estado-tarea/${id_solicitud}/`,
         {
           id_estado_actual_registro: id_estado,
         }

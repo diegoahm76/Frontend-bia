@@ -43,6 +43,8 @@ import {
   actualizar_tarea_service,
   get_estados_notificacion,
   cancelar_asignacion_tarean,
+  actualizar_solicitud_service,
+  get_tipos_documento_notification,
 } from '../store/thunks/notificacionesThunks';
 import {
   set_notification_per_request,
@@ -50,7 +52,10 @@ import {
   set_notification_requests,
   set_notifications_per_request,
 } from '../store/slice/notificacionesSlice';
-import { IObjNotificacionType } from '../interfaces/notificaciones';
+import {
+  IObjNotificacionType,
+  IObjTypeDocument,
+} from '../interfaces/notificaciones';
 import DialogRechazo from '../componentes/DialogRechazo';
 import { AuthSlice } from '../../../../auth/interfaces';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
@@ -80,7 +85,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const {
     notification_requests,
-    list_document_types,
+    tipos_documento_notificacion,
     list_status,
     list_status_asignation,
     list_groups,
@@ -93,6 +98,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
   } = useAppSelector((state) => state.notificaciones_slice);
   const [rechazo_is_active, set_rechazo_is_active] = useState<boolean>(false);
   const [estado_is_active, set_estado_is_active] = useState<boolean>(false);
+  const [is_solicitud, set_is_solicitud] = useState<boolean>(false);
   const [rechazo_tarea_is_active, set_rechazo_tarea_is_active] =
     useState<boolean>(false);
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
@@ -331,6 +337,36 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 </Avatar>
               </IconButton>
             </Tooltip>
+            {rowData.cod_estado_asignacion === 'Ac' &&
+              rowData.id_persona_asignada === userinfo.id_persona && (
+                <Tooltip title="Actualizar estado de solicitud">
+                  <IconButton
+                    onClick={() => {
+                      set_estado_is_active(true);
+                      set_is_solicitud(true);
+                      setSelectedPqr(rowData);
+                    }}
+                  >
+                    <Avatar
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        background: '#fff',
+                        border: '2px solid',
+                      }}
+                      variant="rounded"
+                    >
+                      <UpdateIcon
+                        sx={{
+                          color: 'primary.main',
+                          width: '18px',
+                          height: '18px',
+                        }}
+                      />
+                    </Avatar>
+                  </IconButton>
+                </Tooltip>
+              )}
           </>
         );
       },
@@ -560,6 +596,8 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                     <IconButton
                       onClick={() => {
                         set_estado_is_active(true);
+                        set_is_solicitud(false);
+
                         setSelectedPqr(rowData);
                       }}
                     >
@@ -605,6 +643,9 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                           : rowData.tipo_notificacion_correspondencia
                               .notificacion_personal
                           ? `/#/app/transversal/notificaciones/publicar/notificacion_personal`
+                          : rowData.tipo_notificacion_correspondencia
+                              .publicacion_por_aviso
+                          ? `/#/app/transversal/notificaciones/publicar/publicacion_aviso`
                           : `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
                       }
                     >
@@ -746,6 +787,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
     dispatch(get_status_asignation_list_service());
     void dispatch(get_estados_notificacion());
     void dispatch(get_persons_service('', '', '', '', '', ''));
+    void dispatch(get_tipos_documento_notification());
   }, []);
   useEffect(() => {
     if (selectedPqr !== null) {
@@ -906,13 +948,21 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
     );
   };
   const actualizar_tarea_notificacion: any = (data: any) => {
-    void dispatch(
-      actualizar_tarea_service(
-        notification_per_request?.id_registro_notificacion_correspondencia,
-        data.id_estado,
-        notification_per_request?.id_persona_asignada ?? 0
-      )
-    );
+    is_solicitud
+      ? void dispatch(
+          actualizar_solicitud_service(
+            notification_request?.id_notificacion_correspondencia,
+            data.id_estado,
+            notification_per_request?.id_persona_asignada ?? 0
+          )
+        )
+      : void dispatch(
+          actualizar_tarea_service(
+            notification_per_request?.id_registro_notificacion_correspondencia,
+            data.id_estado,
+            notification_per_request?.id_persona_asignada ?? 0
+          )
+        );
   };
   return (
     <>
@@ -930,19 +980,6 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
         <Grid item xs={12} marginY={2}>
           <Title title="Solicitudes asignadas funcionario"></Title>
           <Grid container direction="row" padding={2} spacing={2}>
-            <Grid item xs={12} md={6}>
-              <FormButton
-                disabled={
-                  notification_request?.id_notificacion_correspondencia === null
-                }
-                variant_button="contained"
-                on_click_function={null}
-                icon_class={null}
-                label="Ver solicitud"
-                type_button="button"
-                color_button="warning"
-              />
-            </Grid>
             <Grid item xs={12} md={6}>
               <FormButton
                 disabled={
@@ -979,9 +1016,11 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 label: 'Tipo de documento',
                 disabled: false,
                 helper_text: '',
-                select_options: list_document_types,
-                option_label: 'label',
-                option_key: 'key',
+                select_options: tipos_documento_notificacion?.filter(
+                  (tipo: IObjTypeDocument) => tipo.aplica_para_notificaciones
+                ),
+                option_label: 'nombre',
+                option_key: 'id_tipo_documento',
               },
               {
                 datum_type: 'input_controller',
@@ -1120,6 +1159,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
           is_modal_active={estado_is_active}
           set_is_modal_active={set_estado_is_active}
           action={actualizar_tarea_notificacion}
+          flag={is_solicitud}
         />
         <SolicitudDetailDialog
           is_modal_active={detail_is_active}

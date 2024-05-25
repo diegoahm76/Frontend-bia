@@ -24,6 +24,7 @@ interface IProps {
   action: any;
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
+  flag?: boolean | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -31,12 +32,15 @@ const DialogSetStatusTask = ({
   action,
   is_modal_active,
   set_is_modal_active,
+  flag,
 }: IProps) => {
   const dispatch = useAppDispatch();
 
-  const { notification_per_request, estados_notificacion } = useAppSelector(
-    (state) => state.notificaciones_slice
-  );
+  const {
+    notification_per_request,
+    estados_notificacion,
+    notification_request,
+  } = useAppSelector((state) => state.notificaciones_slice);
   useEffect(() => {
     void dispatch(get_estados_notificacion());
   }, []);
@@ -63,7 +67,13 @@ const DialogSetStatusTask = ({
     >
       <Box component="form">
         <Grid item xs={12} marginLeft={2} marginRight={2} marginTop={3}>
-          <Title title="Actualizar estado de tarea" />
+          <Title
+            title={
+              flag
+                ? 'Actualizar estado de solicitud'
+                : 'Actualizar estado de tarea '
+            }
+          />
         </Grid>
         <DialogTitle></DialogTitle>
         <Divider />
@@ -85,17 +95,27 @@ const DialogSetStatusTask = ({
                   rules: {
                     required_rule: { rule: true, message: 'Requerido' },
                   },
-                  label: 'Estado de tarea',
+                  label: flag ? 'Estado de solicitud' : 'Estado de tarea',
                   type: 'text',
                   disabled: false,
                   helper_text: '',
-                  select_options: estados_notificacion?.filter(
-                    (objeto: any) =>
-                      objeto.cod_tipo_notificacion_correspondencia ===
-                      notification_per_request?.id_tipo_notificacion_correspondencia
-                  ),
-                  option_label: 'nombre',
-                  option_key: 'id_estado_notificacion_correspondencia',
+                  select_options: flag
+                    ? [
+                        { label: 'Recibida', key: 'RE' },
+                        { label: 'Devuelto', key: 'DE' },
+                        { label: 'En Gestión', key: 'EG' },
+                        { label: 'Pendiente', key: 'PE' },
+                        { label: 'Notificado', key: 'NT' },
+                      ]
+                    : estados_notificacion?.filter(
+                        (objeto: any) =>
+                          objeto.cod_tipo_notificacion_correspondencia ===
+                          notification_per_request?.id_tipo_notificacion_correspondencia
+                      ),
+                  option_label: flag ? 'label' : 'nombre',
+                  option_key: flag
+                    ? 'key'
+                    : 'id_estado_notificacion_correspondencia',
                 },
               ]}
             />

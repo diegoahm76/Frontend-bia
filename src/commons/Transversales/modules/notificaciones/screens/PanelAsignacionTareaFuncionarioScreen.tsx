@@ -484,7 +484,10 @@ export function PanelAsignacionTareaFuncioanrioScreen(): JSX.Element {
                 label: 'Tipo de notificación',
                 disabled: false,
                 helper_text: '',
-                select_options: tipos_notificacion,
+                select_options: tipos_notificacion?.filter(
+                  (tipo: IObjNotificacionType) =>
+                    tipo.aplica_para_notificaciones
+                ),
                 option_label: 'nombre',
                 option_key: 'id_tipo_notificacion_correspondencia',
               },

@@ -577,6 +577,7 @@ export function TiposNotificacionScreen(): JSX.Element {
           notificacion_correo_electronico: data.accion === 'c',
           notificacion_medio_fisico: data.accion === 'd',
           notificacion_personal: data.accion === 'e',
+          publicacion_por_aviso: data.accion === 'f',
         };
         void dispatch(edit_tipo_notificacion(data_edit));
       }
@@ -597,8 +598,23 @@ export function TiposNotificacionScreen(): JSX.Element {
           notificacion_correo_electronico: data.accion === 'c',
           notificacion_medio_fisico: data.accion === 'd',
           notificacion_personal: data.accion === 'e',
+          publicacion_por_aviso: data.accion === 'f',
         };
         void dispatch(add_tipo_notificacion(data_edit));
+      }
+    }
+  };
+  const [notificaciones, set_notificaciones] = useState<boolean>(false);
+
+  const on_change_select = (value: any, name: string): void => {
+    if (name === 'aplica_para') {
+      console.log(value);
+      if (value !== undefined) {
+        if (value.includes('notificaciones')) {
+          set_notificaciones(true);
+        } else {
+          set_notificaciones(false);
+        }
       }
     }
   };
@@ -660,6 +676,7 @@ export function TiposNotificacionScreen(): JSX.Element {
                 ],
                 option_label: 'label',
                 option_key: 'key',
+                on_change_function: on_change_select,
               },
               {
                 datum_type: 'input_controller',
@@ -679,7 +696,7 @@ export function TiposNotificacionScreen(): JSX.Element {
                 md: 4,
                 control_form: control_notificacion,
                 control_name: 'accion',
-                default_value: [],
+                default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
                 label: 'Acción relacionada:',
                 disabled: false,
@@ -690,10 +707,11 @@ export function TiposNotificacionScreen(): JSX.Element {
                   { label: 'Correo electronico', key: 'c' },
                   { label: 'Correspondencia fisica', key: 'd' },
                   { label: 'Notificacion personal', key: 'e' },
-                  { label: 'Publicación por aviso', key: 'e' },
+                  { label: 'Publicación por aviso', key: 'f' },
                 ],
                 option_label: 'label',
                 option_key: 'key',
+                hidden_text: !notificaciones,
               },
               {
                 datum_type: 'input_controller',
@@ -715,7 +733,7 @@ export function TiposNotificacionScreen(): JSX.Element {
                 control_name: 'habiles_o_calendario',
                 default_value: '',
                 rules: { required_rule: { rule: true, message: 'Requerido' } },
-                label: 'Aplica a:',
+                label: 'Tipo',
                 disabled: false,
                 helper_text: '',
                 select_options: [

@@ -36,13 +36,17 @@ import { IObjExhibit } from '../../interfaces/pqrsdf';
 import { v4 as uuid } from 'uuid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { control_error } from '../../store/thunks/pqrsdfThunks';
+import {
+  control_error,
+  get_storage_mediums_service,
+} from '../../store/thunks/pqrsdfThunks';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 interface IProps {
-  control_form: any | null;
+  control_form?: any | null;
+  flag_metadata?: boolean | null;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const StepTwo = () => {
+const StepTwo = ({ flag_metadata }: IProps) => {
   const dispatch = useAppDispatch();
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
   const { representacion_legal } = useAppSelector((state) => state.auth);
@@ -68,6 +72,9 @@ const StepTwo = () => {
   const [add_metadata_is_active, set_add_metadata_is_active] =
     useState<boolean>(false);
   const [cual_medio_view, set_cual_medio_view] = useState<boolean>(false);
+  useEffect(() => {
+    void dispatch(get_storage_mediums_service());
+  }, []);
 
   const on_submit_exhibit = (data: IObjExhibit): void => {
     //  console.log('')(data, metadata);
@@ -430,6 +437,7 @@ const StepTwo = () => {
               option_label: 'label',
               option_key: 'key',
               on_change_function: on_change_select,
+              hidden_text: flag_metadata ?? false,
             },
             {
               datum_type: 'input_controller',
@@ -443,10 +451,13 @@ const StepTwo = () => {
               type: 'text',
               disabled: false,
               helper_text: '',
-              hidden_text: !(
-                cual_medio_view ||
-                (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
-              ),
+              hidden_text:
+                flag_metadata ?? false
+                  ? true
+                  : !(
+                      cual_medio_view ||
+                      (exhibit.cod_medio_almacenamiento ?? null) === 'Ot'
+                    ),
             },
             {
               datum_type: 'input_controller',
@@ -475,7 +486,9 @@ const StepTwo = () => {
               variant_button: 'contained',
               on_click_function: add_metadata_form,
               color_button: 'warning',
-              hidden_text: representacion_legal?.tipo_sesion === 'E',
+              hidden_text:
+                (flag_metadata ?? false) ||
+                representacion_legal?.tipo_sesion === 'E',
             },
           ]}
         />
