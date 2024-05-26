@@ -32,6 +32,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import {
   control_error,
   get_anexos_notificacion,
+  get_anexos_tarea,
 } from '../store/thunks/notificacionesThunks';
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Title } from '../../../../../components/Title';
@@ -79,7 +80,13 @@ const ListadoAnexos = ({ type }: IProps) => {
             null &&
           notification_per_request.anexos !== undefined
         ) {
-          dispatch(set_exhibits(notification_per_request.anexos));
+          //dispatch(set_exhibits(notification_per_request.anexos));
+          console.log(notification_per_request.anexos);
+          dispatch(
+            get_anexos_tarea(
+              notification_per_request.id_registro_notificacion_correspondencia
+            )
+          );
         }
       }
     } else {
