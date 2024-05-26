@@ -22,26 +22,33 @@ import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 import { ModalConfirmacionMail } from './ModalConfirmacionMail';
 import { useState } from 'react';
 
-export const VisorDocumentos: React.FC<any> = ({file}: {file: any}) => {
+export const VisorDocumentos: React.FC<any> = ({ file }: { file: any }) => {
   const [open, setOpen] = useState(false);
 
   return (
     <Grid item xs={12} sm={12}>
-      {(file) && (
+      {file && (
         <>
-          <Grid sx={{display: 'flex', justifyContent: 'center', gap: '1rem', mb: '1.5rem'}}>
+          <Grid
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: '1rem',
+              mb: '1.5rem',
+            }}
+          >
             <Button
               fullWidth
               variant="contained"
               color="primary"
-              sx={{width: '200px'}}
+              sx={{ width: '200px' }}
               href={file}
               download
               endIcon={<CloudDownloadIcon />}
             >
               Descargar
             </Button>
-            <Button
+            {/* <Button
               fullWidth
               sx={{width: '250px'}}
               variant="contained"
@@ -50,19 +57,21 @@ export const VisorDocumentos: React.FC<any> = ({file}: {file: any}) => {
               onClick={() => setOpen(true)}
             >
               Firmar Documento
-            </Button>
+            </Button> */}
           </Grid>
           <DocViewer
             pluginRenderers={DocViewerRenderers}
             documents={[{ uri: file, fileType: 'docx' }]}
-            style={{height: 800, width: '70%', display: 'flex', margin: 'auto'}}
+            style={{
+              height: 800,
+              width: '70%',
+              display: 'flex',
+              margin: 'auto',
+            }}
           />
-          <ModalConfirmacionMail
-            open={open}
-            setOpen={setOpen}
-          />
+          <ModalConfirmacionMail open={open} setOpen={setOpen} />
         </>
       )}
     </Grid>
   );
-}
+};

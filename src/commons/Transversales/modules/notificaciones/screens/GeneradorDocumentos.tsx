@@ -562,7 +562,7 @@ export const GeneradorDocumentos: React.FC = () => {
               {sendTemplate ? 'Actualizar Documento' : 'Ver borrador'}
             </Button>
           </Grid>
-          <Grid item>
+          {/* <Grid item>
             <Button
               component="label"
               variant="outlined"
@@ -577,8 +577,8 @@ export const GeneradorDocumentos: React.FC = () => {
                 accept=".doc, .docx"
               />
             </Button>
-          </Grid>
-          <Grid item>
+          </Grid> */}
+          {/* <Grid item>
             <Button
               startIcon={<SaveIcon />}
               color="success"
@@ -590,7 +590,7 @@ export const GeneradorDocumentos: React.FC = () => {
             >
               Enviar Documento
             </Button>
-          </Grid>
+          </Grid> */}
         </Grid>
       </Grid>
       {/* <AlertaDocumento
