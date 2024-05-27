@@ -10,8 +10,8 @@ export function handleApiError(error: any, info: string = '') {
   const defaultErrorMessage = 'Ha ocurrido un error';
   let errorMessage: any = defaultErrorMessage;
 
-  if (error.response) {
-    errorMessage = errorMessages[error.response.status] || `Error desconocido, código de estado: ${error.response.status}`;
+  if (error.response?.data.detail) {
+    errorMessage = error.response.data.detail || defaultErrorMessage;
   } else if (error.request) {
     errorMessage = 'No se recibió respuesta del servidor, por favor intente nuevamente';
   } else {

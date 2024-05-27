@@ -62,9 +62,7 @@ export const ModalAtom: React.FC<ModalProps> = ({
                   set_modal({ show: false, id: 0 });
                 }}
               />
-
             </div>
-           
           </div>
         </div>
       )}
