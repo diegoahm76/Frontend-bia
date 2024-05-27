@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from '@mui/material';
 import { Title } from '../../../../../../../../../components';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { RequerimientoAlUsuarioContext } from '../../../../context/RequerimientoUsarioContext';
 
 export const PersonaTitular = (): JSX.Element => {
@@ -10,7 +10,10 @@ export const PersonaTitular = (): JSX.Element => {
 
     //* context declaration
     const { infoInicialUsuario } = useContext(RequerimientoAlUsuarioContext);
-  
+
+    useEffect(() => {
+      console.log(infoInicialUsuario);
+    }, [])
 
   return (
     <Grid
@@ -77,6 +80,17 @@ export const PersonaTitular = (): JSX.Element => {
               value={infoInicialUsuario?.dataTitular?.data?.numero_documento ?? 'N/A'}
             />
           </Grid>
+          {/* <Grid item xs={12}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Email"
+              variant="outlined"
+              disabled
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.dataTitular?.data?.email ?? 'N/A'}
+            />
+          </Grid> */}
         </Grid>
       </form>
     </Grid>

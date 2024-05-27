@@ -14,7 +14,6 @@ import {
 import { SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../components';
 import { useSelector } from 'react-redux';
-import { AuthSlice } from '../../auth/interfaces';
 import { api, baseURL } from '../../../api/axios';
 import { control_error, control_success } from '../../../helpers';
 import VisibilityIcon from '@mui/icons-material/Visibility';
@@ -23,11 +22,14 @@ import EditIcon from '@mui/icons-material/Edit';
 import FeedIcon from '@mui/icons-material/Feed';
 import CloseIcon from '@mui/icons-material/Close';
 import UpdateIcon from '@mui/icons-material/Update';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
 import { resetBandejaDeTareas } from '../../gestorDocumental/bandejaDeTareas/toolkit/store/BandejaDeTareasStore';
 import { useAppDispatch } from '../../../hooks';
 import { BusquedaPersonasGenerador } from '../components/GeneradorDocumentos/BusquedaPersonas';
+import swal from 'sweetalert2';
 export interface UnidadOrganizacional {
   codigo: any;
   nombre: string;
@@ -41,10 +43,6 @@ interface TipoRadicado {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeneradorDocumentos: React.FC = () => {
 
-  const {
-    userinfo: { id_persona },
-  } = useSelector((state: AuthSlice) => state.auth);
-
   const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
   const [file, setFile] = useState(''); //Archivo desde el server (plantilla)
   const [urlFile, setUrlFile] = useState<any>(null); //Archivo cargado desde local
@@ -52,29 +50,21 @@ export const GeneradorDocumentos: React.FC = () => {
   const [updateDocument, setUpdateDocument] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(false);
   const [uplockFirma, setUplockFirma] = useState(false);
-  const [noneFirma, setNoneFirma] = useState(false);
   const [isNewData, setIsNewData] = useState(false);
   const [hasConsecutivo, setHasConsecutivo] = useState(false);
   const [hasRadicado, setHasRadicado] = useState(false);
-  const [hasPersona, setHasPersona] = useState(false);
+  const [cleanFields, setCleanFields] = useState(false);
 
   const [contentData, setContentData] = useState<any>({}); // Datos para llenar el documento
   const [matchingData, setMatchingData] = useState<any>({}); // Datos para llenar el documento
 
   const [personaSelected, setpersona] = useState<any[]>([]);
-  const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
   const urlBase = baseURL.replace("/api/", "");
 
-  const dispatch = useAppDispatch();
+  const [radicado_selected, set_radicado_selected] = useState('');
 
-  useEffect(() => {
-    if (personaSelected.length > 0) {
-      setHasPersona(true);
-    }else{
-      setHasPersona(false);
-    }
-    console.log(personaSelected);
-  }, [personaSelected])
+
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     return () => {
@@ -82,34 +72,31 @@ export const GeneradorDocumentos: React.FC = () => {
     };
   }, []);
 
+
   const currentElement = useSelector((state: any) => state.BandejaTareasSlice.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas);
 
   useEffect(() => {
     if(currentElement){
-      if(currentElement.documento){
-        removeFile()
-        if(currentElement.documento.id_consecutivo_tipologia){
+      removeFile()
+      if(currentElement.documento?.id_consecutivo_tipologia){
           setCurrentBorrador(currentElement.documento);
           setHasConsecutivo(true);
           setUplockFirma(true);
-          if(!currentElement?.asignaciones?.firma){
+          if(!currentElement.asignaciones?.firma){
             setUplockFirma(false);
           }
-        }
         setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
       }
 
       if(currentElement.id_pqrsdf){
-        removeFile()
         search_pqrt(currentElement.id_pqrsdf);
       }
 
       if(currentElement.id_tramite && !currentElement?.id_pqrsdf && !currentElement?.documento){
-        removeFile()
         search_opa(currentElement.id_tramite);
       }
     }
-    console.log(currentElement);
+    // console.log(currentElement);
   }, [currentElement])
 
   const search_pqrt = async (id: string) => {
@@ -139,10 +126,6 @@ export const GeneradorDocumentos: React.FC = () => {
     }
   }
 
-
-
-  const [radicado_selected, set_radicado_selected] = useState('');
-
   // Función para manejar el cambio en el select
   const handleradicado = (event: {
     target: { value: SetStateAction<string> };
@@ -161,17 +144,13 @@ export const GeneradorDocumentos: React.FC = () => {
       );
       setTiposRadicado(tipos);
     } catch (error: any) {
-      // console.error('Error al obtener los tipos de radicado:', error);
       control_error(error.response.data.detail);
     }
   };
 
-  useEffect(() => console.log(urlFile), [urlFile])
-
   useEffect(() => {
     fetchTiposRadicado();
   }, []);
-
 
   const [idPlantilla, setIdPlantilla] = useState('');
   const [plantillaSeleccionada, setPlantillaSeleccionada] = useState<any>(null);
@@ -181,9 +160,11 @@ export const GeneradorDocumentos: React.FC = () => {
     target: { value: SetStateAction<string> };
   }) => {
     const id_plantilla = event.target.value;
+    cleanTemplate();
     setUpdateBorrador(false)
     setSendTemplate(false)
     setHasConsecutivo(false);
+    setShowVariables(false);
     set_radicado_selected('');
     setUplockFirma(false);
     setIdPlantilla(id_plantilla)
@@ -323,7 +304,11 @@ export const GeneradorDocumentos: React.FC = () => {
   // };
 
   const handleEdicion = () => {
-    setShowVariables(!showVariables);
+    setShowVariables(true);
+  }
+
+  const cleanForm = () => {
+    setCleanFields(true);
   }
 
   const saveData = (data: any) => {
@@ -386,19 +371,6 @@ export const GeneradorDocumentos: React.FC = () => {
   const sendDocument = async () => {
     if(personaSelected.length){
       let allSuccess = true;
-      if(id_persona){
-        const exists = personaSelected.some(persona => persona.id === id_persona);
-        if (!exists) {
-          const body = {
-            id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
-            id_persona_asignada: id_persona,
-            firma: true
-          }
-          const success = await createAsignacionDocumento(body);
-          if (!success) allSuccess = false;
-        }
-      }
-
       for (const persona of personaSelected) {
         const body = {
             id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
@@ -410,9 +382,10 @@ export const GeneradorDocumentos: React.FC = () => {
       }
       if (allSuccess) {
         setUplockFirma(true);
+        setHasConsecutivo(false);
         if (personaSelected.length == 1) control_success('El documento se envió correctamente');
         if (personaSelected.length > 1) control_success('Todos los documentos se enviaron correctamente');
-        // cleanTemplate();
+
       } else {
         if (personaSelected.length == 1) control_error('Ocurrio un error al enviar el documento');
         if (personaSelected.length > 1) control_error('Hubo un error al enviar algunos documentos');
@@ -420,17 +393,37 @@ export const GeneradorDocumentos: React.FC = () => {
     }
   }
 
+  const alertCleanTemplate = () => {
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará todo el progreso actual',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, limpiar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cleanTemplate();
+      }
+    });
+  }
+
   const cleanTemplate = () => {
+    setIdPlantilla('');
     setPlantillaSeleccionada('');
     setVariablesPlantilla([]);
     setFile('');
+    setShowVariables(false);
     setSendTemplate(false);
     setUpdateBorrador(false);
     setHasConsecutivo(false);
-    setHasPersona(false);
     setpersona([]);
-    setperfilselet([]);
     setLideresUnidad([]);
+    setCleanFields(true);
+    setUplockFirma(false);
+    dispatch(resetBandejaDeTareas());
   }
 
   return (
@@ -481,6 +474,7 @@ export const GeneradorDocumentos: React.FC = () => {
               value={radicado_selected}
               label="Radicado"
               onChange={handleradicado}
+              disabled={!idPlantilla}
               helperText={"Elige un tipo de radicado"}
             >
               <MenuItem value="">Sin radicado</MenuItem>
@@ -516,12 +510,12 @@ export const GeneradorDocumentos: React.FC = () => {
           </Grid> */}
             <FormularioGenerador
               exCallback={saveData}
-              sendBorradorData={updateBorrador}
-              sendTemplateData={sendTemplate}
               isNewData={isNewData}
               setIsNewData={setIsNewData}
               variablesPlantilla={variablesPlantilla}
               showVariables={showVariables}
+              cleanFields={cleanFields}
+              setCleanFields={setCleanFields}
             ></FormularioGenerador>
             <Grid item xs={12}>
               {urlFile && (
@@ -539,16 +533,25 @@ export const GeneradorDocumentos: React.FC = () => {
               mx={1}
               sx={{ display: 'flex', justifyContent: 'end' }}
             >
-              <Grid item>
+              {!showVariables && <Grid item>
                 <Button
                   startIcon={<EditIcon />}
                   variant="contained"
                   onClick={handleEdicion}
-                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0 || showVariables}
                 >
-                  {showVariables ? 'Deshabilitar edición campos' : 'Habilitar edición campos'}
+                  Habilitar edición campos
                 </Button>
-              </Grid>
+              </Grid>}
+              {showVariables && plantillaSeleccionada && <Grid item>
+                <Button
+                  startIcon={<CleaningServicesIcon />}
+                  variant="outlined"
+                  onClick={cleanForm}
+                >
+                  Limpiar campos
+                </Button>
+              </Grid>}
               <Grid item>
                 <Button
                   startIcon={<FeedIcon />}
@@ -569,7 +572,7 @@ export const GeneradorDocumentos: React.FC = () => {
                   {sendTemplate ? 'Actualizar Documento' : 'Ver borrador'}
                 </Button>
               </Grid>
-              {/* <Grid item>
+              <Grid item>
                 <Button
                   component="label"
                   variant="outlined"
@@ -584,14 +587,14 @@ export const GeneradorDocumentos: React.FC = () => {
                     accept=".doc, .docx"
                   />
                 </Button>
-              </Grid> */}
+              </Grid>
               <Grid item>
                 <Button
                   startIcon={<SaveIcon />}
                   color="success"
                   variant="contained"
                   onClick={sendDocument}
-                  disabled={!plantillaSeleccionada || !hasConsecutivo || !hasPersona}
+                  disabled={!plantillaSeleccionada || !hasConsecutivo}
                 >
                   Enviar Documento
                 </Button>
@@ -600,7 +603,8 @@ export const GeneradorDocumentos: React.FC = () => {
       </Grid>
       <BusquedaPersonasGenerador
         personaSelected={personaSelected}
-        setpersona={setpersona}
+        setPersona={setpersona}
+        plantillaSeleccionada={plantillaSeleccionada}
       />
       {file && <Grid
         container
@@ -618,10 +622,9 @@ export const GeneradorDocumentos: React.FC = () => {
         }}
       >
         <VisorDocumentos
-          clean_template={cleanTemplate}
+          clean_template={alertCleanTemplate}
           file={file}
           current_borrador={currentBorrador}
-          none_firma={noneFirma}
           uplock_firma={uplockFirma}
           set_uplock_firma={setUplockFirma}
         />

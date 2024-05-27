@@ -72,9 +72,38 @@ export const ElementosDocumentos = (): JSX.Element => {
   const columns = [
     ...columnsDocumentos,
     {
+      headerName: "¿Documento Finalizado?",
+      field: "finalizado",
+      width: 250,
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
+        return (
+          <Chip
+            size="small"
+            label={params?.value?.documento?.finalizado ? 'Finalizado' : 'En proceso'}
+            color={params?.value?.documento?.finalizado ? 'success' : 'warning'}
+          />
+        );
+      },
+      // renderCell: (params: any) => params?.value?.documento?.finalizado ? 'Finalizado' : 'Sin Finalizar',
+    },
+    {
+      headerName: "¿Documento Firmado?",
+      field: "firma",
+      width: 250,
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
+        return (
+          <Chip
+            size="small"
+            label={params?.value?.asignaciones?.firma ? 'Firmado' : 'Sin Firmar'}
+            color={params?.value?.asignaciones?.firma ? 'success' : 'error'}
+          />
+        );
+      },
+    },
+    {
       headerName: 'Acciones',
       field: 'Acciones',
-      minWidth: 250,
+      minWidth: 200,
       renderCell: (params: GridCellParams | GridValueGetterParams) => {
         return (
           <>

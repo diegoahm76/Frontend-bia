@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CreateIcon from '@mui/icons-material/Create';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 import { ModalConfirmacionMail } from './ModalConfirmacionMail';
 import { useState } from 'react';
@@ -18,6 +19,10 @@ import swal from 'sweetalert2';
 
 export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_firma, set_uplock_firma, clean_template}: {file: any, current_borrador: any, uplock_firma: boolean, set_uplock_firma: (b: boolean) => void, clean_template: () => void}) => {
   const [open, setOpen] = useState(false);
+
+  const obtenerExtension = (url: any) => {
+    return url.split('.').pop();
+}
 
   const new_firma_code = async () => {
     try {
@@ -98,16 +103,15 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
               sx={{width: '250px'}}
               variant="outlined"
               color="primary"
-              endIcon={<CreateIcon />}
+              endIcon={<CleaningServicesIcon />}
               onClick={clean_template}
-              disabled={!uplock_firma}
             >
               Limpiar Pantalla
             </Button>
           </Grid>
           <DocViewer
             pluginRenderers={DocViewerRenderers}
-            documents={[{ uri: file, fileType: 'docx' }]}
+            documents={[{ uri: file, fileType: obtenerExtension(file) }]}
             style={{height: 800, width: '70%', display: 'flex', margin: 'auto'}}
           />
           <ModalConfirmacionMail

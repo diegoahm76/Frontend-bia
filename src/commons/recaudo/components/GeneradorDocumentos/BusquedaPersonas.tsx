@@ -8,22 +8,16 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { LoadingButton } from '@mui/lab';
-import { DataGrid } from '@mui/x-data-grid';
-import GroupIcon from '@mui/icons-material/Group';
 import { FC, useEffect, useState } from 'react';
-import SaveIcon from '@mui/icons-material/Save';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CircularProgress from '@mui/material/CircularProgress';
-// import { BuscadorPersona } from '../../../../../components/BuscadorPersona';
-//  import { Alertas, Persona, Props, SelectItem, lider } from '../../interfaces/types';
 import { Button, Checkbox, FormControl, Grid, IconButton, InputLabel, MenuItem, Select, TextField, } from '@mui/material';
-import { api } from '../../../../api/axios';
 import { control_error } from '../../../../helpers';
 import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 import { BuscadorPersona2 } from '../../../../components/BuscadorPersona2';
 import { Title } from '../../../../components';
 import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
+import { AuthSlice } from '../../../auth/interfaces';
+import { useSelector } from 'react-redux';
 
 
 export interface Persona {
@@ -44,93 +38,30 @@ export interface SelectItem {
 
 interface IProps {
     personaSelected: any;
-    setpersona: any;
-    // perfilselet: any;
-    // setperfilselet: any;
-    // lideresUnidad: any;
-    // setLideresUnidad: any;
+    setPersona: any;
+    plantillaSeleccionada: any;
 }
-// export const AlertaDocumento: React.FC<IProps> = ({ personaSelected, setpersona, perfilselet, setperfilselet, lideresUnidad, setLideresUnidad }) => {
-export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, setpersona }) => {
+export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, setPersona, plantillaSeleccionada }) => {
 
-    useEffect(() => {
-        if (!personaSelected) {
-            setpersonaa([]);
-        }
-    }, [personaSelected])
+    const {
+        userinfo
+      } = useSelector((state: AuthSlice) => state.auth);
+    const [persona, set_persona] = useState<Persona>(); //Se usa cuando se elige una sola persona
+    const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); } //Se usa cuando se elige una sola persona
 
-    const [persona, set_persona] = useState<Persona>();
-    const on_result = async (info_persona: Persona): Promise<void> => { set_persona(info_persona); }
+    const [persons, setPersons] = useState<Persona[]>([]); //Se usa cuando se elige varias personas
+    const [personaSelecteda, setpersonaa] = useState<any>([]);
 
-    useEffect(() => {
-        if(persona?.id_persona){
-            handleSinglePerson();
-        }
-    }, [persona])
+    const handlePersons = (input: any) => {
+        const personsArray = Array.isArray(input) ? input : [input];
 
-    const [opcionSeleccionada, setOpcionSeleccionada] = useState('0');
-
-    const selt1 = () => {
-        setOpcionSeleccionada("1")
-    };
-    const selt2 = () => {
-        setOpcionSeleccionada("2")
-    };
-
-    const selt3 = () => {
-        setOpcionSeleccionada("3")
-    };
-
-    const [persons, setPersons] = useState<Persona[]>([]);
-    const [personaSelecteda, setpersonaa] = useState<
-    { id_persona: string, primer_nombre: string, primer_apellido: string, numero_documento: string, razon_social: string, nombre_comercial: string, require_firma: boolean  }[]
-    >([]);
-
-    //TODO: eliminar
-    useEffect(() => {
-      if(personaSelecteda.length){
-        setpersona(personaSelecteda.map((persona) => ({ id: persona.id_persona, require_firma: persona.require_firma })));
-      }
-    }, [personaSelecteda])
-
-    useEffect(() => {
-        if (persons.length) {
-            handlePersons();
-        }
-    }, [persons])
-
-    const handleSinglePerson = () => {
-        // Verifica si 'persona' está definido y tiene un 'id_persona' no nulo/no indefinido
-        if (persona && persona.id_persona) {
-            // Verifica si la persona ya está en la lista basado en 'id_persona'
-            const yaExiste = personaSelecteda.some(p => p.id_persona === persona.id_persona);
-
-            if (!yaExiste) {
-                setpersonaa(prevLideres => [...prevLideres, {
-                    id_persona: persona.id_persona,
-                    primer_nombre: persona.primer_nombre,
-                    primer_apellido: persona.primer_apellido,
-                    numero_documento: persona.numero_documento,
-                    razon_social: persona.razon_social || '',
-                    nombre_comercial: persona.nombre_comercial || '',
-                    require_firma: persona.require_firma || false
-                }]);
-            } else{
-                control_warning("La persona ya fue agregada");
-            }
-        } else {
-            control_error("No hay ninguna persona seleccionada para agregar.");
-        }
-    };
-
-    const handlePersons = () => {
-        if (persons.length) {
-          const newPersons = persons.filter((persona) => {
-            return persona && persona.id_persona && !personaSelecteda.some(p => p.id_persona === persona.id_persona);
+        if (personsArray.length) {
+          const newPersons = personsArray.filter((persona) => {
+            return persona && persona.id_persona && !personaSelecteda.some((p: any) => p.id_persona === persona.id_persona);
           });
 
           if (newPersons.length) {
-            setpersonaa(prevLideres => [...prevLideres, ...newPersons.map(persona => ({
+            setpersonaa((prevLideres: any) => [...prevLideres, ...newPersons.map(persona => ({
               id_persona: persona.id_persona,
               primer_nombre: persona.primer_nombre,
               primer_apellido: persona.primer_apellido,
@@ -140,16 +71,62 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
               require_firma: persona.require_firma || false
             }))]);
           } else {
-            control_error("No hay ninguna persona nueva para agregar.");
+            control_warning("No hay ninguna persona nueva para agregar.");
           }
         } else {
           control_error("No hay ninguna persona seleccionada para agregar.");
         }
     };
 
+    // useEffect(() => {
+    //     if (!personaSelected.length) {
+    //         setpersonaa([]);
+    //     }
+    // }, [personaSelected])
+
+
+    useEffect(() => {
+        if(persona?.id_persona){
+            handlePersons(persona);
+        }
+    }, [persona])
+
+    useEffect(() => {
+        if (persons.length) {
+            handlePersons(persons);
+        }
+    }, [persons])
+
+    useEffect(() => {
+        if(plantillaSeleccionada?.archivos_digitales){
+            const yaExiste = personaSelecteda.some((p: any) => p.id_persona === userinfo.id_persona);
+            if(!yaExiste){
+                setpersonaa((prevLideres: any) => [...prevLideres, {
+                    id_persona: userinfo.id_persona,
+                    nombre: userinfo.nombre,
+                    primer_nombre: '',
+                    primer_apellido: '',
+                    razon_social: '',
+                    nombre_comercial: '',
+                    numero_documento: userinfo.numero_documento,
+                    require_firma: true
+                }]);
+            }
+        }else{
+            setpersonaa([])
+            setPersona([])
+        }
+    }, [plantillaSeleccionada])
+
+    useEffect(() => {
+      if(personaSelecteda.length){
+        setPersona(personaSelecteda.map((persona: any) => ({ id: persona.id_persona, require_firma: persona.require_firma })));
+      }
+    }, [personaSelecteda])
+
     const handleDelete = (idPersona: any) => {
         // Elimina el id_persona de personaSelected
-        setpersona(personaSelected.filter((obj: any) => obj.id !== idPersona));
+        setPersona(personaSelected.filter((obj: any) => obj.id !== idPersona));
 
         // Elimina la persona de personaa basado en id_persona
         setpersonaa(personaSelecteda.filter((persona: { id_persona: any; }) => persona.id_persona !== idPersona));
@@ -180,7 +157,7 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
             headerName: 'Nombre',
             flex: 2,
             editable: false,
-            valueGetter: (params: any) => `${params.row.primer_nombre || params.row.razon_social || params.row.nombre_comercial || ''} ${params.row.primer_apellido || ''}`,
+            valueGetter: (params: any) => `${params.row.primer_nombre || params.row.razon_social || params.row.nombre_comercial || params.row.nombre || ''} ${params.row.primer_apellido || ''}`,
         },
         {
           field: 'requiere_firma',
@@ -198,20 +175,28 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
             headerName: 'Acciones',
             flex :1,
             renderCell: (params: any) => (
-                <IconButton
+                params.row.id_persona === userinfo.id_persona ? (
+                  <IconButton
+                    color="error"
+                    disabled
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                ) : (
+                  <IconButton
                     color="error"
                     onClick={() => handleDelete(params.row.id_persona)}
-                >
+                  >
                     <DeleteIcon />
-                </IconButton>
-            ),
+                  </IconButton>
+                )
+              ),
         },
     ];
     return (
-
         <Grid container
             spacing={2}
-            m={2} p={2}
+            px={2}
             sx={{
                 position: 'relative',
                 background: '#FAFAFA',
@@ -222,126 +207,31 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
             }}
         >
             <Grid item marginTop={-2} xs={12}>
-                <Title title="Destinatario documento " />
+                <Title title="Destinatarios documento " />
             </Grid>
 
             <Grid container
                 item
-                // justifyContent="center"
-                spacing={2}>
-
-                <Grid item>
-                    <Button startIcon={<GroupIcon />} variant="contained" color="primary" onClick={selt3}>Buscador Persona</Button>
+                marginTop={-2}>
+                <Grid item xs={12}>
+                    <BuscadorPersona2
+                        onResult={(data) => {
+                            on_result(data);
+                        }}
+                        setPersons={setPersons}
+                        plantillaSeleccionada={plantillaSeleccionada}
+                    />
                 </Grid>
-                {opcionSeleccionada === '3' && <>
-
-                    <>
-                        <Grid item xs={12}>
-                            <BuscadorPersona2
-                                onResult={(data) => {
-                                  on_result(data);
-                                }}
-                                setPersons={setPersons}
-                            />
-                        </Grid>
-                        {/* <Grid item xs={12} sm={3}>
-                            <TextField
-                                label="Primer Nombre"
-                                variant="outlined"
-                                fullWidth
-                                size="small"
-                                disabled
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                value={persona?.primer_nombre}
-                            />
-                        </Grid> */}
-
-
-                        {/* <Grid item >
-                            <Button color='success'
-                                variant='contained'
-                                startIcon={<SaveIcon />} onClick={handleSinglePerson}>
-                                guardar
-                            </Button>
-
-                        </Grid> */}
-
-                        <RenderDataGrid
-                            title='Personas  '
-                            columns={columnss ?? []}
-                            rows={personaSelecteda ?? []}
-                        />
-
-
-                        {/* {persona?.id_persona} */}
-                    </>
-
-                </>}
-
+                <RenderDataGrid
+                    title='Personas  '
+                    columns={columnss ?? []}
+                    rows={personaSelecteda ?? []}
+                />
             </Grid>
 
 
 
             {/*  */}
-
-
-
-            {/* {selected_button === 'perfil' && (
-                <><Grid item xs={12}>
-                    <Grid item xs={12} sm={3}>
-                        <FormControl fullWidth size="small">
-                            <InputLabel>Perfil</InputLabel>
-                            <Select value={formData.perfil_profesional} label="Perfil" name="perfil_profesional" onChange={handleInputChange}>
-                                {perfil.map(item => (
-                                    <MenuItem key={item.value} value={item.value}>
-                                        {item.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                </Grid>
-                </>
-            )}
-
-
-            {selected_button === 'buscador' && (
-                <>
-                    <Grid item xs={12}>
-                        <BuscadorPersona
-                            onResult={(data) => {
-                                void on_result(data);
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={3}>
-                        <TextField
-                            label="Primer Nombre"
-                            variant="outlined"
-                            fullWidth
-                            size="small"
-                            disabled
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            value={persona?.primer_nombre}
-                        />
-                    </Grid>
-                </>
-            )}  */}
-
-
-
-
-            <Grid container item justifyContent="flex-end" >
-                <Grid item>
-
-
-
-                </Grid>
-            </Grid>
         </Grid>
     );
 };
