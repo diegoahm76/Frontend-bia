@@ -1555,6 +1555,7 @@ export const get_anexos_tarea = (id: any): any => {
       console.log(data);
 
       dispatch(set_soportes(data.data));
+      dispatch(set_exhibits(data.data));
 
       return data;
     } catch (error: any) {
