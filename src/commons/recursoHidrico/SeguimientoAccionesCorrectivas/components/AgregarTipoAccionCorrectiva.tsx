@@ -113,7 +113,6 @@ export const AgregarTipoAccion: React.FC<IProps> = ({
               <TextField
                 label="Descripción"
                 fullWidth
-                multiline
                 size="small"
                 margin="dense"
                 required

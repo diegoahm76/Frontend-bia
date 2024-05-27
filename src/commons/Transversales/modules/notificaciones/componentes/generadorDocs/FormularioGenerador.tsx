@@ -27,10 +27,10 @@ export const FormularioGenerador: React.FC<any> = (
   }, [isNewData]);
 
   const capitalizeAndSeparate = (name: string): string => {
-    const words = name.split(/(?=[A-Z])|_|-/);
+    const words = name.split(/(?=[A-Z])/);
     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
     return capitalizedWords.join(' ');
-};
+  };
 
   return (
     <>

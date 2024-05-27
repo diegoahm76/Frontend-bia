@@ -230,7 +230,7 @@ export const DatosAccesoScreen: React.FC = () => {
                   <img
                     src={
                       image_url?.includes('/home')
-                        ? process.env.NODE_ENV === 'development'
+                        ? process.env.NODE_ENV === 'production'
                           ? `${
                               process.env.REACT_APP_DOWNLOAD_FILES_BETA ||
                               `${DEFAULT_BETA_DOWNLOAD_FILES_URL}`
