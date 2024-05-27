@@ -14,7 +14,7 @@ export interface CarteraEdadData {
     "Mas 360 Dias": number;
 }
 
-export const CarteraEdad: React.FC = () => {
+export const ReporteGeneralCarteraEdad: React.FC = () => {
     const initialCarteraEdad: CarteraEdadData = {
         "0 a 30 Dias": 0,
         "181 a 360 Dias": 0,

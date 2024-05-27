@@ -67,7 +67,6 @@ export const GraficaApex = () => {
             const url = `/recaudo/reportes/reporte-general-cartera-deuda-y-etapa/`;
             const res = await api.get(url, { params: formData });
             const data_consulta = res.data.data;
-
             const data = Object.values(data_consulta).map((item: any) => item.total_sancion);
             const categories = Object.values(data_consulta).map((item: any) => item.codigo_contable__descripcion);
 
@@ -99,9 +98,6 @@ export const GraficaApex = () => {
             setLoading(false);
         }
     };
-
-
-
 
 
     useEffect(() => {

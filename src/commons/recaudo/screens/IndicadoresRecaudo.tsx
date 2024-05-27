@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React from 'react';
 import 'leaflet/dist/leaflet.css';
-import { CarteraPorDeuda } from './Graficas/CarteraEdad7';
+import { ReporteGeneralCarteraDeuda } from './Graficas/CarteraEdad7';
 import { SetStateAction, useState } from 'react';
 import { Title } from '../../../components/Title';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
 import { GraficaApex } from './Graficas/ReporteEdad3';
-import { ReporteCartera4 } from './Graficas/ReporteCartera4';
-import { CarteraEdad } from './Graficas/CarteraEdad';
-import { Reportetop1 } from './Graficas/Reportetop1';
+import { ReporteGeneralCarteraDeudayEdad } from './Graficas/ReporteCartera4';
+import { ReporteGeneralCarteraEdad } from './Graficas/CarteraEdad';
+import { ReporteCarteraDeudayEdadTop } from './Graficas/Reportetop1';
 import { CarteraPorDeudaEdad } from './Graficas/Reportetop2';
 import { DeudoresXConceptoTop } from './Graficas/CarteraTop';
 
@@ -63,30 +63,30 @@ export const IndicadoresRecaudo: React.FC = () => {
                   Reporte General de Cartera Por Edad
                 </MenuItem>
 
+                <MenuItem value="2">
+                  Reporte General Cartera Por Deuda{' '}
+                </MenuItem>
+
+                <MenuItem value="3">
+                  Reporte General de Cartera Por Deuda y Edad{' '}
+                </MenuItem>
+
                 <MenuItem value="4">
                   Reporte de Cartera Por Deuda y Edad –Top
                 </MenuItem>
 
+                <MenuItem value="5">
+                  Reporte General de Cartera Por Deuda y Edad –Top
+                </MenuItem>            
 
-                <MenuItem value="2">
-                  Reporte General Cartera Por Deuda{' '}
+                <MenuItem value="6">
+                  Reporte General Cartera Por Edad – Deuda y Etapa{' '}
                 </MenuItem>
 
                 <MenuItem value="7">
                   Reporte General Cartera Top 10 Deudores x Concepto{' '}
                 </MenuItem>
 
-                <MenuItem value="5">
-                  Reporte General de Cartera Por Deuda y Edad –Top
-                </MenuItem>
-                <MenuItem value="3">
-                  Reporte General de Cartera Por Deuda y Edad{' '}
-                </MenuItem>
-
-                
-                <MenuItem value="6">
-                  Reporte General Cartera Por Edad – Deuda y Etapa{' '}
-                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -96,27 +96,27 @@ export const IndicadoresRecaudo: React.FC = () => {
       {opcionSeleccionada === '1' ? (
         <>
           {/* R */}
-          <CarteraEdad />
+          <ReporteGeneralCarteraEdad />
         </>
       ) : null}
 
       {opcionSeleccionada === '2' ? (
         <>
           {/* Reporte General Cartera Por Edad – Deuda y Etapa */}
-          <CarteraPorDeuda />
+          <ReporteGeneralCarteraDeuda />
         </>
       ) : null}
       {opcionSeleccionada === '3' ? (
         <>
           {/* Reporte General de Cartera Por Deuda y Edad */}
-          <ReporteCartera4 />
+          <ReporteGeneralCarteraDeudayEdad />
         </>
       ) : null}
 
       {opcionSeleccionada === '4' ? (
         <>
           {/* Reporte General de Cartera Por Deuda y Edad –Top1 */}
-          <Reportetop1 />
+          <ReporteCarteraDeudayEdadTop />
         </>
       ) : null}
       {opcionSeleccionada === '5' ? (

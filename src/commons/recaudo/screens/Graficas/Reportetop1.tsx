@@ -9,7 +9,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 
 
-export const Reportetop1: React.FC = () => {
+export const ReporteCarteraDeudayEdadTop: React.FC = () => {
     interface FormData {
         fecha_facturacion_desde: string;
         fecha_facturacion_hasta: string;
