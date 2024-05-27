@@ -161,7 +161,7 @@ export const Reportetop1: React.FC = () => {
                 </Button>
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={12} sx={{ background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF ` }}>
                 <ReactApexChart
                     options={{
                         chart: {

@@ -5,7 +5,7 @@ import { CarteraPorDeuda } from './Graficas/CarteraEdad7';
 import { SetStateAction, useState } from 'react';
 import { Title } from '../../../components/Title';
 import { FormControl, Grid, InputLabel, MenuItem, Select } from '@mui/material';
-import { ReporteEdad3 } from './Graficas/ReporteEdad3';
+import { GraficaApex } from './Graficas/ReporteEdad3';
 import { ReporteCartera4 } from './Graficas/ReporteCartera4';
 import { CarteraEdad } from './Graficas/CarteraEdad';
 import { Reportetop1 } from './Graficas/Reportetop1';
@@ -13,7 +13,7 @@ import { CarteraPorDeudaEdad } from './Graficas/Reportetop2';
 import { DeudoresXConceptoTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('6');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
@@ -129,7 +129,7 @@ export const IndicadoresRecaudo: React.FC = () => {
       {opcionSeleccionada === '6' ? (
         <>
           {/* Reporte General de Cartera Por Edad */}
-          <ReporteEdad3 />
+          <GraficaApex />
         </>
       ) : null}
 
