@@ -95,8 +95,8 @@ export const ElementosDocumentos = (): JSX.Element => {
         return (
           <Chip
             size="small"
-            label={params?.row?.asignaciones?.persona_firmo ? 'Firmado' : 'Sin Firmar'}
-            color={params?.row?.asignaciones?.persona_firmo ? 'success' : 'error'}
+            label={params?.row?.asignaciones?.firma ? (params?.row?.asignaciones?.persona_firmo ? 'Firmado' : 'Sin Firmar') : 'N/A'}
+            color={params?.row?.asignaciones?.firma ? (params?.row?.asignaciones?.persona_firmo ? 'success' : 'error'): 'warning'}
           />
         );
       },
