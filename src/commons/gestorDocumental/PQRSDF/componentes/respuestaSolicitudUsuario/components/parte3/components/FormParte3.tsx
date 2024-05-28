@@ -440,32 +440,6 @@ export const FormParte3 = ({
                     }}
                   >
                     <MenuItem value=""><em>Selecciona un documento</em></MenuItem>
-                    <MenuItem value="1">hola</MenuItem>
-                    <MenuItem value="2">hola 2</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
-                    <MenuItem value="3">hola 3</MenuItem>
                     {documentosFinalizados.map((document: any) => (
                       <MenuItem key={document.id_consecutivo_tipologia} value={document.id_consecutivo_tipologia}>
                         {document.archivos_digitales.nombre_de_Guardado}

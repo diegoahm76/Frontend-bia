@@ -115,8 +115,9 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const search_opa = async (id: string) => {
     try {
-      const url = `gestor/pqr/get_opa-panel/${id}/`;
+      const url = `gestor/bandeja-tareas/opa/tramite/detalle/get/${id}/`;
       const response = await api.get(url);
+      console.log(response);
       if(response?.data?.data){
         control_success('Datos cargados correctamente, elige la plantalla correspondiente');
         setContentData(response.data.data);
@@ -259,7 +260,7 @@ export const GeneradorDocumentos: React.FC = () => {
       setFile(`${url}${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
       let variablesFiltradas = plantillaSeleccionada.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
       let newMatchingData: any = {};
-      if (contentData?.id_PQRSDF) {
+      if (contentData?.id_PQRSDF || contentData?.id_persona_registra) {
         const keyscontentData = Object.keys(contentData.info_persona_titular);
         variablesFiltradas = variablesFiltradas.filter((variable: string) => {
           if (keyscontentData.includes(variable) && contentData.info_persona_titular[variable]) {
@@ -270,17 +271,6 @@ export const GeneradorDocumentos: React.FC = () => {
         });
       }
 
-      if(contentData?.id_tramite && !contentData?.id_PQRSDF){
-        const keyscontentData = Object.keys(contentData.info_persona_titular);
-        console.log(keyscontentData);
-        variablesFiltradas = variablesFiltradas.filter((variable: string) => {
-          if (keyscontentData.includes(variable) && contentData.info_persona_titular[variable]) {
-            newMatchingData[variable] = contentData.info_persona_titular[variable];
-            return false;
-          }
-          return true;
-        });
-      }
       setMatchingData(newMatchingData);
       setVariablesPlantilla(variablesFiltradas);
     }
@@ -289,7 +279,6 @@ export const GeneradorDocumentos: React.FC = () => {
   useEffect(() => {
     if (plantillaSeleccionada?.archivos_digitales && hasValue(matchingData)) {
       generateBorrador();
-      console.log('matchingData', matchingData);
     }
   }, [matchingData])
 
