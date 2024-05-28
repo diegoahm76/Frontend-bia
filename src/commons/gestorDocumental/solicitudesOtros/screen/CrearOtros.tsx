@@ -210,6 +210,8 @@ export function CrearOtroScreen(): JSX.Element {
 
   useEffect(() => {
     console.log(userinfo);
+    console.log('PQR----', pqr);
+    console.log('OTRO------', otro);
     if (userinfo.id_persona !== null && userinfo.id_persona !== 0) {
       void dispatch(get_pqr_types_service());
       void dispatch(get_presentation_types_service());
@@ -225,11 +227,11 @@ export function CrearOtroScreen(): JSX.Element {
           cod_forma_presentacion:
             representacion_legal?.tipo_sesion === 'E'
               ? 'E'
-              : pqr.cod_forma_presentacion,
+              : otro.cod_forma_presentacion || pqr.cod_forma_presentacion,
           id_medio_solicitud:
             representacion_legal?.tipo_sesion === 'E'
               ? 2
-              : pqr.id_medio_solicitud,
+              : otro.id_medio_solicitud || pqr.id_medio_solicitud,
         })
       );
     }
@@ -294,14 +296,17 @@ export function CrearOtroScreen(): JSX.Element {
   };
 
   useEffect(() => {
+    console.log(otro, 'OTROOOOOOOOOOOOO');
+    console.log(exhibits, 'EXHIBIT');
+    console.log(pqr, 'PQR');
     reset_pqrsdf({
       ...otro,
       cod_forma_presentacion:
         representacion_legal?.tipo_sesion === 'E'
           ? 'E'
-          : pqr.cod_forma_presentacion,
+          : pqr.cod_forma_presentacion || otro.cod_forma_presentacion,
       id_medio_solicitud:
-        representacion_legal?.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud,
+        representacion_legal?.tipo_sesion === 'E' ? 2 : pqr.id_medio_solicitud || otro.id_medio_solicitud,
     });
     if (otro.id_otros !== null && otro.id_otros !== undefined) {
       if ('anexos' in otro) {
@@ -325,13 +330,14 @@ export function CrearOtroScreen(): JSX.Element {
     } else {
       set_action('crear');
     }
-  }, [otro]);
+  }, [otro, control_pqrsdf]);
 
   useEffect(() => {
     if (exhibits.length > 0) {
       dispatch(set_other({ ...otro, anexos: exhibits }));
     }
   }, [exhibits]);
+
 
   const on_submit = (data: IObjOtros): void => {
     const form_data: any = new FormData();
