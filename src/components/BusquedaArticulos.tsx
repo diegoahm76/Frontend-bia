@@ -101,12 +101,6 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
 
   const columnsss: custom_column[] = [
     {
-      field: 'id_bien',
-      headerName: 'Id',
-      minWidth: 80,
-      maxWidth: 100
-    },
-    {
       field: 'codigo_bien',
       headerName: 'Código',
       minWidth: 160,
@@ -118,7 +112,7 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
     },
     {
       field: 'tipo_bien',
-      headerName: 'Tipo bien',
+      headerName: 'Tipo de bien',
       minWidth: 100
     },
   ];

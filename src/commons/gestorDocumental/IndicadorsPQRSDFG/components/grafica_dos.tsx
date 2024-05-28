@@ -42,7 +42,7 @@ export const BasicDemo = ({ id = uuidv4(), titulo = '', value }: any) => {
 
   return (
     <>
-      <div id={id} style={{ textAlign: 'center' }} >
+      <div id={id} style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }} >
         <h2>{titulo ? titulo.toString() : ''}</h2>
         <Knob value={value || 0} size={200} disabled />
         <Button onClick={exportToPDF} variant="contained" color="primary">

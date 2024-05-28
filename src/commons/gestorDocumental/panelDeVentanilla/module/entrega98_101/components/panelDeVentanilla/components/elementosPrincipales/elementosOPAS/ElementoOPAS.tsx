@@ -22,6 +22,8 @@ import Swal from 'sweetalert2';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import { getComplementosAsociadosPqrsdf } from '../../../../../../../toolkit/thunks/PqrsdfyComplementos/getComplementos.service';
 import { getComplementosAsociadosOpas } from '../../../../../../../toolkit/thunks/opas/complementos/getComplementosOpas.service';
+import AddIcon from '@mui/icons-material/Add';
+import { CrearSolicitudOpa } from './Request/CrearSolicitudOpa';
 
 export const ElementoOPAS = (): JSX.Element => {
   // ? dispatch necesario
@@ -101,7 +103,7 @@ const actionsOpas: any[] = [
   },
 ];
 */
-  //* inicio should disable
+    //* inicio should disable
     const shouldDisable = (actionId: string) => {
       const isNoSeleccionado = !opa;
       const isAsigGrup = actionId === 'AsigGrup';
@@ -155,11 +157,11 @@ const actionsOpas: any[] = [
         return !(actionId === 'Dig' /*|| actionId === 'Jurídica'*/);
       }
 
-      if(pendienteRevisionJuridica){
+      if (pendienteRevisionJuridica) {
         return !(actionId === 'Jurídica');
       }
 
-      if(revisadoPorJuridicaDeVentanilla){
+      if (revisadoPorJuridicaDeVentanilla) {
         return !(actionId === 'Jurídica' || actionId === 'AsigGrup')
       }
 
@@ -234,12 +236,12 @@ const actionsOpas: any[] = [
               params.row?.estado_asignacion_grupo === 'Pendiente'
                 ? 'warning'
                 : params.row?.estado_asignacion_grupo === 'Aceptado'
-                ? 'success'
-                : params.row?.estado_asignacion_grupo === 'Rechazado'
-                ? 'error'
-                : !params.row?.estado_asignacion_grupo
-                ? 'warning' // Cambia 'default' al color que desees para el caso null
-                : 'default'
+                  ? 'success'
+                  : params.row?.estado_asignacion_grupo === 'Rechazado'
+                    ? 'error'
+                    : !params.row?.estado_asignacion_grupo
+                      ? 'warning' // Cambia 'default' al color que desees para el caso null
+                      : 'default'
             }
           />
         );
@@ -341,11 +343,25 @@ const actionsOpas: any[] = [
                 </Avatar>
               </IconButton>
             </Tooltip>
+
+
+            <Tooltip title="Crear Solicitud de Opa">
+              <IconButton onClick={() => CrearSolicitudOpa(params?.row.id_solicitud_tramite)}>
+                <AddIcon />
+
+              </IconButton>
+            </Tooltip>
+
+
           </>
         );
       },
     },
   ];
+
+
+
+
 
   return (
     <>
