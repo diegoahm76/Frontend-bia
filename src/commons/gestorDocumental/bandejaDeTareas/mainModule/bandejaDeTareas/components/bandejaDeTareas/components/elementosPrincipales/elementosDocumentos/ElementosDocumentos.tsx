@@ -79,8 +79,8 @@ export const ElementosDocumentos = (): JSX.Element => {
         return (
           <Chip
             size="small"
-            label={params?.value?.documento?.finalizado ? 'Finalizado' : 'En proceso'}
-            color={params?.value?.documento?.finalizado ? 'success' : 'warning'}
+            label={params?.row?.documento?.finalizado ? 'Finalizado' : 'En proceso'}
+            color={params?.row?.documento?.finalizado ? 'success' : 'warning'}
           />
         );
       },
@@ -91,11 +91,12 @@ export const ElementosDocumentos = (): JSX.Element => {
       field: "firma",
       width: 250,
       renderCell: (params: GridCellParams | GridValueGetterParams) => {
+        console.log(params);
         return (
           <Chip
             size="small"
-            label={params?.value?.asignaciones?.firma ? 'Firmado' : 'Sin Firmar'}
-            color={params?.value?.asignaciones?.firma ? 'success' : 'error'}
+            label={params?.row?.asignaciones?.persona_firmo ? 'Firmado' : 'Sin Firmar'}
+            color={params?.row?.asignaciones?.persona_firmo ? 'success' : 'error'}
           />
         );
       },

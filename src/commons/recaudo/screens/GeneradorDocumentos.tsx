@@ -10,6 +10,8 @@ import {
   TextField,
   Button,
   Chip,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../components';
@@ -20,8 +22,9 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 import FeedIcon from '@mui/icons-material/Feed';
-import CloseIcon from '@mui/icons-material/Close';
+import DeleteIcon from '@mui/icons-material/Delete';
 import UpdateIcon from '@mui/icons-material/Update';
+import UploadIcon from '@mui/icons-material/Upload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
@@ -46,14 +49,17 @@ export const GeneradorDocumentos: React.FC = () => {
   const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
   const [file, setFile] = useState(''); //Archivo desde el server (plantilla)
   const [urlFile, setUrlFile] = useState<any>(null); //Archivo cargado desde local
-  const [updateBorrador, setUpdateBorrador] = useState(false);
+  const [updateBorrador, setUpdateBorrador] = useState(false); //Se utiliza cuando se actualiza el borrador
   const [updateDocument, setUpdateDocument] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(false);
   const [uplockFirma, setUplockFirma] = useState(false);
   const [isNewData, setIsNewData] = useState(false);
+  const [isUploadDocument, setIsUploadDocument] = useState(false); //Se utiliza cuando se sube un documento
   const [hasConsecutivo, setHasConsecutivo] = useState(false);
   const [hasRadicado, setHasRadicado] = useState(false);
   const [cleanFields, setCleanFields] = useState(false);
+
+  const [checked, setChecked] = useState(false);
 
   const [contentData, setContentData] = useState<any>({}); // Datos para llenar el documento
   const [matchingData, setMatchingData] = useState<any>({}); // Datos para llenar el documento
@@ -62,7 +68,6 @@ export const GeneradorDocumentos: React.FC = () => {
   const urlBase = baseURL.replace("/api/", "");
 
   const [radicado_selected, set_radicado_selected] = useState('');
-
 
   const dispatch = useAppDispatch();
 
@@ -82,7 +87,7 @@ export const GeneradorDocumentos: React.FC = () => {
           setCurrentBorrador(currentElement.documento);
           setHasConsecutivo(true);
           setUplockFirma(true);
-          if(!currentElement.asignaciones?.firma){
+          if(!currentElement.asignaciones?.firma || currentElement.asignaciones?.persona_firmo){
             setUplockFirma(false);
           }
         setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
@@ -208,13 +213,41 @@ export const GeneradorDocumentos: React.FC = () => {
       const resp: any = await api.post(url, data);
       if(resp.data.data){
         removeFile()
-        if(updateBorrador || updateDocument || sendTemplate) setCurrentBorrador(resp.data.data)
+        if(sendTemplate) setHasConsecutivo(true);
+        if(radicado_selected && sendTemplate && !hasConsecutivo) setHasRadicado(true);
+        if(updateDocument && !hasRadicado) setHasRadicado(true);
+        if(isUploadDocument) setChecked(false);
+        if(isUploadDocument && !hasRadicado) setHasRadicado(true);
+        if(updateBorrador || updateDocument || sendTemplate || isUploadDocument) setCurrentBorrador(resp.data.data)
         setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
       }
     } catch (error: any) {
+      if(!hasConsecutivo) setSendTemplate(false);
       control_error(error.response.data.detail);
     }
   };
+
+  const uploadDocument = async (data: any) => {
+    try {
+      const url = `/gestor/trd/crear-documento-cargado/`;
+      const resp: any = await api.post(url, data);
+      if(resp.data.data){
+        processPlantilla(resp.data.data);
+        setCurrentBorrador(resp.data.data)
+        setIsUploadDocument(true);
+        if(!checked) setHasConsecutivo(true);
+        control_success('Documento cargado correctamente');
+      }
+    } catch (error: any) {
+      control_error(error?.response?.data?.detail);
+    }
+  };
+
+  useEffect(() => {
+    if(isUploadDocument && !checked){
+      setHasConsecutivo(true);
+    }
+  }, [checked])
 
   const createAsignacionDocumento = async (body: any) => {
     try {
@@ -240,12 +273,47 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
-    const url = URL.createObjectURL(file);
-    setUrlFile({ name: file.name, url });
+    setUrlFile(file);
+  };
+
+  const handleUpload = () => {
+    const data = { plantilla: idPlantilla };
+
+    const formData = new FormData();
+    formData.append('archivo', urlFile);
+    formData.append('data', JSON.stringify(data));
+
+    uploadDocument(formData);
+  };
+
+  const handleChangeCheck = (event: any) => {
+    setChecked(event.target.checked);
+  };
+
+  const handleDelete = () => {
+    if(isUploadDocument){
+      swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Al eliminar el archivo se perderá el progreso actual',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          cleanTemplate();
+        }
+      });
+    }
+    if(!isUploadDocument){
+      setUrlFile(null);
+    }
   };
 
   const removeFile = () => {
-    setUrlFile(null);
+    setFile('');
   };
 
   useEffect(() => {
@@ -253,27 +321,32 @@ export const GeneradorDocumentos: React.FC = () => {
     fetch_data_plantillas();
   }, []);
 
-  useEffect(() => {
-    if(plantillaSeleccionada?.archivos_digitales){
+  const processPlantilla = (plantilla: any) => {
+    if(plantilla?.archivos_digitales){
       removeFile()
-      const url = baseURL.replace("/api/", "");
-      setFile(`${url}${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
-      let variablesFiltradas = plantillaSeleccionada.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
-      let newMatchingData: any = {};
-      if (contentData?.id_PQRSDF || contentData?.id_persona_registra) {
-        const keyscontentData = Object.keys(contentData.info_persona_titular);
-        variablesFiltradas = variablesFiltradas.filter((variable: string) => {
-          if (keyscontentData.includes(variable) && contentData.info_persona_titular[variable]) {
-            newMatchingData[variable] = contentData.info_persona_titular[variable];
-            return false;
-          }
-          return true;
-        });
-      }
+      setFile(`${urlBase}${plantilla.archivos_digitales.ruta_archivo}`)
+      if(Object.keys(plantilla.variables).length){
+        let variablesFiltradas = plantilla.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
+        let newMatchingData: any = {};
+        if (contentData?.id_PQRSDF || contentData?.id_persona_registra) {
+          const keyscontentData = Object.keys(contentData.info_persona_titular);
+          variablesFiltradas = variablesFiltradas.filter((variable: string) => {
+            if (keyscontentData.includes(variable) && contentData.info_persona_titular[variable]) {
+              newMatchingData[variable] = contentData.info_persona_titular[variable];
+              return false;
+            }
+            return true;
+          });
+        }
 
-      setMatchingData(newMatchingData);
-      setVariablesPlantilla(variablesFiltradas);
+        setMatchingData(newMatchingData);
+        setVariablesPlantilla(variablesFiltradas);
+      }
     }
+  }
+
+  useEffect(() => {
+    processPlantilla(plantillaSeleccionada);
   }, [plantillaSeleccionada, contentData]);
 
   useEffect(() => {
@@ -285,12 +358,6 @@ export const GeneradorDocumentos: React.FC = () => {
   const hasValue = (obj: any) => {
     return Object.values(obj).some(valor => valor !== null && valor !== undefined && valor !== '');
   }
-
-  // const handleChange = (event: any) => {
-  //   setUnidadSeleccionada(event.target.value as string);
-  //   const selectedId = event.target.value;
-  //   setIdUnidadSeleccionada(selectedId);
-  // };
 
   const handleEdicion = () => {
     setShowVariables(true);
@@ -307,36 +374,50 @@ export const GeneradorDocumentos: React.FC = () => {
     };
     if(hasValue(data) || hasValue(matchingData)){
 
-      if(updateBorrador){
+      if(updateBorrador && !isUploadDocument){
         sendData.variable = 'B'
       }
 
-      if(sendTemplate && !hasConsecutivo && !radicado_selected){
+      if(sendTemplate && !hasConsecutivo && !radicado_selected && !isUploadDocument){
         sendData.variable = 'DC'
-        setHasConsecutivo(true);
       }
 
-      if(radicado_selected && sendTemplate && !hasConsecutivo){
+      if(radicado_selected && sendTemplate && !hasConsecutivo && !isUploadDocument){
         sendData.cod_tipo_radicado = radicado_selected;
         sendData.variable = 'DCR'
-        setHasConsecutivo(true);
-        setHasRadicado(true);
       }
 
-      if(updateDocument){
+      if(updateDocument && !isUploadDocument){
         if(!hasRadicado) {
           sendData.cod_tipo_radicado = radicado_selected;
-          setHasRadicado(true);
         }
         sendData.variable = 'A'
         sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
         setHasConsecutivo(true);
       }
 
+      if(isUploadDocument){
+        if(radicado_selected && !hasRadicado) {
+          sendData.cod_tipo_radicado = radicado_selected;
+        }
+        sendData.variable = 'AC'
+        sendData.consecutivo = checked;
+        sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
+      }
+
       generateDocument(sendData);
     }else{
       control_error('No se han ingresado datos para actualizar el documento');
-      setSendTemplate(false);
+      if(!hasConsecutivo) setSendTemplate(false);
+      if(isUploadDocument && !variablesPlantilla.length){
+        if(radicado_selected && !hasRadicado) {
+          sendData.cod_tipo_radicado = radicado_selected;
+        }
+        sendData.variable = 'AC'
+        sendData.consecutivo = checked;
+        sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
+        generateDocument(sendData);
+      }
     }
   }
 
@@ -350,10 +431,18 @@ export const GeneradorDocumentos: React.FC = () => {
     if(sendTemplate){
       setUpdateDocument(true);
     }else{
-      set_radicado_selected('');
+      // set_radicado_selected('');
       setSendTemplate(false);
       setUpdateBorrador(true);
     }
+    setIsNewData(true);
+  }
+
+  const updateUploadDoc = () => {
+    setIsUploadDocument(true);
+    setUpdateDocument(false);
+    setSendTemplate(false);
+    setUpdateBorrador(false);
     setIsNewData(true);
   }
 
@@ -371,7 +460,16 @@ export const GeneradorDocumentos: React.FC = () => {
       }
       if (allSuccess) {
         setUplockFirma(true);
+        setVariablesPlantilla([]);
+        setShowVariables(false);
+        setSendTemplate(false);
+        setUpdateBorrador(false);
         setHasConsecutivo(false);
+        setHasRadicado(false);
+        setpersona([]);
+        setLideresUnidad([]);
+        setCleanFields(true);
+        setIsUploadDocument(false);
         if (personaSelected.length == 1) control_success('El documento se envió correctamente');
         if (personaSelected.length > 1) control_success('Todos los documentos se enviaron correctamente');
 
@@ -390,7 +488,7 @@ export const GeneradorDocumentos: React.FC = () => {
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
-      confirmButtonText: 'Sí, limpiar',
+      confirmButtonText: 'Continuar',
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
@@ -399,19 +497,39 @@ export const GeneradorDocumentos: React.FC = () => {
     });
   }
 
+  const handleUploadAlert = () => {
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Al subir un archivo se eliminará el progreso en la plantilla actual',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleUpload();
+      }
+    });
+  };
+
   const cleanTemplate = () => {
     setIdPlantilla('');
     setPlantillaSeleccionada('');
     setVariablesPlantilla([]);
     setFile('');
+    setUrlFile(null);
     setShowVariables(false);
     setSendTemplate(false);
     setUpdateBorrador(false);
     setHasConsecutivo(false);
+    setHasRadicado(false);
     setpersona([]);
     setLideresUnidad([]);
     setCleanFields(true);
     setUplockFirma(false);
+    setIsUploadDocument(false);
     dispatch(resetBandejaDeTareas());
   }
 
@@ -463,7 +581,7 @@ export const GeneradorDocumentos: React.FC = () => {
               value={radicado_selected}
               label="Radicado"
               onChange={handleradicado}
-              disabled={!idPlantilla}
+              disabled={!idPlantilla || hasRadicado}
               helperText={"Elige un tipo de radicado"}
             >
               <MenuItem value="">Sin radicado</MenuItem>
@@ -497,6 +615,51 @@ export const GeneradorDocumentos: React.FC = () => {
               </TextField>
               </FormControl>
           </Grid> */}
+            {urlFile &&
+              <>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    value={urlFile.name}
+                    fullWidth
+                    size="small"
+                    label="Documento local"
+                    disabled
+                  />
+                </Grid>
+                <Grid item>
+                  <Button
+                    onClick={handleDelete}
+                    variant='outlined'
+                    startIcon={<DeleteIcon />}
+                  >
+                    Borrar
+                  </Button>
+                </Grid>
+                <Grid item>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked}
+                      onChange={handleChangeCheck}
+                      color="primary"
+                      disabled={isUploadDocument}
+                    />
+                  }
+                  label={checked ? 'Requiere consecutivo' : 'No requiere consecutivo'}
+                />
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant='contained'
+                    startIcon={<UploadIcon />}
+                    onClick={handleUploadAlert}
+                    disabled={isUploadDocument}
+                  >
+                    Subir
+                  </Button>
+                </Grid>
+              </>
+            }
             <FormularioGenerador
               exCallback={saveData}
               isNewData={isNewData}
@@ -506,15 +669,6 @@ export const GeneradorDocumentos: React.FC = () => {
               cleanFields={cleanFields}
               setCleanFields={setCleanFields}
             ></FormularioGenerador>
-            <Grid item xs={12}>
-              {urlFile && (
-                <Chip
-                  label={urlFile.name}
-                  onDelete={removeFile}
-                  deleteIcon={<CloseIcon />}
-                />
-              )}
-            </Grid>
             <Grid
               container
               spacing={2}
@@ -532,7 +686,7 @@ export const GeneradorDocumentos: React.FC = () => {
                   Habilitar edición campos
                 </Button>
               </Grid>}
-              {showVariables && plantillaSeleccionada && <Grid item>
+              {/* {showVariables && plantillaSeleccionada && <Grid item>
                 <Button
                   startIcon={<CleaningServicesIcon />}
                   variant="outlined"
@@ -540,18 +694,18 @@ export const GeneradorDocumentos: React.FC = () => {
                 >
                   Limpiar campos
                 </Button>
-              </Grid>}
+              </Grid>} */}
               <Grid item>
                 <Button
                   startIcon={<FeedIcon />}
                   variant="contained"
                   onClick={generateConsecutivo}
-                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0 || sendTemplate}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0 || sendTemplate || isUploadDocument}
                 >
                   {radicado_selected ? 'Generar Consecutivo y Radicado' : 'Generar Consecutivo'}
                 </Button>
               </Grid>
-              <Grid item>
+              {!isUploadDocument && <Grid item>
                 <Button
                 startIcon={sendTemplate ? <UpdateIcon /> : <VisibilityIcon />}
                 variant="contained"
@@ -560,15 +714,25 @@ export const GeneradorDocumentos: React.FC = () => {
                 >
                   {sendTemplate ? 'Actualizar Documento' : 'Ver borrador'}
                 </Button>
-              </Grid>
+              </Grid>}
+              {isUploadDocument && <Grid item>
+                <Button
+                startIcon={sendTemplate ? <UpdateIcon /> : <VisibilityIcon />}
+                variant="contained"
+                onClick={updateUploadDoc}
+                disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
+                >
+                  Actualizar Documento
+                </Button>
+              </Grid>}
               <Grid item>
                 <Button
                   component="label"
                   variant="outlined"
                   startIcon={<CloudUploadIcon />}
-                  disabled={!plantillaSeleccionada}
+                  disabled={!plantillaSeleccionada || isUploadDocument}
                 >
-                  Cargar Plantilla
+                  Cargar Documento
                   <input
                     type="file"
                     style={{ display: "none" }}
