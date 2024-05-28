@@ -35,50 +35,45 @@ import {
   initialSugerenciasRadicadasData,
   initialQuejasContestadasOportunamenteData,
 } from '../interface/interfacesIndicadores';
+
 import { PorcentajeContext } from '../context/porcentasjesGraficas';
 
+interface PQRSDFContestadasVencidasData{
+  num_pqrsdf_recibidas:number;
+  num_pqrsdf_vencidas_contestadas:number ;
+  num_pqrsdf_vencidas_no_contestadas:number;
+  porcentaje_vencidas_contestadas: number;
+  porcentaje_vencidas_no_contestadas: number;
+  rango_cumplimiento: string;
+}
+const PQRSDFContestadasVencidasDataInitial:PQRSDFContestadasVencidasData={
+  num_pqrsdf_recibidas:0,
+  num_pqrsdf_vencidas_contestadas:0 ,
+  num_pqrsdf_vencidas_no_contestadas:0,
+  porcentaje_vencidas_contestadas: 0,
+  porcentaje_vencidas_no_contestadas: 0,
+  rango_cumplimiento: "",
+}
+
+
 export const PantallaPindicadores = () => {
-  const [P_AtencionAPQRSDF, SET_P_AtencionAPQRSDF] =
-    useState<PQRSDFDataAtencionaQqrsdf>(initialPQRSDFData);
-  const [dataAtencionDerechosPeticion, setDataAtencionDerechosPeticion] =
-    useState<AtencionDerechosPeticionData>(initialAtencionDerechosPeticionData);
-  const [dataAtencionQuejas, setDataAtencionQuejas] =
-    useState<AtencionQuejasData>(initialAtencionQuejasData);
-  const [dataAtencionReclamos, setDataAtencionReclamos] =
-    useState<AtencionReclamosData>(initialAtencionReclamosData);
-  const [dataSugerenciasRadicadas, setDataSugerenciasRadicadas] =
-    useState<SugerenciasRadicadasData>(initialSugerenciasRadicadasData);
-  const [
-    dataPqrsdfContestadasOportunamente,
-    setDataPqrsdfContestadasOportunamente,
-  ] = useState<PqrsdfContestadasOportunamenteData>(
-    initialPqrsdfContestadasOportunamenteData
-  );
-  const [
-    dataPeticionesContestadasOportunamente,
-    setDataPeticionesContestadasOportunamente,
-  ] = useState<PeticionesContestadasOportunamenteData>(
-    initialPeticionesContestadasOportunamenteData
-  );
-  const [
-    dataQuejasContestadasOportunamente,
-    setDataQuejasContestadasOportunamente,
-  ] = useState<QuejasContestadasOportunamenteData>(
-    initialQuejasContestadasOportunamenteData
-  );
-  const [dataReclamosOportunamente, setDataReclamosOportunamente] =
-    useState<ReclamosOportunamenteData>(initialReclamosOportunamenteData);
-  const [
-    dataDenunciasContestadasOportunamente,
-    setDataDenunciasContestadasOportunamente,
-  ] = useState<DenunciasContestadasOportunamenteData>(
-    initialDenunciasContestadasOportunamenteData
-  );
-  const [dataPQRSDFVencidas, setDataPQRSDFVencidas] =
-    useState<PQRSDFVencidasData>(initialPQRSDFVencidasData);
-  const [dataPeriodicidad, setDataPeriodicidad] =
-    useState<PeriodicidadData | null>(null);
+
+
+
+  const [P_AtencionAPQRSDF, SET_P_AtencionAPQRSDF] =useState<PQRSDFDataAtencionaQqrsdf>(initialPQRSDFData);
+  const [dataAtencionDerechosPeticion, setDataAtencionDerechosPeticion] =useState<AtencionDerechosPeticionData>(initialAtencionDerechosPeticionData);
+  const [dataAtencionQuejas, setDataAtencionQuejas] =useState<AtencionQuejasData>(initialAtencionQuejasData);
+  const [dataAtencionReclamos, setDataAtencionReclamos] =useState<AtencionReclamosData>(initialAtencionReclamosData);
+  const [dataSugerenciasRadicadas, setDataSugerenciasRadicadas] =useState<SugerenciasRadicadasData>(initialSugerenciasRadicadasData);
+  const [dataPqrsdfContestadasOportunamente,setDataPqrsdfContestadasOportunamente] = useState<PqrsdfContestadasOportunamenteData>(initialPqrsdfContestadasOportunamenteData);
+  const [dataPeticionesContestadasOportunamente,setDataPeticionesContestadasOportunamente] = useState<PeticionesContestadasOportunamenteData>(initialPeticionesContestadasOportunamenteData);
+  const [dataQuejasContestadasOportunamente,setDataQuejasContestadasOportunamente,] = useState<QuejasContestadasOportunamenteData>(initialQuejasContestadasOportunamenteData);
+  const [dataReclamosOportunamente, setDataReclamosOportunamente] =useState<ReclamosOportunamenteData>(initialReclamosOportunamenteData);
+  const [dataDenunciasContestadasOportunamente,setDataDenunciasContestadasOportunamente,] = useState<DenunciasContestadasOportunamenteData>(initialDenunciasContestadasOportunamenteData);
+  const [dataPQRSDFVencidas, setDataPQRSDFVencidas] =useState<PQRSDFVencidasData>(initialPQRSDFVencidasData);
+  const [dataPeriodicidad, setDataPeriodicidad] =useState<PeriodicidadData | null>(null);
   const [activador, set_activador] = useState<boolean>(false);
+  const [dataPQRSDFContestadasVencidas, setDataPQRSDFContestadasVencidas] =useState<PQRSDFContestadasVencidasData>(PQRSDFContestadasVencidasDataInitial);
 
   //constex
   const { porcentaje } = useContext(PorcentajeContext);
@@ -225,6 +220,17 @@ export const PantallaPindicadores = () => {
       console.error(error);
     }
   };
+
+  const consultarDatosPQRSDFConrestadasVencidas = async (): Promise<void> => {
+    try {
+      let url = `/gestor/pqr/indicadores/indicador-pqrsdf-vencidas-contestadas/?fecha_radicado_desde=${fecha_radicado_desde}&fecha_radicado_hasta=${fecha_radicado_hasta}`;
+      const res = await api.get(url);
+      const dataConsulta = res.data.data;
+      setDataPQRSDFContestadasVencidas(dataConsulta);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const Activador_funciones = () => {
     consultarDatosAtencionQuejas();
     AtencionAPQRSDF();
@@ -238,6 +244,7 @@ export const PantallaPindicadores = () => {
     consultarDatosDenunciasContestadasOportunamente();
     consultarDatosPQRSDFVencidas();
     consultarDatosPeriodicidad();
+     consultarDatosPQRSDFConrestadasVencidas();
   };
 
   useEffect(() => {
@@ -302,71 +309,73 @@ export const PantallaPindicadores = () => {
         <Grid item xs={12} sx={{ textAlign: 'center' }}>
           <h2>Total de PQRSDF: {total}</h2>
         </Grid>
-        <div id="container-pdf-unico">
-          <Grid container >
 
-            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-              <BasicDemo
-                id={6}
-                titulo={primer_grafica_nombre || ''}
-                value={primer_grafica_value}
-              />
-            </Grid>
+        <Grid
+        container
+        
+      >
 
-            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-              <BasicDemo
-                id={1}
-                titulo={segunda_grafica || ''}
-                value={segunda_grafica_value}
-              />
-            </Grid>
 
-            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-              <BasicDemo
-                id={2}
-                titulo={tercera_grafica || ''}
-                value={tercera_grafica_value}
-              />
-            </Grid>
+        <Grid item xs={12} sm={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+          <BasicDemo
+            id={6}
+            titulo={primer_grafica_nombre || ''}
+            value={primer_grafica_value}
+          />
+        </Grid>
 
-            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-              <BasicDemo
-                id={3}
-                titulo={cuarta_grafica || ''}
-                value={cuarta_grafica_value}
-              />
-            </Grid>
+        <Grid item xs={12} sm={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+          <BasicDemo
+            id={1}
+            titulo={segunda_grafica || ''}
+            value={segunda_grafica_value}
+          />
+        </Grid>
 
-            <Grid item xs={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
-              <BasicDemo
-                id={4}
-                titulo={quinta_grafica || ''}
-                value={quinta_grafica_value}
-              />
-            </Grid>
+        <Grid item xs={12} sm={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+          <BasicDemo
+            id={2}
+            titulo={tercera_grafica || ''}
+            value={tercera_grafica_value}
+          />
+        </Grid>
 
-            {/* <Grid container justifyContent="flex-start" alignItems="center" spacing={3}> */}
-            <Grid
-              container
-              justifyContent="center"
-              alignItems="center"
+        <Grid item xs={12} sm={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+          <BasicDemo
+            id={3}
+            titulo={cuarta_grafica || ''}
+            value={cuarta_grafica_value}
+          />
+        </Grid>
+
+        <Grid item xs={12} sm={2.4} sx={{ display: 'flex', alignItems: 'center' }}>
+          <BasicDemo
+            id={4}
+            titulo={quinta_grafica || ''}
+            value={quinta_grafica_value}
+          />
+        </Grid>
+        </Grid>
+
+        {/* <Grid container justifyContent="flex-start" alignItems="center" spacing={3}> */}
+        <Grid
+          container
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Grid item xs={2}>
+            <Button
+            style={{marginTop:15}}
+              startIcon={<PictureAsPdfIcon />}
+              variant='contained'
+              onClick={exportAll}
+              fullWidth
             >
-              <Grid item xs={2}>
-                <Button
-                  startIcon={<PictureAsPdfIcon />}
-                  variant='contained'
-                  onClick={exportAll}
-                  fullWidth
-                >
-                  Imprimir Todas
-                </Button>
-              </Grid>
-            </Grid>
-
-
-
+              Imprimir Todas
+            </Button>
           </Grid>
-        </div>
+        </Grid>
+
       </Grid>
 
       <Grid
@@ -546,6 +555,16 @@ export const PantallaPindicadores = () => {
             titulo="estados vencidos"
           />
         </Grid>
+
+        <Grid item xs={4}>
+          <Graficapiegraficaindicadores
+            valor_uno={dataPQRSDFContestadasVencidas.porcentaje_vencidas_contestadas}
+            valor_dos={dataPQRSDFContestadasVencidas.porcentaje_vencidas_no_contestadas}
+            tipo_porcentaje={dataPQRSDFContestadasVencidas.rango_cumplimiento}
+            titulo="PQRSDF Vencidas Conestadas"
+          />
+        </Grid>
+
       </Grid>
     </>
   );

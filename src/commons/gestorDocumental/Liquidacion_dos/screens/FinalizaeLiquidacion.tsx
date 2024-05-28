@@ -38,7 +38,7 @@ export const FinalizaeLiquidacion: React.FC = () => {
                 <Grid item xs={12}>
                     <Title title="Finalizar Liquidacion"></Title>
                 </Grid>
-                {userinfo.tipo_usuario === 'E' && <>
+                {userinfo.tipo_usuario === 'I' && <>
                     <Grid container alignItems="center" justifyContent="center">
                         <Grid item xs={10}>
                             <ModalDocumentoLiquidacionDetalle />
@@ -48,7 +48,7 @@ export const FinalizaeLiquidacion: React.FC = () => {
 
 
 
-                {userinfo.tipo_usuario === 'I' && <>
+                {userinfo.tipo_usuario === 'E' && <>
                     <Grid container alignItems="center" justifyContent="center">
                         <Grid item xs={10}>
                             <CorreoNotificacinSinPopos />
