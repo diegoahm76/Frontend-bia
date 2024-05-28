@@ -618,9 +618,7 @@ Este reporte se deberá diligenciar en la matriz que se remite como adjunto y de
         const res_lider = await api.get(url);
         const alertas_lider = res_lider.data.data;
         set_lider(alertas_lider);
-        console.log('222222222222');
         console.log(alertas_lider);
-        console.log('111111111111');
       } catch (error: any) {
         // console.error(error);
         control_error(error.response.data.detail);
