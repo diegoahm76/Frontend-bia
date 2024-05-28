@@ -205,7 +205,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
-                    <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} />
+                    <PrevisualizacionComponent data_grid={rows} detalle_seleccionado_prop={detalle_seleccionado} limpiar_formulario={limpiar_formulario} />
                 </Grid>
             </Grid>
             <Grid

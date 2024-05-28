@@ -85,7 +85,7 @@ const SolicitudDetailDialog = ({
             title={
               action === `request`
                 ? 'Resumen del registro de notificación'
-                : 'Resumen solicitid de notificación'
+                : 'Resumen solicitud de notificación'
             }
           />
         </Grid>
@@ -257,10 +257,10 @@ const SolicitudDetailDialog = ({
                         xs: 12,
                         md: 4,
                         control_form: control_detail,
-                        control_name: 'fecha_registro',
+                        control_name: 'fecha_solicitud',
                         default_value: '',
                         rules: {},
-                        label: 'Fecha de asignacion',
+                        label: 'Fecha de solicitud',
                         disabled: true,
                         helper_text: '',
                         format: 'YYYY-MM-DD',
@@ -343,7 +343,7 @@ const SolicitudDetailDialog = ({
                         helper_text: '',
                       },
                       {
-                        datum_type: 'date_picker_controller',
+                        datum_type: 'input_controller',
                         xs: 12,
                         md: 3,
                         control_form: control_detail,

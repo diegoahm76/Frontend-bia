@@ -6,6 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_article_by_type } from "./thunks/maintenanceThunks";
+import { DataGrid } from "@mui/x-data-grid";
 
 
 interface IProps {
@@ -29,6 +30,16 @@ const BuscarArticuloComponent = ({
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState<Record<string, any> | null>(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
+
+  const columns = [
+    // { field: 'id_bien', headerName: 'Id', width: 200 },
+    { field: 'codigo_bien', headerName: 'Código', width: 160 },
+    { field: 'nombre', headerName: 'Nombre', width: 200 },
+    { field: 'doc_identificador_nro', headerName: 'Placa', width: 100, renderCell: (params: any) => params.value.toUpperCase()},
+    { field: 'marca', headerName: 'Marca', width: 200, renderCell: (params: any) => params.value ? params.value : 'Sin Marca'},
+    { field: 'descripcion', headerName: 'Descripcion', width: 200 },
+    { field: 'estado', headerName: 'Estado', width: 200, renderCell: (params: any) => params.value ? params.value : 'Sin Estado'},
+  ];
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
@@ -130,7 +141,22 @@ const BuscarArticuloComponent = ({
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
                   <div className="card">
-                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                    <DataGrid
+                      density="compact"
+                      autoHeight
+                      rows={grid_busqueda ?? []}
+                      columns={columns}
+                      pageSize={8}
+                      rowsPerPageOptions={[8]}
+                      rowHeight={60}
+                      getRowId={(row) => row.id_bien}
+                      onSelectionModelChange={(newSelection) => {
+                        const selected_row = grid_busqueda.find((row) => row.id_bien === newSelection[0]);
+                        set_selected_product(selected_row);
+                      }}
+                      selectionModel={selected_product ? [selected_product.id_bien] : []}
+                    />
+                    {/* <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
                       selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value as any); }} dataKey="id_bien"
                     >
                       <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
@@ -138,7 +164,7 @@ const BuscarArticuloComponent = ({
                       <Column field="nombre" header="Nombre" style={{ width: '25%' }}></Column>
                       <Column field="doc_identificador_nro" header="Placa" style={{ width: '25%' }} hidden={columna_hidden}></Column>
                       <Column field="doc_identificador_nro" header="Serial" style={{ width: '25%' }} hidden={!columna_hidden}></Column>
-                    </DataTable>
+                    </DataTable> */}
                   </div>
                 </Box>
               </Grid>

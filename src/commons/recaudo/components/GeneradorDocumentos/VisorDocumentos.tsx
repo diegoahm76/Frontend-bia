@@ -4,20 +4,12 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
   Button,
-  Dialog,
-  Switch,
-  Chip,
-  Typography,
 } from '@mui/material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CreateIcon from '@mui/icons-material/Create';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 import { ModalConfirmacionMail } from './ModalConfirmacionMail';
 import { useState } from 'react';
@@ -25,8 +17,12 @@ import { api } from '../../../../api/axios';
 import { control_error, control_success } from '../../../../helpers';
 import swal from 'sweetalert2';
 
-export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_firma}: {file: any, current_borrador: any, uplock_firma: boolean}) => {
+export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_firma, set_uplock_firma, clean_template}: {file: any, current_borrador: any, uplock_firma: boolean, set_uplock_firma: (b: boolean) => void, clean_template: () => void}) => {
   const [open, setOpen] = useState(false);
+
+  const obtenerExtension = (url: any) => {
+    return url.split('.').pop();
+}
 
   const new_firma_code = async () => {
     try {
@@ -43,9 +39,14 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
     try {
       const url = `gestor/trd/codigo-verificacion-validacion/`;
       const response = await api.put(url, {id_consecutivo: current_borrador?.id_consecutivo_tipologia, codigo: code });
-      console.log(response);
       control_success('Documento firmado correctamente');
       setOpen(false);
+      set_uplock_firma(false);
+      if(response.data && response?.data?.finalizo){
+        setTimeout(() => {
+          control_success('El documento se ha finalizado correctamente')
+        }, 500)
+      }
     } catch (error: any) {
       control_error(error.response.data.detail);
     }
@@ -97,10 +98,20 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
             >
               Firmar Documento
             </Button>
+            <Button
+              fullWidth
+              sx={{width: '250px'}}
+              variant="outlined"
+              color="primary"
+              endIcon={<CleaningServicesIcon />}
+              onClick={clean_template}
+            >
+              Limpiar Pantalla
+            </Button>
           </Grid>
           <DocViewer
             pluginRenderers={DocViewerRenderers}
-            documents={[{ uri: file, fileType: 'docx' }]}
+            documents={[{ uri: file, fileType: obtenerExtension(file) }]}
             style={{height: 800, width: '70%', display: 'flex', margin: 'auto'}}
           />
           <ModalConfirmacionMail
