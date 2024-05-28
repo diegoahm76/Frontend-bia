@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-export const formatNumber=(number:any)=> {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
-
+export const formatNumber = (number: any) => {
+  const numberWithoutDecimals = Math.floor(number); // Eliminar decimales
+  return numberWithoutDecimals.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};
   /* eslint-disable @typescript-eslint/naming-convention */
 export const formatNumberTable = (number: any) => {
   const integerNumber = Math.round(Number(number));

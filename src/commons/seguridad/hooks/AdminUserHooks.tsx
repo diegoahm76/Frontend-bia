@@ -202,7 +202,7 @@ export const use_admin_users = () => {
         }
         data_create_user.append(
           'redirect_url',
-          process.env.NODE_ENV === 'development'
+          process.env.NODE_ENV === 'production'
             ? `${DEFAULT_AUTH_URL_BETA}/auth/cambiar_contrasena/`
             : `${DEFAULT_AUTH_URL_PROD}/auth/cambiar_contrasena/`
         );

@@ -768,7 +768,7 @@ export const Documento: React.FC<BuscarProps> = ({
             </Grid>
           </Grid>
 
-          {/*        
+          {/*
           <Grid item xs={12} sm={4}>
 
           </Grid> */}

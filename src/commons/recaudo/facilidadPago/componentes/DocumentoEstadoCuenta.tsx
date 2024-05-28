@@ -18,9 +18,9 @@ export const DocumentoEstadoCuenta: React.FC<any> = ({
   id_deudor,
   id_subetapa,
   dataClean,
-  is_generate_resolucion,
+  obligaciones,
   resolucion_url
-}: {datos: any, is_generate_resolucion: boolean, resolucion_url: any, id_deudor: number, id_subetapa: string, currentDeudor: any, dataClean: any}) => {
+}: {datos: any, resolucion_url: any, id_deudor: number, id_subetapa: string, currentDeudor: any, dataClean: any, obligaciones: any}) => {
 
   let data: any[] = [];
   let sumaTotal: string | number = 0;
@@ -30,10 +30,10 @@ export const DocumentoEstadoCuenta: React.FC<any> = ({
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
 
   useEffect(() => {
-    if(datos?.id_deudor && is_generate_resolucion){
+    if(dataClean.length){
       data = []
       dataClean.forEach((item: any) => {
-      if(item.id_deudor){
+      if(item.id){
         data.push([item.nombre, item.monto_inicial, item.valor_intereses, (Number(item.monto_inicial) + Number(item.valor_intereses)).toLocaleString('es-CO')])
       }
       });
@@ -43,14 +43,14 @@ export const DocumentoEstadoCuenta: React.FC<any> = ({
       sumaTotal = (total1 + total2).toLocaleString('es-CO');
       generateEstadoCuenta();
     }
-  }, [is_generate_resolucion, dataClean, datos]);
+  }, [dataClean]);
 
 
   const generateEstadoCuenta = () => {
     const anchoPagina = 595.28;
     const docDefinition = {
       pageSize: 'A4',
-      pageMargins: [60, 125, 60, 80], // Márgenes de la página: [izquierda, arriba, derecha, abajo]
+      pageMargins: [60, 80, 60, 80], // Márgenes de la página: [izquierda, arriba, derecha, abajo]
       header: function(currentPage: any, pageCount: any) { // Función de encabezado
         return [
           {
@@ -103,12 +103,12 @@ export const DocumentoEstadoCuenta: React.FC<any> = ({
                 { text: `\n`},
                 { text: `\n`},
                 { text: 'Señores\n', fontSize: 12 },
-                { text: `${datos?.id_deudor?.nombres || ''} ${datos?.id_deudor?.apellidos || ''}\n`, fontSize: 12 },
+                { text: `${obligaciones.nombre_completo || ''}\n`, fontSize: 12 },
                 { text: `CL 27 SUR 43-56\n`, fontSize: 12 },
                 { text: `Teléfono: ${datos?.id_deudor?.telefono || ''}\n`, fontSize: 12 },
                 { text: [
                     { text: `E-mail: `, fontSize: 12 },
-                    { text: `${datos?.id_deudor?.email || ''}\n`, decoration: 'underline', color: 'blue', link: `emailto: ${datos?.id_deudor?.email || ''}` }
+                    { text: `${obligaciones.email || ''}\n`, decoration: 'underline', color: 'blue', link: `emailto: ${obligaciones.nombre_completo || ''}` }
                   ]
                 },
                 { text: `Villavicencio, Meta\n`, fontSize: 12 },
@@ -130,7 +130,7 @@ export const DocumentoEstadoCuenta: React.FC<any> = ({
                     { text: 'Cormacarena', alignment: 'right', fontSize: 9, margin: [ 0, 30, 90, 10 ] },
                     { text: `Radicado: 123421421412`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 10 ]  },
                     { text: `Fecha: ${dayjs().format('DD/MM/YYYY')}`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 10 ] },
-                    { text: `Nombre: ${datos?.id_deudor?.nombres || ''} ${datos?.id_deudor?.apellidos || ''}`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 10 ] }
+                    { text: `Nombre: ${obligaciones.nombre_completo || ''}`, alignment: 'left', fontSize: 9, margin: [ anchoPagina/2 + 30, 0, 0, 10 ] }
                   ],
                 }
               ]
@@ -138,7 +138,7 @@ export const DocumentoEstadoCuenta: React.FC<any> = ({
           ],
         },
         { text: `Asunto: Respuesta al radicado interno de CORMACARENA número 7678 de fecha primero (01) de abril y 9127 de fecha dieciséis (16) de abril de 2024 `, alignment: 'justify', fontSize: 12, margin: [0, 20, 0, 0]},
-        { text: `En atención al asunto de la referencia, a través del cual el municipio de PUERTO GAITAN identificado con Nit 800.079.035-1, solicita se realice un estado de cuenta con corte al día 31 de mayo de 2024, por todas las obligaciones que a la fecha tenga pendiente por pagar a CORMACARENA, nos permitimos enviar la siguiente liquidación, así:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: `En atención al asunto de la referencia, a través del cual ${obligaciones.nombre_completo || ''} identificado con CC/NIT ${obligaciones.numero_identificacion || ''}, solicita se realice un estado de cuenta con corte al día ${dayjs().format('DD/MM/YYYY')}, por todas las obligaciones que a la fecha tenga pendiente por pagar a CORMACARENA, nos permitimos enviar la siguiente liquidación, así:`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
         {
           table: {
             headerRows: 2,
@@ -159,21 +159,55 @@ export const DocumentoEstadoCuenta: React.FC<any> = ({
           fontSize: 10,
           margin: [20, 15, 20, 0]
         },
-        {
-          table: {
-            headerRows: 1,
-            widths: ['auto', '*', '*', '*'],
-            body: [
-              [{text: 'Nombre y apellidos completos', colSpan: 2, alignment: 'center'}, {}, {text: 'Cargo', alignment: 'center'}, {text: 'Firma', alignment: 'center'}],
-              ['Proyectó', {text: 'Nombre'}, {text: 'Nombre'}, {text: 'Nombre'}],
-              ['Revisó', {}, {}, {}],
-              ['Aprobó', {}, {}, {}],
-              // ... más filas de datos
-            ]
-          },
-          fontSize: 9,
-          margin: [0, 15, 0, 0]
-        }
+        { text: `*Intereses liquidados con corte al  día 31 de mayo de 2024`, alignment: 'center', fontSize: 10, margin: [0, 2, 0, 0]},
+        { text: `Por lo tanto, y teniendo en cuenta el actual estado de cuenta que refleja las obligaciones a su cargo que ascienden a (${sumaTotal}), los invitamos para que cancelen la suma adeudada antes de la fecha de corte de intereses aquí establecidos.`, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: [
+            'Así mismo se le informa que puede realizar el pago por concepto de ',
+            { text: 'visita de control y seguimiento', decoration: 'underline'},
+            ' en las oficinas del banco BBVA – ahorros No 854001674 convenio 33283, o en las oficinas de BANCOLOMBIA – ahorros No 36400028723 o el convenio 87321.'
+          ],
+          alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
+        },
+        { text: [
+            'Por concepto de ',
+            { text: 'tasa por utilización de agua', decoration: 'underline'},
+            ' en las oficinas del banco BBVA – ahorros 854001633 o el convenio 33280.'
+          ],
+          alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
+        },
+        { text: [
+            'Por concepto de ',
+            { text: 'multa', decoration: 'underline'},
+            ' en las oficinas de BANCOLOMBIA cuenta corriente No 36419006266 o el convenio 87318.'
+          ],
+          alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]
+        },
+        { text: [
+            'En caso de realizar el pago, allegue copia de la consignación a los siguientes correos electrónicos ',
+            { text: 'gruporentas@cormacarena.gov.co,', decoration: 'underline', color: 'blue', link: 'mailto:gruporentas@cormacarena.gov.co'},
+            { text: 'info@cormacarena.gov.co', decoration: 'underline', color: 'blue', link: 'mailto:info@cormacarena.gov.co'},
+            ' o en las oficinas de CORMACARENA para que obre como prueba y dar por terminado este proceso.'
+        ], alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: `Cualquier duda por favor comunicarse al teléfono 608-6730420 extensión 504 `, alignment: 'justify', fontSize: 12, margin: [0, 15, 0, 0]},
+        { text: `Cordialmente,`, alignment: 'justify', fontSize: 12, margin: [0, 20, 0, 0]},
+        { text: '__________________________________', alignment: 'justify', fontSize: 12, margin: [0, 40, 0, 0] },
+        { text: 'FERNANDO RUEDA LONDOÑO', alignment: 'justify', fontSize: 12, margin: [0, 2, 0, 0] },
+        { text: 'Coordinador Grupo Rentas', alignment: 'justify', fontSize: 12, margin: [0, 2, 0, 0] },
+        // {
+        //   table: {
+        //     headerRows: 3,
+        //     widths: ['auto', '*', '*', '*'],
+        //     body: [
+        //       [{text: 'Nombre y apellidos completos', colSpan: 2, alignment: 'center'}, {}, {text: 'Cargo', alignment: 'center'}, {text: 'Firma', alignment: 'center'}],
+        //       ['Aprobó', {text: aprobadores_data?.nombre_aprobador, rowSpan: 2}, {text: aprobadores_data?.cargo_aprobador, rowSpan: 2}, {text: '', rowSpan: 2}],
+        //       ['Revisó', {}, {}, {}],
+        //       ['Proyectó', {text: aprobadores_data?.nombre_proyector}, {text: aprobadores_data?.cargo_proyector}, {}],
+        //       // ... más filas de datos
+        //     ]
+        //   },
+        //   fontSize: 9,
+        //   margin: [0, 15, 0, 0]
+        // }
       ]
     };
     pdfMake.createPdf(docDefinition).getDataUrl((dataUrl: any) => {

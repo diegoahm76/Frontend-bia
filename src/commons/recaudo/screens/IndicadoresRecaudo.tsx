@@ -13,7 +13,7 @@ import { CarteraPorDeudaEdad } from './Graficas/Reportetop2';
 import { DeudoresXConceptoTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('3');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
@@ -76,16 +76,14 @@ export const IndicadoresRecaudo: React.FC = () => {
                   Reporte General Cartera Top 10 Deudores x Concepto{' '}
                 </MenuItem>
 
-
-
-
-
                 <MenuItem value="5">
                   Reporte General de Cartera Por Deuda y Edad –Top
                 </MenuItem>
                 <MenuItem value="3">
                   Reporte General de Cartera Por Deuda y Edad{' '}
                 </MenuItem>
+
+                
                 <MenuItem value="6">
                   Reporte General Cartera Por Edad – Deuda y Etapa{' '}
                 </MenuItem>

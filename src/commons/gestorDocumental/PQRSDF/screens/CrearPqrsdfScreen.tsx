@@ -509,9 +509,19 @@ export function CrearPqrsdfScreen(): JSX.Element {
           aux_items.push({
             ...elemento,
             orden_anexo_doc: index,
-            ya_digitalizado: elemento.metadatos === null ? false : true,
+            ya_digitalizado:
+              elemento.metadatos === null
+                ? false
+                : elemento.metadatos.cod_origen_archivo === 'F'
+                ? false
+                : true,
           });
-          ya_digitalizado = elemento.metadatos === null ? false : true;
+          ya_digitalizado =
+            elemento.metadatos === null
+              ? false
+              : elemento.metadatos.cod_origen_archivo === 'F'
+              ? false
+              : true;
         });
 
         const data_edit: any = {
@@ -584,9 +594,19 @@ export function CrearPqrsdfScreen(): JSX.Element {
         aux_items.push({
           ...elemento,
           orden_anexo_doc: index,
-          ya_digitalizado: elemento.metadatos === null ? false : true,
+          ya_digitalizado:
+            elemento.metadatos === null
+              ? false
+              : elemento.metadatos.cod_origen_archivo === 'F'
+              ? false
+              : true,
         });
-        ya_digitalizado = elemento.metadatos === null ? false : true;
+        ya_digitalizado =
+          elemento.metadatos === null
+            ? false
+            : elemento.metadatos.cod_origen_archivo === 'F'
+            ? false
+            : true;
       });
       const data_edit: any = {
         ...data,

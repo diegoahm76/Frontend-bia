@@ -23,8 +23,8 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
   aditionalElement,
 }: dataGridTypesWithAdditionalElement): JSX.Element => {
   return (
-    <Grid container sx={containerStyles}>
-      <Grid item xs={12}>
+    <Grid container sx={rows.length > 0 ? containerStyles : {}}>
+      {rows.length > 0 && <Grid item xs={12}>
         {title && <Title title={title} />}
         <Box sx={{ mt: '20px', mb: '20px' }}>
           <Grid container spacing={2}>
@@ -65,7 +65,7 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
           </Grid>
         </Box>
         {aditionalElement}
-      </Grid>
+      </Grid>}
     </Grid>
   );
 };

@@ -206,4 +206,3 @@ export const SeccionEnvio_MSM_CORREO_F: React.FC<IProps> = ({ selected_proceso }
         </>
     )
 }
-

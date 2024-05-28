@@ -154,7 +154,7 @@ const listarTipologias = async (): Promise<void> => {
       >
         <DialogTitle>
           {' '}
-          <Title title="Agregar metadatos al anexo" />
+          <Title title="Agregar metadatos al anexoaa" />
         </DialogTitle>
 
         {/* Contenedor principal del formulario */}

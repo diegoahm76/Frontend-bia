@@ -25,8 +25,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 import { showAlert } from '../../../utils/showAlert/ShowAlert';
-import { DocumentoPagoPersuasivo } from '../components/GestionCartera/DocumentoPagoPersuasivo';
-import { ProcesoPagoCoactivo } from '../components/GestionCartera/ProcesoPagoCoactivo';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -780,8 +778,8 @@ export const GestionCarteraScreen: React.FC = () => {
                 <TabList onChange={handle_tablist_change}>
                   <Tab label="Gestion Cartera" value="1" />
                   <Tab label="Editar Cartera" value="2" disabled={is_from_liquidacion || !datos}/>
-                  {cobro_persuasivo_active && <Tab label="Proceso cobro Persuasivo" value="3" disabled={false}/>}
-                  {cobro_coactivo_active && <Tab label="Proceso Cobro Coactivo" value="4" disabled={false}/>}
+                  {/* {cobro_persuasivo_active && <Tab label="Proceso cobro Persuasivo" value="3" disabled={false}/>}
+                  {cobro_coactivo_active && <Tab label="Proceso Cobro Coactivo" value="4" disabled={false}/>} */}
                 </TabList>
               </Box>
 
@@ -907,8 +905,7 @@ export const GestionCarteraScreen: React.FC = () => {
                 />
 
               </TabPanel>
-
-              {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
+              {/* {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
                   <DocumentoPagoPersuasivo
                     datos={datos}
                   ></DocumentoPagoPersuasivo>
@@ -917,7 +914,7 @@ export const GestionCarteraScreen: React.FC = () => {
                   <ProcesoPagoCoactivo
                     datos={datos}
                   ></ProcesoPagoCoactivo>
-              </TabPanel>}
+              </TabPanel>} */}
             </TabContext>
           </Box>
         </Grid>

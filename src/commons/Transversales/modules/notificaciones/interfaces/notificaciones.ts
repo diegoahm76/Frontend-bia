@@ -179,7 +179,7 @@ export interface IObjExpediente{
 }
 export interface IObjActo{
   persona_asignada?: string | null;
-  id_persona_asignada?: number | null;
+  id_acto_administrativo?: number | null;
   vigencia_contrato?: string | null;
   Asignadas?: number | null;
   resueltas?: number | null;
@@ -236,6 +236,7 @@ export interface IObjNotificacionType{
     notificacion_personal?:boolean | null;
     notificacion_correo_electronico?:boolean | null;
     notificacion_medio_fisico?:boolean | null;
+    publicacion_por_aviso?:boolean | null;
 }
 
 export interface IObjNotificacionCause{
@@ -373,6 +374,8 @@ export interface IObjNotificationRequest{
   justificacion_rechazo?: string | number | null;
   anexos?: IObjExhibit[]
   tipo_documento ?: IObjTipoDocumento | null;
+  persona_solicitante?: string | null;
+  oficina?: string | null;
 }
 export interface IObjTipoDocumento{
   id_tipo_documento?: number | null;
@@ -418,6 +421,7 @@ export interface IObjPerson {
   primer_nombre?: string | null;
   primer_apellido?: string | null;
   nombre_completo?: string | null;
+  id_unidad_organizacional_actual?: number  | null;
 }
 
 export interface IObjCompany {

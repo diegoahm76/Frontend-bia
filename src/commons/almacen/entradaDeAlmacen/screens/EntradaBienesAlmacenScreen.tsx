@@ -464,6 +464,26 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_info_items(buscar_articulo.info_items_entrada);
     }
   }, [buscar_articulo]);
+
+/*
+  codigo_bien: articulo.codigo_bien,
+  nombre_bien: articulo.nombre,
+  cantidad: 1,
+  id_bodega: parseInt(bodega_detalle),
+  numero_posicion: (prevArray.length + 1),
+  porcentaje_iva: parseInt(iva),
+  id_bien_padre: articulo.id_bien,
+  valor_unitario: parseFloat(valor_unidad),
+  valor_iva: parseFloat(valor_iva),
+  valor_total_item: parseFloat(valor_total_item),
+  id_unidad_medida_vida_util: info_item.unidad_tiempo,
+  valor_residual: info_item.valor_residual,
+  tiene_hoja_vida: info_item.abrir_hdv,
+  doc_identificador_bien: info_item.placa_serial,
+  cantidad_vida_util: info_item.vida_util,
+  cod_estado: info_item.estado*/
+
+
   const columnsss = [
     {
       field: "codigo_bien",
@@ -479,7 +499,22 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       field: "cantidad",
       header: "Cantidad",
       style: { width: '10%' },
-    }
+    },
+    {
+      field: "valor_unitario",
+      header: "Valor unitario",
+      style: { width: '10%' },
+    },
+    {
+      field: "valor_iva",
+      header: "Valor Iva",
+      style: { width: '10%' },
+    },
+    {
+      field: "valor_total_item",
+      header: "Valor total",
+      style: { width: '10%' },
+    },
   ];
 
   return (
@@ -997,7 +1032,22 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     <Column
                       field="cantidad"
                       header="Cantidad"
-                      style={{ width: '10%' }}
+                      style={{ width: '25%' }}
+                    ></Column>
+                    <Column
+                      field="valor_total_item"
+                      header="Valor total item"
+                      style={{ width: '50%' }}
+                    ></Column>
+                    <Column
+                      field="valor_unitario"
+                      header="Valor unitario"
+                      style={{ width: '50%' }}
+                    ></Column>
+                    <Column
+                      field="valor_iva"
+                      header="Valor iva"
+                      style={{ width: '50%' }}
                     ></Column>
                     <Column header="Acciones" align={'center'} body={(rowData) => {
                       return <Button color="error" size="small" variant='contained' onClick={() => { 

@@ -37,6 +37,7 @@ import {
   add_asignacion_notificacion,
   aceptar_rechazar_solicitud_notificacion_service,
   cancelar_asignacion_notificacion,
+  get_tipos_documento_notification,
 } from '../store/thunks/notificacionesThunks';
 import {
   set_notification_per_request,
@@ -45,11 +46,16 @@ import {
   set_notifications_per_request,
 } from '../store/slice/notificacionesSlice';
 import FormButton from '../../../../../components/partials/form/FormButton';
-import { IObjNotificacionType } from '../interfaces/notificaciones';
+import {
+  IObjNotificacionType,
+  IObjTypeDocument,
+} from '../interfaces/notificaciones';
 import SolicitudDetailDialog from '../componentes/SolicitudDetailDialog';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DialogRechazo from '../componentes/DialogRechazo';
 import RemoveIcon from '@mui/icons-material/Remove';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import AnexosSoporteDetailDialog from '../componentes/AnexosSoporteDetailDialog';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -69,7 +75,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
 
   const {
     notification_requests,
-    list_document_types,
+    tipos_documento_notificacion,
     list_status,
     list_groups,
     notification_request,
@@ -80,6 +86,8 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
   } = useAppSelector((state) => state.notificaciones_slice);
   const [rechazo_solicitud_is_active, set_rechazo_solicitud_is_active] =
     useState<boolean>(false);
+  const [anexos_is_active, set_anexos_is_active] = useState<boolean>(false);
+  const [tipo_anexo, set_tipo_anexo] = useState('');
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
@@ -268,6 +276,33 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
+          <Tooltip title="Ver anexos">
+            <IconButton
+              onClick={() => {
+                set_anexos_is_active(true);
+                setSelectedPqr(rowData);
+                set_tipo_anexo('anexo');
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <AttachFileIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
           {rowData?.cod_estado_asignacion === 'Re' && (
             <Tooltip title="Re-Asignar">
               <IconButton
@@ -429,28 +464,57 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       header: 'Acciones',
       headerStyle: { width: '4rem' },
       body: (rowData) => (
-        <Tooltip title="Detalle">
-          <IconButton
-            onClick={() => {
-              set_detail_is_active(true);
-              setSelectedPqr(rowData);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+        <>
+          <Tooltip title="Detalle">
+            <IconButton
+              onClick={() => {
+                set_detail_is_active(true);
+                setSelectedPqr(rowData);
               }}
-              variant="rounded"
             >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <VisibilityIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Ver soportes">
+            <IconButton
+              onClick={() => {
+                set_anexos_is_active(true);
+                setSelectedPqr(rowData);
+                set_tipo_anexo('soporte');
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <AttachFileIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        </>
       ),
     },
   ];
@@ -491,7 +555,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
     dispatch(set_notifications_per_request([]));
     dispatch(get_status_list_service());
     dispatch(get_status_asignation_list_service());
-    dispatch(get_document_types_service());
+    dispatch(get_tipos_documento_notification());
     dispatch(get_groups_list_service());
     void dispatch(get_persons_service('', '', '', '', '', ''));
   }, []);
@@ -586,8 +650,9 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
         <Grid item xs={12} marginY={2}>
           <Title title="Listado de solicitudes de correspondencia"></Title>
           <Grid container direction="row" padding={2} spacing={2}>
-            {/* <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={3}>
               <FormButton
+                href={`/#/app/transversal/correspondencia/crear_solicitud_despacho/`}
                 disabled={false}
                 variant_button="outlined"
                 on_click_function={null}
@@ -596,9 +661,9 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 type_button="button"
                 color_button="primary"
               />
-            </Grid> */}
+            </Grid>
 
-            <Grid item xs={12} md={2}>
+            {/* <Grid item xs={12} md={2}>
               <FormButton
                 disabled={
                   notification_request?.id_notificacion_correspondencia === null
@@ -611,7 +676,7 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 type_button="button"
                 color_button="warning"
               />
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} md={4}>
               <FormButton
                 disabled={
@@ -669,9 +734,11 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
                 label: 'Tipo de documento',
                 disabled: false,
                 helper_text: '',
-                select_options: list_document_types,
-                option_label: 'label',
-                option_key: 'key',
+                select_options: tipos_documento_notificacion?.filter(
+                  (tipo: IObjTypeDocument) => tipo.aplica_para_correspondencia
+                ),
+                option_label: 'nombre',
+                option_key: 'id_tipo_documento',
               },
               {
                 datum_type: 'input_controller',
@@ -797,6 +864,11 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
             expandedRows={expandedRows}
             setExpandedRows={setExpandedRows}
             onRowToggleFunction={get_x}
+          />
+          <AnexosSoporteDetailDialog
+            is_modal_active={anexos_is_active}
+            set_is_modal_active={set_anexos_is_active}
+            action={tipo_anexo}
           />
           <SolicitudDetailDialog
             is_modal_active={detail_is_active}
