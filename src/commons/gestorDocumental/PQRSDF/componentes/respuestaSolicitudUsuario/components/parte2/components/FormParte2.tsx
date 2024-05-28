@@ -67,41 +67,47 @@ any): JSX.Element => {
   useEffect(() => {
     // Verifica si respuestaPqrsdfMade tiene valor antes de intentar asignarlo a watchFormulario
     if (respuestaPqrsdfMade) {
+      console.log(respuestaPqrsdfMade);
       // Actualiza el valor del campo 'asunto' en watchFormulario con el valor de respuestaPqrsdfMade.asunto
       setValue("asunto", respuestaPqrsdfMade.asunto);
     }
   }, [respuestaPqrsdfMade]);
 
   const columns = [
-    { field: "nombre_anexo", headerName: "Nombre Anexo", flex: 1 },
-    { field: "orden_anexo_doc", headerName: "Orden Anexo Doc", flex: 1 },
+    { field: "nombre_anexo", headerName: "Nombre Anexo", flex: 1, minWidth: 200 },
+    { field: "orden_anexo_doc", headerName: "Orden Anexo Doc", flex: 1, minWidth: 200 },
     {
       field: "nombre_medio_almacenamiento",
       headerName: "Nombre Medio Almacenamiento",
       flex: 1,
+      minWidth: 200,
     },
-    { field: "numero_folios", headerName: "Número de Folios", flex: 1 },
+    { field: "numero_folios", headerName: "Número de Folios", flex: 1, minWidth: 200 },
     {
       field: "ya_digitalizado",
       headerName: "Ya Digitalizado",
       flex: 1,
       type: "boolean",
+      minWidth: 200,
     },
     {
       field: "observacion_digitalizacion",
       headerName: "Observación de Digitalización",
       flex: 1,
+      minWidth: 250,
     },
     {
       field: "metadatos.asunto",
       headerName: "Asunto",
       flex: 1,
+      minWidth: 200,
       valueGetter: (params: any) => params.getValue(params.id, "metadatos")?.asunto,
     },
     {
       field: "metadatos.descripcion",
       headerName: "Descripción Metadatos",
       flex: 1,
+      minWidth: 200,
       valueGetter: (params: any) =>
         params.getValue(params.id, "metadatos")?.descripcion,
     },
@@ -109,6 +115,7 @@ any): JSX.Element => {
       field: "metadatos.cod_categoria_archivo",
       headerName: "Código Categoría Archivo",
       flex: 1,
+      minWidth: 200,
       valueGetter: (params: any) =>
         params.getValue(params.id, "metadatos")?.cod_categoria_archivo,
     },
@@ -117,6 +124,7 @@ any): JSX.Element => {
       headerName: "Es Versión Original",
       flex: 1,
       type: "boolean",
+      minWidth: 200,
       valueGetter: (params: any) =>
         params.getValue(params.id, "metadatos")?.es_version_original,
     },
@@ -125,6 +133,7 @@ any): JSX.Element => {
       headerName: "Tiene Réplica Física",
       flex: 1,
       type: "boolean",
+      minWidth: 200,
       valueGetter: (params: any) =>
         params.getValue(params.id, "metadatos")?.tiene_replica_fisica,
     },
@@ -132,6 +141,7 @@ any): JSX.Element => {
       field: "metadatos.nro_folios_documento",
       headerName: "Número de Folios Documento",
       flex: 1,
+      minWidth: 200,
       valueGetter: (params: any) =>
         params.getValue(params.id, "metadatos")?.nro_folios_documento,
     },
@@ -139,6 +149,7 @@ any): JSX.Element => {
       field: "metadatos.palabras_clave_doc",
       headerName: "Palabras Clave Documento",
       flex: 1,
+      minWidth: 200,
       valueGetter: (params:any) =>
         params.getValue(params.id, "metadatos")?.palabras_clave_doc,
     },
@@ -155,8 +166,8 @@ any): JSX.Element => {
         onSubmit={(e: any) => {
           e.preventDefault();
           if (
-            watchFormulario.asunto.length === 0 ||
-            watchFormulario.descripcion_de_la_solicitud.length === 0
+            (watchFormulario.asunto.length === 0 && respuestaPqrsdfMade?.asunto.length === 0) ||
+            (watchFormulario.descripcion_de_la_solicitud.length === 0 && respuestaPqrsdfMade?.descripcion.length === 0)
           ) {
             control_warning("Todos los campos son obligatorios");
             return;
@@ -186,6 +197,7 @@ any): JSX.Element => {
                   size="small"
                   variant="outlined"
                   value={respuestaPqrsdfMade?.asunto || value}
+                  disabled={respuestaPqrsdfMade && (respuestaPqrsdfMade?.asunto !== '' || respuestaPqrsdfMade?.asunto !== null)}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
@@ -245,6 +257,7 @@ any): JSX.Element => {
                   size="small"
                   variant="outlined"
                   value={respuestaPqrsdfMade?.descripcion || value}
+                  disabled={respuestaPqrsdfMade && (respuestaPqrsdfMade?.descripcion !== '' || respuestaPqrsdfMade?.descripcion !== null)}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);

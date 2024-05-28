@@ -433,7 +433,7 @@ export const FormParte3 = ({
                           console.log(file,"file");
                           controlar_tamagno_archivos(file, onChange);
                         } catch (error) {
-                          control_error('No existe un documento asociado');
+                          control_error('No se encontró un documento asociado');
                           console.error('Error al descargar el archivo', error);
                         }
                       }

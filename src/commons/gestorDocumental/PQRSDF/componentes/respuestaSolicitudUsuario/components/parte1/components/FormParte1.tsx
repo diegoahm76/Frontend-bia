@@ -46,7 +46,7 @@ export const FormParte1 = ({
     infoInicialUsuario,
     respuestaPqrs,
     setRespuestaPqrs,
-    respuestaPqrsdfMade, 
+    respuestaPqrsdfMade,
     setrespuestaPqrsdfMade
   } = useContext(ResSolicitudUsuarioContext);
 
@@ -78,7 +78,7 @@ export const FormParte1 = ({
       </Grid>
     );
   }
-//trae la data  de al a respuestac 
+//trae la data  de al a respuestac
   const getPqrsdfResponse = async () => {
     try {
       const url = `/gestor/pqr/get_respuesta_pqrsdf-panel/${+currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas.id_pqrsdf}/`;

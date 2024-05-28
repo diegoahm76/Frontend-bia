@@ -7,23 +7,13 @@ export const postResponderUsuario = async (
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   try {
+    console.log('Hola')
     const url = `gestor/pqr/crear-respuesta-pqrsdf/`;
-    const url_guardado = `gestor/pqr/archivar-pqrsdf/`;
-    const {
-      respuesta_pqrsdf: { id_pqrsdf },
-    } = formData;
-    console.log('id_pqrsdf', id_pqrsdf);
     setLoadingButton(true);
 
     const response = await api.post(url, formData);
 
     if (response.status === 200 || response.status === 201) {
-      const response_guardado = await api.post(url_guardado, {
-        id_PQRSDF: id_pqrsdf,
-      });
-      console.log(response_guardado);
-      const response = await api.post(url_guardado, formData);
-
       Swal.fire({
         icon: 'success',
         title: 'Se ha respondido la solicitud',
