@@ -219,7 +219,11 @@ export const GeneradorDocumentos: React.FC = () => {
         if(isUploadDocument) setChecked(false);
         if(isUploadDocument && !hasRadicado) setHasRadicado(true);
         if(updateBorrador || updateDocument || sendTemplate || isUploadDocument) setCurrentBorrador(resp.data.data)
-        setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
+        if(resp.data.data.archivos_digitales_copia){
+          setFile(`${urlBase}${resp.data.data.archivos_digitales_copia.ruta_archivo}`)
+        }else{
+          setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
+        }
       }
     } catch (error: any) {
       if(!hasConsecutivo) setSendTemplate(false);
@@ -232,7 +236,7 @@ export const GeneradorDocumentos: React.FC = () => {
       const url = `/gestor/trd/crear-documento-cargado/`;
       const resp: any = await api.post(url, data);
       if(resp.data.data){
-        processPlantilla(resp.data.data);
+        processPlantilla(resp.data.data, true);
         setCurrentBorrador(resp.data.data)
         setIsUploadDocument(true);
         if(!checked) setHasConsecutivo(true);
@@ -321,7 +325,7 @@ export const GeneradorDocumentos: React.FC = () => {
     fetch_data_plantillas();
   }, []);
 
-  const processPlantilla = (plantilla: any) => {
+  const processPlantilla = (plantilla: any, isUpload?: boolean) => {
     if(plantilla?.archivos_digitales){
       removeFile()
       setFile(`${urlBase}${plantilla.archivos_digitales.ruta_archivo}`)
@@ -346,7 +350,7 @@ export const GeneradorDocumentos: React.FC = () => {
   }
 
   useEffect(() => {
-    processPlantilla(plantillaSeleccionada);
+    processPlantilla(plantillaSeleccionada, false);
   }, [plantillaSeleccionada, contentData]);
 
   useEffect(() => {

@@ -22,10 +22,9 @@ export const PrevisualizacionComponent: React.FC<IProps> = ({
   >([]);
 
   useEffect(() => {
-  console.log(data_grid);
   const dataWithPlaca = data_grid.map(item => ({
     ...item,
-    placa: detalle_seleccionado_prop.doc_identificador_nro
+    placa: detalle_seleccionado_prop?.doc_identificador_nro
   }));
 
   const newData = dataWithPlaca.filter((item) => {

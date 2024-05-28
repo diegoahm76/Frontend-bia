@@ -70,6 +70,25 @@ export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta
   };
 };
 
+// Consulta mantenimientos programados por fechas y tipo
+export const get_veh_programmed_maintenance: any = (tipo_prog: string, fecha_desde?: string, fecha_hasta?: string, km_desde?: string, km_hasta?: string) => {
+  return async () => {
+    try {
+      let url = `almacen/mantenimientos/programados/vehiculos/get-by-filters/?cod_tipo_activo=Veh&tipo_programacion=${tipo_prog}`;
+      if (fecha_desde) url += `&rango-inicial-fecha=${fecha_desde}`;
+      if (fecha_hasta) url += `&rango-final-fecha=${fecha_hasta}`;
+      if (km_desde) url += `&rango-inicial-kilometraje=${km_desde}`;
+      if (km_hasta) url += `&rango-final-kilometraje=${km_hasta}`;
+
+      const { data } = await api.get(url);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
 export const get_article_by_type: any = (tipo: string) => {
   return async () => {
       try {
