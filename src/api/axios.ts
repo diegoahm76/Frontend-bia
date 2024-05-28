@@ -29,7 +29,7 @@ const DEFAULT_PROD_DOWNLOAD_FILES_URL =
   'https://bia.cormacarena.gov.co';
 
 export const baseURL: string =
-  process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === 'production'
     ? process.env.REACT_APP_BETA_URL || DEFAULT_BETA_URL
     : process.env.REACT_APP_PROD_URL || DEFAULT_PROD_URL;
 

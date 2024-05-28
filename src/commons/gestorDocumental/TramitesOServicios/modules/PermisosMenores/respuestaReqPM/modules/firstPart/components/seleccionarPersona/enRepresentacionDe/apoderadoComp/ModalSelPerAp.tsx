@@ -31,7 +31,6 @@ import { getPersonasService } from '../../../../services/getPersonas.service';
 import { choicesTipoPersona } from '../../../../utils/choices';
 import { columnsPersona } from '../propiaComponent/columns/columnsPersona';
 import { getAttorneys } from '../../../../services/getApoderados.service';
-import { columnsApoderado } from './columns/columnsApoderado';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../../hooks';
 import { ISeleccionLideresProps } from '../../../../../../../../../../../Transversales/modules/corporativo/screens/LideresXUnidadOrg/components/UnidadOrganizacional/components/SeleccionLider/types/seleccionLideres.types';
 import { ModalAndLoadingContext } from '../../../../../../../../../../../../context/GeneralContext';
@@ -43,6 +42,7 @@ import { control_info } from '../../../../../../../../../../alertasgestor/utils/
 import { Title } from '../../../../../../../../../../../../components';
 import Select from 'react-select';
 import { RenderDataGrid } from '../../../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
+import { columnsApoderado } from './columns/columnsApo';
 
 export const ModalSeleccionPersonaApoderado = ({
   control_seleccionar_persona,

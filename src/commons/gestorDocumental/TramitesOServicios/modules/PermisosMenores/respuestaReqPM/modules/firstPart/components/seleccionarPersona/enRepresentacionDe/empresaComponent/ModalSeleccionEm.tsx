@@ -28,7 +28,6 @@ import { type GridColDef } from '@mui/x-data-grid';
 import { Controller } from 'react-hook-form';
 import { choicesTipoPersona } from '../../../../utils/choices';
 import { getPersonasJuridicaService } from '../../../../services/getEmpresas.service';
-import { columnsPersonaEmpresa } from './columns/columnsPersonaEmpresa';
 import { ModalAndLoadingContext } from '../../../../../../../../../../../../context/GeneralContext';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { AvatarStyles } from '../../../../../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
@@ -36,6 +35,7 @@ import { control_info } from '../../../../../../../../../../alertasgestor/utils/
 import { Title } from '../../../../../../../../../../../../components';
 import { RenderDataGrid } from '../../../../../../../../../../tca/Atom/RenderDataGrid/RenderDataGrid';
 import { useAppDispatch } from '../../../../../../../../../../../../hooks';
+import { columnsPersonaEmpresa } from './columns/columnsPersonaE';
 
 export const ModalSeleccionEmpresa = ({
   control_seleccionar_persona,
