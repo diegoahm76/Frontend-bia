@@ -1,20 +1,19 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext } from 'react';
-import { Controller } from 'react-hook-form';
 import { Button, Divider, Grid, Stack, TextField } from '@mui/material';
 import Select from 'react-select';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { LoadingButton } from '@mui/lab';
-import { ModalSeleccionPersona } from './ModalSeleccionPersona';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../../../../context/GeneralContext';
 import { containerStyles } from '../../../../../../../../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../../../../../../../components';
-import { setCurrentPersonaRespuestaUsuario } from '../../../../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../../../alertasgestor/utils/control_error_or_success';
+import { setCurrentPersonaRespuestaUsuario } from '../../../../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
+import { ModalSeleccionPersonaApoderado } from './ModalSelPerAp';
 
-export const PropiaComponent = ({
+export const ApoderadoComponent = ({
   control_seleccionar_persona,
   watchExe,
   reset_seleccionar_persona,
@@ -38,7 +37,7 @@ export const PropiaComponent = ({
     <>
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
-          <Title title="A nombre propio - títular" />
+          <Title title="A nombre propio - ( títular - apoderado )" />
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
@@ -59,9 +58,11 @@ export const PropiaComponent = ({
                 <div>
                   <Select
                     value={{
-                      value: currentPersonaRespuestaUsuario?.tipo_documento,
+                      value:
+                        currentPersonaRespuestaUsuario?.titular?.tipo_documento,
                       label:
-                        currentPersonaRespuestaUsuario?.tipo_documento ?? '...',
+                        currentPersonaRespuestaUsuario?.titular
+                          ?.tipo_documento ?? '...',
                     }}
                     isDisabled={true}
                     placeholder="Seleccionar"
@@ -88,7 +89,8 @@ export const PropiaComponent = ({
                   size="small"
                   variant="outlined"
                   value={
-                    currentPersonaRespuestaUsuario?.numero_documento ?? '...'
+                    currentPersonaRespuestaUsuario?.titular?.numero_documento ??
+                    '...'
                   }
                   InputLabelProps={{ shrink: true }}
                   disabled
@@ -104,13 +106,90 @@ export const PropiaComponent = ({
                   maxRows={2}
                   variant="outlined"
                   value={
-                    currentPersonaRespuestaUsuario?.nombre_completo ?? '...'
+                    currentPersonaRespuestaUsuario?.titular?.nombre_completo ??
+                    '...'
                   }
                   InputLabelProps={{ shrink: true }}
                   disabled
                 />
               </Grid>
-              {currentPersonaRespuestaUsuario?.nombre_completo && (
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+              {/*SELECCIÓN DE APODERADO*/}
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+              {/*-----------------------*/}
+
+              <Grid
+                item
+                xs={12}
+                sm={3}
+                sx={{
+                  zIndex: 2,
+                }}
+              >
+                <div>
+                  <Select
+                    value={{
+                      value:
+                        currentPersonaRespuestaUsuario?.apoderado
+                          ?.tipo_documento,
+                      label:
+                        currentPersonaRespuestaUsuario?.apoderado
+                          ?.tipo_documento ?? '...',
+                    }}
+                    isDisabled={true}
+                    placeholder="Seleccionar"
+                  />
+                  <label>
+                    <small
+                      style={{
+                        color: 'rgba(0, 0, 0, 0.6)',
+                        fontWeight: 'thin',
+                        fontSize: '0.75rem',
+                        marginTop: '0.25rem',
+                        marginLeft: '0.25rem',
+                      }}
+                    >
+                      Tipo de documento del apoderado
+                    </small>
+                  </label>
+                </div>
+              </Grid>
+              <Grid item xs={12} sm={4}>
+                <TextField
+                  fullWidth
+                  label="Número de documento del apoderado"
+                  size="small"
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.apoderado
+                      ?.numero_documento ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
+                />
+              </Grid>
+              <Grid item xs={12} sm={5}>
+                <TextField
+                  fullWidth
+                  label="Nombre del apoderado"
+                  size="small"
+                  multiline
+                  rows={1}
+                  maxRows={2}
+                  variant="outlined"
+                  value={
+                    currentPersonaRespuestaUsuario?.apoderado
+                      ?.nombre_completo ?? '...'
+                  }
+                  InputLabelProps={{ shrink: true }}
+                  disabled
+                />
+              </Grid>
+              {currentPersonaRespuestaUsuario?.apoderado &&
+                currentPersonaRespuestaUsuario?.titular && (
                   <>
                     <Grid item xs={12} sm={12}>
                       <TextField
@@ -141,10 +220,12 @@ export const PropiaComponent = ({
                 startIcon={<CleanIcon />}
                 onClick={() => {
                   dispatch(setCurrentPersonaRespuestaUsuario(null as any));
-                  control_info('Se ha quitado la selección de la persona');
+                  control_info(
+                    'Se ha quitado la selección de la persona y del apoderado'
+                  );
                 }}
               >
-                QUITAR SELECCIÓN DE PERSONA
+                QUITAR SELECCIÓN
               </Button>
 
               <Button
@@ -155,50 +236,16 @@ export const PropiaComponent = ({
                   handleOpenModalOne(true);
                 }}
               >
-                BÚSQUEDA PERSONA
+                BÚSQUEDA PERSONA Y SELECCION DE APODERADO
               </Button>
             </Stack>
             <Divider />
-            {/* <Grid container spacing={2} sx={{ mt: '15px' }}>
-              <Stack
-                direction="row"
-                justifyContent="flex-start"
-                spacing={2}
-                sx={{
-                  mb: '20px',
-                  mt: '20px',
-                  alignItems: 'center',
-                  ml: '20px'
-                }}
-              >
-                <LoadingButton
-                  loading={loadingButton}
-                  color="success"
-                  type="submit"
-                  variant="contained"
-                  disabled={
-                    false
-                  }
-                  startIcon={
-                    asignacion_lideres_current?.observaciones_asignacion ? (
-                      <SyncIcon />
-                    ) : (
-                      <SaveIcon />
-                    )
-                  }
-                >
-                  {asignacion_lideres_current?.observaciones_asignacion
-                    ? 'ACTUALIZAR LÍDER'
-                    : 'GUARDAR LÍDER'}
-                </LoadingButton>
-              </Stack>
-            </Grid>*/}
           </form>
         </Grid>
       </Grid>
 
       {/* modal selección persona */}
-      <ModalSeleccionPersona
+      <ModalSeleccionPersonaApoderado
         {...{
           control_seleccionar_persona,
           watchExe,
