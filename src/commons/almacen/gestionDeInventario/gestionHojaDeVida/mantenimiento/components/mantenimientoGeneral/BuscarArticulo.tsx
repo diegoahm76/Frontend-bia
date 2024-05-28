@@ -31,11 +31,13 @@ const BuscarArticuloComponent = ({
   const [selected_product, set_selected_product] = useState<Record<string, any> | null>(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
 
+  let identificador_nro = grid_busqueda.length > 0 ? (grid_busqueda[0].cod_tipo_activo == 'Veh' ? 'Placa' : 'Serial') : 'Placa - Serial';
+
   const columns = [
     // { field: 'id_bien', headerName: 'Id', width: 200 },
     { field: 'codigo_bien', headerName: 'Código', width: 160 },
     { field: 'nombre', headerName: 'Nombre', width: 200 },
-    { field: 'doc_identificador_nro', headerName: 'Placa', width: 100, renderCell: (params: any) => params.value.toUpperCase()},
+    { field: 'doc_identificador_nro', headerName: identificador_nro, width: 100, renderCell: (params: any) => params.value.toUpperCase()},
     { field: 'marca', headerName: 'Marca', width: 200, renderCell: (params: any) => params.value ? params.value : 'Sin Marca'},
     { field: 'descripcion', headerName: 'Descripcion', width: 200 },
     { field: 'estado', headerName: 'Estado', width: 200, renderCell: (params: any) => params.value ? params.value : 'Sin Estado'},
@@ -140,32 +142,30 @@ const BuscarArticuloComponent = ({
               <Grid item xs={12} sm={12}>
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
-                  <div className="card">
-                    <DataGrid
-                      density="compact"
-                      autoHeight
-                      rows={grid_busqueda ?? []}
-                      columns={columns}
-                      pageSize={8}
-                      rowsPerPageOptions={[8]}
-                      rowHeight={60}
-                      getRowId={(row) => row.id_bien}
-                      onSelectionModelChange={(newSelection) => {
-                        const selected_row = grid_busqueda.find((row) => row.id_bien === newSelection[0]);
-                        set_selected_product(selected_row);
-                      }}
-                      selectionModel={selected_product ? [selected_product.id_bien] : []}
-                    />
-                    {/* <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-                      selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value as any); }} dataKey="id_bien"
-                    >
-                      <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
-                      <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>
-                      <Column field="nombre" header="Nombre" style={{ width: '25%' }}></Column>
-                      <Column field="doc_identificador_nro" header="Placa" style={{ width: '25%' }} hidden={columna_hidden}></Column>
-                      <Column field="doc_identificador_nro" header="Serial" style={{ width: '25%' }} hidden={!columna_hidden}></Column>
-                    </DataTable> */}
-                  </div>
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={grid_busqueda ?? []}
+                    columns={columns}
+                    pageSize={8}
+                    rowsPerPageOptions={[8]}
+                    rowHeight={60}
+                    getRowId={(row) => row.id_bien}
+                    onSelectionModelChange={(newSelection) => {
+                      const selected_row = grid_busqueda.find((row) => row.id_bien === newSelection[0]);
+                      set_selected_product(selected_row);
+                    }}
+                    selectionModel={selected_product ? [selected_product.id_bien] : []}
+                  />
+                  {/* <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                    selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value as any); }} dataKey="id_bien"
+                  >
+                    <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
+                    <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>
+                    <Column field="nombre" header="Nombre" style={{ width: '25%' }}></Column>
+                    <Column field="doc_identificador_nro" header="Placa" style={{ width: '25%' }} hidden={columna_hidden}></Column>
+                    <Column field="doc_identificador_nro" header="Serial" style={{ width: '25%' }} hidden={!columna_hidden}></Column>
+                  </DataTable> */}
                 </Box>
               </Grid>
             </Grid>
