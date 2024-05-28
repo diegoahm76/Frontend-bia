@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, TextField } from '@mui/material';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Title } from '../../../../../../../../../../components';
 import { RequerimientoAlUsuarioOPASContext } from '../../../../../requerimientosUsuarioOpas/context/RequerimientoUsarioOpasContext';
 
@@ -10,7 +10,9 @@ export const PersonaTitular = (): JSX.Element => {
 
     //* context declaration
     const { infoInicialUsuario } = useContext(RequerimientoAlUsuarioOPASContext);
-  
+
+    useEffect(() => console.log(infoInicialUsuario), [infoInicialUsuario])
+
 
   return (
     <Grid
@@ -35,7 +37,7 @@ export const PersonaTitular = (): JSX.Element => {
               label="Nombres"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.nombres ?? 'N/A'}
+              value={infoInicialUsuario?.dataTitular?.data?.nombres || `${infoInicialUsuario?.detallePQRSDF?.data?.info_persona_titular?.primer_nombre || ''} ${infoInicialUsuario?.detallePQRSDF?.data?.info_persona_titular?.segundo_nombre || ''}` || 'N/A'}
               inputProps={{
                 maxLength: 50,
               }}
@@ -49,7 +51,7 @@ export const PersonaTitular = (): JSX.Element => {
               label="Apellidos"
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.apellidos ?? 'N/A'}
+              value={infoInicialUsuario?.dataTitular?.data?.apellidos || `${infoInicialUsuario?.detallePQRSDF?.data?.info_persona_titular?.primer_apellido || ''} ${infoInicialUsuario?.detallePQRSDF?.data?.info_persona_titular?.segundo_apellido || ''}` || 'N/A'}
               inputProps={{
                 maxLength: 10,
               }}
@@ -63,7 +65,7 @@ export const PersonaTitular = (): JSX.Element => {
               disabled
               variant="outlined"
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento ?? 'N/A'}
+              value={infoInicialUsuario?.dataTitular?.data?.tipo_documento || `${infoInicialUsuario?.detallePQRSDF?.data?.info_persona_titular?.tipo_documento}` || 'N/A'}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -74,7 +76,18 @@ export const PersonaTitular = (): JSX.Element => {
               variant="outlined"
               disabled
               InputLabelProps={{ shrink: true }}
-              value={infoInicialUsuario?.dataTitular?.data?.numero_documento ?? 'N/A'}
+              value={infoInicialUsuario?.dataTitular?.data?.numero_documento || `${infoInicialUsuario?.detallePQRSDF?.data?.info_persona_titular?.numero_documento}` || 'N/A'}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              fullWidth
+              size="small"
+              label="Email"
+              variant="outlined"
+              disabled
+              InputLabelProps={{ shrink: true }}
+              value={infoInicialUsuario?.detallePQRSDF?.data?.info_persona_titular?.email || 'N/A'}
             />
           </Grid>
         </Grid>
