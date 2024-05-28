@@ -137,7 +137,7 @@ export const EditarOrganigrama = ({
     }
 
     const baseUrl =
-      process.env.NODE_ENV === 'development'
+      process.env.NODE_ENV === 'production'
         ? process.env.REACT_APP_DOWNLOAD_FILES_BETA
         : process.env.REACT_APP_DOWNLOAD_FILES_PROD;
 
