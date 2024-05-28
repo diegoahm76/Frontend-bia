@@ -431,12 +431,12 @@ export const ListaElementosTramites = (): JSX.Element => {
                   }).then(async (result) => {
                     if (result.isConfirmed) {
                       const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
-                      await delay(1000);
+                      await delay(3000);
                       const { id_solicitud_tramite } =
                         currentElementPqrsdComplementoTramitesYotros;
                       const createSolicitudRevisionJuridica = async () => {
                         try{
-                          const url = `gestor/panel_ventanilla/opas/solicitud_juridica/create/`
+                          const url = `/api/gestor/panel_ventanilla/tramites/solicitud_juridica/create/`
                           const dataPost = {
                             id_solicitud_tramite,
                           }
