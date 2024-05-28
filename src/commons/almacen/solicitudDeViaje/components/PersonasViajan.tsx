@@ -16,6 +16,7 @@ interface props {
   set_inputs_persona_seleccionada: Dispatch<SetStateAction<inputs_persona_seleccionada>>;
   data_personas_viajan: interface_busqueda_persona_solicita[];
   set_data_personas_viajan: React.Dispatch<React.SetStateAction<interface_busqueda_persona_solicita[]>>;
+  accion: string;
 }
 
 
@@ -25,6 +26,7 @@ const PersonasViajan: FC<props> = ({
   set_inputs_persona_seleccionada,
   data_personas_viajan,
   set_data_personas_viajan,
+  accion
 }) => {
   const dispatch = useDispatch();
 
@@ -35,6 +37,9 @@ const PersonasViajan: FC<props> = ({
 
   const [tipos_documentos, set_tipos_documentos] = useState<interface_tipos_documentos[]>([]);
 
+  useEffect(() => {
+    console.log(data_personas_viajan);
+  }, [data_personas_viajan]);
 
   useEffect(()=>{
     // si hay datos en data_persona_seleccionada entonces se rellenan los campos de inputs_persona_seleccionada
@@ -115,114 +120,118 @@ const PersonasViajan: FC<props> = ({
       >
         <Title title="Agregar personas que viajan" />
 
-        <Grid item xs={12} lg={4}>
-          <FormControl required size="small" fullWidth>
-            <InputLabel >Tipo documento:</InputLabel>
-            <Select
-              label='Tipo documento:'
-              disabled
-              value={inputs_persona_seleccionada.tp_documento ?? ''}
-              onChange={(e: SelectChangeEvent) => {
-                set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, tp_documento: e.target.value });
-              }
-              }
-            >
-              {tipos_documentos.length !== 0 ?
-                tipos_documentos.map((item: interface_tipos_documentos) => (
-                  <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
-                ))
-                :
-                <MenuItem value=''>Cargando...</MenuItem>
-              }
-            </Select>
-          </FormControl>
-        </Grid>
+        {accion === 'crear' &&
+          <>
+            <Grid item xs={12} lg={4}>
+              <FormControl required size="small" fullWidth>
+                <InputLabel >Tipo documento:</InputLabel>
+                <Select
+                  label='Tipo documento:'
+                  disabled
+                  value={inputs_persona_seleccionada.tp_documento ?? ''}
+                  onChange={(e: SelectChangeEvent) => {
+                    set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, tp_documento: e.target.value });
+                  }
+                  }
+                >
+                  {tipos_documentos.length !== 0 ?
+                    tipos_documentos.map((item: interface_tipos_documentos) => (
+                      <MenuItem key={item.value} value={item.value}>{item.label}</MenuItem>
+                    ))
+                    :
+                    <MenuItem value=''>Cargando...</MenuItem>
+                  }
+                </Select>
+              </FormControl>
+            </Grid>
 
-        <Grid item xs={12} lg={4}>
-          <TextField
-            label='Documento: '
-            value={inputs_persona_seleccionada.documento ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, documento: e.target.value })
-            }}
-            disabled
-            fullWidth
-            size="small" />
-        </Grid>
+            <Grid item xs={12} lg={4}>
+              <TextField
+                label='Documento: '
+                value={inputs_persona_seleccionada.documento ?? ''}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, documento: e.target.value })
+                }}
+                disabled
+                fullWidth
+                size="small" />
+            </Grid>
 
-        <Grid item xs={12} lg={4}>
-          <Button
-            fullWidth
-            variant="contained"
-            startIcon={<SearchOutlined />}
-            onClick={() => {
-              set_mostrar_modal_buscar_persona(true);
-            }}
-          >
-            Busqueda Avanzada
-          </Button>
-        </Grid>
+            <Grid item xs={12} lg={4}>
+              <Button
+                fullWidth
+                variant="contained"
+                startIcon={<SearchOutlined />}
+                onClick={() => {
+                  set_mostrar_modal_buscar_persona(true);
+                }}
+              >
+                Busqueda Avanzada
+              </Button>
+            </Grid>
 
-        <Grid item xs={12} lg={6}>
-          <TextField
-            label='Nombres: '
-            value={inputs_persona_seleccionada.nombres ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, nombres: e.target.value })
-            }}
-            disabled
-            fullWidth
-            size="small" />
-        </Grid>
+            <Grid item xs={12} lg={6}>
+              <TextField
+                label='Nombres: '
+                value={inputs_persona_seleccionada.nombres ?? ''}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, nombres: e.target.value })
+                }}
+                disabled
+                fullWidth
+                size="small" />
+            </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <TextField
-            label='Razón social: '
-            value={inputs_persona_seleccionada.razon_social ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, razon_social: e.target.value })
-            }}
-            disabled
-            fullWidth
-            size="small" />
-        </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField
+                label='Razón social: '
+                value={inputs_persona_seleccionada.razon_social ?? ''}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, razon_social: e.target.value })
+                }}
+                disabled
+                fullWidth
+                size="small" />
+            </Grid>
 
-        <Grid item xs={12} lg={3}>
-          <TextField
-            label='Nombre comercial: '
-            value={inputs_persona_seleccionada.nombre_comercial ?? ''}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, nombre_comercial: e.target.value })
-            }}
-            disabled
-            fullWidth
-            size="small" />
-        </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField
+                label='Nombre comercial: '
+                value={inputs_persona_seleccionada.nombre_comercial ?? ''}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  set_inputs_persona_seleccionada({ ...inputs_persona_seleccionada, nombre_comercial: e.target.value })
+                }}
+                disabled
+                fullWidth
+                size="small" />
+            </Grid>
 
 
-        <Grid container item my={2} xs={12} sx={{
-          display: "flex",
-          justifyContent: "end",
-        }}>
-          <Grid item xs={12} lg={3}>
-            <Button
-              fullWidth
-              disabled={Object.keys(data_persona_seleccionada).length === 0}
-              type='button'
-              onClick={handle_agregar_articulo}
-              variant='contained'
-              color='success'
-              startIcon={<AddIcon />}
-            >
-              Agregar
-            </Button>
-          </Grid>
-        </Grid>
-
+            <Grid container item my={2} xs={12} sx={{
+              display: "flex",
+              justifyContent: "end",
+            }}>
+              <Grid item xs={12} lg={3}>
+                <Button
+                  fullWidth
+                  disabled={Object.keys(data_persona_seleccionada).length === 0}
+                  type='button'
+                  onClick={handle_agregar_articulo}
+                  variant='contained'
+                  color='success'
+                  startIcon={<AddIcon />}
+                >
+                  Agregar
+                </Button>
+              </Grid>
+            </Grid>
+          </>
+        }
 
 
         <Grid item xs={12}>
           <TablaPersonasViajan
+            accion={accion}
             data_personas_viajan={data_personas_viajan}
             set_data_personas_viajan={set_data_personas_viajan}
           />
