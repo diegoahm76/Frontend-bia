@@ -144,7 +144,7 @@ export const AccionesFinales = ({
     }
 
     await Swal.fire({
-      title: '¿Está seguro de responder la PQRSDF bro?',
+      title: '¿Está seguro de responder la PQRSDF?',
       text: 'Una vez enviada la respuesta no podrá realizar cambios',
       icon: 'warning',
       showCancelButton: true,
