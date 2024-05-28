@@ -10,7 +10,7 @@ export const PersonaTitular = (): JSX.Element => {
     //* context declaration
     // const { infoInicialUsuario } = useContext(ResRequerimientoOpaContext);
     const { currentPersonaRespuestaUsuario } = useAppSelector(state => state.ResRequerimientoOpaSlice);
-  
+
 
   return (
     <Grid
