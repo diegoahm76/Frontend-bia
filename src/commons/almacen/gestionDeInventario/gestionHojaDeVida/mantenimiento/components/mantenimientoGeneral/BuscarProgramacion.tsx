@@ -7,6 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  MenuItem,
   Stack,
   TextField,
 } from '@mui/material';
@@ -19,7 +20,7 @@ import { useAppDispatch } from '../../../../../../../hooks';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { get_programmed_maintenance } from './thunks/maintenanceThunks';
+import { get_programmed_maintenance, get_veh_programmed_maintenance } from './thunks/maintenanceThunks';
 import { get_cv_vehicle_service } from '../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks';
 import { get_cv_computer_service } from '../../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { get_cv_others_service } from '../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks';
@@ -47,12 +48,20 @@ const BuscarProgramacionComponent = ({
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState<any | null>(null);
   const [articulo, set_articulo] = useState<any | null>(null);
+
+  const [tipo_filtro, set_tipo_filtro] = useState<string>('F');
   const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
+  const [km_desde, set_km_desde] = useState<string | null>(null);
+  const [km_hasta, set_km_hasta] = useState<string | null>(null);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
   };
+
+  const handle_change_filtro = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_tipo_filtro(e.target.value);
+  }
 
   const handle_change_fecha_desde = (date: Date | null): void => {
     set_fecha_desde(date);
@@ -62,13 +71,23 @@ const BuscarProgramacionComponent = ({
     set_fecha_hasta(date);
   };
 
+  const handle_change_km_desde = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_km_desde(e.target.value);
+  }
+
+  const handle_change_km_hasta = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_km_hasta(e.target.value);
+  }
+
   const accionar_busqueda: any = () => {
     if (tipo_articulo === 'vehículos') {
       dispatch(
-        get_programmed_maintenance(
-          dayjs(fecha_desde).format('DD-MM-YYYY'),
-          dayjs(fecha_hasta).format('DD-MM-YYYY'),
-          'Veh'
+        get_veh_programmed_maintenance(
+          tipo_filtro,
+          fecha_desde ? dayjs(fecha_desde).format('DD-MM-YYYY') : '',
+          fecha_hasta ? dayjs(fecha_hasta).format('DD-MM-YYYY') : '',
+          km_desde,
+          km_hasta
         )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
@@ -156,7 +175,7 @@ const BuscarProgramacionComponent = ({
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              {/* <Grid item xs={12} sm={3}>
                 <TextField
                   label="Código"
                   helperText="Ingrese código"
@@ -165,49 +184,127 @@ const BuscarProgramacionComponent = ({
                   value={codigo}
                   onChange={on_change_codigo}
                 />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Fecha desde"
-                    value={fecha_desde}
-                    onChange={(newValue) => {
-                      handle_change_fecha_desde(newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField required fullWidth size="small" {...params} />
-                    )}
-                    maxDate={fecha_hasta}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Fecha hasta"
-                    value={fecha_hasta}
-                    onChange={(newValue) => {
-                      handle_change_fecha_hasta(newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField required fullWidth size="small" {...params} />
-                    )}
-                    minDate={fecha_desde}
-                    disabled={fecha_desde == null}
-                  />
-                </LocalizationProvider>
-              </Grid>
+              </Grid> */}
+              {tipo_articulo === 'vehículos' && <Grid item xs={12} sm={3}>
+                <TextField
+                  select
+                  label="Tipo de filtro"
+                  helperText="Seleccione un tipo de filtro"
+                  size="small"
+                  fullWidth
+                  value={tipo_filtro}
+                  onChange={handle_change_filtro}
+                >
+                  <MenuItem value=""><em>Selecciona una opción</em></MenuItem>
+                  <MenuItem value="F">Fecha</MenuItem>
+                  <MenuItem value="K">Kilometraje</MenuItem>
+                </TextField>
+              </Grid>}
+              {tipo_articulo === 'vehículos' && tipo_filtro == 'F' &&
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha desde"
+                        value={fecha_desde}
+                        onChange={(newValue) => {
+                          handle_change_fecha_desde(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        maxDate={fecha_hasta}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha hasta"
+                        value={fecha_hasta}
+                        onChange={(newValue) => {
+                          handle_change_fecha_hasta(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        minDate={fecha_desde}
+                        disabled={fecha_desde == null}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                </>
+              }
+              {tipo_articulo !== 'vehículos' &&
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha desde"
+                        value={fecha_desde}
+                        onChange={(newValue) => {
+                          handle_change_fecha_desde(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        maxDate={fecha_hasta}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha hasta"
+                        value={fecha_hasta}
+                        onChange={(newValue) => {
+                          handle_change_fecha_hasta(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        minDate={fecha_desde}
+                        disabled={fecha_desde == null}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                </>
+              }
+              {tipo_filtro == 'K' &&
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      label="Kilometraje desde"
+                      helperText="Ingrese kilómetros"
+                      size="small"
+                      fullWidth
+                      value={km_desde}
+                      onChange={handle_change_km_desde}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      label="Kilometraje hasta"
+                      helperText="Ingrese kilómetros"
+                      size="small"
+                      fullWidth
+                      value={km_hasta}
+                      onChange={handle_change_km_hasta}
+                    />
+                  </Grid>
+                </>
+              }
               <Stack
                 direction="row"
-                justifyContent="flex-end"
                 sx={{ mt: '17px' }}
               >
-                <Grid item xs={12} sm={3}>
+                <Grid item xs={12} sm={3} sx={{ml: '1rem'}}>
                   <Button
                     color="primary"
                     variant="contained"
                     startIcon={<SearchIcon />}
                     onClick={accionar_busqueda}
+                    disabled={!tipo_filtro}
                   >
                     Buscar
                   </Button>
@@ -245,19 +342,34 @@ const BuscarProgramacionComponent = ({
                       dataKey="id_programacion_mantenimiento"
                     >
                       <Column
-                        field="articulo"
-                        header="Artículo"
+                        field="placa"
+                        header="Placa"
                         style={{ width: '20%' }}
                       ></Column>
                       <Column
                         field="tipo_descripcion"
                         header="Tipo mantenimiento"
-                        style={{ width: '40%' }}
+                        style={{ width: '30%' }}
                       ></Column>
                       <Column
                         field="fecha"
                         header="Fecha programado"
-                        style={{ width: '40%' }}
+                        style={{ width: '30%' }}
+                      ></Column>
+                      {tipo_articulo === 'vehículos' && <Column
+                        field="kilometraje_programado"
+                        header="Kilometraje programado"
+                        style={{ width: '30%' }}
+                      ></Column>}
+                      <Column
+                        field="marca"
+                        header="Marca"
+                        style={{ width: '20%' }}
+                      ></Column>
+                      <Column
+                        field="estado"
+                        header="Estado"
+                        style={{ width: '20%' }}
                       ></Column>
                     </DataTable>
                   </div>

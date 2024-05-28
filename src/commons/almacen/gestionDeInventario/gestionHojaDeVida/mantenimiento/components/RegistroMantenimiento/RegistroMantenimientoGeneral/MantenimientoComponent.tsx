@@ -22,6 +22,7 @@ const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", l
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, programacion, mantenimiento, accion_guardar }: IProps) => {
     const [tipo, set_tipo] = useState<string>("");
+    const [motivo, set_motivo] = useState<string>("");
     const [acciones, set_acciones] = useState<string>("");
     // Errors
     const [mensaje_error_tipo, set_mensaje_error_tipo] = useState<string>("");
@@ -55,13 +56,14 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
             set_mensaje_error_tipo("El campo Tipo de mantenimiento es obligatorio.");
         if (acciones === "")
             set_mensaje_error_acciones("El campo Acciones realizadas es obligatorio.");
-        
+
             return (mensaje_error_tipo === "" && mensaje_error_acciones === "")
     }
 
     useEffect(() => {
         if (programacion !== undefined && programacion !== null) {
             set_tipo(programacion.tipo);
+            set_motivo(programacion?.motivo);
             set_mensaje_error_tipo("");
         }
     }, [programacion]);
@@ -97,6 +99,7 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
                             <Select
                                 value={tipo}
                                 label="Tipo de mantenimiento"
+                                disabled
                                 onChange={handle_change}
                                 error={mensaje_error_tipo !== ""}
                             >
@@ -108,6 +111,16 @@ export const MantenimientoComponent: React.FC<IProps> = ({ limpiar_formulario, p
                             </Select>
                         </FormControl>
                         {(mensaje_error_tipo !== "") && (<FormHelperText error id="tipo-error">{mensaje_error_tipo}</FormHelperText>)}
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            multiline
+                            value={motivo}
+                            label="Motivo"
+                            size="small"
+                            disabled
+                            fullWidth
+                        />
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
