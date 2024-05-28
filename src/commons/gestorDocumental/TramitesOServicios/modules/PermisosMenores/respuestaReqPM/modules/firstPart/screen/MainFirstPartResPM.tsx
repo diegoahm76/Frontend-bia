@@ -15,11 +15,11 @@ import SaveIcon from '@mui/icons-material/Save';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { SelccionarPersona } from '../components/seleccionarPersona/SeleccionarPersona';
 import { RestartAlt } from '@mui/icons-material';
-import { ListaPorPersonaSolPendientes } from '../components/listaPorPersonasSolPendientes/ListaPorPersonaSolPendientes';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../../hooks';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { Title } from '../../../../../../../../../components';
 import { control_info } from '../../../../../../../alertasgestor/utils/control_error_or_success';
+import { ListaPorPersonaSolPendientes } from '../components/listaPorPerSolPen/ListaPorPerSolPen';
 
 // ? ------------
 // * http://localhost:3000/#/app/gestor_documental/pqrsdf/solicitud_pqrsdf

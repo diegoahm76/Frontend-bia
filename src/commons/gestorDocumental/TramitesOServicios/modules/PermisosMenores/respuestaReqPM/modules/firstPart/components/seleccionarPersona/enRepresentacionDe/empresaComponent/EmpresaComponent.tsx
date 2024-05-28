@@ -4,13 +4,13 @@ import { Button, Divider, Grid, Stack, TextField } from '@mui/material';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SearchIcon from '@mui/icons-material/Search';
 import Select from 'react-select';
-import { ModalSeleccionEmpresa } from './ModalSeleccionEmpresa';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../../../../context/GeneralContext';
 import { containerStyles } from '../../../../../../../../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../../../../../../../components';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../../../alertasgestor/utils/control_error_or_success';
+import { ModalSeleccionEmpresa } from './ModalSeleccionEm';
 
 export const EmpresaComponent = ({
   control_seleccionar_persona,

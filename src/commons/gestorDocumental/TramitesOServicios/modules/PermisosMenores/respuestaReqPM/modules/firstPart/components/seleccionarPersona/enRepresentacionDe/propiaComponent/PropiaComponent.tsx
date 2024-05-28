@@ -6,13 +6,13 @@ import Select from 'react-select';
 import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { LoadingButton } from '@mui/lab';
-import { ModalSeleccionPersona } from './ModalSeleccionPersona';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../../../../context/GeneralContext';
 import { containerStyles } from '../../../../../../../../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../../../../../../../components';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../../../alertasgestor/utils/control_error_or_success';
+import { ModalSeleccionPersona } from './ModalSeleccionPers';
 
 export const PropiaComponent = ({
   control_seleccionar_persona,
