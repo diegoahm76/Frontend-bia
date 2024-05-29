@@ -557,11 +557,17 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
           aplica_para_notificaciones:
             data.aplica_para.includes('notificaciones'),
           aplica_para_notificaciones_publicaciones:
-            data.aplica_para_acciones?.includes('notificacion'),
-          aplica_para_publicaciones:
-            data?.aplica_para_acciones?.includes('publicacion'),
-          aplica_para_comunicaciones:
-            data?.aplica_para_acciones?.includes('comunicacion'),
+            data?.aplica_para_acciones?.includes('notificacion') ? true : false,
+          aplica_para_publicaciones: data?.aplica_para_acciones?.includes(
+            'publicacion'
+          )
+            ? true
+            : false,
+          aplica_para_comunicaciones: data?.aplica_para_acciones?.includes(
+            'comunicacion'
+          )
+            ? true
+            : false,
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,
@@ -578,11 +584,17 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
           aplica_para_notificaciones:
             data.aplica_para.includes('notificaciones'),
           aplica_para_notificaciones_publicaciones:
-            data?.aplica_para_acciones?.includes('notificacion'),
-          aplica_para_publicaciones:
-            data?.aplica_para_acciones?.includes('publicacion'),
-          aplica_para_comunicaciones:
-            data?.aplica_para_acciones?.includes('comunicacion'),
+            data?.aplica_para_acciones?.includes('notificacion') ? true : false,
+          aplica_para_publicaciones: data?.aplica_para_acciones?.includes(
+            'publicacion'
+          )
+            ? true
+            : false,
+          aplica_para_comunicaciones: data?.aplica_para_acciones?.includes(
+            'comunicacion'
+          )
+            ? true
+            : false,
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,

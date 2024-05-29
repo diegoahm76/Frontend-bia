@@ -351,6 +351,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                     field="abrir_hdv"
                                                     header="Hoja de vida"
                                                     style={{ width: '15%' }}
+                                                    body={(rowData) => rowData.abrir_hdv ? 'Sí' : 'No'}
                                                 ></Column>
                                                 <Column header="Acciones" style={{ width: '10%' }} align={'center'} body={(rowData) => {
                                                     return <Button color="error" size="small" variant='contained' onClick={() => {

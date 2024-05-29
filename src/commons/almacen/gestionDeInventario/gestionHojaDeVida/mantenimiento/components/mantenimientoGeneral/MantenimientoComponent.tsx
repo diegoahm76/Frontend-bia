@@ -14,12 +14,13 @@ interface IProps {
     parent_type_maintenance: any,
     parent_esp_maintenance: any,
     limpiar_formulario: boolean,
+    clean_form?: boolean,
     programacion: any
 }
 const tipo_mantenimiento = [{ value: "P", label: "Preventivo" }, { value: "C", label: "Correctivo" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, programacion }: IProps) => {
+export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenance, parent_esp_maintenance, limpiar_formulario, clean_form, programacion }: IProps) => {
 
     const [tipo, set_tipo] = useState("");
     const [especificacion, set_especificacion] = useState("");
@@ -41,11 +42,11 @@ export const MantenimientoComponent: React.FC<IProps> = ({ parent_type_maintenan
     }, [parent_esp_maintenance, especificacion]);
 
     useEffect(() => {
-        if (limpiar_formulario) {
+        if (limpiar_formulario || clean_form) {
             set_tipo("");
             set_especificacion("");
         }
-    }, [limpiar_formulario]);
+    }, [limpiar_formulario, clean_form]);
 
     const handle_change: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipo(e.target.value);

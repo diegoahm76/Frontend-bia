@@ -41,6 +41,14 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if(accion_guardar){
+            validar_formulario();
+            set_accion_guardar(false);
+        }
+    }, [detalle, accion_guardar])
+
+
     const validar_formulario: () => void = () => {
         if(user_info !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null && accion_guardar){
             const formulario: ejecutar_mantenimiento = {
@@ -49,18 +57,18 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
                 cod_tipo_mantenimiento: mantenimiento.tipo,
                 dias_empleados:parseInt(detalle.dias_empleados),
                 fecha_estado_anterior: null,
-                id_articulo: detalle_seleccionado.id_articulo,
+                id_articulo: detalle_seleccionado.id_articulo || detalle_seleccionado?.articulo,
                 cod_estado_final: detalle.estado,
                 id_persona_realiza: user_info.id_persona,
                 id_persona_diligencia: user_info.id_persona,
                 cod_estado_anterior: null,
-                acciones_realizadas: mantenimiento.especificacion,
+                acciones_realizadas: mantenimiento.acciones,
                 observaciones: detalle.observaciones,
                 valor_mantenimiento: detalle.valor,
                 contrato_mantenimiento: detalle.contrato,
                 id_programacion_mtto: programacion !== null ? programacion.id_programacion_mantenimiento : null
             };
-            registrar_mantenimiento(formulario); 
+            registrar_mantenimiento(formulario);
         }
     }
 
@@ -73,8 +81,8 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
     const guardar_mantenimiento: () => void = () => {
         //  console.log('')('Estado actual del guardar: ',accion_guardar);
         set_accion_guardar(true);
-        validar_formulario();
-        setTimeout(() => { set_accion_guardar(false); }, 500);
+        // validar_formulario();
+        // setTimeout(() => { set_accion_guardar(false); }, 500);
     }
 
     const salir_mantenimiento: () => void = () => {

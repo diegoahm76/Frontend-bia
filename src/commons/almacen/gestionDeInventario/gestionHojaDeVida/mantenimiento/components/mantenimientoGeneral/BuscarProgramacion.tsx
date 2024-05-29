@@ -47,6 +47,7 @@ const BuscarProgramacionComponent = ({
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   // const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState<any | null>(null);
+
   const [articulo, set_articulo] = useState<any | null>(null);
 
   const [tipo_filtro, set_tipo_filtro] = useState<string>('F');
@@ -129,12 +130,18 @@ const BuscarProgramacionComponent = ({
   };
 
   const selected_product_grid: any = () => {
+    console.log(selected_product);
     if (selected_product !== null) {
       if (tipo_articulo === 'vehículos') {
         dispatch(get_cv_vehicle_service(selected_product.articulo)).then(
           (response: any) => {
             set_articulo(response.data);
-            parent_details(response.data);
+            console.log(response);
+            if(response?.data){
+              parent_details(response.data);
+            }else{
+              parent_details(selected_product)
+            }
           }
         );
       } else if (tipo_articulo === 'computadores') {
