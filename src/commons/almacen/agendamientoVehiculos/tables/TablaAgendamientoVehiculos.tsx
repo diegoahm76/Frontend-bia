@@ -103,6 +103,10 @@ const TablaAgendamientoVehiculos: FC<props_table> = ({
       renderCell: ((res) => (res.row.primer_nombre_solicitante + ' ' + res.row.primer_apellido_solicitante)),
     },
     {
+      field: 'primer_nombre_persona_responsable', headerName: 'Persona responsable', minWidth: 300, flex: 1,
+      renderCell: ((res) => (res.row.primer_nombre_solicitante + ' ' + res.row.primer_apellido_solicitante)),
+    },
+    {
       field: 'fecha_solicitud', headerName: 'Fecha Solicitud', minWidth: 120, flex: 1,
       renderCell: ((res) => (dayjs(res.row.fecha_solicitud).format('DD/MM/YYYY')))
     },

@@ -289,8 +289,8 @@ export const EstablecerTipologias = (): JSX.Element => {
                             ) || []
                     }
                     columns={colums_tipologias}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
+                    pageSize={9}
+                    rowsPerPageOptions={[9]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => uuidv4()}
                   />
@@ -323,8 +323,8 @@ export const EstablecerTipologias = (): JSX.Element => {
                         : tipologias_asociadas_a_trd
                     }
                     columns={colums_tipologias_asociadas}
-                    pageSize={5}
-                    rowsPerPageOptions={[5]}
+                    pageSize={4}
+                    rowsPerPageOptions={[4]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => row.id_tipologia_documental}
                   />

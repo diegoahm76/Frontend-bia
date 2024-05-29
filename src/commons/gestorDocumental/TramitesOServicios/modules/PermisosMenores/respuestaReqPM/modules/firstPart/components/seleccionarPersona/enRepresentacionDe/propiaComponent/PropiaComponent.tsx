@@ -1,18 +1,20 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useContext } from 'react';
+import { Controller } from 'react-hook-form';
 import { Button, Divider, Grid, Stack, TextField } from '@mui/material';
-import CleanIcon from '@mui/icons-material/CleaningServices';
-import SearchIcon from '@mui/icons-material/Search';
 import Select from 'react-select';
-import { ModalSeleccionEmpresa } from './ModalSeleccionEmpresa';
+import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
+import { LoadingButton } from '@mui/lab';
 import { useAppDispatch, useAppSelector } from '../../../../../../../../../../../../hooks';
 import { ModalAndLoadingContext } from '../../../../../../../../../../../../context/GeneralContext';
 import { containerStyles } from '../../../../../../../../../../tca/screens/utils/constants/constants';
 import { Title } from '../../../../../../../../../../../../components';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
 import { control_info } from '../../../../../../../../../../alertasgestor/utils/control_error_or_success';
+import { ModalSeleccionPersona } from './ModalSeleccionPers';
 
-export const EmpresaComponent = ({
+export const PropiaComponent = ({
   control_seleccionar_persona,
   watchExe,
   reset_seleccionar_persona,
@@ -25,22 +27,18 @@ export const EmpresaComponent = ({
   const dispatch = useAppDispatch();
 
   //* context declarations
-  const {
-    generalLoading,
-    handleGeneralLoading,
-    secondLoading,
-    handleSecondLoading,
-  } = useContext(ModalAndLoadingContext);
+  const { handleOpenModalOne } = useContext(ModalAndLoadingContext);
 
   // ? con esta variable se va a manejar la actualización de la persona seleccionada para no generar conflicsot con use form
   const { currentPersonaRespuestaUsuario } = useAppSelector(
     (state) => state.ResRequerimientoOpaSlice
   );
+
   return (
     <>
       <Grid container sx={containerStyles}>
         <Grid item xs={12}>
-          <Title title="A nombre de una empresa" />
+          <Title title="A nombre propio - títular" />
           <form
             onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
               event.preventDefault();
@@ -61,8 +59,7 @@ export const EmpresaComponent = ({
                 <div>
                   <Select
                     value={{
-                      value:
-                        currentPersonaRespuestaUsuario?.tipo_documento ?? 'N/A',
+                      value: currentPersonaRespuestaUsuario?.tipo_documento,
                       label:
                         currentPersonaRespuestaUsuario?.tipo_documento ?? '...',
                     }}
@@ -100,99 +97,20 @@ export const EmpresaComponent = ({
               <Grid item xs={12} sm={5}>
                 <TextField
                   fullWidth
-                  label="Nombre comercial de la empresa"
+                  label="Nombre de la persona"
                   size="small"
                   multiline
                   rows={1}
                   maxRows={2}
                   variant="outlined"
                   value={
-                    currentPersonaRespuestaUsuario?.nombre_comercial ?? '...'
+                    currentPersonaRespuestaUsuario?.nombre_completo ?? '...'
                   }
                   InputLabelProps={{ shrink: true }}
                   disabled
                 />
               </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  fullWidth
-                  label="Razón social de la empresa"
-                  size="small"
-                  multiline
-                  rows={1}
-                  maxRows={2}
-                  variant="outlined"
-                  value={currentPersonaRespuestaUsuario?.razon_social ?? '...'}
-                  InputLabelProps={{ shrink: true }}
-                  disabled
-                />
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{
-                  zIndex: 2,
-                }}
-              >
-                <div>
-                  <Select
-                    value={{
-                      value:
-                        currentPersonaRespuestaUsuario?.tipo_doc_rep ?? 'N/A',
-                      label:
-                        currentPersonaRespuestaUsuario?.tipo_doc_rep ?? '...',
-                    }}
-                    isDisabled={true}
-                    placeholder="Seleccionar"
-                  />
-                  <label>
-                    <small
-                      style={{
-                        color: 'rgba(0, 0, 0, 0.6)',
-                        fontWeight: 'thin',
-                        fontSize: '0.75rem',
-                        marginTop: '0.25rem',
-                        marginLeft: '0.25rem',
-                      }}
-                    >
-                      Tipo de documento del representante
-                    </small>
-                  </label>
-                </div>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  fullWidth
-                  label="Documento representante de la empresa"
-                  size="small"
-                  multiline
-                  rows={1}
-                  maxRows={2}
-                  variant="outlined"
-                  value={
-                    currentPersonaRespuestaUsuario?.numero_documento_rep ??
-                    '...'
-                  }
-                  InputLabelProps={{ shrink: true }}
-                  disabled
-                />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <TextField
-                  fullWidth
-                  label="Nombre representante de la empresa"
-                  size="small"
-                  multiline
-                  rows={1}
-                  maxRows={2}
-                  variant="outlined"
-                  value={currentPersonaRespuestaUsuario?.nombre_rep ?? '...'}
-                  InputLabelProps={{ shrink: true }}
-                  disabled
-                />
-              </Grid>
-              {currentPersonaRespuestaUsuario?.nombre_rep && (
+              {currentPersonaRespuestaUsuario?.nombre_completo && (
                   <>
                     <Grid item xs={12} sm={12}>
                       <TextField
@@ -226,7 +144,7 @@ export const EmpresaComponent = ({
                   control_info('Se ha quitado la selección de la persona');
                 }}
               >
-                QUITAR SELECCIÓN DE EMPRESA
+                QUITAR SELECCIÓN DE PERSONA
               </Button>
 
               <Button
@@ -234,53 +152,53 @@ export const EmpresaComponent = ({
                 variant="contained"
                 startIcon={<SearchIcon />}
                 onClick={() => {
-                  handleGeneralLoading(true);
+                  handleOpenModalOne(true);
                 }}
               >
-                BÚSQUEDA DE EMPRESA
+                BÚSQUEDA PERSONA
               </Button>
             </Stack>
             <Divider />
             {/* <Grid container spacing={2} sx={{ mt: '15px' }}>
-          <Stack
-            direction="row"
-            justifyContent="flex-start"
-            spacing={2}
-            sx={{
-              mb: '20px',
-              mt: '20px',
-              alignItems: 'center',
-              ml: '20px'
-            }}
-          >
-            <LoadingButton
-              loading={loadingButton}
-              color="success"
-              type="submit"
-              variant="contained"
-              disabled={
-                false
-              }
-              startIcon={
-                asignacion_lideres_current?.observaciones_asignacion ? (
-                  <SyncIcon />
-                ) : (
-                  <SaveIcon />
-                )
-              }
-            >
-              {asignacion_lideres_current?.observaciones_asignacion
-                ? 'ACTUALIZAR LÍDER'
-                : 'GUARDAR LÍDER'}
-            </LoadingButton>
-          </Stack>
-        </Grid>*/}
+              <Stack
+                direction="row"
+                justifyContent="flex-start"
+                spacing={2}
+                sx={{
+                  mb: '20px',
+                  mt: '20px',
+                  alignItems: 'center',
+                  ml: '20px'
+                }}
+              >
+                <LoadingButton
+                  loading={loadingButton}
+                  color="success"
+                  type="submit"
+                  variant="contained"
+                  disabled={
+                    false
+                  }
+                  startIcon={
+                    asignacion_lideres_current?.observaciones_asignacion ? (
+                      <SyncIcon />
+                    ) : (
+                      <SaveIcon />
+                    )
+                  }
+                >
+                  {asignacion_lideres_current?.observaciones_asignacion
+                    ? 'ACTUALIZAR LÍDER'
+                    : 'GUARDAR LÍDER'}
+                </LoadingButton>
+              </Stack>
+            </Grid>*/}
           </form>
         </Grid>
       </Grid>
 
       {/* modal selección persona */}
-      <ModalSeleccionEmpresa
+      <ModalSeleccionPersona
         {...{
           control_seleccionar_persona,
           watchExe,

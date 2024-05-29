@@ -7,8 +7,7 @@ import ReactApexChart from 'react-apexcharts';
 import { api } from '../../../../api/axios';
 import ClearIcon from '@mui/icons-material/Clear';
 
-export const CarteraPorDeuda: React.FC = () => {
-
+export const ReporteGeneralCarteraDeuda: React.FC = () => {
 
     const initialFormData = {
         fecha_desde: '',
@@ -102,13 +101,12 @@ export const CarteraPorDeuda: React.FC = () => {
 
 
 
-
-
     useEffect(() => {
         fetchChoiseConcepto();
         carteraDeuda();
     }, []);
 
+    
     return (
         <Grid container item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}>
             <Grid item xs={12} sm={12}>
@@ -187,7 +185,7 @@ export const CarteraPorDeuda: React.FC = () => {
                 </Button>
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={12} sx={{ background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF ` }}>
                 <div id="chart">
                     <ReactApexChart options={estado.options} series={estado.series} type="bar" height={1500} />
                 </div>
