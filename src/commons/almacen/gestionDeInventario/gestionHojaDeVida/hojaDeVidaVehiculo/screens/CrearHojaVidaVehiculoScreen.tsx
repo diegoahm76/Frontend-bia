@@ -72,6 +72,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
       form_data.append('fecha_circulacion', dayjs(data.fecha_circulacion).format('YYYY-MM-DD'));
     }
     form_data.append('id_articulo', data.id_articulo);
+    form_data.append('id_vehiculo_arreandado', data?.id_vehiculo_arrendado)
     form_data.append('doc_identificador_nro', data.doc_identificador_nro
     );
     form_data.append('codigo_bien', data.codigo_bien);

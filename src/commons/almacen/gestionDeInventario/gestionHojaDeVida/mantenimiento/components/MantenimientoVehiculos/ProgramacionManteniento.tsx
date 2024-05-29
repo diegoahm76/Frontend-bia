@@ -1,7 +1,7 @@
 import { Box, Button, Grid, Stack } from '@mui/material';
 import { Title } from '../../../../../../../components';
 import { KilometrajeComponent } from './KilometrajeComponent';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { type crear_mantenimiento } from '../../interfaces/IProps';
 import { ArticuloComponent } from '../mantenimientoGeneral/ArticuloComponent';
 import { DetallesComponent } from '../mantenimientoGeneral/DetallesComponent';
@@ -26,6 +26,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const [limpiar_formulario, set_limpiar_formulario] = useState<boolean>(false);
+    const [clean_form, set_clean_form] = useState<boolean>(false)
 
     const {
         rows,
@@ -94,11 +95,34 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
         set_limpiar_formulario(true);
     }
 
+    const prev_id_bien = useRef();
+
+    useEffect(() => {
+        if (detalle_seleccionado && (prev_id_bien.current === undefined || prev_id_bien.current !== detalle_seleccionado.id_bien)) {
+          set_clean_form(true)
+          prev_id_bien.current = detalle_seleccionado?.id_bien;
+        }
+      }, [detalle_seleccionado]);
+
     useEffect(() => {
         setTimeout(() => {
             set_limpiar_formulario(false);
         }, 1000);
     }, [limpiar_formulario])
+
+    useEffect(() => {
+        if(limpiar_formulario){
+            setTimeout(() => {
+                set_limpiar_formulario(false);
+            }, 1000);
+        }
+
+        if(clean_form){
+            setTimeout(() => {
+                set_clean_form(false);
+            }, 1000);
+        }
+    }, [limpiar_formulario, clean_form])
 
     return (
         <>
@@ -151,7 +175,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* MANTENIMIENTO COMPONENT */}
                     <Title title='Detalles' />
-                    <MantenimientoComponent programacion={programacion} parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} />
+                    <MantenimientoComponent programacion={programacion} parent_type_maintenance={set_type_maintenance_state} parent_esp_maintenance={set_esp_maintenance_state} limpiar_formulario={limpiar_formulario} clean_form={clean_form}/>
                 </Grid>
             </Grid>
 
@@ -169,7 +193,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* FECHAS COMPONENT */}
                     <Title title='Programar por fechas' />
-                    <FechasComponent programacion={programacion} parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} user_info={user_info} limpiar_formulario={limpiar_formulario} />
+                    <FechasComponent programacion={programacion} parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} user_info={user_info} limpiar_formulario={limpiar_formulario} clean_form={clean_form} />
                 </Grid>
             </Grid>
 
@@ -187,7 +211,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* KILOMETRAJE COMPONENT */}
                     <Title title='Programar por kilometraje' />
-                    <KilometrajeComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} limpiar_formulario={limpiar_formulario} user_info={user_info} />
+                    <KilometrajeComponent parent_state_setter={wrapper_set_parent_state} detalle_seleccionado={detalle_seleccionado} tipo_matenimiento={tipo_mantenimiento} especificacion={especificacion} limpiar_formulario={limpiar_formulario} clean_form={clean_form} user_info={user_info} />
                 </Grid>
             </Grid>
 

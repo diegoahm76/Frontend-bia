@@ -185,7 +185,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   };
 
   const buscar_x_codigo: any = () => {
-    //validar si el campo codigo esta vacio  
+    //validar si el campo codigo esta vacio
     if(codigo_articulo === '' || codigo_articulo === undefined){
       control_error("El campo Código es obligatorio.");
       return;
@@ -204,20 +204,24 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     set_observaciones(e.target.value);
   };
   const cambio_cantidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(parseInt(e.target.value) > 0){
       set_cantidad(e.target.value);
-      set_msj_error_cantidad("");
-    }else{
-      set_msj_error_cantidad("El campo Cantidad no puede ser menor a 1.");
-    }
+      if(parseInt(e.target.value) < 1) set_msj_error_cantidad("El campo Cantidad no puede ser menor a 1.");
+    // if(parseInt(e.target.value) > 0){
+    //   set_cantidad(e.target.value);
+    //   set_msj_error_cantidad("");
+    // }else{
+    //   set_msj_error_cantidad("El campo Cantidad no puede ser menor a 1.");
+    // }
   };
   const cambio_valor_unidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if(parseInt(e.target.value) >= 0){
       set_valor_unidad(e.target.value);
-      set_msj_error_vu("");
-    }else{
-      set_msj_error_vu("El campo Valor unidad no puede ser menor a 0.");
-    }
+      if(parseInt(e.target.value) < 1) set_msj_error_vu("El campo Valor unidad no puede ser menor a 0.");
+    // if(parseInt(e.target.value) >= 0){
+    //   set_valor_unidad(e.target.value);
+    //   set_msj_error_vu("");
+    // }else{
+    //   set_msj_error_vu("El campo Valor unidad no puede ser menor a 0.");
+    // }
   };
 
   const cambio_tipo_documento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -251,12 +255,12 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   const cargar_entradas = (): void => {
     const encabezado: IInfoEntrada = {
       id_entrada_almacen: entrada_update ? buscar_articulo.info_entrada.id_entrada_almacen : null,
-      fecha_entrada: fecha_entrada.format("YYYY-MM-DD HH:mm:ss"), 
-      motivo, 
-      observacion: observaciones, 
-      id_proveedor: proveedor.id_persona, 
-      id_tipo_entrada: parseInt(tipo_entrada),  
-      id_bodega: parseInt(bodega_ingreso), 
+      fecha_entrada: fecha_entrada.format("YYYY-MM-DD HH:mm:ss"),
+      motivo,
+      observacion: observaciones,
+      id_proveedor: proveedor.id_persona,
+      id_tipo_entrada: parseInt(tipo_entrada),
+      id_bodega: parseInt(bodega_ingreso),
       valor_total_entrada
     };
     set_entradas({...entradas, info_entrada: encabezado,info_items_entrada: info_items});
@@ -285,7 +289,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
           tiene_hoja_vida: info_item.abrir_hdv,
           doc_identificador_bien: info_item.placa_serial,
           cantidad_vida_util: info_item.vida_util,
-          cod_estado: info_item.estado
+          cod_estado: info_item.estado,
         }])
       });
     }else{
@@ -310,7 +314,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
     }
     set_detalles_entrada([]);
   }
-  
+
   const validar_formulario = (): boolean =>{
   let validar = true;
     if(tipo_entrada === ""){
@@ -342,7 +346,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       validar = false;
     }
     if(valor_unidad === ""){
-      set_msj_error_vu("El campo Cantidad es obligatorio.");
+      set_msj_error_vu("El campo Valor Unidad es obligatorio.");
       validar = false;
     }
     return validar;
@@ -430,7 +434,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       set_iva(articulo.id_porcentaje_iva);
       set_msj_error_articulo("");
       limpiar_detalle();
-    } 
+    }
   },[articulo]);
 
   useEffect(() => {
@@ -601,7 +605,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   label="Concepto"
                   size="small"
                   fullWidth
-                  onChange={cambio_motivo} 
+                  onChange={cambio_motivo}
                   error={msj_error_motivo !== ""}/>
               {(msj_error_motivo !== "") && (<FormHelperText error >{msj_error_motivo}</FormHelperText>)}
               </Grid>
@@ -647,7 +651,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     onChange={cambio_tipo_documento}
                     error={msj_error_tdoc !== ""}
                      disabled
-                            
+
                   >
                     {tipos_documentos.map((tipos: any) => (
                       <MenuItem key={tipos.value} value={tipos.value}>
@@ -882,7 +886,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                     label="% Iva"
                     onChange={cambio_iva}
                     error={msj_error_iva !== ""}
-                    
+
                   >
                     {porcentaje_iva.map((bg: any) => (
                       <MenuItem key={bg.id_porcentaje_iva} value={bg.id_porcentaje_iva}>
@@ -1049,8 +1053,25 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                       header="Valor iva"
                       style={{ width: '50%' }}
                     ></Column>
+                    <Column
+                      field="cod_estado"
+                      header="Estado"
+                      style={{ width: '10%' }}
+                      body={(rowData) => rowData.cod_estado == 'O' ? 'Óptimo' : (rowData.cod_estado == 'A' ? 'Averiado' : 'Defectuoso')}
+                    ></Column>
+                    <Column
+                        field="doc_identificador_bien"
+                        header="Placa/Serial"
+                        style={{ width: '10%' }}
+                    ></Column>
+                    <Column
+                      field="tiene_hoja_vida"
+                      header="Hoja de vida"
+                      style={{ width: '15%' }}
+                      body={(rowData) => rowData.tiene_hoja_vida ? 'Sí' : 'No'}
+                    ></Column>
                     <Column header="Acciones" align={'center'} body={(rowData) => {
-                      return <Button color="error" size="small" variant='contained' onClick={() => { 
+                      return <Button color="error" size="small" variant='contained' onClick={() => {
                         const index = info_items.findIndex((i:any) => i.id_entrada_local === rowData.id_entrada_local);
                         info_items.splice(index,1);
                         set_info_items([...info_items]);
@@ -1142,7 +1163,7 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
         </Grid>
       </Grid>
       </Grid>
-  
+
     </>
   );
 }

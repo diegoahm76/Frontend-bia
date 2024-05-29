@@ -19,10 +19,11 @@ interface IProps {
     tipo_matenimiento: string,
     especificacion: string,
     limpiar_formulario: boolean,
+    clean_form?: boolean,
     user_info: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, limpiar_formulario, user_info }: IProps) => {
+export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, limpiar_formulario, clean_form, user_info }: IProps) => {
     const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
     const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
     const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
@@ -57,13 +58,15 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
     }, [detalle_seleccionado]);
 
     useEffect(() => {
-        set_cada("");
-        set_cada_desde("");
-        set_cada_hasta("");
-        set_mensaje_error_cada("");
-        set_mensaje_error_desde("");
-        set_mensaje_error_hasta("");
-    }, [limpiar_formulario]);
+        if(limpiar_formulario || clean_form){
+            set_cada("");
+            set_cada_desde("");
+            set_cada_hasta("");
+            set_mensaje_error_cada("");
+            set_mensaje_error_desde("");
+            set_mensaje_error_hasta("");
+        }
+    }, [limpiar_formulario, clean_form]);
 
     const [cada, set_cada] = useState("");
     const [cada_desde, set_cada_desde] = useState("");
@@ -170,6 +173,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                                     'aria-label': 'weight',
                                 }}
                                 size='small'
+                                value={cada}
                                 onChange={handle_change_cada}
                                 error={mensaje_error_cada !== ""}
                             />
@@ -186,6 +190,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                                     'aria-label': 'weight',
                                 }}
                                 size='small'
+                                value={cada_desde}
                                 onChange={handle_change_cada_desde}
                                 error={mensaje_error_desde !== ""}
                             />
@@ -202,6 +207,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                                     'aria-label': 'weight',
                                 }}
                                 size='small'
+                                value={cada_hasta}
                                 onChange={handle_change_cada_hasta}
                                 error={mensaje_error_hasta !== ""}
                             />

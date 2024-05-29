@@ -37,7 +37,7 @@ export const PrevisualizacionComponent: React.FC<IProps> = ({
   });
 
   set_data_previsualizacion([...data_previsualizacion, ...newData]);
-}, [data_grid, detalle_seleccionado_prop?.doc_identificador_nro]);
+}, [data_grid]);
 
   useEffect(() => {
     if (limpiar_formulario) set_data_previsualizacion([]);
