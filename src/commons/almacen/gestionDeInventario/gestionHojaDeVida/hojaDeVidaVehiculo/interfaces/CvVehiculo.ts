@@ -9,6 +9,7 @@ export interface Icv {
 
 export interface IVehicles {
   id_bien: number | null;
+  id_vehiculo_arrendado?: number | null;
   codigo_bien: string | null;
   nro_elemento_bien: number | null;
   nombre: string;

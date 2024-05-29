@@ -45,7 +45,7 @@ const BuscarProgramacionComponent = ({
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>('');
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
-  const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
+  // const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState<any | null>(null);
   const [articulo, set_articulo] = useState<any | null>(null);
 
@@ -60,6 +60,10 @@ const BuscarProgramacionComponent = ({
   };
 
   const handle_change_filtro = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_fecha_desde(null);
+    set_fecha_hasta(null);
+    set_km_desde(null);
+    set_km_hasta(null);
     set_tipo_filtro(e.target.value);
   }
 
@@ -89,9 +93,14 @@ const BuscarProgramacionComponent = ({
           km_desde,
           km_hasta
         )
+        // get_programmed_maintenance(
+        //   dayjs(fecha_desde).format('DD-MM-YYYY'),
+        //   dayjs(fecha_hasta).format('DD-MM-YYYY'),
+        //   'Veh'
+        // )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
-        set_grid_busqueda_before([...response.detail]);
+        // set_grid_busqueda_before([...response.detail]);
       });
     } else if (tipo_articulo === 'computadores') {
       dispatch(
@@ -102,7 +111,7 @@ const BuscarProgramacionComponent = ({
         )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
-        set_grid_busqueda_before([...response.detail]);
+        // set_grid_busqueda_before([...response.detail]);
       });
     } else {
       dispatch(
@@ -113,7 +122,7 @@ const BuscarProgramacionComponent = ({
         )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
-        set_grid_busqueda_before([...response.detail]);
+        // set_grid_busqueda_before([...response.detail]);
       });
     }
     //  console.log('')(grid_busqueda_before);
@@ -229,7 +238,6 @@ const BuscarProgramacionComponent = ({
                           <TextField required fullWidth size="small" {...params} />
                         )}
                         minDate={fecha_desde}
-                        disabled={fecha_desde == null}
                       />
                     </LocalizationProvider>
                   </Grid>
@@ -264,7 +272,6 @@ const BuscarProgramacionComponent = ({
                           <TextField required fullWidth size="small" {...params} />
                         )}
                         minDate={fecha_desde}
-                        disabled={fecha_desde == null}
                       />
                     </LocalizationProvider>
                   </Grid>
@@ -304,7 +311,12 @@ const BuscarProgramacionComponent = ({
                     variant="contained"
                     startIcon={<SearchIcon />}
                     onClick={accionar_busqueda}
-                    disabled={!tipo_filtro}
+                    disabled={
+                      !tipo_filtro ||
+                      (tipo_articulo !== 'vehículos' && (!fecha_desde || !fecha_hasta)) ||
+                      (tipo_articulo === 'vehículos' && tipo_filtro === 'F' && (!fecha_desde !== !fecha_hasta)) ||
+                      (tipo_articulo === 'vehículos' && tipo_filtro === 'K' && (!km_desde !== !km_hasta))
+                    }
                   >
                     Buscar
                   </Button>
@@ -343,8 +355,9 @@ const BuscarProgramacionComponent = ({
                     >
                       <Column
                         field="placa"
-                        header="Placa"
+                        header={tipo_articulo === 'vehículos' ? 'Placa' : 'Serial'}
                         style={{ width: '20%' }}
+                        body={(rowData) => <div>{rowData.placa.toUpperCase()}</div>}
                       ></Column>
                       <Column
                         field="tipo_descripcion"
@@ -355,16 +368,19 @@ const BuscarProgramacionComponent = ({
                         field="fecha"
                         header="Fecha programado"
                         style={{ width: '30%' }}
+                        body={(rowData) => <div>{rowData?.fecha || 'N/A'}</div>}
                       ></Column>
                       {tipo_articulo === 'vehículos' && <Column
                         field="kilometraje_programado"
                         header="Kilometraje programado"
                         style={{ width: '30%' }}
+                        body={(rowData) => <div>{rowData?.kilometraje_programado || 'N/A'}</div>}
                       ></Column>}
                       <Column
                         field="marca"
                         header="Marca"
                         style={{ width: '20%' }}
+                        body={(rowData) => <div>{rowData.marca || 'Sin Marca'}</div>}
                       ></Column>
                       <Column
                         field="estado"
