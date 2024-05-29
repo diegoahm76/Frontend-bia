@@ -34,6 +34,7 @@ import {
   set_filed,
 } from '../../../../gestorDocumental/PQRSDF/store/slice/pqrsdfSlice';
 import { ImpresionRadicadoScreen } from '../../../../gestorDocumental/PQRSDF/screens/ImpresionRadicadoScreen';
+import FormButton from '../../../../../components/partials/form/FormButton';
 
 export interface UnidadOrganizacional {
   codigo: any;
@@ -561,6 +562,18 @@ export const GeneradorDocumentos: React.FC = () => {
             >
               {sendTemplate ? 'Actualizar Documento' : 'Ver borrador'}
             </Button>
+          </Grid>
+          <Grid item>
+            <FormButton
+              disabled={false}
+              href={`/#/app/transversal/notificaciones/panel_asignacion_funcionario`}
+              variant_button="outlined"
+              on_click_function={null}
+              icon_class={null}
+              label={'Volver'}
+              type_button="button"
+              color_button="error"
+            />
           </Grid>
           {/* <Grid item>
             <Button

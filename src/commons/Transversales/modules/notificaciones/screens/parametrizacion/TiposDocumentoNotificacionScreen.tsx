@@ -558,11 +558,17 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
           aplica_para_notificaciones:
             data.aplica_para.includes('notificaciones'),
           aplica_para_notificaciones_publicaciones:
-            data.aplica_para_acciones?.includes('notificacion'),
+            data.aplica_para_acciones !== null
+              ? data.aplica_para_acciones?.includes('notificacion')
+              : false,
           aplica_para_publicaciones:
-            data?.aplica_para_acciones?.includes('publicacion'),
+            data.aplica_para_acciones !== null
+              ? data?.aplica_para_acciones?.includes('publicacion')
+              : false,
           aplica_para_comunicaciones:
-            data?.aplica_para_acciones?.includes('comunicacion'),
+            data.aplica_para_acciones !== null
+              ? data?.aplica_para_acciones?.includes('comunicacion')
+              : false,
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,
@@ -579,11 +585,17 @@ export function TiposDocumentoNotificacionScreen(): JSX.Element {
           aplica_para_notificaciones:
             data.aplica_para.includes('notificaciones'),
           aplica_para_notificaciones_publicaciones:
-            data?.aplica_para_acciones?.includes('notificacion'),
+            data.aplica_para_acciones !== null
+              ? data.aplica_para_acciones?.includes('notificacion')
+              : false,
           aplica_para_publicaciones:
-            data?.aplica_para_acciones?.includes('publicacion'),
+            data.aplica_para_acciones !== null
+              ? data?.aplica_para_acciones?.includes('publicacion')
+              : false,
           aplica_para_comunicaciones:
-            data?.aplica_para_acciones?.includes('comunicacion'),
+            data.aplica_para_acciones !== null
+              ? data?.aplica_para_acciones?.includes('comunicacion')
+              : false,
           item_ya_usado: false,
           registro_precargado: false,
           activo: checked_activo,
