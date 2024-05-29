@@ -48,7 +48,7 @@ export const get_marca_service = (): any => {
   };
 };
 
-// Obtener programados 
+// Obtener programados
 
 export const get_maintenance_vehicle = (id: number | null): any => {
   return async (dispatch: Dispatch<any>) => {
@@ -68,11 +68,15 @@ export const get_maintenance_vehicle = (id: number | null): any => {
   };
 };
 
-export const get_vehicles_all_service: any = () => {
+// export const get_vehicles_all_service: any = () => {
+export const get_vehicles_all_service: any = (placa?: string, nombre?: string) => {
   return async (dispatch: Dispatch<any>) => {
     try {
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Veh`);
+      // const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Veh`);
+      // const { data } = await api.get(`almacen/hoja-de-vida/vehiculos/get-by-nro-identificador/?cod_tipo_activo=Veh&doc_identificador_nro=BFJ321`);
+      const url = `almacen/hoja-de-vida/vehiculos/get-by-nombre-nroidentificador/?cod_tipo_activo=Veh&doc_identificador_nro=${placa}&nombre=${nombre}`;
+      const { data } = await api.get(url);
       //  console.log('')(data)
       dispatch(set_vehicles(data.Elementos));
       return data;
@@ -83,7 +87,7 @@ export const get_vehicles_all_service: any = () => {
   };
 };
 
-// Obtener Hoja de Vida 
+// Obtener Hoja de Vida
 export const get_cv_vehicle_service: (id: any) => any = (id: any) => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -98,8 +102,23 @@ export const get_cv_vehicle_service: (id: any) => any = (id: any) => {
   };
 };
 
+// Obtener Hoja de Vida vehículo arrendado
+export const get_cv_vehicle_arrendado_service: (id: any) => any = (id: any) => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+      const { data } = await api.get(`almacen/hoja-de-vida/vehiculos/get-by-id-vehiculo/${id}/`);
+      dispatch(set_cv_vehicle(data.Elementos));
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
 
-// Crear Hoja de Vida 
+
+// Crear Hoja de Vida
 export const create_cv_vehicles_service: any = (formdata: any) => {
   return async (dispatch: Dispatch<any>) => {
     try {
@@ -134,6 +153,24 @@ export const get_cv_vehicle_id = (id: number): any => {
   };
 };
 
+export const get_cv_vehicle_arrendado_id = (id: number | null): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(`almacen/hoja-de-vida/vehiculos/get-by-id-vehiculo/${id}/`);
+      //  console.log('')(data)
+      if (data.success === true) {
+        dispatch(set_current_cv_vehicle(data.data));
+
+      }
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+
+      return error as AxiosError;
+    }
+  };
+};
+
 
 // Eliminar Hoja de Vida
 export const delete_cv_vehicle_service: any = (id: string) => {
@@ -149,7 +186,7 @@ export const delete_cv_vehicle_service: any = (id: string) => {
   };
 };
 
-// Actualizar Hoja de Vida 
+// Actualizar Hoja de Vida
 export const update_cv_vehicle_service: any = (id: string | number, hoja_vida: any) => {
   return async (dispatch: Dispatch<any>) => {
 

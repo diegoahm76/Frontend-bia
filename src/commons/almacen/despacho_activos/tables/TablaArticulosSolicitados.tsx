@@ -30,10 +30,16 @@ const TablaArticulosSolicitados: React.FC<props> = ({
     {field: 'nombre_bien', headerName:'Nombre del articulo', minWidth:250, flex:1},
     {field: 'nombre_unidad_medida', headerName:'Unidad medida', minWidth:150, flex:1},
     {field: 'cantidad', headerName:'Cantidad', minWidth:150, flex:1},
-    {field: 'observacion', headerName:'Observacion', minWidth:600, flex:1},
+    {field: 'cod_tipo_bien', headerName:'Tipo de bien', width:150, flex:1, renderCell: (params: any) => (
+      params.row?.cod_tipo_bien === 'A' ? 'Activo' : 'Consumo'
+    )},
+    {field: 'doc_identificador_nro', headerName:'Placa / Serial', width:150, flex:1},
+    {field: 'marca', headerName:'Marca', width:150, flex:1},
+    {field: 'descripcion', headerName:'Descripción', width:150, flex:1},
+    {field: 'observacion', headerName:'Observacion', minWidth:300, flex:1},
   ];
 
- 
+
   return (
     <>
       <Grid item xs={12} container
@@ -67,6 +73,6 @@ const TablaArticulosSolicitados: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaArticulosSolicitados;
