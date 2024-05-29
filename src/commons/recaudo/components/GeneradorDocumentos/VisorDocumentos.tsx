@@ -19,10 +19,11 @@ import swal from 'sweetalert2';
 
 export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_firma, set_uplock_firma, clean_template}: {file: any, current_borrador: any, uplock_firma: boolean, set_uplock_firma: (b: boolean) => void, clean_template: () => void}) => {
   const [open, setOpen] = useState(false);
+  const [resetTime, setResetTime] = useState(false);
 
   const obtenerExtension = (url: any) => {
     return url.split('.').pop();
-}
+  }
 
   const new_firma_code = async () => {
     try {
@@ -30,6 +31,7 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
       const response = await api.post(url, {id_consecutivo: current_borrador?.id_consecutivo_tipologia});
       control_success('Código de verificación enviado correctamente');
       setOpen(true);
+      setResetTime(true)
     } catch (error: any) {
       control_error(error.response.data.detail);
     }
@@ -44,7 +46,7 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
       set_uplock_firma(false);
       if(response.data && response?.data?.finalizo){
         setTimeout(() => {
-          control_success('El documento se ha finalizado correctamente')
+          control_success('El documento ha sido finalizado. Todas las firmas se han validado correctamente.')
         }, 500)
       }
     } catch (error: any) {
@@ -116,7 +118,9 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
           />
           <ModalConfirmacionMail
             open={open}
+            resetTime={resetTime}
             setOpen={setOpen}
+            setResetTime={setResetTime}
             put_firma_code={put_firma_code}
             new_firma_code={new_firma_code}
           />

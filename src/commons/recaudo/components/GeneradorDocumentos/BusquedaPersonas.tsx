@@ -222,11 +222,11 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
                         plantillaSeleccionada={plantillaSeleccionada}
                     />
                 </Grid>
-                <RenderDataGrid
+                {personaSelecteda.length > 0 && <RenderDataGrid
                     title='Personas  '
                     columns={columnss ?? []}
                     rows={personaSelecteda ?? []}
-                />
+                />}
             </Grid>
 
 

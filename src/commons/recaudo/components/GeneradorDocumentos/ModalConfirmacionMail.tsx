@@ -17,7 +17,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { Title } from '../../../../components';
 import { useEffect, useState } from 'react';
 
-export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen, put_firma_code, new_firma_code}: {open: boolean, setOpen: (b: boolean) => void, put_firma_code: (code: string) => void, new_firma_code: () => void}) => {
+export const ModalConfirmacionMail: React.FC<any> = ({open, resetTime, setOpen, setResetTime, put_firma_code, new_firma_code}: {open: boolean, resetTime: boolean, setOpen: (b: boolean) => void, setResetTime: (b: boolean) => void, put_firma_code: (code: string) => void, new_firma_code: () => void}) => {
 
   const [tiempoRestante, setTiempoRestante] = useState(300);
   const [error, setError] = useState(false);
@@ -27,6 +27,13 @@ export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen, put_firma_c
     put_firma_code(codeConfirm);
     setError(false);
   };
+
+  useEffect(() => {
+    if(resetTime){
+      setTiempoRestante(300);
+      setResetTime(false)
+    }
+  }, [resetTime])
 
   useEffect(() => {
     if (open) {
@@ -48,7 +55,7 @@ export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen, put_firma_c
   const handleClose = () => {
     setOpen(false);
     setError(false);
-    setTiempoRestante(120);
+    setTiempoRestante(300);
   };
 
   const handleChangeCode = (e: any) => {
@@ -75,9 +82,14 @@ export const ModalConfirmacionMail: React.FC<any> = ({open, setOpen, put_firma_c
             </Grid>
             <Grid item xs={12}>
               {tiempoRestante > 0 ? (
-                <Typography variant="subtitle2">Tiempo restante: {tiempoRestante} segundos</Typography>
+                <Typography variant="subtitle2">
+                  Tiempo restante: {Math.floor(tiempoRestante / 60) > 0 ? `${Math.floor(tiempoRestante / 60)} minutos ` : ""}{tiempoRestante % 60} segundos
+                  <Button onClick={new_firma_code} disabled={tiempoRestante > 240}>Reenviar código</Button>
+                </Typography>
               ) : (
-                <Typography variant="subtitle2">El tiempo ha expirado. <Button onClick={new_firma_code}>Reenviar código</Button></Typography>
+                <Typography variant="subtitle2">
+                  El tiempo ha expirado. <Button onClick={new_firma_code}>Reenviar código</Button>
+                </Typography>
               )}
             </Grid>
           </Grid>
