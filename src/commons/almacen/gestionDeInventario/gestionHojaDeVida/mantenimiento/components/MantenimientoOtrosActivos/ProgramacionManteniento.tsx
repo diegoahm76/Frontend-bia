@@ -187,9 +187,9 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
-                    <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} />
+                    <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} detalle_seleccionado_prop={detalle_seleccionado}/>
                 </Grid>
-           
+
             <Grid container>
                 <Grid item xs={6}>
                     <Box
@@ -288,7 +288,7 @@ export const ProgramacionMantenientoOtrosScreen: React.FC = () => {
                     </Box>
                 </Grid>
                 </Grid>
-             
+
             </Grid>
         </>
     )

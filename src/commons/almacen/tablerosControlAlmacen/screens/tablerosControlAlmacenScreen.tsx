@@ -112,7 +112,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   const [data_vehiculo_seleccionado, set_data_vehiculo_seleccionado] = useState<interface_busqueda_vehiculos>(Object);
   // data de historico de uso de vehiculos
   const [data_huv, set_data_huv] = useState<interface_historico_vehiculo[]>([]);
-  
+
   // Actualizacion a MSI
   // tipos de castegorias de bienes [carro, computador, etc]
   const [tipos_categoria, set_tipos_categoria] = useState<any[]>([]);
@@ -395,8 +395,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
             }
             dispatch(
               obtener_movimientos_incautados({
-                categoria: inputs_msi?.tipo_bien === 'A' ? inputs_msi?.tipo_categoria : '',
-                fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), 
+                categoria: inputs_msi?.tipo_bien,
+                fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'),
                 fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD')
               }))
                 .then((response: any) => {
@@ -914,13 +914,13 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                 {seleccion_tablero_control === 'MSI' && (
                   <Grid item container spacing={2}>
                     <Grid item xs={12}>
-                      <FormControl required size="small" fullWidth>
-                        <InputLabel>Tipo bien: </InputLabel>
-                        <Select
+                        <TextField
+                          size="small"
+                          select
                           label="Tipo bien :"
                           value={inputs_msi.tipo_bien}
                           fullWidth
-                          onChange={(e: SelectChangeEvent) => {
+                          onChange={(e: any) => {
                             // limpiamos la data del resultado
                             set_resultado_busqueda([]);
                             // agregamos el valor seleccionado
@@ -930,6 +930,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                             });
                           }}
                         >
+                          <MenuItem value={''}><em>Selecciona una opción</em></MenuItem>
                           {tipos_bienes?.length !== 0 ? (
                             tipos_bienes?.map((tipo_bien) => (
                               <MenuItem key={tipo_bien[0]} value={tipo_bien[0]}>
@@ -939,11 +940,10 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           ) : (
                             <MenuItem value={''}>Cargando...</MenuItem>
                           )}
-                        </Select>
-                      </FormControl>
+                        </TextField>
                     </Grid>
 
-                    {inputs_msi?.tipo_bien === 'A' &&
+                    {/* {inputs_msi?.tipo_bien === 'A' &&
                       <Grid item xs={12} lg={4}>
                         <FormControl required size="small" fullWidth>
                           <InputLabel>Categoria: </InputLabel>
@@ -970,10 +970,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           </Select>
                         </FormControl>
                       </Grid>
-                    }
+                    } */}
 
 
-                    <Grid item xs={12} sm={inputs_msi?.tipo_bien === 'A' ? 4 : 6}>
+                    <Grid item xs={12} sm={6}>
+                    {/* <Grid item xs={12} sm={inputs_msi?.tipo_bien === 'A' ? 4 : 6}> */}
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Fecha desde"
@@ -995,7 +996,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       </LocalizationProvider>
                     </Grid>
 
-                    <Grid item xs={12} sm={inputs_msi?.tipo_bien === 'A' ? 4 : 6}>
+                    {/* <Grid item xs={12} sm={inputs_msi?.tipo_bien === 'A' ? 4 : 6}> */}
+                    <Grid item xs={12} sm={6}>
                       <LocalizationProvider dateAdapter={AdapterDayjs}>
                         <DatePicker
                           label="Fecha hasta"

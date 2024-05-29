@@ -81,7 +81,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
         set_user_info(val);
     }, [set_user_info]);
 
-    const crear_mantenimiento: () => void = () => { 
+    const crear_mantenimiento: () => void = () => {
         dispatch(create_maintenance_service(rows)).then(() => {
             limpiar();
         });
@@ -188,8 +188,8 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                 <Grid item xs={12}>
                     {/* PREVISUALIZACION COMPONENT */}
                     <Title title='Previsualización' />
-                    <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} />
-                </Grid>  
+                    <PrevisualizacionComponent data_grid={rows} limpiar_formulario={limpiar_formulario} detalle_seleccionado_prop={detalle_seleccionado} />
+                </Grid>
                  <Grid container>
                 <Grid item xs={6}>
                     <Box
@@ -221,7 +221,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                                     set_is_modal_active={set_buscar_programacion_is_active}
                                     title={title_programacion}
                                     prog_details={set_prog_details}
-                                    parent_details={set_details_state} 
+                                    parent_details={set_details_state}
                                     tipo_articulo={"computadores"}/>
                             )}
                         </Stack>
@@ -257,7 +257,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                                     is_modal_active={anular_mantenimiento_is_active}
                                     set_is_modal_active={set_anular_mantenimiento_is_active}
                                     title={title}
-                                    user_info={user_info} 
+                                    user_info={user_info}
                                     id_programado={programacion.id_programacion_mantenimiento}/>
                             )}
                             <Button
@@ -289,7 +289,7 @@ export const ProgramacionMantenientoComputadoresScreen: React.FC = () => {
                 </Grid>
             </Grid>
             </Grid>
-         
+
         </>
     )
 }

@@ -50,7 +50,7 @@ const ResumenSolicitud: React.FC<props> = ({
       <Grid item xs={12} lg={1}>
         <PrintResumenPDF />
       </Grid>
-      
+
       <Grid item xs={12} lg={3}>
         <TextField
           fullWidth
