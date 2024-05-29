@@ -27,7 +27,7 @@ const SeleccionarVehiculo = () => {
         if (current_vehicle.id_bien !== null) {
             void dispatch(get_cv_vehicle_id(current_vehicle.id_bien))
         }
-        if (current_vehicle.id_vehiculo_arrendado) {
+        if (current_vehicle?.id_vehiculo_arrendado) {
             void dispatch(get_cv_vehicle_arrendado_id(current_vehicle.id_vehiculo_arrendado))
         }
 
