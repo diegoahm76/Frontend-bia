@@ -40,9 +40,15 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
     if (current_cv_vehicle.id_hoja_de_vida !== null) {
       set_action("editar")
     }
+    console.log(current_cv_vehicle);
     if (current_cv_vehicle.id_articulo !== null) {
       void dispatch(get_maintenance_vehicle(current_cv_vehicle.id_articulo ?? 0))
     }
+
+    //TODO: REvisar si se va a agregar service
+    // if (current_cv_vehicle.id_vehiculo_arrendado !== null) {
+    //   void dispatch(get_maintenance_vehicle(current_cv_vehicle.id_articulo ?? 0))
+    // }
   }, [current_cv_vehicle]);
 
   const on_submit = (data: FormValues): void => {
@@ -121,7 +127,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
         <EspecificacionesVehicle
           control_vehicle={control_vehicle} get_values={get_values} title={''} />
         <EspecificacionAdicional control_vehicle={control_vehicle} get_values={get_values} />
-        <Mantenimiento_vehicle />
+        {current_cv_vehicle.id_articulo && <Mantenimiento_vehicle />}
 
 
         <Grid
@@ -151,14 +157,14 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
                 type_button="button"
               />
             </Grid>}
-          <Grid item xs={12} md={3}>
+          {current_cv_vehicle.id_articulo && <Grid item xs={12} md={3}>
             <Button
               variant="contained"
               onClick={programacion_mantenimiento}
             >
               Programar mantenimiento
             </Button>
-          </Grid>
+          </Grid>}
 
 
         </Grid>
