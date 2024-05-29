@@ -43,12 +43,14 @@ export const CatalogodeBienesScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('nodo', nodo);
     if (nodo?.length === 0) {
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 15000);
+      setLoading(true);
+      // const timer = setTimeout(() => {
+      //   setLoading(false);
+      // }, 15000);
 
-      return () => clearTimeout(timer);
+      // return () => clearTimeout(timer);
     } else {
       setLoading(false);
     }

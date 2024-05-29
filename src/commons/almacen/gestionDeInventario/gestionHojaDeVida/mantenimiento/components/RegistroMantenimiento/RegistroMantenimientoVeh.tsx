@@ -64,6 +64,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 contrato_mantenimiento: detalle.contrato,
                 id_programacion_mtto: programacion !== null ? programacion.id_programacion_mantenimiento : null
             };
+            console.log(formulario);
             registrar_mantenimiento(formulario);
         }
     }
@@ -197,7 +198,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 </Grid>
             </Grid>
             </Grid>
-           
+
         </>
     )
 }
