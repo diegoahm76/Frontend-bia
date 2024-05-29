@@ -29,13 +29,37 @@ const Mantenimiento_vehicle = () => {
       cellClassName: 'truncate-cell',
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {params.row.fecha ? params.row.fecha : 'N/A'}
+        </div>
+      ),
+    },
+    {
+      field: 'kilometraje_programado',
+      headerName: 'Kilometraje Programado',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.kilometraje_programado ? params.row.kilometraje_programado : 'N/A'}
         </div>
       ),
     },
     {
       field: 'estado',
       headerName: 'Estado',
+
+      width: 250,
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'placa',
+      headerName: 'Placa',
 
       width: 250,
       cellClassName: 'truncate-cell',
