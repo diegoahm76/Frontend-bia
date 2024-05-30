@@ -173,14 +173,19 @@ const ArchivoSoporteReapertura = ({ control_archivo_expediente, open, handle_clo
     }, [])
 
     const on_submit = (data: FormValues): void => {
-        //  console.log('')(data.fecha_creacion_doc)
+        let fecha;
+        if (data.fecha_creacion_doc !== null && data.fecha_creacion_doc !== undefined) {
+            fecha = new Date(data.fecha_creacion_doc);
+        } else {
+            fecha = new Date();
+        }
         const form_data: any = new FormData();
         form_data.append('nombre_asignado_documento', data.nombre_asignado_documento);
         form_data.append('nro_folios_del_doc', data.nro_folios_del_doc);
         form_data.append('tiene_consecutivo_documento', data.tiene_consecutivo_documento);
         form_data.append('cod_origen_archivo', data.cod_origen_archivo);
         form_data.append('codigo_tipologia_doc_prefijo', data.codigo_tipologia_doc_prefijo);
-        form_data.append('fecha_creacion_doc', data.fecha_creacion_doc);
+        form_data.append('fecha_creacion_doc', fecha.toISOString());
         form_data.append('codigo_tipologia_doc_agno', data.codigo_tipologia_doc_agno);
         form_data.append('codigo_tipologia_doc_consecutivo', data.codigo_tipologia_doc_consecutivo);
         form_data.append('cod_categoria_archivo', data.cod_categoria_archivo);
