@@ -217,9 +217,9 @@ export const GeneradorDocumentos: React.FC = () => {
         removeFile()
         if(sendTemplate) setHasConsecutivo(true);
         if(radicado_selected && sendTemplate && !hasConsecutivo) setHasRadicado(true);
-        if(updateDocument && !hasRadicado) setHasRadicado(true);
+        if(updateDocument && !hasRadicado && radicado_selected) setHasRadicado(true);
         if(isUploadDocument) setChecked(false);
-        if(isUploadDocument && !hasRadicado) setHasRadicado(true);
+        if(isUploadDocument && !hasRadicado && radicado_selected) setHasRadicado(true);
         if(updateBorrador || updateDocument || sendTemplate || isUploadDocument) setCurrentBorrador(resp.data.data)
         if(resp.data.data.archivos_digitales_copia){
           setFile(`${urlBase}${resp.data.data.archivos_digitales_copia.ruta_archivo}`)
