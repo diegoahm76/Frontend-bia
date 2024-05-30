@@ -223,8 +223,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         obtener_tipo_documento_fc();
         obtener_tipos_recurso_fc();
     }, []);
-
-    useEffect(() => {
+    
+    useEffect(() => {        
         console.log(props.configuracion?.expediente);
         if(props.configuracion !== null)
             props.configuracion?.expediente.length > 0 ? set_anulado(props.configuracion?.expediente[0]?.anulado) : set_anulado(false);
@@ -513,7 +513,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
 
     return (
         <>
-            {props.expediente !== null && <Grid item md={12} xs={12}>
+            {/*{props.expediente !== null &&*/} <Grid item md={12} xs={12}>
                 <Title title="Archivado de documento" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
@@ -817,8 +817,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        {/* {(!actualizar && !anulado) && <Grid item xs={12} sm={12}> */}
-                        <Grid item xs={12} sm={12}>
+                        {/*{(!actualizar && !anulado) &&*/} <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -845,9 +844,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        {/* </Grid>} */}
-                        {/* {(!actualizar && !anulado) && <Grid item xs={12} sm={12}> */}
-                        <Grid item xs={12} sm={12}>
+                         { /*  } */ }
+                        {/*{(!actualizar && !anulado) &&*/} <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -866,7 +864,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        {/* </Grid>} */}
+                        
+                         { /* } */}
                         {archivos.length !== 0 && <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
@@ -890,7 +889,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                         </Grid>}
                     </Grid>
                 </Box>
-            </Grid>}
+            </Grid>
+            
+              { /* } */}
         </>
     )
 }
