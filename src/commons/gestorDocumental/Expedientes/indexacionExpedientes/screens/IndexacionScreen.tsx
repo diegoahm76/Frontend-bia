@@ -74,9 +74,9 @@ export const IndexacionScreen: React.FC = () => {
         navigate('/home');
     }
 
-    const crear_obj_indexacion = (): void => {
-        if (!actualizar) {
-            const data_documentos: any[] = archivos.map((obj:any) => obj.data_json);
+    /*const crear_obj_indexacion = (): void => {
+        /*if (!actualizar) {*/
+            /*const data_documentos: any[] = archivos.map((obj:any) => obj.data_json);
             const data_archivos: File[] = archivos.map((obj:any) => obj.archivo);
             const form_data = new FormData();
             form_data.append('data_documentos', JSON.stringify(data_documentos));
@@ -85,8 +85,26 @@ export const IndexacionScreen: React.FC = () => {
             dispatch(crear_indexacion_documentos(form_data, expediente?.id_expediente_documental)).then((response: any) => {
                 if(response.success)
                     set_limpiar(true);
-            });
-        } 
+            });*/
+        /*}
+    };*/
+
+    const crear_obj_indexacion = (): void => {
+        const data_documentos: any[] = [];
+        const data_archivos: File[] = [];
+        archivos.forEach((obj: any) => {
+            if (obj.data_json && obj.archivo) {
+                data_documentos.push(obj.data_json);
+                data_archivos.push(obj.archivo);
+            }
+        });
+        const form_data = new FormData();
+        form_data.append('data_documentos', JSON.stringify(data_documentos));
+        data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
+        dispatch(crear_indexacion_documentos(form_data, expediente?.id_expediente_documental)).then((response: any) => {
+            if(response.success)
+                set_limpiar(true);
+        });
     };
 
     useEffect(() => {
@@ -106,18 +124,26 @@ export const IndexacionScreen: React.FC = () => {
             >
                 <SerieDocumentalScreen set_expediente={set_expediente} set_serie={set_serie} set_seccion={set_seccion} set_tdr={set_tdr} limpiar={limpiar} set_configuracion={set_configuracion}></SerieDocumentalScreen>
             </Grid>
-            {expediente !== null && <Grid
+            {/* {expediente && */}
+            
+            <Grid
                 container
                 sx={class_css}
             >
                 <ExpedienteSeleccionado expediente={expediente} limpiar={limpiar} configuracion={configuracion}></ExpedienteSeleccionado>
-            </Grid>}
-            {expediente !== null && <Grid
+            </Grid>
+            
+            { /* } */}
+           { /*  {expediente !== null && *} */}
+            <Grid
                 container
                 sx={class_css}
             >
                 <ArchivoDocumento expediente={expediente} limpiar={limpiar} serie={serie} set_archivos={set_archivos} configuracion={configuracion} set_actualizar={set_actualizar} set_id_documento_seleccionado={set_id_documento_seleccionado}></ArchivoDocumento>
-            </Grid>}
+            </Grid>
+            
+        
+        { /* } */}
             <Grid container>
                 <Grid item xs={12} sm={12}>
                     <Box
@@ -132,14 +158,18 @@ export const IndexacionScreen: React.FC = () => {
                             spacing={2}
                             sx={{ mt: '20px' }}
                         >
-                            {(expediente !== null && !actualizar && !anulado) && <Button
+                             {/* {(expediente !== null && !actualizar && !anulado) &&  */}
+                             
+                             <Button
                                 color='success'
                                 variant='contained'
                                 startIcon={<SaveIcon />}
                                 onClick={() => { crear_obj_indexacion() }}
                             >
                                 Guardar
-                            </Button>}
+                            </Button>
+                            
+                            {/* } */}
                             <Button
                                 // color='inherit'
                                 variant="outlined"
@@ -148,23 +178,28 @@ export const IndexacionScreen: React.FC = () => {
                             >
                                 Limpiar
                             </Button>
-                            {(id_documento_seleccionado !== null && !anulado && expediente !== null) && <Button
+                            {/*{(id_documento_seleccionado !== null && !anulado && expediente !== null) && */}
+                            <Button
                                 sx={{ background: '#ff9800' }}
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { set_abrir_modal_anular(true) }}
                             >
                                 Anular documento
-                            </Button>}
+                            </Button>
+                            
+                           {/* } */}
                             {<AnularDocumnetoModal is_modal_active={abrir_modal_anular} set_is_modal_active={set_abrir_modal_anular} title={"Anular expediente"} user_info={usuario} id_expediente={id_documento_seleccionado}></AnularDocumnetoModal>}
-                            {(id_documento_seleccionado !== null && expediente !== null) && <Button
+                            {/* {(id_documento_seleccionado !== null && expediente !== null) && */}
+                            <Button
                                 variant='contained'
                                 startIcon={<ClearIcon />}
                                 onClick={() => { borrar_documento_fc() }}
                                 sx={{ background: '#ff6961' }}
                             >
                                 Borrar documento
-                            </Button>}
+                            </Button>
+                            {/* } */}
                             <Button
                                 color="error"
                                 variant='contained'
