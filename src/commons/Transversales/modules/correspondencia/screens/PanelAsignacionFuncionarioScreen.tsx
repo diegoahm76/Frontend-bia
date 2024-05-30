@@ -620,7 +620,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                       </Avatar>
                     </IconButton>
                   </Tooltip>
-                  {notification_request?.estado_solicitud !== 'NT' && (
+                  {notification_request?.cod_estado !== 'NT' && (
                     <Tooltip title="Gestionar tarea">
                       <IconButton
                         onClick={() => {
@@ -977,7 +977,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
             <Grid item xs={12} md={6}>
               <FormButton
                 disabled={
-                  (notification_request?.estado_solicitud === 'NT' ||
+                  (notification_request?.cod_estado === 'NT' ||
                     notification_request?.id_notificacion_correspondencia ===
                       null ||
                     notification_request?.id_persona_asignada !==
