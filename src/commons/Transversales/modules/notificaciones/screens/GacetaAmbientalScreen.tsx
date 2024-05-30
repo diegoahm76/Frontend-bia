@@ -240,7 +240,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
               },
             ]}
           />
-          <ListadoAnexos />
+          <ListadoAnexos type={'anexo'} />
           {/* 
           <PrimaryForm
             on_submit_form={null}
@@ -351,6 +351,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
               label={'Cancelar'}
               type_button="button"
               color_button="error"
+              href={`/#/app/transversal/notificaciones/panel_asignacion_funcionario`}
             />
           </Grid>
           <>

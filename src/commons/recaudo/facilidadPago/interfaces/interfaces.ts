@@ -19,12 +19,14 @@ export interface Filtro {
 export interface Obligacion {
   id: number;
   nombre: string;
+  monto_inicial: string;
+  InteresMoratorio_c:string;
+  valor_capital_intereses_c:string;
   inicio: string;
+  dias_mora: number;
   nro_expediente: number;
   nro_resolucion: string;
-  monto_inicial: string;
   valor_intereses: string;
-  dias_mora: number;
   valor_capital_intereses: number;
 }
 

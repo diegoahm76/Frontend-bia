@@ -20,6 +20,7 @@ const TablaArticulosDespachados: React.FC<props> = ({
   articulos_despachados
 }) => {
 
+  //TODO: agregar columnas
   let columns: custom_column[] = [
     {field: 'id_bien_solicitado', headerName:'Código bien', minWidth:150, flex:1},
     {field: 'nombre_bien_despachado', headerName:'Nombre del articulo', minWidth:300, flex:1},
@@ -28,7 +29,7 @@ const TablaArticulosDespachados: React.FC<props> = ({
     {field: 'observacion', headerName:'Observacion', minWidth:600, flex:1},
   ];
 
- 
+
   return (
     <>
       <Grid item xs={12} container
@@ -62,6 +63,6 @@ const TablaArticulosDespachados: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaArticulosDespachados;

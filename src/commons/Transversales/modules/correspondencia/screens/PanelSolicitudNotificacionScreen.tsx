@@ -54,6 +54,8 @@ import SolicitudDetailDialog from '../componentes/SolicitudDetailDialog';
 import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import DialogRechazo from '../componentes/DialogRechazo';
 import RemoveIcon from '@mui/icons-material/Remove';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import AnexosSoporteDetailDialog from '../componentes/AnexosSoporteDetailDialog';
 
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
@@ -84,6 +86,8 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
   } = useAppSelector((state) => state.notificaciones_slice);
   const [rechazo_solicitud_is_active, set_rechazo_solicitud_is_active] =
     useState<boolean>(false);
+  const [anexos_is_active, set_anexos_is_active] = useState<boolean>(false);
+  const [tipo_anexo, set_tipo_anexo] = useState('');
   const columns_pqrs: ColumnProps[] = [
     {
       headerStyle: { width: '4rem' },
@@ -272,6 +276,33 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
               </Avatar>
             </IconButton>
           </Tooltip>
+          <Tooltip title="Ver anexos">
+            <IconButton
+              onClick={() => {
+                set_anexos_is_active(true);
+                setSelectedPqr(rowData);
+                set_tipo_anexo('anexo');
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <AttachFileIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
           {rowData?.cod_estado_asignacion === 'Re' && (
             <Tooltip title="Re-Asignar">
               <IconButton
@@ -433,28 +464,57 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
       header: 'Acciones',
       headerStyle: { width: '4rem' },
       body: (rowData) => (
-        <Tooltip title="Detalle">
-          <IconButton
-            onClick={() => {
-              set_detail_is_active(true);
-              setSelectedPqr(rowData);
-            }}
-          >
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
+        <>
+          <Tooltip title="Detalle">
+            <IconButton
+              onClick={() => {
+                set_detail_is_active(true);
+                setSelectedPqr(rowData);
               }}
-              variant="rounded"
             >
-              <VisibilityIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-              />
-            </Avatar>
-          </IconButton>
-        </Tooltip>
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <VisibilityIcon
+                  sx={{ color: 'primary.main', width: '18px', height: '18px' }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Ver soportes">
+            <IconButton
+              onClick={() => {
+                set_anexos_is_active(true);
+                setSelectedPqr(rowData);
+                set_tipo_anexo('soporte');
+              }}
+            >
+              <Avatar
+                sx={{
+                  width: 24,
+                  height: 24,
+                  background: '#fff',
+                  border: '2px solid',
+                }}
+                variant="rounded"
+              >
+                <AttachFileIcon
+                  sx={{
+                    color: 'primary.main',
+                    width: '18px',
+                    height: '18px',
+                  }}
+                />
+              </Avatar>
+            </IconButton>
+          </Tooltip>
+        </>
       ),
     },
   ];
@@ -804,6 +864,11 @@ export function PanelSolicitudNotificacionScreen(): JSX.Element {
             expandedRows={expandedRows}
             setExpandedRows={setExpandedRows}
             onRowToggleFunction={get_x}
+          />
+          <AnexosSoporteDetailDialog
+            is_modal_active={anexos_is_active}
+            set_is_modal_active={set_anexos_is_active}
+            action={tipo_anexo}
           />
           <SolicitudDetailDialog
             is_modal_active={detail_is_active}

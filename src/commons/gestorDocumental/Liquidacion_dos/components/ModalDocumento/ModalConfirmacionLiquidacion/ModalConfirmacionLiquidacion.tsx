@@ -125,7 +125,7 @@ export const ModalConfirmacionLiquidacion = () => {
                 startIcon={<ReceiptIcon />}
                 onClick={fetch_Actualizar_archivo_digital}
             >
-                Generar Liquidacionn
+                Generar Liquidacion
             </Button>
 
         </>

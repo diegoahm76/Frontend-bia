@@ -1,25 +1,25 @@
 export interface row {
-    id: number, 
-    codigo: number, 
+    id: number,
+    codigo: number,
     serial_placa: string,
-    kilometraje: string, 
+    kilometraje: string,
     fecha: string,
     tipo_mantenimiento: string
 }
 
 export interface detalle_articulo {
-    marca: string, 
+    marca: string,
     serial_placa: string,
     modelo: string
-    kilometraje: string, 
+    kilometraje: string,
 }
 
 export interface detalle_mantenimiento {
-    tipo: string, 
-    especificacion: string, 
+    tipo: string,
+    especificacion: string,
 }
-export interface anular_mantenimiento { 
-    justificacion_anulacion: string 
+export interface anular_mantenimiento {
+    justificacion_anulacion: string
 }
 
 export interface crear_mantenimiento {
@@ -36,6 +36,7 @@ export interface crear_mantenimiento {
     id_articulo: number,
     id_persona_solicita: number,
     id_persona_anula: number| null
+    placa?: string | null
 }
 
 export interface ejecutar_mantenimiento {

@@ -35,7 +35,6 @@ const ViajeAgendado: React.FC<props> = ({solicitud_respondida}) => {
   };
 
   const cambio_fecha_salida = (date: Dayjs | null): void => {
-    console.log(date);
     if (date !== null) {
       set_fecha_salida(date);
     } else {
@@ -66,12 +65,12 @@ const ViajeAgendado: React.FC<props> = ({solicitud_respondida}) => {
       cambio_fecha_retorno(dayjs(solicitud_respondida.fecha_retorno_asignada ?? '2024-01-01'));
       cambio_hora_salida(parseHora(solicitud_respondida.hora_partida));
       cambio_hora_retorno(parseHora(solicitud_respondida.hora_retorno));
-      set_nombres_conductor(solicitud_respondida.nombre_conductor);
-      set_apellidos_conductor(solicitud_respondida.apellido_conductor);
-      set_documento_conductor(solicitud_respondida.numero_documento);
-      set_nombre_vehiculo(solicitud_respondida.nombre);
-      set_marca_vehiculo(solicitud_respondida.marca);
-      set_placa_vehiculo(solicitud_respondida.placa);
+      set_nombres_conductor(solicitud_respondida.nombre_conductor ?? '');
+      set_apellidos_conductor(solicitud_respondida.apellido_conductor ?? '');
+      set_documento_conductor(solicitud_respondida.numero_documento ?? '');
+      set_nombre_vehiculo(solicitud_respondida.nombre ?? '') ;
+      set_marca_vehiculo(solicitud_respondida.marca ?? '');
+      set_placa_vehiculo(solicitud_respondida.placa ?? '');
       cambio_fecha_autorizacion(dayjs(solicitud_respondida.fecha_autorizacion ?? '2024-01-01'));
     }
   },[solicitud_respondida])

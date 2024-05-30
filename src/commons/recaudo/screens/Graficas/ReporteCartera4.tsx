@@ -8,9 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { api } from '../../../../api/axios';
 import ClearIcon from '@mui/icons-material/Clear';
 
-
-
-export const ReporteCartera4: React.FC = () => {
+export const  ReporteGeneralCarteraDeudayEdad: React.FC = () => {
 
 
 

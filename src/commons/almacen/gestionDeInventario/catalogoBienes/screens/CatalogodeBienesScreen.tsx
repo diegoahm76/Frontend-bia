@@ -43,17 +43,19 @@ export const CatalogodeBienesScreen: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log('nodo', nodo);
     if (nodo?.length === 0) {
-      const timer = setTimeout(() => {
-        setLoading(false);
-      }, 15000);
+      setLoading(true);
+      // const timer = setTimeout(() => {
+      //   setLoading(false);
+      // }, 15000);
 
-      return () => clearTimeout(timer);
+      // return () => clearTimeout(timer);
     } else {
       setLoading(false);
     }
   }, [nodo]);
-  
+
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   const action_template = (node: INodo, Column: any) => {
     return (
@@ -138,7 +140,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!is_solicitud_realizada_ref.current) {    
+    if (!is_solicitud_realizada_ref.current) {
       void dispatch(get_bienes_service());
       is_solicitud_realizada_ref.current = true;
     }
@@ -155,10 +157,10 @@ export const CatalogodeBienesScreen: React.FC = () => {
 
 
   const on_submit_crear_hijo= (data: any): void => {
-   //  console.log('')(data) 
-  void dispatch(get_code_bien_service(data.bien?.id_bien, data.bien?.nivel_jerarquico + 1)) 
+   //  console.log('')(data)
+  void dispatch(get_code_bien_service(data.bien?.id_bien, data.bien?.nivel_jerarquico + 1))
   }
-    
+
   return (
     <>
       <Grid
@@ -176,7 +178,7 @@ export const CatalogodeBienesScreen: React.FC = () => {
           <Title title="Catálogo de bienes " />
           <Stack direction="row" spacing={2} sx={{ m: '20px 0' }}>
             <Button
-              disabled={Object.keys(nodo).length !== 0 ? true : false}
+              // disabled={Object.keys(nodo).length !== 0 ? true : false}
               variant="outlined"
               startIcon={<AddIcon style={{ fontSize: '20px' }} />}
               onClick={() => {

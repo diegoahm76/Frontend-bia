@@ -21,6 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import {
   control_error,
   get_anexos_tarea,
+  get_anexos_tarea_aux,
   get_causas_notificacion,
   get_tipos_soporte,
 } from '../store/thunks/notificacionesThunks';
@@ -63,7 +64,7 @@ const StepTwo = () => {
     void dispatch(get_tipos_soporte());
     void dispatch(get_causas_notificacion());
     void dispatch(
-      get_anexos_tarea(
+      get_anexos_tarea_aux(
         notification_per_request?.id_registro_notificacion_correspondencia
       )
     );

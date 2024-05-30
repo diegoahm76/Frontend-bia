@@ -42,28 +42,35 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
     }, []);
 
     useEffect(() => {
-        validar_formulario();
-    }, [detalle])
+        if(accion_guardar){
+            validar_formulario();
+            set_accion_guardar(false);
+        }
+    }, [detalle, accion_guardar])
+
+    useEffect(() => console.log(detalle_seleccionado), [detalle_seleccionado])
 
     const validar_formulario: () => void = () => {
-        if (user_info !== null && programacion !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null && accion_guardar) {
+        if (user_info !== null && programacion !== null && (detalle_seleccionado !== null) && detalle !== null && mantenimiento !== null && accion_guardar) {
             const formulario: ejecutar_mantenimiento = {
                 fecha_registrado: dayjs().format("YYYY-MM-DD"),
-                fecha_ejecutado: fecha_dias.fecha_mantenimiento.format("YYYY-MM-DD"),
+                // fecha_ejecutado: fecha_dias.fecha_mantenimiento.format("YYYY-MM-DD"),
+                fecha_ejecutado: dayjs().subtract(parseInt(detalle.dias_empleados), 'days').format("YYYY-MM-DD"),
                 cod_tipo_mantenimiento: mantenimiento.tipo,
                 dias_empleados: parseInt(detalle.dias_empleados),
                 fecha_estado_anterior: null,
-                id_articulo: detalle_seleccionado.id_articulo,
+                id_articulo: detalle_seleccionado?.id_articulo || detalle_seleccionado?.articulo,
                 cod_estado_final: detalle.estado,
-                id_persona_realiza: user_info.id_persona,
+                id_persona_realiza: detalle?.realizado?.id_persona,
                 id_persona_diligencia: user_info.id_persona,
                 cod_estado_anterior: null,
-                acciones_realizadas: mantenimiento.especificacion,
+                acciones_realizadas: mantenimiento.acciones,
                 observaciones: detalle.observaciones,
                 valor_mantenimiento: detalle.valor,
                 contrato_mantenimiento: detalle.contrato,
                 id_programacion_mtto: programacion !== null ? programacion.id_programacion_mantenimiento : null
             };
+            console.log(formulario);
             registrar_mantenimiento(formulario);
         }
     }
@@ -105,7 +112,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 }}
             >
                 <Grid item xs={12}>
-                    <Title title="Registro mantenimiento de vehículos" />
+                    <Title title="Ejecución mantenimiento de vehículos" />
                     <BusquedaProgramacionComponent set_prog_seleccion={set_programacion} parent_details={set_detalle_seleccionado} tipo_articulo={"vehículos"} limpiar_formulario={limpiar_formulario} emit_dias_posibles={set_dias_posibles} accion_guardar={accion_guardar}/>
                 </Grid>
             </Grid>
@@ -197,7 +204,7 @@ export const RegistroMantenimientoVehComponent: React.FC = () => {
                 </Grid>
             </Grid>
             </Grid>
-           
+
         </>
     )
 }

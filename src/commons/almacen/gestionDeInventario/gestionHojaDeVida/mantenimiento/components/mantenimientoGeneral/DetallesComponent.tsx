@@ -19,10 +19,10 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
 
     useEffect(() => {
         if (detalle_seleccionado_prop !== undefined && detalle_seleccionado_prop !== null) {
-            set_marca(detalle_seleccionado_prop.marca ?? 'N/A');
-            set_codigo_bien(detalle_seleccionado_prop.doc_identificador_nro ?? 'N/A');
+            set_marca(detalle_seleccionado_prop.marca ?? 'Sin Marca');
+            set_codigo_bien(detalle_seleccionado_prop.doc_identificador_nro?.toUpperCase() ?? 'Sin Placa');
             set_descripcion(detalle_seleccionado_prop.descripcion ?? 'N/A');
-            set_porcentaje_iva(detalle_seleccionado_prop.estado ?? 'N/A');
+            set_porcentaje_iva(detalle_seleccionado_prop.estado ?? 'Sin Estado');
         }
     }, [detalle_seleccionado_prop]);
 
@@ -76,7 +76,7 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField
-                            label="Modelo"
+                            label="Descripción"
                             size="small"
                             required
                             disabled

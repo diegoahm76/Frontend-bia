@@ -161,7 +161,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
               variant="contained"
               onClick={programacion_mantenimiento}
             >
-              MANTENIMIENTOS
+              Programar mantenimiento
             </Button>
           </Grid>
         </Grid>

@@ -121,10 +121,11 @@ export const DetallesComponent: React.FC<IProps> = ({ limpiar_formulario, user_i
         };
 
         function validar_dias_empleados(dias_empleados: number): void {
-            if (dias_empleados > fecha_dias.dias_posibles)
-                set_mensaje_error_dias("Los dias empleados superan los dias disponibles.");
-            else
-                set_mensaje_error_dias("");
+            //TODO: Comentado el 30MAY, revisar
+            // if (dias_empleados > fecha_dias.dias_posibles)
+            //     set_mensaje_error_dias("Los dias empleados superan los dias disponibles.");
+            // else
+            //     set_mensaje_error_dias("");
         }
 
         useEffect(() => {
