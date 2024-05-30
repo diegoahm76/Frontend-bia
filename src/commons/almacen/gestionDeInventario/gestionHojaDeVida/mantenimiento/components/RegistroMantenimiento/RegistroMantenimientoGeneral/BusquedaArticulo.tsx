@@ -151,7 +151,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <TextField
-                            label="Modelo"
+                            label="Descripción"
                             size="small"
                             disabled
                             fullWidth

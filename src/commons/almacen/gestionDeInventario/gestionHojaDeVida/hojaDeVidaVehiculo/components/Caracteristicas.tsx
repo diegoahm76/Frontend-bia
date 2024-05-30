@@ -7,13 +7,15 @@ import { useEffect, useState } from 'react';
 interface IProps {
     title: string;
     control_vehicle: any;
-    get_values: any
+    get_values: any;
+    watch?: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EspecificacionesVehicle = ({
     title,
     control_vehicle,
-    get_values
+    get_values,
+    watch
 }: IProps) => {
 
 
@@ -22,7 +24,16 @@ const EspecificacionesVehicle = ({
     const dispatch = useAppDispatch();
     const [file, set_file] = useState<any>(null);
     const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
+    const [is_circulacion, set_is_circulacion] = useState<boolean>(false);
     const [file_name, set_file_name] = useState<string>("");
+
+    useEffect(() => {
+        if (get_values("en_circulacion") === "true") {
+            set_is_circulacion(true)
+        }else{
+            set_is_circulacion(false)
+        }
+    }, [watch("en_circulacion")])
 
 
     useEffect(() => {
@@ -150,7 +161,7 @@ const EspecificacionesVehicle = ({
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Placa",
                             type: "text",
-                            disabled: false,
+                            disabled: current_cv_vehicle?.doc_identificador_nro,
                             helper_text: ""
                         },
                         {
@@ -266,14 +277,14 @@ const EspecificacionesVehicle = ({
                             control_name: "en_circulacion",
                             default_value: "",
                             rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Vehícuo en circulación",
+                            label: "Vehículo en circulación",
                             disabled: false,
                             helper_text: "",
                             select_options: [{ label: "SI", value: "true" }, { label: "NO", value: "false" }],
                             option_label: "label",
                             option_key: "value",
                         },
-                        {
+                        is_circulacion && {
                             datum_type: 'date_picker_controller',
                             xs: 12,
                             md: 4,

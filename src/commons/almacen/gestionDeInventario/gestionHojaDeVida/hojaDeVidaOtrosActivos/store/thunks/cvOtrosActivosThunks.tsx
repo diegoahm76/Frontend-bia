@@ -50,11 +50,18 @@ export const get_marca_service = (): any => {
 
 
 
-export const get_others_all_service: any = () => {
+export const get_others_all_service: any = (nombre?: string, doc_identificador_nro?: string) => {
     return async (dispatch: Dispatch<any>) => {
         try {
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=OAc`);
+            let url = `almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=OAc`;
+            if (nombre) {
+                url += `&nombre=${nombre}`;
+            }
+            if (doc_identificador_nro) {
+                url += `&doc_identificador_nro=${doc_identificador_nro}`;
+            }
+            const { data } = await api.get(url);
             //  console.log('')(data)
             dispatch(set_others(data.Elementos));
             return data;
@@ -161,7 +168,7 @@ export const delete_cv_others_service: any = (id: string) => {
 };
 
 
-// Obtener programados 
+// Obtener programados
 
 export const get_maintenance_other = (id: number | null): any => {
     return async (dispatch: Dispatch<any>) => {

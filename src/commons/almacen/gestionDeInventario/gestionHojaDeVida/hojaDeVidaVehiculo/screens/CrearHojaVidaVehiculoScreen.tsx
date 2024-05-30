@@ -25,7 +25,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const { current_cv_vehicle, } = useAppSelector((state) => state.cve);
   const [action, set_action] = useState<string>("guardar");
-  const { control: control_vehicle, handleSubmit: handle_submit, reset: reset_vehicle, getValues: get_values } = useForm<FormValues>();
+  const { control: control_vehicle, handleSubmit: handle_submit, reset: reset_vehicle, getValues: get_values, watch } = useForm<FormValues>();
 
   useEffect(() => {
     void dispatch(get_marca_service());
@@ -125,7 +125,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
         </Grid>
         <SeleccionarVehiculo />
         <EspecificacionesVehicle
-          control_vehicle={control_vehicle} get_values={get_values} title={''} />
+          control_vehicle={control_vehicle} get_values={get_values} watch={watch} title={''} />
         <EspecificacionAdicional control_vehicle={control_vehicle} get_values={get_values} />
         {current_cv_vehicle.id_articulo && <Mantenimiento_vehicle />}
 

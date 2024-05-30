@@ -198,7 +198,8 @@ export const GeneradorDocumentos: React.FC = () => {
       const url = `/gestor/trd/consecutivo-tipologia-doc/`;
       const resp: any = await api.post(url, data);
       if (resp.data.data) {
-        void dispatch(get_filed_id_service(resp.data.data.id_radicado ?? 0));
+        // void dispatch(get_filed_id_service(resp.data.data.id_radicado ?? 0));
+        if(resp.data.data?.id_radicado) void dispatch(get_filed_id_service(resp.data.data.id_radicado ?? 0));
         removeFile();
         if (updateBorrador || updateDocument || sendTemplate)
           setCurrentBorrador(resp.data.data);
@@ -346,7 +347,7 @@ export const GeneradorDocumentos: React.FC = () => {
       }
       sendData.cod_tipo_radicado =
         (radicado_selected ?? '') === '' ? null : radicado_selected;
-      sendData.id_solicitud_notififcacion =
+      sendData.id_solicitud_notificacion =
         notification_request?.id_notificacion_correspondencia;
       console.log(sendData);
       generateDocument(sendData);
@@ -428,7 +429,7 @@ export const GeneradorDocumentos: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Title title="Generación de documento" />
+        <Title title="Generación de documentos" />
         <Grid item xs={12} md={6}>
           <FormControl fullWidth size="small">
             <TextField
