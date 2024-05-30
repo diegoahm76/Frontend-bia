@@ -45,7 +45,7 @@ export const MostrarCentroPlantillas: React.FC = () => {
       flex: 1
     },
     {
-      field: 'otras_tipologias',
+      field: 'nombre_tipologia',
       headerName: 'Tipologia',
       width: 200,
       flex: 1,
@@ -336,7 +336,8 @@ export const MostrarCentroPlantillas: React.FC = () => {
               rows={data_busqueda_Avanazda}
               pageSize={10}
               rowsPerPageOptions={[10]}
-              getRowId={(row) => uuidv4()}
+              getRowId={(row) => row.id_plantilla_doc}
+              getRowHeight={() => 'auto'}
             />
           )}
         </Box>

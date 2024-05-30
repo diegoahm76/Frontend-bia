@@ -26,6 +26,8 @@ const BuscarArticuloComponent = ({
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>("");
   const [nombre, set_nombre] = useState<string>("");
+  const [placa, set_placa] = useState<string>("");
+  const [marca, set_marca] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState<Record<string, any> | null>(null);
@@ -51,12 +53,26 @@ const BuscarArticuloComponent = ({
     set_nombre(e.target.value);
   }
 
+  const on_change_placa: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_placa(e.target.value);
+  }
+
+  const on_change_marca: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_marca(e.target.value);
+  }
+
   const accionar_busqueda: any = () => {
-    if (nombre === '' && codigo === '') {
+    console.log(grid_busqueda_before);
+    if (nombre === '' && codigo === '' && placa === '' && marca === '') {
       set_grid_busqueda(grid_busqueda_before);
       return
     }
-    const data_filter = grid_busqueda_before.filter(gv => ((Boolean(gv.nombre.includes(nombre))) && gv.codigo_bien.toString().includes(codigo)));
+    const data_filter = grid_busqueda_before.filter(gv => (
+      (gv.nombre?.toLowerCase()?.includes(nombre.toLowerCase()) ?? false) &&
+      gv.codigo_bien.toString().toLowerCase().includes(codigo.toLowerCase()) &&
+      (gv.doc_identificador_nro?.toLowerCase()?.includes(placa.toLowerCase()) ?? false) &&
+      (gv.marca?.toLowerCase()?.includes(marca.toLowerCase()) ?? false)
+    ));
     set_grid_busqueda(data_filter);
   }
 
@@ -92,7 +108,7 @@ const BuscarArticuloComponent = ({
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} md={2}>
                 <TextField
                   label="Código"
                   helperText="Ingrese código"
@@ -102,7 +118,7 @@ const BuscarArticuloComponent = ({
                   onChange={on_change_codigo}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   label="Nombre"
                   helperText="Ingrese nombre"
@@ -112,12 +128,32 @@ const BuscarArticuloComponent = ({
                   onChange={on_change_nombre}
                 />
               </Grid>
+              <Grid item xs={12} md={2}>
+                <TextField
+                  label="Placa / Serial"
+                  helperText="Ingrese placa"
+                  size="small"
+                  fullWidth
+                  value={placa}
+                  onChange={on_change_placa}
+                />
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <TextField
+                  label="Marca"
+                  helperText="Ingrese marca"
+                  size="small"
+                  fullWidth
+                  value={marca}
+                  onChange={on_change_marca}
+                />
+              </Grid>
               <Stack
                 direction="row"
                 justifyContent="flex-end"
                 sx={{ mt: '17px' }}
               >
-                <Grid item xs={12} sm={4}>
+                <Grid item ml={1}>
                   <Button
                     color='primary'
                     variant='contained'

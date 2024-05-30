@@ -205,7 +205,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   };
   const cambio_cantidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
       set_cantidad(e.target.value);
-      if(parseInt(e.target.value) < 1) set_msj_error_cantidad("El campo Cantidad no puede ser menor a 1.");
+      if(parseInt(e.target.value) < 1){
+        set_msj_error_cantidad("El campo Cantidad no puede ser menor a 1.");
+      } else{
+        set_msj_error_cantidad("");
+      }
     // if(parseInt(e.target.value) > 0){
     //   set_cantidad(e.target.value);
     //   set_msj_error_cantidad("");
@@ -215,7 +219,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
   };
   const cambio_valor_unidad: any = (e: React.ChangeEvent<HTMLInputElement>) => {
       set_valor_unidad(e.target.value);
-      if(parseInt(e.target.value) < 1) set_msj_error_vu("El campo Valor unidad no puede ser menor a 0.");
+      if(parseInt(e.target.value) < 1){
+        set_msj_error_vu("El campo Valor unidad no puede ser menor a 1.");
+      }else{
+        set_msj_error_vu("");
+      }
     // if(parseInt(e.target.value) >= 0){
     //   set_valor_unidad(e.target.value);
     //   set_msj_error_vu("");

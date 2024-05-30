@@ -139,9 +139,9 @@ const Especificaciones = ({
                             control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Serie",
+                            label: "Serial",
                             type: "text",
-                            disabled: false,
+                            disabled: current_cv_computer?.doc_identificador_nro,
                             helper_text: ""
                         },
 

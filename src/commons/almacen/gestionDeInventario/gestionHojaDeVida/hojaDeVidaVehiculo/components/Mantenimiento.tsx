@@ -46,6 +46,42 @@ const Mantenimiento_vehicle = () => {
       ),
     },
     {
+      field: 'fecha_ejecutado',
+      headerName: 'Fecha de ejecucion',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.fecha_ejecutado ? params.row.fecha_ejecutado : 'N/A'}
+        </div>
+      ),
+    },
+    {
+      field: 'persona_realiza',
+      headerName: 'Persona Realiza',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.persona_realiza ? params.row.persona_realiza : 'N/A'}
+        </div>
+      ),
+    },
+    {
+      field: 'persona_diligencia',
+      headerName: 'Persona Diligencia',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.persona_diligencia ? params.row.persona_diligencia : 'N/A'}
+        </div>
+      ),
+    },
+    {
       field: 'estado',
       headerName: 'Estado',
 

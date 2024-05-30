@@ -1,4 +1,4 @@
-import { Grid, } from '@mui/material';
+import { Chip, Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
@@ -59,11 +59,11 @@ const SeleccionarVehiculo = () => {
         },
         {
             field: 'cod_tipo_activo',
-            headerName: 'Tipo de bien',
+            headerName: 'Tipo Activo',
             width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.cod_tipo_activo == 'Veh' ? 'Vehículo' : 'N/A'}
                 </div>
             ),
 
@@ -81,7 +81,7 @@ const SeleccionarVehiculo = () => {
         },
         {
             field: 'doc_identificador_nro',
-            headerName: 'Placa / serial',
+            headerName: 'Placa',
             width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -89,6 +89,18 @@ const SeleccionarVehiculo = () => {
                 </div>
             ),
 
+        },
+        {
+            field: 'tiene_hoja_vida',
+            headerName: 'Tiene hoja de vida',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => {
+                return params.row.tiene_hoja_vida === true ? (
+                    <Chip size="small" label="SI" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="NO" color="error" variant="outlined" />
+                );
+            },
         },
         {
             field: 'estado',
@@ -127,11 +139,13 @@ const SeleccionarVehiculo = () => {
             field: 'id_vehiculo_arrendado',
             headerName: '¿Es arrendado?',
             width: 140, flex: 1,
-            renderCell: (params) => (
-                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.row.id_vehiculo_arrendado ? 'Sí' : 'No'}
-                </div>
-            ),
+            renderCell: (params) => {
+                return params.row.id_vehiculo_arrendado === true ? (
+                    <Chip size="small" label="SI" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="NO" color="error" variant="outlined" />
+                );
+            },
 
         },
 

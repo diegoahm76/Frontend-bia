@@ -55,6 +55,7 @@ const BuscarProgramacionComponent = ({
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
   const [km_desde, set_km_desde] = useState<string | null>(null);
   const [km_hasta, set_km_hasta] = useState<string | null>(null);
+  const [doc_identificador_nro, set_doc_identificador_nro] = useState<string | null>(null);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
@@ -65,6 +66,7 @@ const BuscarProgramacionComponent = ({
     set_fecha_hasta(null);
     set_km_desde(null);
     set_km_hasta(null);
+    set_doc_identificador_nro(null);
     set_tipo_filtro(e.target.value);
   }
 
@@ -84,6 +86,10 @@ const BuscarProgramacionComponent = ({
     set_km_hasta(e.target.value);
   }
 
+  const on_change_doc_id: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_doc_identificador_nro(e.target.value);
+  }
+
   const accionar_busqueda: any = () => {
     if (tipo_articulo === 'vehículos') {
       dispatch(
@@ -92,7 +98,8 @@ const BuscarProgramacionComponent = ({
           fecha_desde ? dayjs(fecha_desde).format('DD-MM-YYYY') : '',
           fecha_hasta ? dayjs(fecha_hasta).format('DD-MM-YYYY') : '',
           km_desde,
-          km_hasta
+          km_hasta,
+          doc_identificador_nro,
         )
         // get_programmed_maintenance(
         //   dayjs(fecha_desde).format('DD-MM-YYYY'),
@@ -108,7 +115,8 @@ const BuscarProgramacionComponent = ({
         get_programmed_maintenance(
           dayjs(fecha_desde).format('DD-MM-YYYY'),
           dayjs(fecha_hasta).format('DD-MM-YYYY'),
-          'Com'
+          'Com',
+          doc_identificador_nro
         )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
@@ -119,7 +127,8 @@ const BuscarProgramacionComponent = ({
         get_programmed_maintenance(
           dayjs(fecha_desde).format('DD-MM-YYYY'),
           dayjs(fecha_hasta).format('DD-MM-YYYY'),
-          'OAc'
+          'OAc',
+          doc_identificador_nro
         )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
@@ -164,9 +173,9 @@ const BuscarProgramacionComponent = ({
     }
   };
 
-  useEffect(() => {
-    parent_details(articulo);
-  }, [articulo, parent_details]);
+  // useEffect(() => {
+  //   parent_details(articulo);
+  // }, [articulo, parent_details]);
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -201,7 +210,7 @@ const BuscarProgramacionComponent = ({
                   onChange={on_change_codigo}
                 />
               </Grid> */}
-              {tipo_articulo === 'vehículos' && <Grid item xs={12} sm={3}>
+              {tipo_articulo === 'vehículos' && <Grid item xs={12} sm={2}>
                 <TextField
                   select
                   label="Tipo de filtro"
@@ -308,11 +317,31 @@ const BuscarProgramacionComponent = ({
                   </Grid>
                 </>
               }
+              {tipo_articulo === 'vehículos' && <Grid item xs={12} sm={2}>
+                <TextField
+                  label="Placa"
+                  helperText="Ingrese placa"
+                  size="small"
+                  fullWidth
+                  value={doc_identificador_nro}
+                  onChange={on_change_doc_id}
+                />
+              </Grid>}
+              {tipo_articulo !== 'vehículos' && <Grid item xs={12} sm={2}>
+                <TextField
+                  label="Serial"
+                  helperText="Ingrese serial"
+                  size="small"
+                  fullWidth
+                  value={doc_identificador_nro}
+                  onChange={on_change_doc_id}
+                />
+              </Grid>}
               <Stack
                 direction="row"
                 sx={{ mt: '17px' }}
               >
-                <Grid item xs={12} sm={3} sx={{ml: '1rem'}}>
+                <Grid item sx={{ml: '1rem'}}>
                   <Button
                     color="primary"
                     variant="contained"
@@ -377,6 +406,12 @@ const BuscarProgramacionComponent = ({
                         style={{ width: '30%' }}
                         body={(rowData) => <div>{rowData?.fecha || 'N/A'}</div>}
                       ></Column>
+                      <Column
+                        field="fecha_solicitud"
+                        header="Fecha solicitud"
+                        style={{ width: '30%' }}
+                        body={(rowData) => <div>{rowData?.fecha_solicitud || 'N/A'}</div>}
+                      ></Column>
                       {tipo_articulo === 'vehículos' && <Column
                         field="kilometraje_programado"
                         header="Kilometraje programado"
@@ -388,6 +423,18 @@ const BuscarProgramacionComponent = ({
                         header="Marca"
                         style={{ width: '20%' }}
                         body={(rowData) => <div>{rowData.marca || 'Sin Marca'}</div>}
+                      ></Column>
+                      <Column
+                        field="motivo"
+                        header="Motivo"
+                        style={{ width: '60%' }}
+                        body={(rowData) => <div>{rowData.motivo || 'N/A'}</div>}
+                      ></Column>
+                      <Column
+                        field="responsable"
+                        header="Responsable"
+                        style={{ width: '20%' }}
+                        body={(rowData) => <div>{rowData.responsable || 'N/A'}</div>}
                       ></Column>
                       <Column
                         field="estado"
