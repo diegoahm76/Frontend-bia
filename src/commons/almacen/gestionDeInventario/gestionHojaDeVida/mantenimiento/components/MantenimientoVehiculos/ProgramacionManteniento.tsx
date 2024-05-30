@@ -104,20 +104,19 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
         }
       }, [detalle_seleccionado]);
 
-    useEffect(() => {
-        setTimeout(() => {
-            set_limpiar_formulario(false);
-        }, 1000);
-    }, [limpiar_formulario])
 
     useEffect(() => {
         if(limpiar_formulario){
+            console.log('hola');
+            set_programacion(null)
             setTimeout(() => {
                 set_limpiar_formulario(false);
             }, 1000);
         }
 
         if(clean_form){
+            console.log('hola 2');
+            // set_programacion(null)
             setTimeout(() => {
                 set_clean_form(false);
             }, 1000);
@@ -325,6 +324,7 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
                                 variant='contained'
                                 startIcon={<SaveIcon />}
                                 onClick={crear_mantenimiento}
+                                disabled={programacion !== null}
                             >
                                 Guardar
                             </Button>

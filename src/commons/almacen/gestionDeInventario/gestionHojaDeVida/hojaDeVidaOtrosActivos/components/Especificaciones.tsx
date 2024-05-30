@@ -11,13 +11,15 @@ import { useEffect, useState } from 'react';
 interface IProps {
     title: string;
     control_other: any;
-    get_values: any
+    get_values: any;
+    watch?: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const EspecificacionesOtros = ({
     title,
     control_other,
-    get_values
+    get_values,
+    watch
 }: IProps) => {
 
 
@@ -144,9 +146,9 @@ const EspecificacionesOtros = ({
                             control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Serie",
+                            label: "Serial",
                             type: "text",
-                            disabled: false,
+                            disabled: current_cv_other?.doc_identificador_nro,
                             helper_text: ""
                         },
                         {

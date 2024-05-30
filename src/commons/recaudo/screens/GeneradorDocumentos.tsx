@@ -116,7 +116,7 @@ export const GeneradorDocumentos: React.FC = () => {
         setContentData(response.data.data);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron datos');
     }
   }
 
@@ -130,7 +130,7 @@ export const GeneradorDocumentos: React.FC = () => {
         setContentData(response.data.data);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron datos');
     }
   }
 
@@ -152,7 +152,7 @@ export const GeneradorDocumentos: React.FC = () => {
       );
       setTiposRadicado(tipos);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron tipos de radicado');
     }
   };
 
@@ -205,7 +205,7 @@ export const GeneradorDocumentos: React.FC = () => {
       if(data.length === 0) control_error('No se encontraron plantillas disponibles');
       setPlantillas(data);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron plantillas disponibles');
     }
   };
 
@@ -229,7 +229,7 @@ export const GeneradorDocumentos: React.FC = () => {
       }
     } catch (error: any) {
       if(!hasConsecutivo) setSendTemplate(false);
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'Error al generar el documento');
     }
   };
 
@@ -245,7 +245,7 @@ export const GeneradorDocumentos: React.FC = () => {
         control_success('Documento cargado correctamente');
       }
     } catch (error: any) {
-      control_error(error?.response?.data?.detail);
+      control_error(error?.response?.data?.detail || 'Error al cargar el documento');
     }
   };
 
@@ -273,7 +273,7 @@ export const GeneradorDocumentos: React.FC = () => {
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron unidades organizacionales');
     }
   };
 

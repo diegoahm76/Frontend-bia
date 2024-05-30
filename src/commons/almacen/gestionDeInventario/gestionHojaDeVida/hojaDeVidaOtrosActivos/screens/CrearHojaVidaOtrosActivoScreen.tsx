@@ -26,7 +26,7 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
     const dispatch = useAppDispatch();
     const [action, set_action] = useState<string>("guardar");
     const { current_cv_other, } = useAppSelector((state) => state.cvo);
-    const { control: control_other, handleSubmit: handle_submit, reset: reset_other, getValues: get_values } = useForm<FormValues>();
+    const { control: control_other, handleSubmit: handle_submit, reset: reset_other, getValues: get_values, watch } = useForm<FormValues>();
     useEffect(() => {
         void dispatch(get_marca_service());
     }, []);
@@ -53,7 +53,7 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
         form_data.append('observaciones_acionales', data.observaciones_adicionales);
         form_data.append('id_marca', data.id_marca ?? null);
         form_data.append('id_articulo', (data.id_articulo ?? "").toString());
-        if(data.ruta_imagen_foto !== null){ 
+        if(data.ruta_imagen_foto !== null){
         form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
         }
         if (data.id_hoja_de_vida === null) {
@@ -100,6 +100,7 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                 <EspecificacionesOtros
                     control_other={control_other}
                     get_values={get_values}
+                    watch={watch}
                     title="Características físicas" />
 
                 <EspecificacionesTec

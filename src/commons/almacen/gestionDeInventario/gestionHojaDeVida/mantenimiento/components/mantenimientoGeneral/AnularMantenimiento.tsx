@@ -37,7 +37,7 @@ const AnularMantenimientoComponent = ({ is_modal_active, set_is_modal_active, ti
     // const object_formulario = { id_mantenimiento: id_programado, id_funcionario: user_info.id_usuario, fecha_anulacion: fecha, motivo_anulacion: motivo };
     dispatch(override_maintenance(id_programado, { justificacion_anulacion: motivo })).then((response: { success: boolean, detail: string }) => {
       if (response.success) {
-        navigate('/home');
+        // navigate('/home');
         set_is_modal_active(false);
       }
     }).catch((error: any) =>{

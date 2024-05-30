@@ -101,7 +101,6 @@ const Caracteristicas = ({
                             multiline_text: true,
                             rows_text: 4,
                             type: "text",
-                            disabled: true,
                             helper_text: ""
                         },
                     ]}
