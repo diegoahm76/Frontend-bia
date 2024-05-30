@@ -223,8 +223,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         obtener_tipo_documento_fc();
         obtener_tipos_recurso_fc();
     }, []);
-    
-    useEffect(() => {        
+
+    useEffect(() => {
         console.log(props.configuracion?.expediente);
         if(props.configuracion !== null)
             props.configuracion?.expediente.length > 0 ? set_anulado(props.configuracion?.expediente[0]?.anulado) : set_anulado(false);
@@ -817,7 +817,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        {(!actualizar && !anulado) && <Grid item xs={12} sm={12}>
+                        {/* {(!actualizar && !anulado) && <Grid item xs={12} sm={12}> */}
+                        <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -843,8 +844,10 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     </Button>
                                 </Grid>
                             </Stack>
-                        </Grid>}
-                        {(!actualizar && !anulado) && <Grid item xs={12} sm={12}>
+                        </Grid>
+                        {/* </Grid>} */}
+                        {/* {(!actualizar && !anulado) && <Grid item xs={12} sm={12}> */}
+                        <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -862,7 +865,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     </Button>
                                 </Grid>
                             </Stack>
-                        </Grid>}
+                        </Grid>
+                        {/* </Grid>} */}
                         {archivos.length !== 0 && <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
