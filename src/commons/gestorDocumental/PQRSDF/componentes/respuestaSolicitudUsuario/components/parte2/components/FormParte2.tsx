@@ -24,6 +24,8 @@ any): JSX.Element => {
   const { respuestaPqrsdfMade, setrespuestaPqrsdfMade } = useContext(
     ResSolicitudUsuarioContext
   );
+
+  useEffect(() => console.log(respuestaPqrsdfMade), [respuestaPqrsdfMade])
   //* redux states functions
   // const dispatch = useDispatch();
 
@@ -157,11 +159,11 @@ any): JSX.Element => {
 
   return (
     <>
-      <RenderDataGrid
+      {respuestaPqrsdfMade && <RenderDataGrid
         rows={respuestaPqrsdfMade?.anexos ?? []}
         title="Anexos de respuestas de PQRSDF"
         columns={columns ?? []}
-      />
+      />}
       <form
         onSubmit={(e: any) => {
           e.preventDefault();
@@ -257,7 +259,7 @@ any): JSX.Element => {
                   size="small"
                   variant="outlined"
                   value={respuestaPqrsdfMade?.descripcion || value}
-                  disabled={respuestaPqrsdfMade && (respuestaPqrsdfMade?.descripcion !== '' || respuestaPqrsdfMade?.descripcion !== null)}
+                  disabled={respuestaPqrsdfMade && respuestaPqrsdfMade?.descripcion}
                   InputLabelProps={{ shrink: true }}
                   onChange={(e) => {
                     onChange(e.target.value);
@@ -290,7 +292,7 @@ any): JSX.Element => {
             variant="contained"
             color="primary"
             type="submit"
-            disabled={respuestaPqrsdfMade?.anexos && respuestaPqrsdfMade.anexos.length > 0}
+            disabled={respuestaPqrsdfMade && (respuestaPqrsdfMade?.anexos?.length > 0 || respuestaPqrsdfMade?.asunto || respuestaPqrsdfMade?.asunto)}
             endIcon={<ArrowForward />}
             sx={{
               width: "35%",

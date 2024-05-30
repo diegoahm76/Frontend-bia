@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Grid, Box, TextField, Stack } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
@@ -20,6 +21,7 @@ export const TablaLiquidacionResumen: React.FC = () => {
   const [total, set_total] = useState(0);
   const [lista, set_lista] = useState(Array<Obligacion>);
   const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
+  const [totalCapitalIntereses, setTotalCapitalIntereses] = useState(0);
 
   const total_cop = new Intl.NumberFormat("es-ES", {
     style: "currency",
@@ -35,6 +37,13 @@ export const TablaLiquidacionResumen: React.FC = () => {
     style: "currency",
     currency: "COP",
   }).format(intereses)
+
+  const totalCapitalIntereses_cop = new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "COP",
+  }).format(totalCapitalIntereses)
+
+
 
   useEffect(() => {
     if (plan_pagos.data_cartera_modificada !== undefined) {
@@ -99,8 +108,24 @@ export const TablaLiquidacionResumen: React.FC = () => {
         </div>
       ),
     },
+    // {
+    //   field: 'valor_intereses',
+    //   headerName: 'Intereses Moratorios',
+    //   width: 150,
+    //   renderCell: (params) => {
+    //     const precio_cop = new Intl.NumberFormat("es-ES", {
+    //       style: "currency",
+    //       currency: "COP",
+    //     }).format(params.value)
+    //     return (
+    //       <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //         {precio_cop}
+    //       </div>
+    //     )
+    //   },
+    // },
     {
-      field: 'valor_intereses',
+      field: 'InteresMoratorio_c',
       headerName: 'Intereses Moratorios',
       width: 150,
       renderCell: (params) => {
@@ -116,7 +141,7 @@ export const TablaLiquidacionResumen: React.FC = () => {
       },
     },
     {
-      field: 'valor_capital_intereses',
+      field: 'valor_capital_intereses_c',
       headerName: 'Total (Capital + Intereses)',
       width: 200,
       renderCell: (params) => {
@@ -131,18 +156,40 @@ export const TablaLiquidacionResumen: React.FC = () => {
         )
       },
     },
+    // {
+    //   field: 'valor_capital_intereses',
+    //   headerName: 'Total (Capital + Intereses)',
+    //   width: 200,
+    //   renderCell: (params) => {
+    //     const precio_cop = new Intl.NumberFormat("es-ES", {
+    //       style: "currency",
+    //       currency: "COP",
+    //     }).format(params.value)
+    //     return (
+    //       <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+    //         {precio_cop}
+    //       </div>
+    //     )
+    //   },
+    // },
   ];
 
   useEffect(() => {
     let sub_capital = 0
     let sub_intereses = 0
+    let sub_totalCapitalIntereses = 0
+
     for (let i = 0; i < lista.length; i++) {
       sub_capital = sub_capital + parseFloat(lista[i].monto_inicial)
-      sub_intereses = sub_intereses + parseFloat(lista[i].valor_intereses)
+      sub_intereses = sub_intereses + parseFloat(lista[i].InteresMoratorio_c)
+      sub_totalCapitalIntereses = sub_totalCapitalIntereses + parseFloat(lista[i].valor_capital_intereses_c)
+
       set_capital(sub_capital)
       set_intereses(sub_intereses)
     }
     set_total(capital + intereses)
+    setTotalCapitalIntereses(sub_totalCapitalIntereses)
+
   }, [lista, capital, intereses])
 
   return (
@@ -166,7 +213,7 @@ export const TablaLiquidacionResumen: React.FC = () => {
 
 
                   <RenderDataGrid
-                    title="Datos de liquidación"
+                    title="Datos de liquidaciónx"
                     rows={lista}
                     columns={columns}
                   />
@@ -206,13 +253,22 @@ export const TablaLiquidacionResumen: React.FC = () => {
                   />
                 </Grid>
                 <Grid item xs={12} sm={2.5}>
+
+                  <TextField
+                    label="Total Capital + Intereses"
+                    size="small"
+                    fullWidth
+                    value={totalCapitalIntereses_cop}
+                  />
+                </Grid>
+                {/* <Grid item xs={12} sm={2.5}>
                   <TextField
                     label="Capital + Intereses"
                     size="small"
                     fullWidth
                     value={total_cop}
                   />
-                </Grid>
+                </Grid> */}
               </Stack>
             </Grid>
           ) : null
