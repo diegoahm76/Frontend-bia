@@ -76,7 +76,7 @@ export const DetallesComponent: React.FC<IProps> = ({ detalle_seleccionado_prop,
                     </Grid>
                     <Grid item xs={12} sm={3}>
                         <TextField
-                            label="Modelo"
+                            label="Descripción"
                             size="small"
                             required
                             disabled

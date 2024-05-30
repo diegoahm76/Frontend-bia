@@ -53,7 +53,8 @@ export const RegistroMantenimientoOtrosComponent: React.FC = () => {
         if(user_info !== null && detalle_seleccionado !== null && detalle !== null && mantenimiento !== null && accion_guardar){
             const formulario: ejecutar_mantenimiento = {
                 fecha_registrado: dayjs().format("YYYY-MM-DD"),
-                fecha_ejecutado: fecha_dias.fecha_mantenimiento.format("YYYY-MM-DD"),
+                // fecha_ejecutado: fecha_dias.fecha_mantenimiento.format("YYYY-MM-DD"),
+                fecha_ejecutado: dayjs().subtract(parseInt(detalle.dias_empleados), 'days').format("YYYY-MM-DD"),
                 cod_tipo_mantenimiento: mantenimiento.tipo,
                 dias_empleados:parseInt(detalle.dias_empleados),
                 fecha_estado_anterior: null,
