@@ -26,13 +26,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import UpdateIcon from '@mui/icons-material/Update';
 import UploadIcon from '@mui/icons-material/Upload';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
 import { resetBandejaDeTareas } from '../../gestorDocumental/bandejaDeTareas/toolkit/store/BandejaDeTareasStore';
 import { useAppDispatch } from '../../../hooks';
 import { BusquedaPersonasGenerador } from '../components/GeneradorDocumentos/BusquedaPersonas';
 import swal from 'sweetalert2';
+import { LoadingButton } from '@mui/lab';
 export interface UnidadOrganizacional {
   codigo: any;
   nombre: string;
@@ -60,6 +60,8 @@ export const GeneradorDocumentos: React.FC = () => {
   const [cleanFields, setCleanFields] = useState(false);
 
   const [checked, setChecked] = useState(false);
+  const [localChecked, setLocalChecked] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   const [contentData, setContentData] = useState<any>({}); // Datos para llenar el documento
   const [matchingData, setMatchingData] = useState<any>({}); // Datos para llenar el documento
@@ -278,6 +280,7 @@ export const GeneradorDocumentos: React.FC = () => {
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
     setUrlFile(file);
+    event.target.value = null;
   };
 
   const handleUpload = () => {
@@ -292,6 +295,7 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const handleChangeCheck = (event: any) => {
     setChecked(event.target.checked);
+    setLocalChecked(event.target.checked)
   };
 
   const handleDelete = () => {
@@ -330,7 +334,7 @@ export const GeneradorDocumentos: React.FC = () => {
       removeFile()
       setFile(`${urlBase}${plantilla.archivos_digitales.ruta_archivo}`)
       if(Object.keys(plantilla.variables).length){
-        let variablesFiltradas = plantilla.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
+        let variablesFiltradas = plantilla.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado' && variable !== 'fecha_consecutivo');
         let newMatchingData: any = {};
         if (contentData?.id_PQRSDF || contentData?.id_persona_registra) {
           const keyscontentData = Object.keys(contentData.info_persona_titular);
@@ -452,6 +456,7 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const sendDocument = async () => {
     if(personaSelected.length){
+      setIsSending(true);
       let allSuccess = true;
       for (const persona of personaSelected) {
         const body = {
@@ -463,7 +468,7 @@ export const GeneradorDocumentos: React.FC = () => {
         if (!success) allSuccess = false;
       }
       if (allSuccess) {
-        setUplockFirma(true);
+        if(personaSelected[0].require_firma) setUplockFirma(true);
         setVariablesPlantilla([]);
         setShowVariables(false);
         setSendTemplate(false);
@@ -474,10 +479,14 @@ export const GeneradorDocumentos: React.FC = () => {
         setLideresUnidad([]);
         setCleanFields(true);
         setIsUploadDocument(false);
+        set_radicado_selected('');
+
+        setIsSending(false);
         if (personaSelected.length == 1) control_success('El documento se envió correctamente');
         if (personaSelected.length > 1) control_success('Todos los documentos se enviaron correctamente');
 
       } else {
+        setIsSending(false);
         if (personaSelected.length == 1) control_error('Ocurrio un error al enviar el documento');
         if (personaSelected.length > 1) control_error('Hubo un error al enviar algunos documentos');
       }
@@ -649,7 +658,7 @@ export const GeneradorDocumentos: React.FC = () => {
                       disabled={isUploadDocument}
                     />
                   }
-                  label={checked ? 'Requiere consecutivo' : 'No requiere consecutivo'}
+                  label={localChecked ? 'Requiere consecutivo' : 'No requiere consecutivo'}
                 />
                 </Grid>
                 <Grid item>
@@ -659,7 +668,7 @@ export const GeneradorDocumentos: React.FC = () => {
                     onClick={handleUploadAlert}
                     disabled={isUploadDocument}
                   >
-                    Subir
+                    Cargar
                   </Button>
                 </Grid>
               </>
@@ -746,15 +755,16 @@ export const GeneradorDocumentos: React.FC = () => {
                 </Button>
               </Grid>
               <Grid item>
-                <Button
+                <LoadingButton
                   startIcon={<SaveIcon />}
                   color="success"
                   variant="contained"
                   onClick={sendDocument}
-                  disabled={!plantillaSeleccionada || !hasConsecutivo}
+                  disabled={!plantillaSeleccionada || !hasConsecutivo || isSending}
+                  loading={isSending}
                 >
                   Enviar Documento
-                </Button>
+                </LoadingButton>
               </Grid>
             </Grid>
       </Grid>

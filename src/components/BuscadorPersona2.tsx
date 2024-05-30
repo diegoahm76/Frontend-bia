@@ -330,7 +330,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
             onClick={handle_click_open}
             disabled={!plantillaSeleccionada?.archivos_digitales}
           >
-            Buscar
+            Busqueda Avanzada
           </Button>
         </Grid>
       </Grid>

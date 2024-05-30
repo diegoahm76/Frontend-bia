@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { type crear_mantenimiento } from "../../interfaces/IProps";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { RenderDataGrid } from "../../../../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid";
+import { GridColDef } from "@mui/x-data-grid";
 
 interface IProps {
     data_grid: crear_mantenimiento[],
@@ -41,28 +42,29 @@ export const PrevisualizacionComponent: React.FC<IProps> = ({ data_grid, limpiar
       set_data_previsualizacion(prevArray => prevArray.filter(item => item !== row));
     };
 
-    const columns = [
+    const columns:  GridColDef[] = [
       // { field: "id_articulo", header: "Id", visible: true },
       {
         field: 'cod_tipo_mantenimiento',
         headerName: 'Tipo de mantenimiento',
-        visible: true,
         renderCell: (params: any) => params.row?.cod_tipo_mantenimiento === 'C' ? 'Correctivo' : 'Preventivo',
-        width: 230,
+        minWidth: 230,
+        flex: 1
       },
-      { field: 'placa', headerName: 'Serial', visible: true, width: 250, renderCell: (params: any) => params.row?.placa?.toUpperCase() },
-      { field: 'fecha_programada', headerName: 'Fecha', visible: true, width: 120,
+      { field: 'placa', headerName: 'Serial', minWidth: 250, flex: 1, renderCell: (params: any) => params.row?.placa?.toUpperCase() },
+      { field: 'fecha_programada', headerName: 'Fecha', flex: 1, minWidth: 120,
         renderCell: (params: any) => params.row.fecha_programada ? params.row.fecha_programada : 'N/A' },
       {
         field: 'tipo_programacion',
         headerName: 'Tipo de programación',
-        visible: true,
-        width: 200
+        minWidth: 200,
+        flex: 1
       },
       {
         field: 'Acciones',
         headerName: 'Acciones',
-        visible: true,
+        minWidth: 140,
+        flex: 1,
         renderCell: (params: any) => (
           <>
             <IconButton

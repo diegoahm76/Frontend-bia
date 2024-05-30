@@ -420,10 +420,9 @@ export const FormParte3 = ({
                           const url = baseURL.replace("/api/", "");
                           const urlFile = `${url}${documentoSeleccionado.archivos_digitales.ruta_archivo}`
                           const response = await axios.get(urlFile, { responseType: 'blob' });
-                          const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+                          // const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
                           // const file = new File([response.data], `${documentoSeleccionado.archivos_digitales.nombre_de_Guardado}${randomNumber}.docx`);
-                          const file = new File([response.data], `${randomNumber}_plantilla-nota-interna.docx`);
-                          console.log(file,"file");
+                          const file = new File([response.data], `${documentoSeleccionado.archivos_digitales.nombre_de_Guardado}.${documentoSeleccionado.archivos_digitales.formato}`);
                           controlar_tamagno_archivos(file, onChange);
                         } catch (error) {
                           control_error('No se encontró un documento asociado');
