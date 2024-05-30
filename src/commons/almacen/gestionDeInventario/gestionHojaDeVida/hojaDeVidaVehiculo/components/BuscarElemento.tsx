@@ -91,6 +91,18 @@ const SeleccionarVehiculo = () => {
 
         },
         {
+            field: 'tiene_hoja_vida',
+            headerName: 'Tiene hoja de vida',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => {
+                return params.row.tiene_hoja_vida === true ? (
+                    <Chip size="small" label="SI" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="NO" color="error" variant="outlined" />
+                );
+            },
+        },
+        {
             field: 'estado',
             headerName: 'Estado vehículo',
             width: 200, flex: 1,

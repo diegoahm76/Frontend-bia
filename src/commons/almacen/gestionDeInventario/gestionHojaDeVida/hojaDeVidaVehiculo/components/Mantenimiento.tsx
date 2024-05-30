@@ -46,14 +46,14 @@ const Mantenimiento_vehicle = () => {
       ),
     },
     {
-      field: 'fecha_ejecucion',
+      field: 'fecha_ejecutado',
       headerName: 'Fecha de ejecucion',
       width: 250,
 
       cellClassName: 'truncate-cell',
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.row.fecha_ejecucion ? params.row.fecha_ejecucion : 'No se ha ejecutado'}
+          {params.row.fecha_ejecutado ? params.row.fecha_ejecutado : 'N/A'}
         </div>
       ),
     },
