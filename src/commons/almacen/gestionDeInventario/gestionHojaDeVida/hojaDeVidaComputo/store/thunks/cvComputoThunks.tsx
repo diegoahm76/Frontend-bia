@@ -89,7 +89,8 @@ export const get_cv_computer_id = (id: number): any => {
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-
+            //TODO: Agregado para prueba
+            dispatch(set_current_cv_computer({}));
             return error as AxiosError;
         }
     };
@@ -109,7 +110,8 @@ export const get_maintenance = (id: number | null): any => {
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-
+             //TODO: Agregado para prueba
+             dispatch(set_maintenance([]));
             return error as AxiosError;
         }
     };

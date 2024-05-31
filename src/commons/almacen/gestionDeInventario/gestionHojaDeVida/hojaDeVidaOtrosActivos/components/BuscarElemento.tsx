@@ -150,6 +150,13 @@ const SeleccionarOtros = () => {
         }
     })
 
+    const clear_fields: any = (async () => {
+        reset_other({
+            doc_identificador_nro: "",
+            nombre: ""
+        });
+    })
+
 
     return (
         <>
@@ -172,14 +179,14 @@ const SeleccionarOtros = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 5,
                             control_form: control_other,
                             control_name: "nombre",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Nombre",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                         {
@@ -192,7 +199,7 @@ const SeleccionarOtros = () => {
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Serial",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                     ]}
@@ -201,7 +208,7 @@ const SeleccionarOtros = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 4,
                             control_form: control_other,
                             control_name: "nombre",
                             default_value: "",
@@ -224,7 +231,7 @@ const SeleccionarOtros = () => {
                             disabled: false,
                             helper_text: "",
                         },
-                    ]} get_filters_models={filter_other} />
+                    ]} get_filters_models={filter_other} clear_fields={clear_fields}/>
             </Grid>
         </>
     );
