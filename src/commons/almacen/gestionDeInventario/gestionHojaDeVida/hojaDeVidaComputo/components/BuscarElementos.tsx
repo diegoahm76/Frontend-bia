@@ -138,12 +138,18 @@ const SeleccionarComputer = () => {
         void dispatch(get_computers_all_service(nombre, placa_serial))
     })
 
-
     const search_computer: any = (async () => {
         const cv_computer = get_values("id_bien")
         if (cv_computer !== null) {
             void dispatch(get_computers_all_service())
         }
+    })
+
+    const clear_fields: any = (async () => {
+        reset_computo({
+            doc_identificador_nro: "",
+            nombre: ""
+        });
     })
 
 
@@ -168,14 +174,14 @@ const SeleccionarComputer = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 5,
                             control_form: control_computo,
                             control_name: "nombre",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Nombre",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                         {
@@ -188,7 +194,7 @@ const SeleccionarComputer = () => {
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Serial",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                     ]}
@@ -197,7 +203,7 @@ const SeleccionarComputer = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 4,
                             control_form: control_computo,
                             control_name: "nombre",
                             default_value: "",
@@ -220,7 +226,7 @@ const SeleccionarComputer = () => {
                             disabled: false,
                             helper_text: "",
                         },
-                    ]} get_filters_models={filter_computer} />
+                    ]} get_filters_models={filter_computer} clear_fields={clear_fields}/>
             </Grid>
         </>
     );

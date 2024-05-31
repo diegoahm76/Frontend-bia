@@ -167,6 +167,13 @@ const SeleccionarVehiculo = () => {
         }
     })
 
+    const clear_fields: any = (async () => {
+        reset_vehicle({
+            doc_identificador_nro: "",
+            nombre: ""
+        });
+    })
+
 
     return (
         <>
@@ -189,20 +196,7 @@ const SeleccionarVehiculo = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
-                            control_form: control_vehicle,
-                            control_name: "doc_identificador_nro",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Placa / Serial",
-                            type: "text",
-                            disabled: true,
-                            helper_text: "",
-                        },
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
+                            md: 5,
                             control_form: control_vehicle,
                             control_name: "nombre",
                             default_value: "",
@@ -211,6 +205,19 @@ const SeleccionarVehiculo = () => {
                             type: "text",
                             disabled: true,
                             helper_text: ""
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_vehicle,
+                            control_name: "doc_identificador_nro",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Placa",
+                            type: "text",
+                            disabled: true,
+                            helper_text: "",
                         },
                     ]}
                     modal_select_model_title='Buscar Vehículos'
@@ -223,7 +230,7 @@ const SeleccionarVehiculo = () => {
                             control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Placa / Serial",
+                            label: "Placa",
                             type: "text",
                             disabled: false,
                             helper_text: "",
@@ -231,7 +238,7 @@ const SeleccionarVehiculo = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 4,
                             control_form: control_vehicle,
                             control_name: "nombre",
                             default_value: "",
@@ -241,7 +248,7 @@ const SeleccionarVehiculo = () => {
                             disabled: false,
                             helper_text: ""
                         },
-                    ]} get_filters_models={filter_vehicle} />
+                    ]} get_filters_models={filter_vehicle} clear_fields={clear_fields}/>
             </Grid>
         </>
     );
