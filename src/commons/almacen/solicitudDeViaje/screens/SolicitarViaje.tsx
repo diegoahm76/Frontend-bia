@@ -58,6 +58,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
   const [departamentos, set_departamentos] = useState<any>();
   const [departamento_editar, set_departamento_editar] = useState<string>('73');
   const [municipio_editar, set_municipio_editar] = useState<string>('73001');
+  const [unidad_organizacional, set_unidad_organizacional] = useState<string>('');
 
   const [abrir_modal_generar_direccion, set_abrir_modal_generar_direccion] = useState<boolean>(false);
 
@@ -530,6 +531,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
         set_municipio(datos_solicitud_ver.solicitud_viaje.cod_municipio);
         set_departamento(datos_solicitud_ver.solicitud_viaje.cod_departamento);
         set_motivo_viaje(datos_solicitud_ver.solicitud_viaje.motivo_viaje);
+        set_unidad_organizacional(datos_solicitud_ver.solicitud_viaje.unidad_organizacional_solicita);
 
         set_data_personas_viajan(datos_solicitud_ver.personas_solicitud_viaje);
   
@@ -997,6 +999,19 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_consideraciones_adicionales(e.target.value)}
           />
         </Grid>
+
+        {accion === 'ver' &&
+          <Grid item xs={12}>
+            <TextField
+              label='Unidad organizacional'
+              disabled
+              fullWidth
+              size="small"
+              value={unidad_organizacional}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_unidad_organizacional(e.target.value)}
+            />
+          </Grid>
+        }
 
         {accion === 'editar' &&
           <Grid container spacing={1} item xs={12} sx={{

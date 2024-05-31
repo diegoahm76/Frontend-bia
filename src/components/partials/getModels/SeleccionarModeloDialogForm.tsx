@@ -12,6 +12,7 @@ import {
   Box,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../Title';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
@@ -42,6 +43,7 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   get_filters_models: any;
+  clear_fields?: any;
   models: any[];
   columns_model: GridColDef[] | null;
   row_id: string | number;
@@ -59,6 +61,7 @@ const SeleccionarModeloDialogForm = ({
   modal_title,
   set_models,
   get_filters_models,
+  clear_fields,
   models,
   columns_model,
   row_id,
@@ -339,12 +342,21 @@ const SeleccionarModeloDialogForm = ({
               {form_filters.map((option, index) => (
                 <TypeDatum key={index} form_input={option} />
               ))}
-              <Grid item xs={12} md={2}>
+              <Grid item>
                 <FormButton
                   variant_button="contained"
                   on_click_function={get_filters_models}
                   icon_class={<SearchIcon />}
                   label="BUSCAR"
+                  type_button="button"
+                />
+              </Grid>
+              <Grid item>
+                <FormButton
+                  variant_button="outlined"
+                  on_click_function={clear_fields}
+                  icon_class={<CleanIcon />}
+                  label={'LIMPIAR'}
                   type_button="button"
                 />
               </Grid>

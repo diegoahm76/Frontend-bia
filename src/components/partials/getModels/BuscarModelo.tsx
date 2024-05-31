@@ -56,6 +56,7 @@ interface IProps {
   open_search_modal?: boolean | null;
   set_open_search_modal?: any | null;
   border_show?: boolean | null;
+  clear_fields?: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -67,6 +68,7 @@ const BuscarModelo = ({
   set_models,
   // reset_values,
   get_filters_models,
+  clear_fields,
   models,
   columns_model,
   row_id,
@@ -97,7 +99,7 @@ const BuscarModelo = ({
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
   const TypeDatum: any = (input: any) => {
     const form_input = input.form_input;
-    if (form_input.datum_type === 'input_controller') {
+    if (form_input?.datum_type === 'input_controller') {
       return (
         <FormInputController
           xs={form_input.xs}
@@ -435,6 +437,7 @@ const BuscarModelo = ({
         set_models={set_models}
         button_origin_show={button_origin_show}
         get_filters_models={get_filters_models}
+        clear_fields={clear_fields}
         models={models}
         columns_model={columns_model}
         row_id={row_id}

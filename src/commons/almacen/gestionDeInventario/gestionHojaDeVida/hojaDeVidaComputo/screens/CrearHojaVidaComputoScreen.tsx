@@ -23,7 +23,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   const [action, set_action] = useState<string>("guardar");
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { current_cv_computer } = useAppSelector((state) => state.cv);
+  const { current_cv_computer, current_computer } = useAppSelector((state) => state.cv);
   const { control: control_cv_computo, handleSubmit: handle_submit, reset: reset_cv_computer, getValues: get_values } = useForm<FormValues>();
 
   useEffect(() => {
@@ -33,10 +33,13 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (current_cv_computer.id_hoja_de_vida !== null) {
+    if (current_cv_computer?.id_hoja_de_vida) {
       set_action("editar")
+    }else{
+      set_action("crear")
     }
-    if (current_cv_computer.id_articulo !== null) {
+    if (current_cv_computer?.id_articulo !== null) {
+      console.log('holasasa')
       void dispatch(get_maintenance(current_cv_computer.id_articulo ?? 0))
     }
   }, [current_cv_computer]);
@@ -50,6 +53,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const on_submit = (data: FormValues): void => {
+    console.log('New', data)
     const form_data: any = new FormData();
     form_data.append('sistema_operativo', data.sistema_operativo);
     form_data.append('suite_ofimatica', data.suite_ofimatica);
@@ -68,9 +72,10 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     );
     form_data.append('otras_aplicaciones', data.otras_aplicaciones);
     form_data.append('id_marca', data.id_marca ?? null);
-    form_data.append('id_articulo', (data.id_articulo ?? "").toString());
-    if(data.ruta_imagen_foto !== null) {
-    form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+    form_data.append('id_articulo', (data.id_articulo || current_computer.id_bien || '' ).toString());
+    if(data.ruta_imagen_foto && typeof data.ruta_imagen_foto  !== "string" ) {
+      console.log('gola')
+      form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
     }
     if (data.id_hoja_de_vida === null) {
       void dispatch(create_cv_computers_service(form_data, navigate));
@@ -80,14 +85,38 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   };
 
   const delete_hoja_vida = (): void => {
-    if (current_cv_computer.id_hoja_de_vida !== null && current_cv_computer.id_hoja_de_vida !== undefined) {
-      void dispatch(delete_cv_computers_service(current_cv_computer.id_hoja_de_vida));
+    if (current_cv_computer?.id_hoja_de_vida !== null && current_cv_computer?.id_hoja_de_vida !== undefined) {
+      void dispatch(delete_cv_computers_service(current_cv_computer?.id_hoja_de_vida));
     }
   };
 
   useEffect(() => {
-    reset_cv_computer(current_cv_computer);
-    //  console.log('')(current_cv_computer)
+    if(current_cv_computer?.id_hoja_de_vida){
+      reset_cv_computer(current_cv_computer);
+    }else{
+      reset_cv_computer({
+        id_hoja_de_vida: null,
+        id_articulo: null,
+        codigo_bien: current_computer?.codigo_bien ?? "",
+        nombre: "",
+        id_marca: null,
+        sistema_operativo: "",
+        suite_ofimatica: "",
+        antivirus: "",
+        color: "",
+        tipo_de_equipo: "",
+        tipo_almacenamiento: "",
+        capacidad_almacenamiento: "",
+        doc_identificador_nro: current_computer?.doc_identificador_nro ?? "",
+        procesador: "",
+        memoria_ram: "",
+        estado: "",
+        observaciones_adicionales: "",
+        otras_aplicaciones: "",
+        ruta_imagen_foto: null,
+      });
+      console.log('reset')
+    }
   }, [current_cv_computer]);
 
   return (
@@ -139,17 +168,18 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
             <FormButton
               variant_button="contained"
               on_click_function={handle_submit(on_submit)}
-              icon_class={action === "create" ? <EditIcon /> : <SaveIcon />}
+              icon_class={action === "create" ? <SaveIcon /> : <EditIcon />}
               label={action}
               type_button="button"
             />
           </Grid>
 
-          {current_cv_computer.id_hoja_de_vida !== null &&
+          {current_cv_computer?.id_hoja_de_vida !== null &&
             <Grid item xs={12} md={2}>
               <FormButton
                 variant_button="outlined"
                 on_click_function={delete_hoja_vida}
+                disabled={!current_cv_computer?.id_hoja_de_vida}
                 icon_class={<CloseIcon />}
                 label={"Eliminar"}
                 type_button="button"
