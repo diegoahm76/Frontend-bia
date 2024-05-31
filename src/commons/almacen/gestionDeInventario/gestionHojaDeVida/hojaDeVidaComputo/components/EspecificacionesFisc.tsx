@@ -3,6 +3,7 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { set_computers, set_current_computer, set_current_cv_computer } from '../store/slices/indexCvComputo';
 import { useEffect, useState } from 'react';
+import { baseURL } from '../../../../../../api/axios';
 
 
 
@@ -17,7 +18,9 @@ const Especificaciones = ({
     control_computo,
     get_values
 }: IProps) => {
-    const { computers, marcas, current_cv_computer } = useAppSelector((state) => state.cv);
+    const url_base = baseURL.replace("/api/", "");
+
+    const { computers, marcas, current_cv_computer, current_computer } = useAppSelector((state) => state.cv);
     const [file, set_file] = useState<any>(null);
     const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
     const [file_name, set_file_name] = useState<string>("");
@@ -34,29 +37,31 @@ const Especificaciones = ({
             if ('name' in file) {
                 //  console.log('')(file.name)
                 set_file_name(file.name)
-                dispatch(set_current_cv_computer({
-                    ...current_cv_computer,
-                    id_marca: get_values("id_marca"),
-                    estado: get_values("estado"),
-                    color: get_values("color"),
-                    tipo_de_equipo: get_values("tipo_de_equipo"),
-                    capacidad_almacenamiento: get_values("capacidad_almacenamiento"),
-                    procesador: get_values("procesador"),
-                    memoria_ram: get_values("memoria_ram"),
-                    tipo_almacenamiento: get_values("tipo_almacenamiento"),
-                    suite_ofimatica: get_values("suite_ofimatica"),
-                    antivirus: get_values("antivirus"),
-                    otras_aplicaciones: get_values("otras_aplicaciones"),
-                    ruta_imagen_foto: file
-                }))
 
+                //TODO: Cambiar para actualizar la imágen
+                if(current_cv_computer?.id_hoja_de_vida){
+                    dispatch(set_current_cv_computer({
+                        ...current_cv_computer,
+                        id_marca: get_values("id_marca"),
+                        estado: get_values("estado"),
+                        color: get_values("color"),
+                        tipo_de_equipo: get_values("tipo_de_equipo"),
+                        capacidad_almacenamiento: get_values("capacidad_almacenamiento"),
+                        procesador: get_values("procesador"),
+                        memoria_ram: get_values("memoria_ram"),
+                        tipo_almacenamiento: get_values("tipo_almacenamiento"),
+                        suite_ofimatica: get_values("suite_ofimatica"),
+                        antivirus: get_values("antivirus"),
+                        otras_aplicaciones: get_values("otras_aplicaciones"),
+                        ruta_imagen_foto: file
+                    }))
+                }
             }
         }
     }, [file]);
 
     useEffect(() => {
-        if (current_cv_computer.id_hoja_de_vida
-            !== null) {
+        if (current_cv_computer?.id_hoja_de_vida) {
             if (current_cv_computer.ruta_imagen_foto !== null) {
                 const file = current_cv_computer.ruta_imagen_foto
                 //  console.log('')(file)
@@ -67,9 +72,12 @@ const Especificaciones = ({
                     }
                 } else {
                     set_file_name(String(current_cv_computer.ruta_imagen_foto))
-                    set_selected_image_aux(current_cv_computer.ruta_imagen_foto);
+                    set_selected_image_aux(`${url_base}${current_cv_computer.ruta_imagen_foto}`);
                 }
 
+            }else{
+                set_selected_image_aux(null);
+                set_file_name("");
             }
         }
     }, [current_cv_computer]);
@@ -113,7 +121,7 @@ const Especificaciones = ({
                             rules: {},
                             label: "Codigo bien",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                         {
@@ -141,7 +149,7 @@ const Especificaciones = ({
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Serial",
                             type: "text",
-                            disabled: current_cv_computer?.doc_identificador_nro,
+                            disabled: current_cv_computer?.doc_identificador_nro || current_computer?.doc_identificador_nro,
                             helper_text: ""
                         },
 
