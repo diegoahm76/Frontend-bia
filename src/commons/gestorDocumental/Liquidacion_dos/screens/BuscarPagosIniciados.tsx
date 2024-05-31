@@ -220,8 +220,8 @@ export const BuscarPagosIniciados: React.FC = () => {
                         autoHeight
                         rows={deudores}
                         columns={columns_deudores}
-                        pageSize={100}
-                        rowsPerPageOptions={[100]}
+                        pageSize={10}
+                        rowsPerPageOptions={[10]}
                         experimentalFeatures={{ newEditingApi: true }}
                         getRowId={(row) => row.id_pago}
                         loading={loading}

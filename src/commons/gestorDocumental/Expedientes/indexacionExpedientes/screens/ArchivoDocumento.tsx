@@ -233,7 +233,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     useEffect(() => {
         if (props.serie !== "")
             obtener_tipologias_id_serie_fc();
-    }, [props.serie]);
+    }, [props, props.serie]);
 
     useEffect(() => {
         if (palabras_clave !== "")
@@ -513,7 +513,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
 
     return (
         <>
-            {props.expediente !== null && <Grid item md={12} xs={12}>
+            {/*{props.expediente !== null &&*/} <Grid item md={12} xs={12}>
                 <Title title="Archivado de documento" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
@@ -523,7 +523,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     label="Fecha de incorporación al expediente"
                                     value={fecha_incorporacion_exp}
                                     onChange={(newValue) => { cambio_fecha_incorporacion_exp(newValue) }}
-                                    readOnly={creado_automaticamente}
+                                    // readOnly={creado_automaticamente}
                                     inputFormat='DD/MM/YYYY'
                                     disabled={anulado}
                                     renderInput={(params) => (
@@ -545,7 +545,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     label="Fecha de creación documento"
                                     value={fecha_creacion_doc}
                                     onChange={(newValue) => { cambio_fecha_creacion_doc(newValue) }}
-                                    readOnly={creado_automaticamente}
+                                    //readOnly={creado_automaticamente}
                                     inputFormat='DD/MM/YYYY'
                                     disabled={anulado}
                                     renderInput={(params) => (
@@ -568,8 +568,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     label="Tipología documental"
                                     value={tipologia_doc ?? ""}
                                     onChange={cambio_tipologia_doc}
-                                    readOnly={actualizar}
-                                    disabled={anulado}
+                                    // readOnly={actualizar}
+                                    // disabled={anulado}
                                     error={error_tipologia_doc}
                                 >
                                     {lt_tipologias.map((m: any) => (
@@ -588,9 +588,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 required
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 onChange={cambio_nro_folio}
                                 value={nro_folio}
@@ -624,7 +624,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={tipo_archivo ?? ""}
                                     onChange={cambio_tipo_archivo}
                                     disabled={anulado}
-                                    readOnly={creado_automaticamente}
+                                    // readOnly={creado_automaticamente}
                                     error={error_tipo_archivo}
                                 >
                                     {lt_tipo_archivo.map((m: any) => (
@@ -642,9 +642,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: actualizar,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={prefijo}
                                 onChange={cambio_prefijo}
@@ -657,7 +657,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     views={['year']}
                                     value={año_doc}
                                     onChange={(newValue) => { cambio_año_doc(newValue) }}
-                                    readOnly={actualizar}
+                                    //readOnly={actualizar}
                                     disabled={anulado}
                                     renderInput={(params) => (
                                         <TextField
@@ -678,9 +678,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: actualizar,
-                                }}
+                                }}*/
                                 required
                                 fullWidth
                                 value={consecutivo}
@@ -697,7 +697,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={tipo_recurso ?? ""}
                                     onChange={cambio_tipo_recurso}
                                     disabled={anulado}
-                                    readOnly={creado_automaticamente}
+                                    //readOnly={creado_automaticamente}
                                     error={error_tipo_recurso}
                                 >
                                     {lt_tipo_recurso.map((m: any) => (
@@ -717,7 +717,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={tiene_replica ?? ""}
                                     onChange={cambio_tiene_replica}
                                     disabled={anulado}
-                                    readOnly={creado_automaticamente}
+                                    //readOnly={creado_automaticamente}
                                     error={error_tiene_replica}
                                 >
                                     {lt_si_no.map((m: any) => (
@@ -735,9 +735,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={nombre_documento}
                                 required
@@ -753,9 +753,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 required
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={asunto}
                                 onChange={cambio_asunto}
@@ -771,9 +771,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={descripcion}
                                 onChange={cambio_descripcion}
@@ -796,9 +796,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     InputLabelProps={{
                                             shrink: true
                                         }}
-                                        InputProps={{
+                                        /*InputProps={{
                                             readOnly: creado_automaticamente,
-                                        }}
+                                        }}*/
                                     />
                                 </Grid>
                             </Stack>
@@ -817,7 +817,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        {(!actualizar && !anulado) && <Grid item xs={12} sm={12}>
+                        {/*{(!actualizar && !anulado) &&*/} <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -843,8 +843,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     </Button>
                                 </Grid>
                             </Stack>
-                        </Grid>}
-                        {(!actualizar && !anulado) && <Grid item xs={12} sm={12}>
+                        </Grid>
+                         { /*  } */ }
+                        {/*{(!actualizar && !anulado) &&*/} <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -862,7 +863,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     </Button>
                                 </Grid>
                             </Stack>
-                        </Grid>}
+                        </Grid>
+                        
+                         { /* } */}
                         {archivos.length !== 0 && <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
@@ -886,7 +889,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                         </Grid>}
                     </Grid>
                 </Box>
-            </Grid>}
+            </Grid>
+            
+              { /* } */}
         </>
     )
 }

@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {
   Grid,
-  type SelectChangeEvent,
-  Skeleton,
   Button,
   Dialog,
   DialogContent,
@@ -13,20 +11,15 @@ import {
   Avatar,
   MenuItem,
 } from '@mui/material';
-import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { useState, useEffect } from 'react';
-import { CustomSelect } from './CustomSelect';
 // import { LoadingButton } from '@mui/lab';
 import { Typography } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
 import { control_error } from '../helpers';
 import {
   get_bandeja_tareas,
-  get_person_by_document,
   get_tipo_documento,
-  search_avanzada,
 } from '../request';
 import type {
   IList,
@@ -43,13 +36,31 @@ import ClearIcon from '@mui/icons-material/Clear';
 interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
   setPersons: (data: InfoPersona[]) => void;
+  plantillaSeleccionada: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BuscadorPersona2: React.FC<PropsBuscador> = ({
   onResult,
   setPersons,
+  plantillaSeleccionada,
 }: PropsBuscador) => {
+
+  const [form_search, set_form_search] = useState({
+    tipo_documento: '',
+    numero_documento: '',
+    primer_nombre: '',
+    primer_apellido: '',
+    razon_social: '',
+    nombre_comercial: '',
+    nombre_completo: '',
+  });
+  const [is_search, set_is_search] = useState(false);
+  const [options_doc_type, set_options_doc_type] = useState<IList[]>([]);
+  const [open_dialog, set_open_dialog] = useState(false);
+  const [rows, set_rows] = useState<InfoPersona[]>([]);
+  const [local_ids_persons, set_local_ids_persons] = useState<number[]>([]);
+
   const columns: GridColDef[] = [
     {
       field: 'tipo_persona',
@@ -69,36 +80,49 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
       sortable: true,
       width: 170,
     },
-    {
-      field: 'primer_nombre',
-      headerName: 'PRIMER NOMBRE',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'segundo_nombre',
-      headerName: 'SEGUNDO NOMBRE',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'primer_apellido',
-      headerName: 'PRIMER APELLIDO',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'segundo_apellido',
-      headerName: 'SEGUNDO APELLIDO',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'tipo_usuario',
-      headerName: 'Tipo de Usuario',
-      sortable: true,
-      width: 170,
-    },
+    ...(form_search.tipo_documento !== 'NT' ? [
+      {
+        field: 'primer_nombre',
+        headerName: 'NOMBRES',
+        sortable: true,
+        width: 170,
+        valueGetter: (params: any) => {
+          const nombre = (params.row.tipo_documento === 'NT') ? 'NA' : `${params.row.primer_nombre || ''} ${params.row.segundo_nombre || ''}`;
+          return nombre;
+        },
+      },
+      {
+        field: 'primer_apellido',
+        headerName: 'APELLIDOS',
+        sortable: true,
+        width: 170,
+        valueGetter: (params: any) => {
+          const apellido = (params.row.tipo_documento === 'NT') ? 'NA' : `${params.row.primer_apellido || ''} ${params.row.segundo_apellido || ''}`;
+          return apellido;
+        },
+      }
+    ] : []),
+    ...(form_search.tipo_documento == 'NT' || form_search.tipo_documento == '' ? [
+      {
+        field: 'razon_social',
+        headerName: 'RAZÓN SOCIAL',
+        sortable: true,
+        width: 170,
+        valueGetter: (params: any) => {
+          const razon = (params.row.tipo_documento !== 'NT') ? 'NA' : `${params.row.razon_social || ''}`;
+          return razon;
+        },
+      },
+      {
+        field: 'nombre_comercial',
+        headerName: 'NOMBRE COMERCIAL',
+        sortable: true,
+        width: 170,
+        valueGetter: (params: any) => {
+          const nombre_comercial = (params.row.tipo_documento !== 'NT') ? 'NA' : `${params.row.nombre_comercial || ''}`;
+          return nombre_comercial;
+        },
+      }] : []),
     {
       field: 'ACCIONES',
       headerName: 'ACCIONES',
@@ -121,7 +145,6 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
                   if (params.row !== undefined) {
                     handle_close();
                     onResult(params.row);
-                    set_data_form(params.row);
                   }
                 }}
               />
@@ -131,92 +154,6 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
       ),
     },
   ];
-  const columns_juridica: GridColDef[] = [
-    {
-      field: 'tipo_persona',
-      headerName: 'TIPO PERSONA',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'tipo_documento',
-      headerName: 'TIPO DOCUMENTO',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'numero_documento',
-      headerName: 'NÚMERO DOCUMENTO',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'razon_social',
-      headerName: 'RAZÓN SOCIAL',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'nombre_comercial',
-      headerName: 'NOMBRE COMERCIAL',
-      sortable: true,
-      width: 170,
-    },
-    {
-      field: 'tipo_usuario',
-      headerName: 'Tipo de Usuario',
-      sortable: true,
-      width: 170,
-    },
-
-
-    {
-      field: 'ACCIONES',
-      headerName: 'ACCIONES',
-      width: 80,
-      renderCell: (params) => (
-        <>
-          <IconButton aria-label="Seleccionar">
-            <Avatar
-              sx={{
-                width: 24,
-                height: 24,
-                background: '#fff',
-                border: '2px solid',
-              }}
-              variant="rounded"
-            >
-              <AddIcon
-                sx={{ color: 'primary.main', width: '18px', height: '18px' }}
-                onClick={() => {
-                  if (params.row !== undefined) {
-                    handle_close();
-                    onResult(params.row);
-                    // set_nombre_completo(params.row.nombre_comercial);
-                  }
-                }}
-              />
-            </Avatar>
-          </IconButton>
-        </>
-      ),
-    },
-  ];
-
-  const [is_search, set_is_search] = useState(false);
-  const [options_doc_type, set_options_doc_type] = useState<IList[]>([]);
-  const [form_search, set_form_search] = useState({
-    tipo_documento: '',
-    numero_documento: '',
-    primer_nombre: '',
-    primer_apellido: '',
-    razon_social: '',
-    nombre_comercial: '',
-    nombre_completo: '',
-  });
-  const [open_dialog, set_open_dialog] = useState(false);
-  const [rows, set_rows] = useState<InfoPersona[]>([]);
-  const [local_ids_persons, set_local_ids_persons] = useState<number[]>([]);
 
   const set_data_form = (data: InfoPersona): void => {
     set_form_search({
@@ -284,7 +221,11 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
       );
 
       if (data?.length > 0) {
-        set_rows(data);
+        const new_data: any = data.map(item => ({
+          ...item,
+          require_firma: false
+        }));
+        set_rows(new_data);
       }else{
         control_error('No se encontraron resultados');
       }
@@ -387,8 +328,9 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
             startIcon={<SearchIcon />}
             type="submit"
             onClick={handle_click_open}
+            disabled={!plantillaSeleccionada?.archivos_digitales}
           >
-            Buscar
+            Busqueda Avanzada
           </Button>
         </Grid>
       </Grid>
@@ -503,7 +445,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
                         checkboxSelection
                         density='compact'
                         rows={rows ?? []}
-                        columns={(form_search.tipo_documento === 'NT' ? columns_juridica : columns) ?? []}
+                        columns={columns ?? []}
                         pageSize={8}
                         rowsPerPageOptions={[8]}
                         getRowId={(row) => row.id_persona}

@@ -114,6 +114,7 @@ const ModalBusquedaResponsable: React.FC<props> = ({
 
   const enviar_responsable_seleccionado = () => {
     if(Object.keys(funcionario_responsable_temp).length !== 0){
+      console.log(funcionario_responsable_temp);
       set_mostrar_busqueda_responsable(false);
       set_funcionario_responsable_seleccionado(funcionario_responsable_temp);
       set_funcionario_responsable_temp({} as interface_busqueda_responsable);
@@ -314,7 +315,7 @@ const ModalBusquedaResponsable: React.FC<props> = ({
     </>
   );
 }
- 
+
 
 // eslint-disable-next-line no-restricted-syntax
 export default ModalBusquedaResponsable;

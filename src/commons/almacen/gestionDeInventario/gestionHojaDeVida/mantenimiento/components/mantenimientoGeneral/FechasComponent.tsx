@@ -29,6 +29,7 @@ interface IProps {
     especificacion: string,
     user_info: any,
     limpiar_formulario: boolean,
+    clean_form?: boolean,
     programacion: any
 }
 const opcion_programar = [{ value: "MA", label: "Manual" }, { value: "AU", label: "Automatica" }, { value: "OT", label: "Otro" }];
@@ -36,7 +37,7 @@ const opcion_programar = [{ value: "MA", label: "Manual" }, { value: "AU", label
 const opcion_programar_fecha = [{ value: "W", label: "Semanas" }, { value: "M", label: "Meses" }];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info, limpiar_formulario, programacion }: IProps) => {
+export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, user_info, limpiar_formulario, clean_form, programacion }: IProps) => {
     const [tipo, set_tipo] = useState("");
     const [fecha, set_fecha] = useState("");
     const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
@@ -87,7 +88,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }, [detalle_seleccionado]);
 
     useEffect(() => {
-        if (limpiar_formulario) {
+        if (limpiar_formulario || clean_form) {
             set_tipo("");
             set_fecha("");
             set_fecha_desde(null);
@@ -100,7 +101,7 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
             set_disabled_type(true);
             set_selected_date([]);
         }
-    }, [limpiar_formulario]);
+    }, [limpiar_formulario, clean_form]);
 
     const handle_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
         set_tipo(event.target.value);
@@ -177,13 +178,13 @@ export const FechasComponent: React.FC<IProps> = ({ parent_state_setter, detalle
     }
     /**
      * Obtiene listado de fechas para mantenimiento automatico
-     * @param i_cada 
-     * @param f_desde 
-     * @param f_hasta 
-     * @param fecha 
-     * @param fechas_array 
-     * @param check_isd 
-     * @param check_if 
+     * @param i_cada
+     * @param f_desde
+     * @param f_hasta
+     * @param fecha
+     * @param fechas_array
+     * @param check_isd
+     * @param check_if
      * @returns arreglo de fechas
      */
     const calcular_fechas_auto = async (i_cada: number, f_desde: dayjs.Dayjs, f_hasta: dayjs.Dayjs, fecha: string, fechas_array: Dayjs[], check_isd: boolean, check_if: boolean): Promise<Dayjs[]> => {

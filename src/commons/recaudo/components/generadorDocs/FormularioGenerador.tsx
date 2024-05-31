@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 import { Grid, TextField, Typography } from '@mui/material';
 
 export const FormularioGenerador: React.FC<any> = (
-  {variablesPlantilla, showVariables, isNewData, exCallback, setIsNewData} :
-  {variablesPlantilla: any[], showVariables: boolean, isNewData: boolean, exCallback: (data: any) => void, setIsNewData: (bool: boolean) => void}
+  {variablesPlantilla, showVariables, isNewData, exCallback, setIsNewData, cleanFields, setCleanFields} :
+  {variablesPlantilla: any[], showVariables: boolean, isNewData: boolean, exCallback: (data: any) => void, setIsNewData: (bool: boolean) => void, cleanFields: boolean, setCleanFields: (bool: boolean) => void}
 ) => {
   const [formValues, setFormValues] = useState<any>({});
 
@@ -26,11 +26,26 @@ export const FormularioGenerador: React.FC<any> = (
     }
   }, [isNewData]);
 
+  useEffect(() => {
+    if (cleanFields) {
+      cleanForm();
+      setCleanFields(false);
+    }
+  }, [cleanFields])
+
   const capitalizeAndSeparate = (name: string): string => {
     const words = name.split(/(?=[A-Z])|_|-/);
     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1));
     return capitalizedWords.join(' ');
-};
+  };
+
+  const cleanForm = () => {
+    const camposVacios: any = {};
+    variablesPlantilla.forEach(variable => {
+        camposVacios[variable] = '';
+    });
+    setFormValues(camposVacios);
+  }
 
   return (
     <>

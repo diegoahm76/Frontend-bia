@@ -25,7 +25,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
   const dispatch = useAppDispatch();
   const { current_cv_vehicle, } = useAppSelector((state) => state.cve);
   const [action, set_action] = useState<string>("guardar");
-  const { control: control_vehicle, handleSubmit: handle_submit, reset: reset_vehicle, getValues: get_values } = useForm<FormValues>();
+  const { control: control_vehicle, handleSubmit: handle_submit, reset: reset_vehicle, getValues: get_values, watch } = useForm<FormValues>();
 
   useEffect(() => {
     void dispatch(get_marca_service());
@@ -40,9 +40,15 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
     if (current_cv_vehicle.id_hoja_de_vida !== null) {
       set_action("editar")
     }
+    console.log(current_cv_vehicle);
     if (current_cv_vehicle.id_articulo !== null) {
       void dispatch(get_maintenance_vehicle(current_cv_vehicle.id_articulo ?? 0))
     }
+
+    //TODO: REvisar si se va a agregar service
+    // if (current_cv_vehicle.id_vehiculo_arrendado !== null) {
+    //   void dispatch(get_maintenance_vehicle(current_cv_vehicle.id_articulo ?? 0))
+    // }
   }, [current_cv_vehicle]);
 
   const on_submit = (data: FormValues): void => {
@@ -72,6 +78,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
       form_data.append('fecha_circulacion', dayjs(data.fecha_circulacion).format('YYYY-MM-DD'));
     }
     form_data.append('id_articulo', data.id_articulo);
+    form_data.append('id_vehiculo_arreandado', data?.id_vehiculo_arrendado)
     form_data.append('doc_identificador_nro', data.doc_identificador_nro
     );
     form_data.append('codigo_bien', data.codigo_bien);
@@ -118,9 +125,9 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
         </Grid>
         <SeleccionarVehiculo />
         <EspecificacionesVehicle
-          control_vehicle={control_vehicle} get_values={get_values} title={''} />
+          control_vehicle={control_vehicle} get_values={get_values} watch={watch} title={''} />
         <EspecificacionAdicional control_vehicle={control_vehicle} get_values={get_values} />
-        <Mantenimiento_vehicle />
+        {current_cv_vehicle.id_articulo && <Mantenimiento_vehicle />}
 
 
         <Grid
@@ -150,14 +157,14 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
                 type_button="button"
               />
             </Grid>}
-          <Grid item xs={12} md={3}>
+          {current_cv_vehicle.id_articulo && <Grid item xs={12} md={3}>
             <Button
               variant="contained"
               onClick={programacion_mantenimiento}
             >
               Programar mantenimiento
             </Button>
-          </Grid>
+          </Grid>}
 
 
         </Grid>

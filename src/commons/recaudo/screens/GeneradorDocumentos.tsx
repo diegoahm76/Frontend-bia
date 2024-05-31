@@ -10,26 +10,29 @@ import {
   TextField,
   Button,
   Chip,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
 import { SetStateAction, useEffect, useState } from 'react';
 import { Title } from '../../../components';
 import { useSelector } from 'react-redux';
-import { AuthSlice } from '../../auth/interfaces';
 import { api, baseURL } from '../../../api/axios';
 import { control_error, control_success } from '../../../helpers';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import SaveIcon from '@mui/icons-material/Save';
 import EditIcon from '@mui/icons-material/Edit';
 import FeedIcon from '@mui/icons-material/Feed';
-import CloseIcon from '@mui/icons-material/Close';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import DeleteIcon from '@mui/icons-material/Delete';
 import UpdateIcon from '@mui/icons-material/Update';
-import { AlertaDocumento } from './AlertaDocumento';
+import UploadIcon from '@mui/icons-material/Upload';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { FormularioGenerador } from '../components/generadorDocs/FormularioGenerador';
 import { VisorDocumentos } from '../components/GeneradorDocumentos/VisorDocumentos';
 import { resetBandejaDeTareas } from '../../gestorDocumental/bandejaDeTareas/toolkit/store/BandejaDeTareasStore';
 import { useAppDispatch } from '../../../hooks';
 import { BusquedaPersonasGenerador } from '../components/GeneradorDocumentos/BusquedaPersonas';
+import swal from 'sweetalert2';
+import { LoadingButton } from '@mui/lab';
 export interface UnidadOrganizacional {
   codigo: any;
   nombre: string;
@@ -43,38 +46,32 @@ interface TipoRadicado {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GeneradorDocumentos: React.FC = () => {
 
-  const {
-    userinfo: { id_persona },
-  } = useSelector((state: AuthSlice) => state.auth);
-
   const [lideresUnidad, setLideresUnidad] = useState<string[]>([]); // Asumiendo que es un string
   const [file, setFile] = useState(''); //Archivo desde el server (plantilla)
   const [urlFile, setUrlFile] = useState<any>(null); //Archivo cargado desde local
-  const [updateBorrador, setUpdateBorrador] = useState(false);
+  const [updateBorrador, setUpdateBorrador] = useState(false); //Se utiliza cuando se actualiza el borrador
   const [updateDocument, setUpdateDocument] = useState(false);
   const [sendTemplate, setSendTemplate] = useState(false);
   const [uplockFirma, setUplockFirma] = useState(false);
   const [isNewData, setIsNewData] = useState(false);
+  const [isUploadDocument, setIsUploadDocument] = useState(false); //Se utiliza cuando se sube un documento
   const [hasConsecutivo, setHasConsecutivo] = useState(false);
   const [hasRadicado, setHasRadicado] = useState(false);
-  const [hasPersona, setHasPersona] = useState(false);
+  const [cleanFields, setCleanFields] = useState(false);
 
-  const [dataPQRS, setDataPQRS] = useState<any>({}); // Datos para llenar el documento
+  const [checked, setChecked] = useState(false);
+  const [localChecked, setLocalChecked] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+
+  const [contentData, setContentData] = useState<any>({}); // Datos para llenar el documento
   const [matchingData, setMatchingData] = useState<any>({}); // Datos para llenar el documento
 
-  const [personaSelected, setpersona] = useState<string[]>([]);
-  const [perfilselet, setperfilselet] = useState<string[]>([]); // Asumiendo que es un string
+  const [personaSelected, setpersona] = useState<any[]>([]);
   const urlBase = baseURL.replace("/api/", "");
 
-  const dispatch = useAppDispatch();
+  const [radicado_selected, set_radicado_selected] = useState('');
 
-  useEffect(() => {
-    if (personaSelected.length > 0) {
-      setHasPersona(true);
-    }else{
-      setHasPersona(false);
-    }
-  }, [personaSelected])
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     return () => {
@@ -82,23 +79,31 @@ export const GeneradorDocumentos: React.FC = () => {
     };
   }, []);
 
+
   const currentElement = useSelector((state: any) => state.BandejaTareasSlice.currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas);
 
   useEffect(() => {
-    if(currentElement && currentElement.documento){
+    if(currentElement){
       removeFile()
-      if(currentElement.documento.id_consecutivo_tipologia){
-        setCurrentBorrador(currentElement.documento);
-        setHasConsecutivo(true);
+      if(currentElement.documento?.id_consecutivo_tipologia){
+          setCurrentBorrador(currentElement.documento);
+          setHasConsecutivo(true);
+          setUplockFirma(true);
+          if(!currentElement.asignaciones?.firma || currentElement.asignaciones?.persona_firmo){
+            setUplockFirma(false);
+          }
+        setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
       }
-      setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
-    }
 
-    if(currentElement && currentElement.id_pqrsdf){
-      removeFile()
-      search_pqrt(currentElement.id_pqrsdf);
+      if(currentElement.id_pqrsdf){
+        search_pqrt(currentElement.id_pqrsdf);
+      }
+
+      if(currentElement.id_tramite && !currentElement?.id_pqrsdf && !currentElement?.documento){
+        search_opa(currentElement.id_tramite);
+      }
     }
-    console.log(currentElement);
+    // console.log(currentElement);
   }, [currentElement])
 
   const search_pqrt = async (id: string) => {
@@ -108,14 +113,26 @@ export const GeneradorDocumentos: React.FC = () => {
       console.log(response.data);
       if(response?.data?.data){
         control_success('Datos cargados correctamente, elige la plantalla correspondiente');
-        setDataPQRS(response.data.data);
+        setContentData(response.data.data);
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron datos');
     }
   }
 
-  const [radicado_selected, set_radicado_selected] = useState('');
+  const search_opa = async (id: string) => {
+    try {
+      const url = `gestor/bandeja-tareas/opa/tramite/detalle/get/${id}/`;
+      const response = await api.get(url);
+      console.log(response);
+      if(response?.data?.data){
+        control_success('Datos cargados correctamente, elige la plantalla correspondiente');
+        setContentData(response.data.data);
+      }
+    } catch (error: any) {
+      control_error(error?.response?.data?.detail || 'No se encontraron datos');
+    }
+  }
 
   // Función para manejar el cambio en el select
   const handleradicado = (event: {
@@ -135,17 +152,13 @@ export const GeneradorDocumentos: React.FC = () => {
       );
       setTiposRadicado(tipos);
     } catch (error: any) {
-      // console.error('Error al obtener los tipos de radicado:', error);
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron tipos de radicado');
     }
   };
-
-  useEffect(() => console.log(urlFile), [urlFile])
 
   useEffect(() => {
     fetchTiposRadicado();
   }, []);
-
 
   const [idPlantilla, setIdPlantilla] = useState('');
   const [plantillaSeleccionada, setPlantillaSeleccionada] = useState<any>(null);
@@ -155,7 +168,13 @@ export const GeneradorDocumentos: React.FC = () => {
     target: { value: SetStateAction<string> };
   }) => {
     const id_plantilla = event.target.value;
+    cleanTemplate();
+    setUpdateBorrador(false)
+    setSendTemplate(false)
     setHasConsecutivo(false);
+    setShowVariables(false);
+    set_radicado_selected('');
+    setUplockFirma(false);
     setIdPlantilla(id_plantilla)
     const currentPlantilla = plantillas.find(plantilla => plantilla.id_plantilla_doc === id_plantilla);
     if(currentPlantilla){
@@ -186,7 +205,7 @@ export const GeneradorDocumentos: React.FC = () => {
       if(data.length === 0) control_error('No se encontraron plantillas disponibles');
       setPlantillas(data);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron plantillas disponibles');
     }
   };
 
@@ -196,13 +215,45 @@ export const GeneradorDocumentos: React.FC = () => {
       const resp: any = await api.post(url, data);
       if(resp.data.data){
         removeFile()
-        if(updateBorrador || updateDocument || sendTemplate) setCurrentBorrador(resp.data.data)
-        setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
+        if(sendTemplate) setHasConsecutivo(true);
+        if(radicado_selected && sendTemplate && !hasConsecutivo) setHasRadicado(true);
+        if(updateDocument && !hasRadicado && radicado_selected) setHasRadicado(true);
+        if(isUploadDocument) setChecked(false);
+        if(isUploadDocument && !hasRadicado && radicado_selected) setHasRadicado(true);
+        if(updateBorrador || updateDocument || sendTemplate || isUploadDocument) setCurrentBorrador(resp.data.data)
+        if(resp.data.data.archivos_digitales_copia){
+          setFile(`${urlBase}${resp.data.data.archivos_digitales_copia.ruta_archivo}`)
+        }else{
+          setFile(`${urlBase}${resp.data.data.archivos_digitales.ruta_archivo}`)
+        }
       }
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      if(!hasConsecutivo) setSendTemplate(false);
+      control_error(error?.response?.data?.detail || 'Error al generar el documento');
     }
   };
+
+  const uploadDocument = async (data: any) => {
+    try {
+      const url = `/gestor/trd/crear-documento-cargado/`;
+      const resp: any = await api.post(url, data);
+      if(resp.data.data){
+        processPlantilla(resp.data.data, true);
+        setCurrentBorrador(resp.data.data)
+        setIsUploadDocument(true);
+        if(!checked) setHasConsecutivo(true);
+        control_success('Documento cargado correctamente');
+      }
+    } catch (error: any) {
+      control_error(error?.response?.data?.detail || 'Error al cargar el documento');
+    }
+  };
+
+  useEffect(() => {
+    if(isUploadDocument && !checked){
+      setHasConsecutivo(true);
+    }
+  }, [checked])
 
   const createAsignacionDocumento = async (body: any) => {
     try {
@@ -222,18 +273,55 @@ export const GeneradorDocumentos: React.FC = () => {
       const unidadesData = res.data.data;
       setUnidades(unidadesData);
     } catch (error: any) {
-      control_error(error.response.data.detail);
+      control_error(error?.response?.data?.detail || 'No se encontraron unidades organizacionales');
     }
   };
 
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
-    const url = URL.createObjectURL(file);
-    setUrlFile({ name: file.name, url });
+    setUrlFile(file);
+    event.target.value = null;
+  };
+
+  const handleUpload = () => {
+    const data = { plantilla: idPlantilla };
+
+    const formData = new FormData();
+    formData.append('archivo', urlFile);
+    formData.append('data', JSON.stringify(data));
+
+    uploadDocument(formData);
+  };
+
+  const handleChangeCheck = (event: any) => {
+    setChecked(event.target.checked);
+    setLocalChecked(event.target.checked)
+  };
+
+  const handleDelete = () => {
+    if(isUploadDocument){
+      swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Al eliminar el archivo se perderá el progreso actual',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Continuar',
+        cancelButtonText: 'Cancelar',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          cleanTemplate();
+        }
+      });
+    }
+    if(!isUploadDocument){
+      setUrlFile(null);
+    }
   };
 
   const removeFile = () => {
-    setUrlFile(null);
+    setFile('');
   };
 
   useEffect(() => {
@@ -241,35 +329,37 @@ export const GeneradorDocumentos: React.FC = () => {
     fetch_data_plantillas();
   }, []);
 
-  useEffect(() => {
-    if(plantillaSeleccionada?.archivos_digitales){
+  const processPlantilla = (plantilla: any, isUpload?: boolean) => {
+    if(plantilla?.archivos_digitales){
       removeFile()
-      setUpdateBorrador(false)
-      setSendTemplate(false)
-      const url = baseURL.replace("/api/", "");
-      setFile(`${url}${plantillaSeleccionada.archivos_digitales.ruta_archivo}`)
-      let variablesFiltradas = plantillaSeleccionada.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado');
-      let newMatchingData: any = {};
-      if (dataPQRS?.id_PQRSDF) {
-        const keysdataPQRS = Object.keys(dataPQRS.info_persona_titular);
-        console.log(keysdataPQRS);
-        variablesFiltradas = variablesFiltradas.filter((variable: string) => {
-          if (keysdataPQRS.includes(variable) && dataPQRS.info_persona_titular[variable]) {
-            newMatchingData[variable] = dataPQRS.info_persona_titular[variable];
-            return false;
-          }
-          return true;
-        });
+      setFile(`${urlBase}${plantilla.archivos_digitales.ruta_archivo}`)
+      if(Object.keys(plantilla.variables).length){
+        let variablesFiltradas = plantilla.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado' && variable !== 'fecha_consecutivo');
+        let newMatchingData: any = {};
+        if (contentData?.id_PQRSDF || contentData?.id_persona_registra) {
+          const keyscontentData = Object.keys(contentData.info_persona_titular);
+          variablesFiltradas = variablesFiltradas.filter((variable: string) => {
+            if (keyscontentData.includes(variable) && contentData.info_persona_titular[variable]) {
+              newMatchingData[variable] = contentData.info_persona_titular[variable];
+              return false;
+            }
+            return true;
+          });
+        }
+
+        setMatchingData(newMatchingData);
+        setVariablesPlantilla(variablesFiltradas);
       }
-      setMatchingData(newMatchingData);
-      setVariablesPlantilla(variablesFiltradas);
     }
-  }, [plantillaSeleccionada, dataPQRS]);
+  }
+
+  useEffect(() => {
+    processPlantilla(plantillaSeleccionada, false);
+  }, [plantillaSeleccionada, contentData]);
 
   useEffect(() => {
     if (plantillaSeleccionada?.archivos_digitales && hasValue(matchingData)) {
       generateBorrador();
-      console.log('matchingData', matchingData);
     }
   }, [matchingData])
 
@@ -277,14 +367,12 @@ export const GeneradorDocumentos: React.FC = () => {
     return Object.values(obj).some(valor => valor !== null && valor !== undefined && valor !== '');
   }
 
-  // const handleChange = (event: any) => {
-  //   setUnidadSeleccionada(event.target.value as string);
-  //   const selectedId = event.target.value;
-  //   setIdUnidadSeleccionada(selectedId);
-  // };
-
   const handleEdicion = () => {
-    setShowVariables(!showVariables);
+    setShowVariables(true);
+  }
+
+  const cleanForm = () => {
+    setCleanFields(true);
   }
 
   const saveData = (data: any) => {
@@ -292,36 +380,52 @@ export const GeneradorDocumentos: React.FC = () => {
       plantilla: idPlantilla,
       payload: {...data, ...matchingData},
     };
-    console.log(sendData, variablesPlantilla);
     if(hasValue(data) || hasValue(matchingData)){
 
-      if(updateBorrador){
+      if(updateBorrador && !isUploadDocument){
         sendData.variable = 'B'
       }
 
-      if(sendTemplate && !hasConsecutivo && !radicado_selected){
+      if(sendTemplate && !hasConsecutivo && !radicado_selected && !isUploadDocument){
         sendData.variable = 'DC'
-        setHasConsecutivo(true);
       }
 
-      if(radicado_selected && sendTemplate && !hasConsecutivo){
+      if(radicado_selected && sendTemplate && !hasConsecutivo && !isUploadDocument){
         sendData.cod_tipo_radicado = radicado_selected;
         sendData.variable = 'DCR'
-        setHasConsecutivo(true);
-        setHasRadicado(true);
       }
 
-      if(updateDocument){
-        if(!hasRadicado) sendData.cod_tipo_radicado = radicado_selected;
+      if(updateDocument && !isUploadDocument){
+        if(!hasRadicado) {
+          sendData.cod_tipo_radicado = radicado_selected;
+        }
         sendData.variable = 'A'
         sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
         setHasConsecutivo(true);
       }
 
+      if(isUploadDocument){
+        if(radicado_selected && !hasRadicado) {
+          sendData.cod_tipo_radicado = radicado_selected;
+        }
+        sendData.variable = 'AC'
+        sendData.consecutivo = checked;
+        sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
+      }
+
       generateDocument(sendData);
     }else{
       control_error('No se han ingresado datos para actualizar el documento');
-      setSendTemplate(false);
+      if(!hasConsecutivo) setSendTemplate(false);
+      if(isUploadDocument && !variablesPlantilla.length){
+        if(radicado_selected && !hasRadicado) {
+          sendData.cod_tipo_radicado = radicado_selected;
+        }
+        sendData.variable = 'AC'
+        sendData.consecutivo = checked;
+        sendData.id_consecutivo = currentBorrador?.id_consecutivo_tipologia;
+        generateDocument(sendData);
+      }
     }
   }
 
@@ -335,46 +439,111 @@ export const GeneradorDocumentos: React.FC = () => {
     if(sendTemplate){
       setUpdateDocument(true);
     }else{
-      set_radicado_selected('');
+      // set_radicado_selected('');
       setSendTemplate(false);
       setUpdateBorrador(true);
     }
     setIsNewData(true);
   }
 
+  const updateUploadDoc = () => {
+    setIsUploadDocument(true);
+    setUpdateDocument(false);
+    setSendTemplate(false);
+    setUpdateBorrador(false);
+    setIsNewData(true);
+  }
+
   const sendDocument = async () => {
     if(personaSelected.length){
+      setIsSending(true);
       let allSuccess = true;
-      for (const id_persona_asignada of personaSelected) {
+      for (const persona of personaSelected) {
         const body = {
-          id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
-          id_persona_asignada,
+            id_consecutivo: currentBorrador?.id_consecutivo_tipologia,
+            id_persona_asignada: persona.id,
+            firma: persona.require_firma
         }
         const success = await createAsignacionDocumento(body);
         if (!success) allSuccess = false;
       }
       if (allSuccess) {
-        setUplockFirma(true);
+        if(personaSelected[0].require_firma) setUplockFirma(true);
+        setVariablesPlantilla([]);
+        setShowVariables(false);
+        setSendTemplate(false);
+        setUpdateBorrador(false);
+        setHasConsecutivo(false);
+        setHasRadicado(false);
+        setpersona([]);
+        setLideresUnidad([]);
+        setCleanFields(true);
+        setIsUploadDocument(false);
+        set_radicado_selected('');
+
+        setIsSending(false);
         if (personaSelected.length == 1) control_success('El documento se envió correctamente');
         if (personaSelected.length > 1) control_success('Todos los documentos se enviaron correctamente');
-        cleanTemplate();
+
       } else {
+        setIsSending(false);
         if (personaSelected.length == 1) control_error('Ocurrio un error al enviar el documento');
         if (personaSelected.length > 1) control_error('Hubo un error al enviar algunos documentos');
       }
     }
   }
 
+  const alertCleanTemplate = () => {
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción eliminará todo el progreso actual',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        cleanTemplate();
+      }
+    });
+  }
+
+  const handleUploadAlert = () => {
+    swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Al subir un archivo se eliminará el progreso en la plantilla actual',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleUpload();
+      }
+    });
+  };
+
   const cleanTemplate = () => {
-    setPlantillaSeleccionada(null);
+    setIdPlantilla('');
+    setPlantillaSeleccionada('');
+    setVariablesPlantilla([]);
     setFile('');
+    setUrlFile(null);
+    setShowVariables(false);
     setSendTemplate(false);
     setUpdateBorrador(false);
     setHasConsecutivo(false);
-    setHasPersona(false);
+    setHasRadicado(false);
     setpersona([]);
-    setperfilselet([]);
     setLideresUnidad([]);
+    setCleanFields(true);
+    setUplockFirma(false);
+    setIsUploadDocument(false);
+    dispatch(resetBandejaDeTareas());
   }
 
   return (
@@ -425,6 +594,7 @@ export const GeneradorDocumentos: React.FC = () => {
               value={radicado_selected}
               label="Radicado"
               onChange={handleradicado}
+              disabled={!idPlantilla || hasRadicado}
               helperText={"Elige un tipo de radicado"}
             >
               <MenuItem value="">Sin radicado</MenuItem>
@@ -458,24 +628,60 @@ export const GeneradorDocumentos: React.FC = () => {
               </TextField>
               </FormControl>
           </Grid> */}
+            {urlFile &&
+              <>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    value={urlFile.name}
+                    fullWidth
+                    size="small"
+                    label="Documento local"
+                    disabled
+                  />
+                </Grid>
+                <Grid item>
+                  <Button
+                    onClick={handleDelete}
+                    variant='outlined'
+                    startIcon={<DeleteIcon />}
+                  >
+                    Borrar
+                  </Button>
+                </Grid>
+                <Grid item>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={checked}
+                      onChange={handleChangeCheck}
+                      color="primary"
+                      disabled={isUploadDocument}
+                    />
+                  }
+                  label={localChecked ? 'Requiere consecutivo' : 'No requiere consecutivo'}
+                />
+                </Grid>
+                <Grid item>
+                  <Button
+                    variant='contained'
+                    startIcon={<UploadIcon />}
+                    onClick={handleUploadAlert}
+                    disabled={isUploadDocument}
+                  >
+                    Cargar
+                  </Button>
+                </Grid>
+              </>
+            }
             <FormularioGenerador
               exCallback={saveData}
-              sendBorradorData={updateBorrador}
-              sendTemplateData={sendTemplate}
               isNewData={isNewData}
               setIsNewData={setIsNewData}
               variablesPlantilla={variablesPlantilla}
               showVariables={showVariables}
+              cleanFields={cleanFields}
+              setCleanFields={setCleanFields}
             ></FormularioGenerador>
-            <Grid item xs={12}>
-              {urlFile && (
-                <Chip
-                  label={urlFile.name}
-                  onDelete={removeFile}
-                  deleteIcon={<CloseIcon />}
-                />
-              )}
-            </Grid>
             <Grid
               container
               spacing={2}
@@ -483,27 +689,36 @@ export const GeneradorDocumentos: React.FC = () => {
               mx={1}
               sx={{ display: 'flex', justifyContent: 'end' }}
             >
-              <Grid item>
+              {!showVariables && <Grid item>
                 <Button
                   startIcon={<EditIcon />}
                   variant="contained"
                   onClick={handleEdicion}
-                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0 || showVariables}
                 >
-                  {showVariables ? 'Deshabilitar edición campos' : 'Habilitar edición campos'}
+                  Habilitar edición campos
                 </Button>
-              </Grid>
+              </Grid>}
+              {/* {showVariables && plantillaSeleccionada && <Grid item>
+                <Button
+                  startIcon={<CleaningServicesIcon />}
+                  variant="outlined"
+                  onClick={cleanForm}
+                >
+                  Limpiar campos
+                </Button>
+              </Grid>} */}
               <Grid item>
                 <Button
                   startIcon={<FeedIcon />}
                   variant="contained"
                   onClick={generateConsecutivo}
-                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0 || sendTemplate}
+                  disabled={!plantillaSeleccionada || variablesPlantilla.length === 0 || sendTemplate || isUploadDocument}
                 >
                   {radicado_selected ? 'Generar Consecutivo y Radicado' : 'Generar Consecutivo'}
                 </Button>
               </Grid>
-              <Grid item>
+              {!isUploadDocument && <Grid item>
                 <Button
                 startIcon={sendTemplate ? <UpdateIcon /> : <VisibilityIcon />}
                 variant="contained"
@@ -512,15 +727,25 @@ export const GeneradorDocumentos: React.FC = () => {
                 >
                   {sendTemplate ? 'Actualizar Documento' : 'Ver borrador'}
                 </Button>
-              </Grid>
-              {/* <Grid item>
+              </Grid>}
+              {isUploadDocument && <Grid item>
+                <Button
+                startIcon={sendTemplate ? <UpdateIcon /> : <VisibilityIcon />}
+                variant="contained"
+                onClick={updateUploadDoc}
+                disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
+                >
+                  Actualizar Documento
+                </Button>
+              </Grid>}
+              <Grid item>
                 <Button
                   component="label"
                   variant="outlined"
                   startIcon={<CloudUploadIcon />}
-                  disabled={!plantillaSeleccionada}
+                  disabled={!plantillaSeleccionada || isUploadDocument}
                 >
-                  Cargar Plantilla
+                  Cargar Documento
                   <input
                     type="file"
                     style={{ display: "none" }}
@@ -528,23 +753,25 @@ export const GeneradorDocumentos: React.FC = () => {
                     accept=".doc, .docx"
                   />
                 </Button>
-              </Grid> */}
+              </Grid>
               <Grid item>
-                <Button
+                <LoadingButton
                   startIcon={<SaveIcon />}
                   color="success"
                   variant="contained"
                   onClick={sendDocument}
-                  disabled={!plantillaSeleccionada || !hasConsecutivo || !hasPersona}
+                  disabled={!plantillaSeleccionada || !hasConsecutivo || isSending}
+                  loading={isSending}
                 >
                   Enviar Documento
-                </Button>
+                </LoadingButton>
               </Grid>
             </Grid>
       </Grid>
       <BusquedaPersonasGenerador
         personaSelected={personaSelected}
-        setpersona={setpersona}
+        setPersona={setpersona}
+        plantillaSeleccionada={plantillaSeleccionada}
       />
       {file && <Grid
         container
@@ -562,9 +789,11 @@ export const GeneradorDocumentos: React.FC = () => {
         }}
       >
         <VisorDocumentos
+          clean_template={alertCleanTemplate}
           file={file}
           current_borrador={currentBorrador}
-          uplock_firma={hasConsecutivo}
+          uplock_firma={uplockFirma}
+          set_uplock_firma={setUplockFirma}
         />
 
       </Grid>}

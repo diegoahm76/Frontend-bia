@@ -6,11 +6,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import { choicesRepresentacion } from '../../utils/choices';
 import { PropiaComponent } from './enRepresentacionDe/propiaComponent/PropiaComponent';
-import { EmpresaComponent } from './enRepresentacionDe/empresaComponent/EmpresaComponent';
-import { ApoderadoComponent } from './enRepresentacionDe/apoderadoComponent/ApoderadoComponent';
 import { useAppDispatch } from '../../../../../../../../../../hooks';
 import { Title } from '../../../../../../../../../../components';
 import { setCurrentPersonaRespuestaUsuario } from '../../../../../../../respuestaRequerimientoOpa/toolkit/slice/ResRequerimientoOpaSlice';
+import { ApoderadoComponent } from './enRepresentacionDe/apoderadoComp/ApCom';
+import { EmpresaComponent } from './enRepresentacionDe/empresaComponent/EmpresaCompo';
 
 /* eslint-disable @typescript-eslint/naming-convention */
 export const SelccionarPersona = (): JSX.Element => {

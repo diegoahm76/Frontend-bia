@@ -28,8 +28,14 @@ const TablaModalActivosDisponibles: React.FC<props> = ({
   const columns: custom_column[] = [
     {field: 'codigo_bien_espachado', headerName:'Codigo bien', width:150, flex:1},
     {field: 'nombre_bien_espachado', headerName:'Nombre bien', width:150, flex:1},
-    {field: 'id_bien_despachado', headerName:'Id bien', width:150, flex:1},
-    {field: 'nombre_bodega', headerName:'Marca', width:150, flex:1},
+    {field: 'cod_tipo_bien', headerName:'Tipo de bien', width:150, flex:1, renderCell: (params: any) => (
+      params.row?.cod_tipo_bien === 'A' ? 'Activo' : 'Consumo'
+    )},
+    {field: 'doc_identificador_nro', headerName:'Placa / Serial', width:150, flex:1},
+    {field: 'marca', headerName:'Marca', width:150, flex:1},
+    {field: 'descripcion', headerName:'Descripción', width:150, flex:1},
+    // {field: 'id_bien_despachado', headerName:'Id bien', width:150, flex:1},
+    // {field: 'nombre_bodega', headerName:'Marca', width:150, flex:1},
   ]
 
   const handle_seleccionar_filas = (selectionModel: GridRowId[]) => {
@@ -38,15 +44,15 @@ const TablaModalActivosDisponibles: React.FC<props> = ({
       // Encontrar el objeto con el ID correspondiente
       return data.find(bien => bien.id_bien_despachado === id_bien_despachado);
     });
-  
+
     // Filtrar objetos nulos (por si no se encuentra coincidencia)
     const filas_filtradas_validas = filasFiltradas.filter(bien => bien !== undefined);
-  
+
     // Actualizar el estado con las filas seleccionadas
     set_filas_seleccionadas_temp(filas_filtradas_validas);
   };
-  
-  
+
+
   return (
     <>
       <Grid item xs={12} container
@@ -83,6 +89,6 @@ const TablaModalActivosDisponibles: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaModalActivosDisponibles;

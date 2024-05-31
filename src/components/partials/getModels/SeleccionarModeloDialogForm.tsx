@@ -281,7 +281,9 @@ const SeleccionarModeloDialogForm = ({
   };
 
   const select_model = (): void => {
-    const model = models.find((p) => p[row_id] === selected_row[0]);
+    console.log(models, row_id);
+    console.log(selected_row);
+    const model = models.find((p) => (p[row_id] !== null ? p[row_id] : p.id_vehiculo_arrendado) === selected_row[0]);
     if (model !== undefined) {
       dispatch(set_current_model(model));
       console.log('model', model);
@@ -313,7 +315,7 @@ const SeleccionarModeloDialogForm = ({
         }}
       >
         {/* <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
-        
+
             <Divider /> */}
 
         <DialogContent sx={{ mb: '0px' }}>
@@ -398,9 +400,9 @@ const SeleccionarModeloDialogForm = ({
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowId={(row) =>
-                  row[row_id ?? uuid()] === null
-                    ? uuid()
-                    : row[row_id ?? uuid()]
+                  row[row_id] !== null
+                    ? row[row_id]
+                    : row.id_vehiculo_arrendado
                 }
                 selectionModel={selected_row}
               />

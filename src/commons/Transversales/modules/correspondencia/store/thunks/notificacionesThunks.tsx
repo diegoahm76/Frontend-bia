@@ -106,6 +106,8 @@ export const add_pqrsdf_service = (pqrsdf: any): any => {
       console.log(data);
 
       control_success(data.detail);
+      dispatch(set_notification_request({}));
+
       // if (navigate_flag ?? true) {
       //   navigate(
       //     `/app/gestor_documental/pqrsdf/crear_pqrsdf/${data.data.id_PQRSDF}`
@@ -1581,8 +1583,25 @@ export const get_anexos_tarea = (id: any): any => {
       );
       console.log(data);
 
-      dispatch(set_soportes(data.data));
       dispatch(set_exhibits(data.data));
+
+      return data;
+    } catch (error: any) {
+      console.log('add_pqrsdf_service');
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+export const get_anexos_tarea_aux = (id: any): any => {
+  return async (dispatch: Dispatch<any>) => {
+    try {
+      const { data } = await api.get(
+        `gestor/notificaciones/get-datos-notificacion-anexos-registro/${id}/`
+      );
+      console.log(data);
+
+      dispatch(set_soportes(data.data));
 
       return data;
     } catch (error: any) {

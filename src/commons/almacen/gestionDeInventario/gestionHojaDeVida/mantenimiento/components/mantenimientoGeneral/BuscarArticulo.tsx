@@ -6,6 +6,7 @@ import { DataTable } from "primereact/datatable";
 import { Title } from '../../../../../../../components';
 import { useAppDispatch } from "../../../../../../../hooks";
 import { get_article_by_type } from "./thunks/maintenanceThunks";
+import { DataGrid } from "@mui/x-data-grid";
 
 
 interface IProps {
@@ -25,10 +26,24 @@ const BuscarArticuloComponent = ({
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>("");
   const [nombre, set_nombre] = useState<string>("");
+  const [placa, set_placa] = useState<string>("");
+  const [marca, set_marca] = useState<string>("");
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
   const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState<Record<string, any> | null>(null);
   const [columna_hidden, set_columna_hidden] = useState<boolean>(false);
+
+  let identificador_nro = grid_busqueda.length > 0 ? (grid_busqueda[0].cod_tipo_activo == 'Veh' ? 'Placa' : 'Serial') : 'Placa - Serial';
+
+  const columns = [
+    // { field: 'id_bien', headerName: 'Id', width: 200 },
+    { field: 'codigo_bien', headerName: 'Código', width: 160 },
+    { field: 'nombre', headerName: 'Nombre', width: 200 },
+    { field: 'doc_identificador_nro', headerName: identificador_nro, width: 100, renderCell: (params: any) => params.value.toUpperCase()},
+    { field: 'marca', headerName: 'Marca', width: 200, renderCell: (params: any) => params.value ? params.value : 'Sin Marca'},
+    { field: 'descripcion', headerName: 'Descripcion', width: 200 },
+    { field: 'estado', headerName: 'Estado', width: 200, renderCell: (params: any) => params.value ? params.value : 'Sin Estado'},
+  ];
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
@@ -38,12 +53,26 @@ const BuscarArticuloComponent = ({
     set_nombre(e.target.value);
   }
 
+  const on_change_placa: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_placa(e.target.value);
+  }
+
+  const on_change_marca: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_marca(e.target.value);
+  }
+
   const accionar_busqueda: any = () => {
-    if (nombre === '' && codigo === '') {
+    console.log(grid_busqueda_before);
+    if (nombre === '' && codigo === '' && placa === '' && marca === '') {
       set_grid_busqueda(grid_busqueda_before);
       return
     }
-    const data_filter = grid_busqueda_before.filter(gv => ((Boolean(gv.nombre.includes(nombre))) && gv.codigo_bien.toString().includes(codigo)));
+    const data_filter = grid_busqueda_before.filter(gv => (
+      (gv.nombre?.toLowerCase()?.includes(nombre.toLowerCase()) ?? false) &&
+      gv.codigo_bien.toString().toLowerCase().includes(codigo.toLowerCase()) &&
+      (gv.doc_identificador_nro?.toLowerCase()?.includes(placa.toLowerCase()) ?? false) &&
+      (gv.marca?.toLowerCase()?.includes(marca.toLowerCase()) ?? false)
+    ));
     set_grid_busqueda(data_filter);
   }
 
@@ -79,7 +108,7 @@ const BuscarArticuloComponent = ({
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} md={2}>
                 <TextField
                   label="Código"
                   helperText="Ingrese código"
@@ -89,7 +118,7 @@ const BuscarArticuloComponent = ({
                   onChange={on_change_codigo}
                 />
               </Grid>
-              <Grid item xs={12} sm={4}>
+              <Grid item xs={12} md={3}>
                 <TextField
                   label="Nombre"
                   helperText="Ingrese nombre"
@@ -99,12 +128,32 @@ const BuscarArticuloComponent = ({
                   onChange={on_change_nombre}
                 />
               </Grid>
+              <Grid item xs={12} md={2}>
+                <TextField
+                  label="Placa / Serial"
+                  helperText="Ingrese placa"
+                  size="small"
+                  fullWidth
+                  value={placa}
+                  onChange={on_change_placa}
+                />
+              </Grid>
+              <Grid item xs={12} md={3}>
+                <TextField
+                  label="Marca"
+                  helperText="Ingrese marca"
+                  size="small"
+                  fullWidth
+                  value={marca}
+                  onChange={on_change_marca}
+                />
+              </Grid>
               <Stack
                 direction="row"
                 justifyContent="flex-end"
                 sx={{ mt: '17px' }}
               >
-                <Grid item xs={12} sm={4}>
+                <Grid item ml={1}>
                   <Button
                     color='primary'
                     variant='contained'
@@ -129,17 +178,30 @@ const BuscarArticuloComponent = ({
               <Grid item xs={12} sm={12}>
                 <Title title='Resultados' />
                 <Box sx={{ width: '100%', mt: '20px' }}>
-                  <div className="card">
-                    <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
-                      selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value as any); }} dataKey="id_bien"
-                    >
-                      <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
-                      <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>
-                      <Column field="nombre" header="Nombre" style={{ width: '25%' }}></Column>
-                      <Column field="doc_identificador_nro" header="Placa" style={{ width: '25%' }} hidden={columna_hidden}></Column>
-                      <Column field="doc_identificador_nro" header="Serial" style={{ width: '25%' }} hidden={!columna_hidden}></Column>
-                    </DataTable>
-                  </div>
+                  <DataGrid
+                    density="compact"
+                    autoHeight
+                    rows={grid_busqueda ?? []}
+                    columns={columns}
+                    pageSize={8}
+                    rowsPerPageOptions={[8]}
+                    rowHeight={60}
+                    getRowId={(row) => row.id_bien}
+                    onSelectionModelChange={(newSelection) => {
+                      const selected_row = grid_busqueda.find((row) => row.id_bien === newSelection[0]);
+                      set_selected_product(selected_row);
+                    }}
+                    selectionModel={selected_product ? [selected_product.id_bien] : []}
+                  />
+                  {/* <DataTable value={grid_busqueda} sortField="nombre" stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]} tableStyle={{ minWidth: '50rem' }}
+                    selectionMode="single" selection={selected_product} onSelectionChange={(e) => { set_selected_product(e.value as any); }} dataKey="id_bien"
+                  >
+                    <Column field="id_bien" header="Id" style={{ width: '25%' }}></Column>
+                    <Column field="codigo_bien" header="Código" style={{ width: '25%' }}></Column>
+                    <Column field="nombre" header="Nombre" style={{ width: '25%' }}></Column>
+                    <Column field="doc_identificador_nro" header="Placa" style={{ width: '25%' }} hidden={columna_hidden}></Column>
+                    <Column field="doc_identificador_nro" header="Serial" style={{ width: '25%' }} hidden={!columna_hidden}></Column>
+                  </DataTable> */}
                 </Box>
               </Grid>
             </Grid>

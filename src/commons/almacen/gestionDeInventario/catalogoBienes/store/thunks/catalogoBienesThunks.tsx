@@ -72,8 +72,10 @@ export const add_bien_service: any = (bien: any) => {
         visible_solicitudes: visible_solicitudes_const,
       };
       //  console.log('')(new_obj)
-      const { data } = await api.post(
-        'almacen/bienes/catalogo-bienes/post/',
+      // const { data } = await api.post(
+      const { data } = await api.put(
+        // 'almacen/bienes/catalogo-bienes/post/',
+        'almacen/bienes/catalogo-bienes/create-update/',
         new_obj,
       );
       dispatch(get_bienes_service());

@@ -620,34 +620,36 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                       </Avatar>
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Gestionar tarea">
-                    <IconButton
-                      onClick={() => {
-                        //set_tarea_is_active(true);
-                        setSelectedPqr(rowData);
-                        set_tipo_tarea('');
-                      }}
-                      href={`/#/app/transversal/correspondencia/gestionar_tarea_solicitud_correspondencia/`}
-                    >
-                      <Avatar
-                        sx={{
-                          width: 24,
-                          height: 24,
-                          background: '#fff',
-                          border: '2px solid',
+                  {notification_request?.cod_estado !== 'NT' && (
+                    <Tooltip title="Gestionar tarea">
+                      <IconButton
+                        onClick={() => {
+                          //set_tarea_is_active(true);
+                          setSelectedPqr(rowData);
+                          set_tipo_tarea('');
                         }}
-                        variant="rounded"
+                        href={`/#/app/transversal/correspondencia/gestionar_tarea_solicitud_correspondencia/`}
                       >
-                        <AssignmentIcon
+                        <Avatar
                           sx={{
-                            color: 'primary.main',
-                            width: '18px',
-                            height: '18px',
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
                           }}
-                        />
-                      </Avatar>
-                    </IconButton>
-                  </Tooltip>
+                          variant="rounded"
+                        >
+                          <AssignmentIcon
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </>
               )}
             {rowData?.cod_estado_asignacion === 'Re' &&
@@ -757,12 +759,12 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
     getValues: get_values,
   } = useForm<any>();
   useEffect(() => {
+    dispatch(get_tipos_documento_notification());
     dispatch(set_notification_request({}));
     dispatch(set_notification_requests([]));
     dispatch(set_notification_per_request({}));
     dispatch(set_notifications_per_request([]));
     dispatch(get_status_list_service());
-    dispatch(get_tipos_documento_notification());
     dispatch(get_groups_list_service());
     dispatch(get_status_asignation_list_service());
     void dispatch(get_estados_notificacion());
@@ -975,8 +977,9 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
             <Grid item xs={12} md={6}>
               <FormButton
                 disabled={
-                  (notification_request?.id_notificacion_correspondencia ===
-                    null ||
+                  (notification_request?.cod_estado === 'NT' ||
+                    notification_request?.id_notificacion_correspondencia ===
+                      null ||
                     notification_request?.id_persona_asignada !==
                       userinfo.id_persona) &&
                   (notification_request?.cod_estado_asignacion ?? 'Pe') !== 'Ac'

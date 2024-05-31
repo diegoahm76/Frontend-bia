@@ -9,6 +9,18 @@ import { Footer } from '../components/PagosEnLinea/Footer';
 export const PagosEnLineaScreen: React.FC = () => {
   return (
     <>
+    <Grid
+      container
+      direction={'column'}
+      padding={2}
+      sx={{
+        minHeight: '100vh',
+        backgroundColor: '#042f4a',
+        backgroundImage: `linear-gradient(269deg, rgba(20, 146, 230, 0.7) 0%, rgba(6, 47, 72, 0.7) 34%, rgba(54, 89, 22, 0.7) 100%), url(../image/imagenes/FondoCormaca.jpg)`,
+        backgroundSize: '100% 100%',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
       <Grid
         container
         sx={{
@@ -51,7 +63,8 @@ export const PagosEnLineaScreen: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-      <Footer />
+    </Grid>
+      {/* <Footer /> */}
     </>
   );
 };
