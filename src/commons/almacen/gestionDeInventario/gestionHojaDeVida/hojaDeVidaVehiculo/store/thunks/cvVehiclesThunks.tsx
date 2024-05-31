@@ -62,7 +62,8 @@ export const get_maintenance_vehicle = (id: number | null): any => {
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-
+      //TODO: Agregado para prueba
+      dispatch(set_maintenance_vehicle([]));
       return error as AxiosError;
     }
   };
@@ -147,7 +148,7 @@ export const get_cv_vehicle_id = (id: number): any => {
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-
+      dispatch(set_current_cv_vehicle({}));
       return error as AxiosError;
     }
   };
@@ -165,7 +166,7 @@ export const get_cv_vehicle_arrendado_id = (id: number | null): any => {
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
-
+      dispatch(set_current_cv_vehicle({}));
       return error as AxiosError;
     }
   };

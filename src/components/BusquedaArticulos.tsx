@@ -115,21 +115,16 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
       headerName: 'Tipo Activo',
       minWidth: 160,
       renderCell: (params: any) => {
-        if (params.row.cod_tipo_activo === 'com') {
-          return 'Computadores';
-        } else if (params.row?.cod_tipo_activo === 'CyE') {
-          return 'Construcciones y Edificaciones';
-        } else if (params.row?.cod_tipo_activo === 'Int') {
-          return 'Intangibles';
-        } else if (params.row?.cod_tipo_activo === 'OAc') {
-          return 'Otros Activos';
-        } else if (params.row?.cod_tipo_activo === 'Ter') {
-          return 'Terrenos';
-        } else if (params.row?.cod_tipo_activo === 'Veh') {
-          return 'Vehículos';
-        } else {
-          return 'N/A';
-        }
+        const tipo_activo: any = {
+          'Com': 'Computadores',
+          'CyE': 'Construcciones y Edificaciones',
+          'Int': 'Intangibles',
+          'OAc': 'Otros Activos',
+          'Ter': 'Terrenos',
+          'Veh': 'Vehículos'
+        };
+
+        return tipo_activo[params.row.cod_tipo_activo] || 'N/A';
       }
     },
     {

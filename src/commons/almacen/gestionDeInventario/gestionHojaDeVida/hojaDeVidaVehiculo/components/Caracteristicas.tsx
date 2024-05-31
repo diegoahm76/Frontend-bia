@@ -3,6 +3,7 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { set_current_cv_vehicle, set_current_vehicles, set_vehicles } from '../store/slices/indexCvVehiculo';
 import { useEffect, useState } from 'react';
+import { baseURL } from '../../../../../../api/axios';
 
 interface IProps {
     title: string;
@@ -17,9 +18,9 @@ const EspecificacionesVehicle = ({
     get_values,
     watch
 }: IProps) => {
+    const url_base = baseURL.replace("/api/", "");
 
-
-    const { vehicles, current_cv_vehicle } = useAppSelector((state) => state.cve);
+    const { vehicles, current_cv_vehicle, current_vehicle } = useAppSelector((state) => state.cve);
     const { marcas } = useAppSelector((state) => state.cv);
     const dispatch = useAppDispatch();
     const [file, set_file] = useState<any>(null);
@@ -46,39 +47,42 @@ const EspecificacionesVehicle = ({
             if ('name' in file) {
                 //  console.log('')(file.name)
                 set_file_name(file.name)
-                dispatch(set_current_cv_vehicle({
-                    ...current_cv_vehicle,
-                    id_marca: get_values("id_marca"),
-                    estado: get_values("estado"),
-                    color: get_values("color"),
-                    doc_identificador_nro: get_values("doc_identificador_nro"),
-                    cod_tipo_vehiculo: get_values("cod_tipo_vehiculo"),
-                    tiene_platon: get_values("tiene_platon"),
-                    capacidad_pasajeros: get_values("capacidad_pasajeros"),
-                    linea: get_values("linea"),
-                    tipo_combustible: get_values("tipo_combustible"),
-                    // es_arrendado: get_values("es_arrendado"),
-                    ultimo_kilometraje: get_values("ultimo_kilometraje"),
-                    fecha_ultimo_kilometraje: get_values("fecha_ultimo_kilometraje"),
-                    fecha_adquisicion: get_values("fecha_adquisicion"),
-                    fecha_vigencia_garantia: get_values("fecha_vigencia_garantia"),
-                    numero_motor: get_values("numero_motor"),
-                    numero_chasis: get_values("numero_chasis"),
-                    cilindraje: get_values("cilindraje"),
-                    transmision: get_values("transmision"),
-                    dimension_llantas: get_values("dimension_llantas"),
-                    capacidad_extintor: get_values("capacidad_extintor"),
-                    tarjeta_operacion: get_values("tarjeta_operacion"),
-                    observaciones_adicionales: get_values("observaciones_adicionales"),
-                    es_agendable: get_values("es_agendable"),
-                    en_circulacion: get_values("en_circulacion"),
-                    fecha_circulacion: get_values("fecha_circulacion"),
-                    id_articulo: get_values("id_articulo"),
-                    id_vehiculo_arrendado: get_values("id_vehiculo_arrendado"),
-                    id_proveedor: get_values("id_proveedor"),
-                    tipo_vehiculo: get_values("tipo_vehiculo"),
-                    ruta_imagen_foto: file
-                }))
+                //TODO: Cambiar para actualizar la imágen
+                if(current_cv_vehicle?.id_hoja_de_vida){
+                    dispatch(set_current_cv_vehicle({
+                        ...current_cv_vehicle,
+                        id_marca: get_values("id_marca"),
+                        estado: get_values("estado"),
+                        color: get_values("color"),
+                        // doc_identificador_nro: get_values("doc_identificador_nro"),
+                        cod_tipo_vehiculo: get_values("cod_tipo_vehiculo"),
+                        tiene_platon: get_values("tiene_platon"),
+                        capacidad_pasajeros: get_values("capacidad_pasajeros"),
+                        linea: get_values("linea"),
+                        tipo_combustible: get_values("tipo_combustible"),
+                        // es_arrendado: get_values("es_arrendado"),
+                        ultimo_kilometraje: get_values("ultimo_kilometraje"),
+                        fecha_ultimo_kilometraje: get_values("fecha_ultimo_kilometraje"),
+                        fecha_adquisicion: get_values("fecha_adquisicion"),
+                        fecha_vigencia_garantia: get_values("fecha_vigencia_garantia"),
+                        numero_motor: get_values("numero_motor"),
+                        numero_chasis: get_values("numero_chasis"),
+                        cilindraje: get_values("cilindraje"),
+                        transmision: get_values("transmision"),
+                        dimension_llantas: get_values("dimension_llantas"),
+                        capacidad_extintor: get_values("capacidad_extintor"),
+                        tarjeta_operacion: get_values("tarjeta_operacion"),
+                        observaciones_adicionales: get_values("observaciones_adicionales"),
+                        es_agendable: get_values("es_agendable"),
+                        en_circulacion: get_values("en_circulacion"),
+                        fecha_circulacion: get_values("fecha_circulacion"),
+                        id_articulo: get_values("id_articulo"),
+                        id_vehiculo_arrendado: get_values("id_vehiculo_arrendado"),
+                        id_proveedor: get_values("id_proveedor"),
+                        tipo_vehiculo: get_values("tipo_vehiculo"),
+                        ruta_imagen_foto: file
+                    }))
+                }
 
             }
         }
@@ -86,8 +90,7 @@ const EspecificacionesVehicle = ({
 
 
     useEffect(() => {
-        if (current_cv_vehicle.id_hoja_de_vida
-            !== null) {
+        if (current_cv_vehicle?.id_hoja_de_vida) {
             if (current_cv_vehicle.ruta_imagen_foto !== null) {
                 const file = current_cv_vehicle.ruta_imagen_foto
                 //  console.log('')(file)
@@ -98,9 +101,12 @@ const EspecificacionesVehicle = ({
                     }
                 } else {
                     set_file_name(String(current_cv_vehicle.ruta_imagen_foto))
-                    set_selected_image_aux(current_cv_vehicle.ruta_imagen_foto);
+                    set_selected_image_aux(`${url_base}${current_cv_vehicle.ruta_imagen_foto}`);
                 }
 
+            }else{
+                set_selected_image_aux(null);
+                set_file_name("");
             }
         }
     }, [current_cv_vehicle]);
@@ -161,7 +167,7 @@ const EspecificacionesVehicle = ({
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Placa",
                             type: "text",
-                            disabled: current_cv_vehicle?.doc_identificador_nro,
+                            disabled: current_cv_vehicle?.doc_identificador_nro || current_vehicle?.doc_identificador_nro,
                             helper_text: ""
                         },
                         {

@@ -28,8 +28,6 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
 
   useEffect(() => {
     void dispatch(get_marca_service());
-
-
   }, []);
 
   useEffect(() => {
@@ -74,7 +72,6 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     form_data.append('id_marca', data.id_marca ?? null);
     form_data.append('id_articulo', (data.id_articulo || current_computer.id_bien || '' ).toString());
     if(data.ruta_imagen_foto && typeof data.ruta_imagen_foto  !== "string" ) {
-      console.log('gola')
       form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
     }
     if (data.id_hoja_de_vida === null) {
@@ -96,7 +93,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
     }else{
       reset_cv_computer({
         id_hoja_de_vida: null,
-        id_articulo: null,
+        // id_articulo: null,
         codigo_bien: current_computer?.codigo_bien ?? "",
         nombre: "",
         id_marca: null,
@@ -168,7 +165,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
             <FormButton
               variant_button="contained"
               on_click_function={handle_submit(on_submit)}
-              icon_class={action === "create" ? <SaveIcon /> : <EditIcon />}
+              icon_class={action === "crear" ? <SaveIcon /> : <EditIcon />}
               label={action}
               type_button="button"
             />
