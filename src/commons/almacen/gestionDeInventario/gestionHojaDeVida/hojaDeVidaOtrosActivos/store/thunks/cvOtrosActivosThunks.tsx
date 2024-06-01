@@ -101,6 +101,7 @@ export const get_cv_others_id: (id: any) => any = (id: any) => {
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
+            dispatch(set_current_cv_others({}));
             return error as AxiosError;
         }
     };
@@ -182,7 +183,7 @@ export const get_maintenance_other = (id: number | null): any => {
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-
+            dispatch(set_maintenance_other([]));
             return error as AxiosError;
         }
     };

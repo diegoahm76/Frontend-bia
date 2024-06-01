@@ -142,6 +142,7 @@ const ModalBusquedaFuncionarios: React.FC<props> = ({
   const busqueda_responsable_obtenida = useRef(false);
   const busqueda_operario_obtenida = useRef(false);
   useEffect(() => {
+    console.log(tipo_funcionario)
     if (!busqueda_responsable_obtenida.current && mostrar_modal_busqueda_funcionarios) {
       if (tipo_funcionario === 'actual' || tipo_funcionario === 'reasignado') {
         get_obtener_responsables_fc();
@@ -175,6 +176,8 @@ const ModalBusquedaFuncionarios: React.FC<props> = ({
   }
 
   const enviar_funcionario_seleccionado = () => {
+    console.log(tipo_funcionario)
+    console.log(funcionario_responsable_reasignado_temp)
     if (tipo_funcionario === 'reasignado') {
       if (Object.keys(funcionario_responsable_reasignado_temp).length !== 0) {
         set_mostrar_modal_busqueda_funcionarios(false);
@@ -194,7 +197,7 @@ const ModalBusquedaFuncionarios: React.FC<props> = ({
         control_error('Haga clic en una fila de la tabla para seleccionar el responsable');
       }
     }
-    
+
     if (tipo_funcionario === 'operario') {
       if (Object.keys(funcionario_operario_temp).length !== 0) {
         set_mostrar_modal_busqueda_funcionarios(false);

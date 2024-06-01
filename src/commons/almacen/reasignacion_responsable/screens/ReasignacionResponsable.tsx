@@ -63,6 +63,8 @@ const ReasingnacionResponsable = () => {
 
   useEffect(() => {
     // SI hay data de funcionario responsable seleccionado se rellenará los inputs
+    console.log(funcionario_responsable_reasignado_seleccionado)
+    console.log(funcionario_operario_seleccionado)
     if (Object.keys(funcionario_responsable_reasignado_seleccionado).length !== 0) {
       set_inputs_funcionarios({
         ...inputs_funcionarios,
@@ -92,7 +94,13 @@ const ReasingnacionResponsable = () => {
         apellidos_funcionario_operario: funcionario_operario_seleccionado.primer_apellido,
       });
     }
+
+
   }, [funcionario_operario_seleccionado, funcionario_responsable_reasignado_seleccionado, funcionario_responsable_actual_seleccionado]);
+
+  useEffect(() => {
+    console.log(inputs_funcionarios)
+  }, [inputs_funcionarios])
 
   /**
  * Función para cambiar de tab - Pestaña
