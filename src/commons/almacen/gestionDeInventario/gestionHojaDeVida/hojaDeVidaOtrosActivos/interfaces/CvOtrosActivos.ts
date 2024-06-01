@@ -8,7 +8,7 @@ export interface Icv {
 }
 
 export interface IcvOthers {
-  id_hoja_de_vida: number | null;
+  id_hoja_de_vida?: number | null;
   especificaciones_tecnicas?: string | null;
   caracteristicas_fisicas?: string | null;
   observaciones_adicionales?: string | null;

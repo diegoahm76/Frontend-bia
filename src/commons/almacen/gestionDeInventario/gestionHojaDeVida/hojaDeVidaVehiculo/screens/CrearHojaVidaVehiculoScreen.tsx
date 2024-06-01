@@ -23,7 +23,7 @@ import dayjs from 'dayjs';
 export function CrearHojaVidaVehiculoScreen(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { current_cv_vehicle, } = useAppSelector((state) => state.cve);
+  const { current_cv_vehicle, current_vehicle} = useAppSelector((state) => state.cve);
   const [action, set_action] = useState<string>("guardar");
   const { control: control_vehicle, handleSubmit: handle_submit, reset: reset_vehicle, getValues: get_values, watch } = useForm<FormValues>();
 
@@ -37,11 +37,13 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
   }, [current_cv_vehicle]);
 
   useEffect(() => {
-    if (current_cv_vehicle.id_hoja_de_vida !== null) {
+    if (current_cv_vehicle?.id_hoja_de_vida) {
       set_action("editar")
+    }else{
+      set_action("crear")
     }
     console.log(current_cv_vehicle);
-    if (current_cv_vehicle.id_articulo !== null) {
+    if (current_cv_vehicle?.id_articulo) {
       void dispatch(get_maintenance_vehicle(current_cv_vehicle.id_articulo ?? 0))
     }
 
@@ -77,15 +79,15 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
     if (data.fecha_circulacion !== null) {
       form_data.append('fecha_circulacion', dayjs(data.fecha_circulacion).format('YYYY-MM-DD'));
     }
-    form_data.append('id_articulo', data.id_articulo);
+    form_data.append('id_articulo', data.id_articulo || current_vehicle?.id_bien || '');
     form_data.append('id_vehiculo_arreandado', data?.id_vehiculo_arrendado)
     form_data.append('doc_identificador_nro', data.doc_identificador_nro
     );
     form_data.append('codigo_bien', data.codigo_bien);
     form_data.append('tipo_vehiculo', data.tipo_vehiculo);
     form_data.append('id_marca', data.id_marca);
-    if (data.ruta_imagen_foto !== null) {
-    form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+    if(data.ruta_imagen_foto && typeof data.ruta_imagen_foto  !== "string" ) {
+      form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
     }
     if (data.id_hoja_de_vida === null) {
       void dispatch(create_cv_vehicles_service(form_data, navigate));
@@ -103,6 +105,31 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
   const programacion_mantenimiento = (): void => {
     navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_vehiculos');
   };
+
+  useEffect(() => {
+    if(current_cv_vehicle?.id_hoja_de_vida){
+      reset_vehicle(current_cv_vehicle);
+    }else{
+      reset_vehicle({
+        id_hoja_de_vida: null,
+        cod_tipo_vehiculo: '',
+        tiene_platon: null,
+        capacidad_pasajeros: null,
+        color: '',
+        es_arrendado: null,
+        linea: '',
+        tipo_combustible: '',
+        es_agendable: null,
+        fecha_adquisicion: '',
+        codigo_bien: current_vehicle?.codigo_bien ?? "",
+        doc_identificador_nro: current_vehicle?.doc_identificador_nro ?? "",
+        numero_motor: '',
+        numero_chasis: '',
+        ultimo_kilometraje: null,
+        // cilindra
+      })
+    }
+  }, [current_cv_vehicle])
 
   return (
     <>
@@ -127,7 +154,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
         <EspecificacionesVehicle
           control_vehicle={control_vehicle} get_values={get_values} watch={watch} title={''} />
         <EspecificacionAdicional control_vehicle={control_vehicle} get_values={get_values} />
-        {current_cv_vehicle.id_articulo && <Mantenimiento_vehicle />}
+        {current_cv_vehicle?.id_articulo && <Mantenimiento_vehicle />}
 
 
         <Grid
@@ -152,6 +179,7 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
               <FormButton
                 variant_button="outlined"
                 on_click_function={delete_hoja_vida}
+                disabled={!current_cv_vehicle?.id_hoja_de_vida}
                 icon_class={<CloseIcon />}
                 label={"Eliminar"}
                 type_button="button"
