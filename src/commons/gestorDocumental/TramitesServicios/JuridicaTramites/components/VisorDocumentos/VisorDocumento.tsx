@@ -110,7 +110,7 @@ export const VisorDocumento: React.FC = () => {
   // Consulta las opciones de tipo de pago
   const consulta_informacion_opa = async () => {
     try {
-      let url = `/gestor/panel_juridica/opas/informacion/get/${id}/`;
+      let url = `gestor/panel_juridica/tramites/informacion/get/${id}/`;
       const res = await api.get(url);
       const dataConsulta = res.data.data;
       set_form_data(dataConsulta);
@@ -130,7 +130,7 @@ export const VisorDocumento: React.FC = () => {
 
      const response = await api.post(`/gestor/panel_juridica/opas/revision/create/${id}/`, body);
     const data = response.data;
-    control_success('Completada correctamente');
+    control_success('Se ha finalizado la revisión jurídica de manera correcta');
     console.log(data);
       console.log(data);
     } catch (error: any) {

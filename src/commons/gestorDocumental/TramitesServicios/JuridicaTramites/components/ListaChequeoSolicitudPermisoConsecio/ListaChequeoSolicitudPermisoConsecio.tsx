@@ -94,7 +94,7 @@ export const ControlledAccordions = () => {
     // Función para obtener las opciones de pago desde la API
     const choiseTipoPago = async () => {
         try {
-            let url = '/gestor/choices/cod-tipo-consecutivo/';
+            let url = 'gestor/choices/cod-tipo-consecutivo/';
             const res = await api.get(url);
             const dataConsulta = res.data.data;
             setChoicesPago(dataConsulta);
@@ -145,7 +145,7 @@ export const ControlledAccordions = () => {
 
     const consulta_informacion_opa = async () => {
         try {
-            let url = `/tramites/opa/tramites/anexos/get/${id}/`;
+            let url = `tramites/opa/tramites/anexos/get/${id}/`;
             const res = await api.get(url);
             const dataConsulta = res.data.data;
             set_form_data(dataConsulta);
