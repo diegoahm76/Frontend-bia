@@ -21,6 +21,7 @@ import Mantenimiento from '../components/Mantenimientos';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function CrearHojaVidaComputoScreen(): JSX.Element {
   const [action, set_action] = useState<string>("guardar");
+  const [file, set_file] = useState<any>(null);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { current_cv_computer, current_computer } = useAppSelector((state) => state.cv);
@@ -31,63 +32,13 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
   }, []);
 
   useEffect(() => {
+    set_file(null);
     if (current_cv_computer?.id_hoja_de_vida) {
       set_action("editar")
     }else{
       set_action("crear")
     }
-    if (current_cv_computer?.id_articulo !== null) {
-      console.log('holasasa')
-      void dispatch(get_maintenance(current_cv_computer.id_articulo ?? 0))
-    }
-  }, [current_cv_computer]);
 
-  const programacion_mantenimiento = (): void => {
-    navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_computadores');
-  };
-
-
-
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const on_submit = (data: FormValues): void => {
-    console.log('New', data)
-    const form_data: any = new FormData();
-    form_data.append('sistema_operativo', data.sistema_operativo);
-    form_data.append('suite_ofimatica', data.suite_ofimatica);
-    form_data.append('antivirus', data.antivirus);
-    form_data.append('color', data.color);
-    form_data.append('tipo_de_equipo', data.tipo_de_equipo);
-    form_data.append('tipo_almacenamiento', data.tipo_almacenamiento);
-    form_data.append('capacidad_almacenamiento', data.capacidad_almacenamiento);
-    form_data.append('procesador', data.procesador);
-    form_data.append('memoria_ram', data.memoria_ram);
-    form_data.append('estado', data.estado);
-    form_data.append('doc_identificador_nro', data.doc_identificador_nro);
-    form_data.append(
-      'observaciones_adicionales',
-      data.observaciones_adicionales
-    );
-    form_data.append('otras_aplicaciones', data.otras_aplicaciones);
-    form_data.append('id_marca', data.id_marca ?? null);
-    form_data.append('id_articulo', (data.id_articulo || current_computer.id_bien || '' ).toString());
-    if(data.ruta_imagen_foto && typeof data.ruta_imagen_foto  !== "string" ) {
-      form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
-    }
-    if (data.id_hoja_de_vida === null) {
-      void dispatch(create_cv_computers_service(form_data, navigate));
-    } else {
-      void dispatch(update_cv_computers_service(data.id_hoja_de_vida, form_data));
-    }
-  };
-
-  const delete_hoja_vida = (): void => {
-    if (current_cv_computer?.id_hoja_de_vida !== null && current_cv_computer?.id_hoja_de_vida !== undefined) {
-      void dispatch(delete_cv_computers_service(current_cv_computer?.id_hoja_de_vida));
-    }
-  };
-
-  useEffect(() => {
     if(current_cv_computer?.id_hoja_de_vida){
       reset_cv_computer(current_cv_computer);
     }else{
@@ -114,7 +65,58 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
       });
       console.log('reset')
     }
+
+    if (current_cv_computer?.id_articulo !== null) {
+      void dispatch(get_maintenance(current_cv_computer.id_articulo ?? 0))
+    }
   }, [current_cv_computer]);
+
+  const programacion_mantenimiento = (): void => {
+    navigate('/app/almacen/gestion_inventario/mantenimiento_equipos/programacion_mantenimiento_computadores');
+  };
+
+
+
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const on_submit = (data: FormValues): void => {
+    console.log('New', data)
+    const form_data: any = new FormData();
+    form_data.append('sistema_operativo', data.sistema_operativo || '');
+    form_data.append('suite_ofimatica', data.suite_ofimatica || '');
+    form_data.append('antivirus', data.antivirus || '');
+    form_data.append('color', data.color || '');
+    form_data.append('tipo_de_equipo', data.tipo_de_equipo || '');
+    form_data.append('tipo_almacenamiento', data.tipo_almacenamiento || '');
+    form_data.append('capacidad_almacenamiento', data.capacidad_almacenamiento || '');
+    form_data.append('procesador', data.procesador || '');
+    form_data.append('memoria_ram', data.memoria_ram || null);
+    form_data.append('estado', data.estado || '');
+    form_data.append('doc_identificador_nro', data.doc_identificador_nro || '');
+    form_data.append(
+      'observaciones_adicionales',
+      data.observaciones_adicionales || ''
+    );
+    form_data.append('otras_aplicaciones', data.otras_aplicaciones || '');
+    form_data.append('id_marca', data.id_marca ?? null);
+    form_data.append('id_articulo', (data.id_articulo || current_computer.id_bien || '' ).toString());
+    if(file) {
+      form_data.append('ruta_imagen_foto', file);
+    }
+    if (data.id_hoja_de_vida === null) {
+      void dispatch(create_cv_computers_service(form_data, navigate));
+      reset_cv_computer();
+      set_file(null);
+    } else {
+      void dispatch(update_cv_computers_service(data.id_hoja_de_vida, form_data));
+    }
+  };
+
+  const delete_hoja_vida = (): void => {
+    if (current_cv_computer?.id_hoja_de_vida !== null && current_cv_computer?.id_hoja_de_vida !== undefined) {
+      void dispatch(delete_cv_computers_service(current_cv_computer?.id_hoja_de_vida));
+    }
+  };
 
   return (
 
@@ -140,6 +142,8 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
         <SeleccionarComputer />
 
         <Especificaciones
+          file={file}
+          set_file={set_file}
           control_computo={control_cv_computo}
           get_values={get_values}
           title="Especificaciones físicas" />
@@ -167,6 +171,7 @@ export function CrearHojaVidaComputoScreen(): JSX.Element {
               on_click_function={handle_submit(on_submit)}
               icon_class={action === "crear" ? <SaveIcon /> : <EditIcon />}
               label={action}
+              disabled={!current_computer?.id_bien}
               type_button="button"
             />
           </Grid>
