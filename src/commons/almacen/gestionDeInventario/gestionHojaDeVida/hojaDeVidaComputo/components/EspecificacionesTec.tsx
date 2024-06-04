@@ -138,7 +138,7 @@ const EspecificacionesTec = ({
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Memoria RAM",
-                            type: "text",
+                            type: "number",
                             disabled: false,
                             helper_text: ""
                         },

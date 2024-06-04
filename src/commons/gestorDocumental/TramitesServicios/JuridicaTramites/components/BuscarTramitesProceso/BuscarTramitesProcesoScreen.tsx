@@ -14,6 +14,8 @@ import { download_pdf } from "../../../../../../documentos-descargar/PDF_descarg
 import { api } from "../../../../../../api/axios";
 import { RenderDataGrid } from "../../../../tca/Atom/RenderDataGrid/RenderDataGrid";
 import { StepperContext } from "../../../context/SteperContext";
+import { handleApiError } from "../../../../../../utils/functions/errorManage";
+import { control_success } from "../../../../../../helpers";
 
 
 interface ItiposSolicitud {
@@ -85,7 +87,7 @@ export const BuscarTramitesProcesoScreen = () => {
     // Consulta las opciones de tipo de pago
     const BusquedaAvanzadaTramitesProceso = async () => {
         try {
-            let url = 'gestor/panel_juridica/opas/solicitudes/get/';
+            let url = 'gestor/panel_juridica/tramites/revision/get/';
             // Construir la URL con los parámetros del formulario
             const queryParams = new URLSearchParams();
             if (form.NombrePeticionario) {
@@ -115,9 +117,10 @@ export const BuscarTramitesProcesoScreen = () => {
             // Hacer la solicitud HTTP a la URL construida
             const res = await api.get(url);
             const dataConsulta = res.data.data;
+            control_success('datos encontrados')
             set_data(dataConsulta);
         } catch (error) {
-            console.error(error);
+            handleApiError(error);
         }
     };
 
@@ -145,6 +148,11 @@ export const BuscarTramitesProcesoScreen = () => {
             headerName: "Pago",
             width: 180,
             renderCell: (params:any) => <PaymentChip paid={params.value} />,
+        },
+        {
+            field: "estado_tipo_solicitud_juridica",
+            headerName: "Estado revisión",
+            width: 250,
         },
         {
             field: "acciones",

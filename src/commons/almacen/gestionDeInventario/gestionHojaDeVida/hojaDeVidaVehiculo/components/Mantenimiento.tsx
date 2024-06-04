@@ -53,7 +53,7 @@ const Mantenimiento_vehicle = () => {
       cellClassName: 'truncate-cell',
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.row.fecha_ejecutado ? params.row.fecha_ejecutado : 'N/A'}
+          {params.row.fecha_ejecutado ? params.row.fecha_ejecutado.split('T')[0] : 'N/A'}
         </div>
       ),
     },
