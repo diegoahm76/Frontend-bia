@@ -13,6 +13,8 @@ interface IProps {
     title: string;
     control_other: any;
     get_values: any;
+    file: any;
+    set_file: any;
     watch?: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -20,6 +22,8 @@ const EspecificacionesOtros = ({
     title,
     control_other,
     get_values,
+    file,
+    set_file,
     watch
 }: IProps) => {
 
@@ -30,7 +34,7 @@ const EspecificacionesOtros = ({
     const dispatch = useAppDispatch();
     const [file_name, set_file_name] = useState<string>("");
     const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
-    const [file, set_file] = useState<any>(null);
+
     const filter_other: any = (async () => {
         const cv_computer = get_values("id_bien")
         if (cv_computer !== null) {
@@ -49,18 +53,6 @@ const EspecificacionesOtros = ({
             if ('name' in file) {
                 //  console.log('')(file.name)
                 set_file_name(file.name)
-                if(current_cv_other?.id_hoja_de_vida){
-                    dispatch(set_current_cv_others({
-                        ...current_cv_other,
-                        id_marca: get_values("id_marca"),
-                        especificaciones_tecnicas: get_values("especificaciones_tecnicas"),
-                        doc_identificador_nro: get_values("doc_identificador_nro"),
-                        caracteristicas_fisicas: get_values("caracteristicas_fisicas"),
-                        observaciones_adicionales: get_values("observaciones_adicionales"),
-                        ruta_imagen_foto: file
-                    }))
-                }
-
             }
         }
     }, [file]);
@@ -84,6 +76,9 @@ const EspecificacionesOtros = ({
                 set_selected_image_aux(null);
                 set_file_name("");
             }
+        }else{
+            set_selected_image_aux(null);
+            set_file_name("");
         }
     }, [current_cv_other]);
 
@@ -155,7 +150,7 @@ const EspecificacionesOtros = ({
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Serial",
                             type: "text",
-                            disabled: current_cv_other?.doc_identificador_nro || current_other?.doc_identificador_nro,
+                            disabled: true,
                             helper_text: ""
                         },
                         {

@@ -71,6 +71,15 @@ export const GeneradorDocumentos: React.FC = () => {
 
   const [radicado_selected, set_radicado_selected] = useState('');
 
+  const [idPlantilla, setIdPlantilla] = useState('');
+  const [plantillaSeleccionada, setPlantillaSeleccionada] = useState<any>(null);
+
+  const [plantillas, setPlantillas] = useState<any[]>([]);
+  const [showVariables, setShowVariables] = useState(false);
+  const [variablesPlantilla, setVariablesPlantilla] = useState<any[]>([]);
+  const [currentBorrador, setCurrentBorrador] = useState<any>(null);
+
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -92,7 +101,11 @@ export const GeneradorDocumentos: React.FC = () => {
           if(!currentElement.asignaciones?.firma || currentElement.asignaciones?.persona_firmo){
             setUplockFirma(false);
           }
-        setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
+        if(currentElement.documento.archivos_digitales_copia){
+          setFile(`${urlBase}${currentElement.documento.archivos_digitales_copia.ruta_archivo}`)
+        }else{
+          setFile(`${urlBase}${currentElement.documento.archivos_digitales.ruta_archivo}`)
+        }
       }
 
       if(currentElement.id_pqrsdf){
@@ -160,9 +173,6 @@ export const GeneradorDocumentos: React.FC = () => {
     fetchTiposRadicado();
   }, []);
 
-  const [idPlantilla, setIdPlantilla] = useState('');
-  const [plantillaSeleccionada, setPlantillaSeleccionada] = useState<any>(null);
-
   // Función para manejar el cambio en el select
   const handlePlantillaChange = (event: {
     target: { value: SetStateAction<string> };
@@ -187,15 +197,14 @@ export const GeneradorDocumentos: React.FC = () => {
     }
   };
 
-  const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
+  // const [idUnidadSeleccionada, setIdUnidadSeleccionada] = useState('');
 
-  const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
+  // const [unidadSeleccionada, setUnidadSeleccionada] = useState('');
 
-  const [unidades, setUnidades] = useState<UnidadOrganizacional[]>([]);
-  const [plantillas, setPlantillas] = useState<any[]>([]);
-  const [showVariables, setShowVariables] = useState(false);
-  const [variablesPlantilla, setVariablesPlantilla] = useState<any[]>([]);
-  const [currentBorrador, setCurrentBorrador] = useState<any>(null);
+  // const [unidades, setUnidades] = useState<UnidadOrganizacional[]>([]);
+
+  useEffect(() => console.log(currentBorrador), [currentBorrador])
+
 
   const fetch_data_plantillas = async (): Promise<void> => {
     try {
@@ -265,17 +274,17 @@ export const GeneradorDocumentos: React.FC = () => {
     }
   };
 
-  const fetchUnidades = async () => {
-    try {
-      const url =
-        '/gestor/consecutivos-unidades/unidades_organigrama_actual/get/';
-      const res = await api.get(url);
-      const unidadesData = res.data.data;
-      setUnidades(unidadesData);
-    } catch (error: any) {
-      control_error(error?.response?.data?.detail || 'No se encontraron unidades organizacionales');
-    }
-  };
+  // const fetchUnidades = async () => {
+  //   try {
+  //     const url =
+  //       '/gestor/consecutivos-unidades/unidades_organigrama_actual/get/';
+  //     const res = await api.get(url);
+  //     const unidadesData = res.data.data;
+  //     setUnidades(unidadesData);
+  //   } catch (error: any) {
+  //     control_error(error?.response?.data?.detail || 'No se encontraron unidades organizacionales');
+  //   }
+  // };
 
   const handleFileUpload = (event: any) => {
     const file = event.target.files[0];
@@ -325,13 +334,14 @@ export const GeneradorDocumentos: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUnidades();
+    // fetchUnidades();
     fetch_data_plantillas();
   }, []);
 
   const processPlantilla = (plantilla: any, isUpload?: boolean) => {
     if(plantilla?.archivos_digitales){
       removeFile()
+      setVariablesPlantilla([]);
       setFile(`${urlBase}${plantilla.archivos_digitales.ruta_archivo}`)
       if(Object.keys(plantilla.variables).length){
         let variablesFiltradas = plantilla.variables.filter((variable: string) => variable !== 'consecutivo' && variable !== 'radicado' && variable !== 'fecha_radicado' && variable !== 'fecha_consecutivo');
@@ -415,7 +425,7 @@ export const GeneradorDocumentos: React.FC = () => {
 
       generateDocument(sendData);
     }else{
-      control_error('No se han ingresado datos para actualizar el documento');
+      if(!isUploadDocument) control_error('No se han ingresado datos para actualizar el documento');
       if(!hasConsecutivo) setSendTemplate(false);
       if(isUploadDocument && !variablesPlantilla.length){
         if(radicado_selected && !hasRadicado) {
@@ -733,7 +743,7 @@ export const GeneradorDocumentos: React.FC = () => {
                 startIcon={sendTemplate ? <UpdateIcon /> : <VisibilityIcon />}
                 variant="contained"
                 onClick={updateUploadDoc}
-                disabled={!plantillaSeleccionada || variablesPlantilla.length === 0}
+                disabled={!plantillaSeleccionada || (variablesPlantilla.length === 0 && hasConsecutivo && hasRadicado)}
                 >
                   Actualizar Documento
                 </Button>

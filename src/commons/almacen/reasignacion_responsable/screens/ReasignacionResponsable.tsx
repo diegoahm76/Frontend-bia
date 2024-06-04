@@ -65,7 +65,8 @@ const ReasingnacionResponsable = () => {
     // SI hay data de funcionario responsable seleccionado se rellenará los inputs
     console.log(funcionario_responsable_reasignado_seleccionado)
     console.log(funcionario_operario_seleccionado)
-    if (Object.keys(funcionario_responsable_reasignado_seleccionado).length !== 0) {
+    if (funcionario_responsable_reasignado_seleccionado?.id_persona) {
+      console.log('entrando')
       set_inputs_funcionarios({
         ...inputs_funcionarios,
         tp_documento_funcionario_responsable_reasignado: funcionario_responsable_reasignado_seleccionado.tipo_documento,
@@ -76,6 +77,7 @@ const ReasingnacionResponsable = () => {
     }
     // SI hay data de funcionario responsable seleccionado se rellenará los inputs
     if (Object.keys(funcionario_responsable_actual_seleccionado).length !== 0) {
+      console.log('entrando ope')
       set_inputs_funcionarios({
         ...inputs_funcionarios,
         tp_documento_funcionario_responsable_actual: funcionario_responsable_actual_seleccionado.tipo_documento,
@@ -85,15 +87,15 @@ const ReasingnacionResponsable = () => {
       });
     }
     // Si hay data de funcionario operario seleccionado se rellenará los inputs
-    if (Object.keys(funcionario_operario_seleccionado).length !== 0) {
-      set_inputs_funcionarios({
-        ...inputs_funcionarios,
-        tp_documento_funcionario_operario: funcionario_operario_seleccionado.tipo_documento,
-        documento_funcionario_operario: funcionario_operario_seleccionado.numero_documento,
-        nombres_funcionario_operario: funcionario_operario_seleccionado.primer_nombre,
-        apellidos_funcionario_operario: funcionario_operario_seleccionado.primer_apellido,
-      });
-    }
+    // if (Object.keys(funcionario_operario_seleccionado).length !== 0) {
+    //   set_inputs_funcionarios({
+    //     ...inputs_funcionarios,
+    //     tp_documento_funcionario_operario: funcionario_operario_seleccionado.tipo_documento,
+    //     documento_funcionario_operario: funcionario_operario_seleccionado.numero_documento,
+    //     nombres_funcionario_operario: funcionario_operario_seleccionado.primer_nombre,
+    //     apellidos_funcionario_operario: funcionario_operario_seleccionado.primer_apellido,
+    //   });
+    // }
 
 
   }, [funcionario_operario_seleccionado, funcionario_responsable_reasignado_seleccionado, funcionario_responsable_actual_seleccionado]);
