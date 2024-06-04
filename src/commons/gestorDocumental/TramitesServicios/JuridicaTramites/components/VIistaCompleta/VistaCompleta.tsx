@@ -95,7 +95,7 @@ export const VistaCompleta = () => {
   // Consulta las opciones de tipo de pago
   const consulta_informacion_opa = async () => {
     try {
-      let url = `/gestor/panel_juridica/opas/informacion/get/${id}/`;
+      let url = `gestor/panel_juridica/tramites/informacion/get/${id}/`;
       const res = await api.get(url);
       const dataConsulta = res.data.data;
       set_form_data(dataConsulta);

@@ -25,6 +25,7 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     const [action, set_action] = useState<string>("guardar");
+    const [file, set_file] = useState<any>(null);
     const { current_cv_other, current_other } = useAppSelector((state) => state.cvo);
     const { control: control_other, handleSubmit: handle_submit, reset: reset_other, getValues: get_values, watch } = useForm<FormValues>();
     useEffect(() => {
@@ -35,7 +36,24 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
             set_action("editar")
         }else{
             set_action("crear")
-          }
+        }
+
+        if(current_cv_other?.id_hoja_de_vida){
+            reset_other(current_cv_other);
+        }else{
+            reset_other({
+                id_hoja_de_vida: null,
+                // id_articulo: null,
+                codigo_bien: current_other?.codigo_bien ?? "",
+                id_marca: null,
+                doc_identificador_nro: current_other?.doc_identificador_nro ?? "",
+                caracteristicas_fisicas: '',
+                especificaciones_tecnicas: '',
+                observaciones_adicionales: '',
+                ruta_imagen_foto: '',
+            })
+        }
+
         if (current_cv_other?.id_articulo !== null) {
             void dispatch(get_maintenance_other(current_cv_other.id_articulo ?? 0))
         }
@@ -49,47 +67,29 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
 
     const on_submit = (data: FormValues): void => {
         const form_data: any = new FormData();
-        form_data.append('caracteristicas_fisicas', data.caracteristicas_fisicas);
-        form_data.append('doc_identificador_nro', data.doc_identificador_nro);
-        form_data.append('especificaciones_tecnicas', data.especificaciones_tecnicas);
-        form_data.append('observaciones_adicionales', data.observaciones_adicionales);
+        form_data.append('caracteristicas_fisicas', data.caracteristicas_fisicas || '');
+        form_data.append('doc_identificador_nro', data.doc_identificador_nro || '');
+        form_data.append('especificaciones_tecnicas', data.especificaciones_tecnicas || '');
+        form_data.append('observaciones_adicionales', data.observaciones_adicionales || '');
         form_data.append('id_marca', data.id_marca ?? null);
         form_data.append('id_articulo', (data.id_articulo || current_other?.id_bien || '').toString());
-        if(data.ruta_imagen_foto && typeof data.ruta_imagen_foto  !== "string" ) {
-            form_data.append('ruta_imagen_foto', data.ruta_imagen_foto);
+        if(file) {
+            form_data.append('ruta_imagen_foto', file);
         }
         if (data.id_hoja_de_vida === null) {
             void dispatch(create_cv_others_service(form_data, navigate));
+            reset_other();
+            set_file(null);
         } else {
             void dispatch(update_cv_other_service(data.id_hoja_de_vida, form_data));
 
         }
     };
     const delete_hoja_vida = (): void => {
-
         if (current_cv_other.id_hoja_de_vida !== null && current_cv_other.id_hoja_de_vida !== undefined) {
             void dispatch(delete_cv_others_service(current_cv_other.id_hoja_de_vida));
         }
     };
-
-    useEffect(() => {
-    if(current_cv_other?.id_hoja_de_vida){
-        reset_other(current_cv_other);
-    }else{
-        reset_other({
-            id_hoja_de_vida: null,
-            // id_articulo: null,
-            codigo_bien: current_other?.codigo_bien ?? "",
-            id_marca: null,
-            doc_identificador_nro: current_other?.doc_identificador_nro ?? "",
-            caracteristicas_fisicas: '',
-            especificaciones_tecnicas: '',
-            observaciones_adicionales: '',
-            ruta_imagen_foto: '',
-        })
-    }
-
-    }, [current_cv_other]);
 
     return (
         <>
@@ -115,6 +115,8 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
 
 
                 <EspecificacionesOtros
+                    file={file}
+                    set_file={set_file}
                     control_other={control_other}
                     get_values={get_values}
                     watch={watch}
@@ -136,8 +138,9 @@ export function CrearHojaVidaOtrosActivosScreen(): JSX.Element {
                         <FormButton
                             variant_button="contained"
                             on_click_function={handle_submit(on_submit)}
-                            icon_class={action === "create" ? <EditIcon /> : <SaveIcon />}
+                            icon_class={action === "crear" ? <SaveIcon /> : <EditIcon />}
                             label={action}
+                            disabled={!current_other?.id_bien}
                             type_button="button"
                         />
                     </Grid>

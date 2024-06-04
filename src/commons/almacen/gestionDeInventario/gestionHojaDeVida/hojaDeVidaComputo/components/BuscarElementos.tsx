@@ -150,6 +150,7 @@ const SeleccionarComputer = () => {
             doc_identificador_nro: "",
             nombre: ""
         });
+        filter_computer()
     })
 
 

@@ -40,6 +40,28 @@ export interface interface_inputs_funcionarios {
   apellidos_funcionario_operario?: string
 }
 
+export interface interface_inputs_responsable {
+  tp_documento_funcionario_responsable_reasignado?: string
+  documento_funcionario_responsable_reasignado?: string
+  nombres_funcionario_responsable_reasignado?: string
+  apellidos_funcionario_responsable_reasignado?: string
+}
+
+export interface interface_inputs_responsable_actual {
+  tp_documento_funcionario_responsable_actual?: string
+  documento_funcionario_responsable_actual?: string
+  nombres_funcionario_responsable_actual?: string
+  apellidos_funcionario_responsable_actual?: string
+}
+
+export interface interface_inputs_operario {
+  tp_documento_funcionario_operario?: string
+  documento_funcionario_operario?: string
+  nombres_funcionario_operario?: string
+  apellidos_funcionario_operario?: string
+}
+
+
 export interface response_tipos_documentos {
   success: boolean
   detail: string

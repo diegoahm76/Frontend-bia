@@ -23,7 +23,6 @@ const SeleccionarVehiculo = () => {
             id_marca: current_vehicle.id_marca
         }))
         reset_vehicle(current_vehicle);
-        console.log('holaaa',current_vehicle);
         if (current_vehicle.id_bien !== null) {
             void dispatch(get_cv_vehicle_id(current_vehicle.id_bien))
         }
@@ -140,7 +139,7 @@ const SeleccionarVehiculo = () => {
             headerName: '¿Es arrendado?',
             width: 140, flex: 1,
             renderCell: (params) => {
-                return params.row.id_vehiculo_arrendado === true ? (
+                return params.row.id_vehiculo_arrendado ? (
                     <Chip size="small" label="SI" color="success" variant="outlined" />
                 ) : (
                     <Chip size="small" label="NO" color="error" variant="outlined" />
@@ -172,6 +171,7 @@ const SeleccionarVehiculo = () => {
             doc_identificador_nro: "",
             nombre: ""
         });
+        filter_vehicle();
     })
 
 
