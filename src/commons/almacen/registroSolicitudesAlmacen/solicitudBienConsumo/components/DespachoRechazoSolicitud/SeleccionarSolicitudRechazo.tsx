@@ -16,6 +16,7 @@ interface IProps {
     get_values: any;
     open_modal: boolean;
     set_open_modal: any;
+    reset_solicitud_aprobacion: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudRechazo = ({
@@ -23,7 +24,13 @@ const SeleccionarSolicitudRechazo = ({
     control_solicitud_despacho,
     get_values, open_modal,
     set_open_modal,
+    reset_solicitud_aprobacion,
 }: IProps) => {
+
+    const clear_fields = () => {
+        reset_solicitud_aprobacion();
+    }
+
     // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
     const { solicitudes } = useAppSelector((state) => state.solic_consumo);
@@ -98,6 +105,7 @@ const SeleccionarSolicitudRechazo = ({
                     show_search_button={false}
                     open_search_modal={open_modal}
                     set_open_search_modal={set_open_modal}
+                    clear_fields={clear_fields}
                     form_inputs={[
                         {
                             datum_type: 'title',
@@ -125,7 +133,7 @@ const SeleccionarSolicitudRechazo = ({
                             md: 6,
                             control_form: control_solicitud_despacho,
                             control_name: 'fecha_aprobacion_responsable',
-                            default_value: '',
+                            default_value: null,
                             rules: {
 
                             },
@@ -167,7 +175,6 @@ const SeleccionarSolicitudRechazo = ({
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 9,
                             control_form: control_solicitud_despacho,
                             control_name: 'persona_solicita',
                             default_value: '',

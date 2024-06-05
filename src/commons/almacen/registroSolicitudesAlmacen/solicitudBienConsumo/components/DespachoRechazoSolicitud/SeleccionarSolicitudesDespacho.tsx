@@ -14,6 +14,8 @@ interface IProps {
   title: string;
   control_solicitud_despacho: any;
   get_values: any;
+  watch_solicitud?: any;
+  clear_fields?: any;
 
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -21,6 +23,9 @@ const SeleccionarSolicitudDespacho = ({
   title,
   control_solicitud_despacho,
   get_values,
+  watch_solicitud,
+  clear_fields,
+
 }: IProps) => {
   // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
@@ -99,6 +104,8 @@ const SeleccionarSolicitudDespacho = ({
           get_filters_models={get_solicitudes_filtro}
           title_table_modal={'Solicitudes encontradas'}
           button_submit_label="Buscar solicitud"
+          button_modal_disabled={!watch_solicitud('fecha_despacho')}
+          clear_fields={clear_fields}
           set_models={set_solicitudes}
 
           form_inputs={[

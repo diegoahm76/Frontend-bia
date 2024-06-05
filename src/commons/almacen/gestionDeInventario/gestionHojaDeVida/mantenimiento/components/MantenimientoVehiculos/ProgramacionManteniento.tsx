@@ -107,7 +107,6 @@ export const ProgramacionMantenientoVehiculosScreen: React.FC = () => {
 
     useEffect(() => {
         if(limpiar_formulario){
-            console.log('hola');
             set_programacion(null)
             setTimeout(() => {
                 set_limpiar_formulario(false);

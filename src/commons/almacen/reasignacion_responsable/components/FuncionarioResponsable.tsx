@@ -4,7 +4,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useDispatch } from 'react-redux';
 import { control_error, control_success } from '../../../../helpers';
 import { get_obtener_responsables } from '../thunks/reasignacion_responsable';
-import { interface_busqueda_responsable, interface_inputs_funcionarios, interface_tipos_documentos, response_busqueda_responsable } from '../interfaces/types';
+import { interface_busqueda_responsable, interface_inputs_funcionarios, interface_inputs_responsable, interface_inputs_responsable_actual, interface_tipos_documentos, response_busqueda_responsable } from '../interfaces/types';
 import { Title } from '../../../../components';
 
 
@@ -13,6 +13,10 @@ interface props {
   set_tipo_funcionario: Dispatch<SetStateAction<string>>;
   inputs_funcionarios: interface_inputs_funcionarios;
   set_inputs_funcionarios: Dispatch<SetStateAction<interface_inputs_funcionarios>>;
+  inputs_responsable: interface_inputs_responsable;
+  set_inputs_responsable: Dispatch<SetStateAction<interface_inputs_responsable>>;
+  inputs_responsable_actual: interface_inputs_responsable_actual;
+  set_inputs_responsable_actual: Dispatch<SetStateAction<interface_inputs_responsable_actual>>;
   tipos_documentos: interface_tipos_documentos[];
   set_mostrar_modal_busqueda_funcionarios: Dispatch<SetStateAction<boolean>>;
   set_funcionario_responsable_reasignado_seleccionado?: Dispatch<SetStateAction<interface_busqueda_responsable>>;
@@ -25,6 +29,10 @@ const FuncionarioResponsable: FC<props> = ({
   set_tipo_funcionario,
   inputs_funcionarios,
   set_inputs_funcionarios,
+  inputs_responsable,
+  set_inputs_responsable,
+  inputs_responsable_actual,
+  set_inputs_responsable_actual,
   tipos_documentos,
   set_mostrar_modal_busqueda_funcionarios,
   set_funcionario_responsable_reasignado_seleccionado,
@@ -35,14 +43,14 @@ const FuncionarioResponsable: FC<props> = ({
   const get_obtener_responsables_fc = () => {
     dispatch(get_obtener_responsables(
       tipo_funcionario === 'reasignado' ?
-        (inputs_funcionarios.tp_documento_funcionario_responsable_reasignado ?? '')
+        (inputs_responsable.tp_documento_funcionario_responsable_reasignado ?? '')
         :
-        (inputs_funcionarios.tp_documento_funcionario_responsable_actual ?? ''),
+        (inputs_responsable_actual.tp_documento_funcionario_responsable_actual ?? ''),
 
       tipo_funcionario === 'reasignado' ?
-        (inputs_funcionarios.documento_funcionario_responsable_reasignado ?? '')
+        (inputs_responsable.documento_funcionario_responsable_reasignado ?? '')
         :
-        (inputs_funcionarios.documento_funcionario_responsable_actual ?? ''),
+        (inputs_responsable_actual.documento_funcionario_responsable_actual ?? ''),
       '',
       '',
       '',
@@ -77,16 +85,16 @@ const FuncionarioResponsable: FC<props> = ({
 
   const buscar_funcionario = () => {
     if (tipo_funcionario === 'reasignado') {
-      if (!('tp_documento_funcionario_responsable_reasignado' in inputs_funcionarios) ||
-        !('documento_funcionario_responsable_reasignado' in inputs_funcionarios)
+      if (!('tp_documento_funcionario_responsable_reasignado' in inputs_responsable) ||
+        !('documento_funcionario_responsable_reasignado' in inputs_responsable)
       ) {
         control_error('Debe ingresar el tipo y número de documento');
       } else {
         get_obtener_responsables_fc();
       }
     } else if (tipo_funcionario === 'actual') {
-      if (!('tp_documento_funcionario_responsable_actual' in inputs_funcionarios) ||
-        !('documento_funcionario_responsable_actual' in inputs_funcionarios)
+      if (!('tp_documento_funcionario_responsable_actual' in inputs_responsable_actual) ||
+        !('documento_funcionario_responsable_actual' in inputs_responsable_actual)
       ) {
         control_error('Debe ingresar el tipo y número de documento');
       } else {
@@ -109,18 +117,23 @@ const FuncionarioResponsable: FC<props> = ({
             label='Tipo documento:'
             value={
               tipo_funcionario === 'reasignado' ?
-                (inputs_funcionarios.tp_documento_funcionario_responsable_reasignado ?? '')
+                (inputs_responsable.tp_documento_funcionario_responsable_reasignado ?? '')
                 :
-                (inputs_funcionarios.tp_documento_funcionario_responsable_actual ?? '')
+                (inputs_responsable_actual.tp_documento_funcionario_responsable_actual ?? '')
             }
-            onChange={(e) => set_inputs_funcionarios({
-              ...inputs_funcionarios,
-              ...(tipo_funcionario === 'reasignado' ?
-                { tp_documento_funcionario_responsable_reasignado: e.target.value }
-                :
-                { tp_documento_funcionario_responsable_actual: e.target.value }
-              )
-            })
+            onChange={(e) => {
+                if (tipo_funcionario === 'reasignado') {
+                  set_inputs_responsable(prevState => ({
+                    ...prevState,
+                    tp_documento_funcionario_responsable_reasignado: e.target.value
+                  }));
+                } else {
+                  set_inputs_responsable_actual(prevState => ({
+                    ...prevState,
+                    tp_documento_funcionario_responsable_actual: e.target.value
+                  }));
+                }
+              }
             }
           >
             {tipos_documentos.length !== 0 ?
@@ -140,18 +153,23 @@ const FuncionarioResponsable: FC<props> = ({
           label='Documento:'
           value={
             tipo_funcionario === 'reasignado' ?
-              (inputs_funcionarios.documento_funcionario_responsable_reasignado ?? '')
+              (inputs_responsable.documento_funcionario_responsable_reasignado ?? '')
               :
-              (inputs_funcionarios.documento_funcionario_responsable_actual ?? '')
+              (inputs_responsable_actual.documento_funcionario_responsable_actual ?? '')
           }
-          onChange={(e) => set_inputs_funcionarios({
-            ...inputs_funcionarios,
-            ...(tipo_funcionario === 'reasignado' ?
-              { documento_funcionario_responsable_reasignado: e.target.value }
-              :
-              { documento_funcionario_responsable_actual: e.target.value }
-            )
-          })
+          onChange={(e) => {
+              if (tipo_funcionario === 'reasignado') {
+                set_inputs_responsable(prevState => ({
+                  ...prevState,
+                  tp_documento_funcionario_responsable_reasignado: e.target.value
+                }));
+              } else {
+                set_inputs_responsable_actual(prevState => ({
+                  ...prevState,
+                  tp_documento_funcionario_responsable_actual: e.target.value
+                }));
+              }
+            }
           }
           size='small'
         />
@@ -191,18 +209,24 @@ const FuncionarioResponsable: FC<props> = ({
           label='Nombres: '
           value={
             tipo_funcionario === 'reasignado' ?
-              (inputs_funcionarios.nombres_funcionario_responsable_reasignado ?? '')
+              (inputs_responsable.nombres_funcionario_responsable_reasignado ?? '')
               :
-              (inputs_funcionarios.nombres_funcionario_responsable_actual ?? '')
+              (inputs_responsable_actual.nombres_funcionario_responsable_actual ?? '')
           }
-          onChange={(e) => set_inputs_funcionarios({
-            ...inputs_funcionarios,
-            ...(tipo_funcionario === 'reasignado' ?
-              { nombres_funcionario_responsable_reasignado: e.target.value }
-              :
-              { nombres_funcionario_responsable_actual: e.target.value }
-            )
-          })}
+          onChange={(e) => {
+              if (tipo_funcionario === 'reasignado') {
+                set_inputs_responsable(prevState => ({
+                  ...prevState,
+                  tp_documento_funcionario_responsable_reasignado: e.target.value
+                }));
+              } else {
+                set_inputs_responsable_actual(prevState => ({
+                  ...prevState,
+                  tp_documento_funcionario_responsable_actual: e.target.value
+                }));
+              }
+            }
+          }
           size='small'
         />
       </Grid>
@@ -214,18 +238,24 @@ const FuncionarioResponsable: FC<props> = ({
           label='Apellidos: '
           value={
             tipo_funcionario === 'reasignado' ?
-              (inputs_funcionarios.apellidos_funcionario_responsable_reasignado ?? '')
+              (inputs_responsable.apellidos_funcionario_responsable_reasignado ?? '')
               :
-              (inputs_funcionarios.apellidos_funcionario_responsable_actual ?? '')
+              (inputs_responsable_actual.apellidos_funcionario_responsable_actual ?? '')
           }
-          onChange={(e) => set_inputs_funcionarios({
-            ...inputs_funcionarios,
-            ...(tipo_funcionario === 'reasignado' ?
-              { apellidos_funcionario_responsable_reasignado: e.target.value }
-              :
-              { apellidos_funcionario_responsable_actual: e.target.value }
-            )
-          })}
+          onChange={(e) => {
+              if (tipo_funcionario === 'reasignado') {
+                set_inputs_responsable(prevState => ({
+                  ...prevState,
+                  tp_documento_funcionario_responsable_reasignado: e.target.value
+                }));
+              } else {
+                set_inputs_responsable_actual(prevState => ({
+                  ...prevState,
+                  tp_documento_funcionario_responsable_actual: e.target.value
+                }));
+              }
+            }
+          }
           size='small'
         />
       </Grid>

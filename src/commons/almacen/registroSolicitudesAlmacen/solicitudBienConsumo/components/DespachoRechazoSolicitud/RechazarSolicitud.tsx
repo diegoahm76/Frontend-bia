@@ -5,10 +5,12 @@ import { useAppSelector } from '../../../../../../hooks';
 import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
 import BuscarModelo from '../../../../../../components/partials/getModels/BuscarModelo';
 import { type IList } from '../../../../../../interfaces/globalModels';
+import dayjs, { Dayjs } from 'dayjs';
 
 interface IProps {
     title: string;
     control_solicitud_despacho: any;
+    reset_solicitud_aprobacion: any;
     get_values: any;
 }
 
@@ -16,10 +18,13 @@ interface IProps {
 const RechazoSolicitud = ({
     title,
     control_solicitud_despacho,
+    reset_solicitud_aprobacion,
     get_values,
-
-
 }: IProps) => {
+
+    const clear_fields = () => {
+        reset_solicitud_aprobacion();
+    }
 
     // const dispatch = useAppDispatch();
 
@@ -60,7 +65,7 @@ const RechazoSolicitud = ({
                             md: 12,
                             control_form: control_solicitud_despacho,
                             control_name: 'fecha_rechazo_almacen',
-                            default_value: '',
+                            default_value: dayjs().format('YYYY-MM-DD'),
                             rules: {},
                             label: 'Fecha de entrega',
                             disabled: true,
@@ -83,22 +88,22 @@ const RechazoSolicitud = ({
                             helper_text: ""
                         },
                     ]}
-                    modal_select_model_title='Buscar solicitud'
+                    modal_select_model_title='Buscar solicitud jeja'
                     modal_form_filters={[
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 2,
-                            control_form: control_solicitud_despacho,
-                            control_name: "id_solicitud_consumibles",
-                            default_value: "",
-                            rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Número de solicitud",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                        }
-                    ]} get_filters_models={undefined} columns_model={[]} />
+                        // {
+                        //     datum_type: "input_controller",
+                        //     xs: 12,
+                        //     md: 2,
+                        //     control_form: control_solicitud_despacho,
+                        //     control_name: "id_solicitud_consumibles",
+                        //     default_value: "",
+                        //     rules: { required_rule: { rule: false, message: "requerido" } },
+                        //     label: "Número de solicitud",
+                        //     type: "number",
+                        //     disabled: false,
+                        //     helper_text: "",
+                        // }
+                    ]} get_filters_models={undefined} columns_model={[]} clear_fields={clear_fields}/>
             </Grid>
 
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Avatar, Box, IconButton } from "@mui/material"
+import { Avatar, Box, Button, IconButton } from "@mui/material"
 import { useEffect, useState } from "react";
 import { type crear_mantenimiento } from "../../interfaces/IProps";
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -96,6 +96,14 @@ export const PrevisualizacionComponent: React.FC<IProps> = ({ data_grid, limpiar
 
     return (
         <>
+            <Button
+              variant="contained"
+              color="error"
+              sx={{ my: '1rem'}}
+              onClick={() => set_data_previsualizacion([])}
+            >
+              Limpiar Tabla
+            </Button>
             <RenderDataGrid
               title="información"
               columns={columns}

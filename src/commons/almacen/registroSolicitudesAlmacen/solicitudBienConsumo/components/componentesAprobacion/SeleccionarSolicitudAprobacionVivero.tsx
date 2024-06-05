@@ -34,19 +34,21 @@ const SeleccionarSolicitudAprobadaVivero = ({
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
-            width: 400,
+            minWidth: 200,
+            flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.fecha_solicitud.split('T')[0]}
                 </div>
             ),
 
         },
-    
+
         {
             field: 'observacion',
             headerName: 'Observación',
-            width: 400,
+            minWidth: 300,
+            flex: 2,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -54,6 +56,8 @@ const SeleccionarSolicitudAprobadaVivero = ({
             ),
 
         },
+
+        //TODO: Agregar columnas
 
     ];
 
