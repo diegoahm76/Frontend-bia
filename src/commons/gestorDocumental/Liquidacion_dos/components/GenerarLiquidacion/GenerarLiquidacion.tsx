@@ -26,15 +26,11 @@ export const GenerarLiquidacion = () => {
   const [valores_porcentaje, set_valores_porcentaje] = useState<Registro[]>([])
   const fechaActual = new Date().toLocaleDateString(); // Obtiene la fecha actual en formato de cadena de texto
   const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
-
-
-  const [inputs, setInputs] = useState({
-    capitalPagado: 0,
-    valorAvaluo: 0
-  });
+  const [inputs, setInputs] = useState({capitalPagado: 0,valorAvaluo: 0});
   const [showTextField1, setShowTextField1] = useState(false);
   const [showTextField2, setShowTextField2] = useState(false);
-
+  const currentElementPqrsdComplementoTramitesYotros = useAppSelector((state) =>state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros);
+  
   const handleSwitch1Change = () => {
     setShowTextField1(!showTextField1);
   };
@@ -53,18 +49,12 @@ export const GenerarLiquidacion = () => {
   };
 
 
-  const currentElementPqrsdComplementoTramitesYotros = useAppSelector(
-    (state) =>
-      state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
-  );
-  console.log(currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite)
   const fetch_datos_choises = async (): Promise<void> => {
     try {
       const url = `/tramites/general/get/?radicado=${currentElementPqrsdComplementoTramitesYotros?.radicado}`;
       const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
       const data_consulta: DatosConsulta = res.data.data;
       setDatosConsulta(data_consulta);
-      console.log(data_consulta)
       setUsuario({
         ...usuario,
         nombres: data_consulta.Nombre,
@@ -103,19 +93,59 @@ export const GenerarLiquidacion = () => {
     }
   };
 
-  // Filtrar las configuraciones básicas que tengan el nombre de variable "SMMV"
+
   const configuracionSMMV = configuraciones.find(configuracion => configuracion.nombre_variable === "SMMV");
   const configuracionST = configuraciones.find(configuracion => configuracion.nombre_variable === "ST");
   const configuracionVH = configuraciones.find(configuracion => configuracion.nombre_variable === "VH");
 
+
+  const [configuracionIds, setConfiguracionIds] = useState<{ [key: string]: number | null }>({SMMV: null,ST: null,VH: null,});
+
+
+
+
+const ActualizarVariablesUsadas = async (id:number): Promise<void> => {
+  try {
+    const url = `/recaudo/configuracion_baisca/sueldo_minimo/${id}/`;
+    const res = await api.get(url); 
+    const data_consulta = res.data.data;
+    console.log(data_consulta)
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
+useEffect(() => {
+  console.log("configuracionIds", configuracionIds);
+
+  // Mapear los IDs para consultar las variables usadas
+  Object.values(configuracionIds).forEach(id => {
+    if (id !== null) {
+      ActualizarVariablesUsadas(id);
+    }
+  });
+}, [configuracionIds]); // Dependencia de 'configuracionIds' para actualizar cuando cambien
 
   // Obtener el valor si se encontró la configuración correspondiente
   const valorSMMV = configuracionSMMV ? configuracionSMMV.valor : undefined;
   const valorST = configuracionST ? configuracionST.valor : undefined;
   const valorVH = configuracionVH ? configuracionVH.valor : undefined;
 
+  const nuevosIds = {
+    SMMV: configuracionSMMV ? configuracionSMMV.id_valores_variables : null,
+    ST: configuracionST ? configuracionST.id_valores_variables : null,
+    VH: configuracionVH ? configuracionVH.id_valores_variables : null,
+  };
+
+  useEffect(() => {
+    setConfiguracionIds(nuevosIds);
+  }, [configuraciones]);
+
 
   const total_valor_veiculos = (liquidacionState.numeroDeVehiculos * valorVH) * liquidacionState.cantidadDeComisiones || 0;
+
 
   const TraerValorSalirioMinimoMensual = async (): Promise<void> => {
     try {
@@ -123,6 +153,8 @@ export const GenerarLiquidacion = () => {
       const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
       const configuracionesData: ConfiguracionBasica[] = res.data?.data || [];
       setConfiguraciones(configuracionesData);
+      console.log("configuracionesData", configuracionesData);
+
     } catch (error) {
       console.error(error);
     }
@@ -142,21 +174,12 @@ export const GenerarLiquidacion = () => {
       try {
         // Reemplazar 'minimo' en la fórmula con el valor correspondiente (2000000)
         const formula = registro.formula.replace(/minimo/g, valor_minimo_filtrado_estandar.toString());
-
         // Evaluar la fórmula
         if (eval(formula)) {
-
           const valor_registro = registro.valor;
-       
-
           const valor_porcentaje = parseInt(valor_registro) < 7 ? (parseInt(valor_registro) / 1000) * variable_sumada_valores_capital_avaluo : valor_registro;
-
           const logData = { valorMinimo: valor_minimo_filtrado_estandar, capacidad: registro.capacidad, valor: valor_porcentaje.toString(), valor_subsidio_trasporte: "0", total_valor_veiculos: "" };
           setLogs(logData);
-
-          console.log("valor_registro", valor_registro);
-          console.log("valor_porcentaje", valor_porcentaje);
-
         } else {
         }
       } catch (error) {
@@ -185,7 +208,6 @@ export const GenerarLiquidacion = () => {
   useEffect(() => {
     ComprobarInteresCobro();
     TraerValorSalirioMinimoMensual();
-
   }, [])
 
   useEffect(() => {
@@ -221,18 +243,9 @@ export const GenerarLiquidacion = () => {
     <>
       <Grid container spacing={2}>
 
-
-
-        {/* <Grid item xs={12}>
-          <CapitalPagado />
-        </Grid> */}
-
-
-
         <Grid item xs={12}>
           <Title title="Solicitante" />
         </Grid>
-
 
         <Grid item xs={12} sm={4}>
           <TextField
