@@ -1,16 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useState, useEffect, SyntheticEvent } from 'react';
-import { Box, Button, Chip, Grid, Tab } from "@mui/material";
-import { DataGrid, GridColDef, GridToolbar } from '@mui/x-data-grid';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { GenerarLiquidacion } from '../components/GenerarLiquidacion/GenerarLiquidacion';
+
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Chip, Grid } from "@mui/material";
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Title } from '../../../../components/Title';
 import { api } from '../../../../api/axios';
-import { BotonesFinales } from '../components/BotonesFinales/BotonesFinales';
 import { LetraFormatoHumano } from '../utils/LetraFormatoHumano';
-import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { useNavigate } from 'react-router-dom';
 
+// Definición de la interfaz para los datos del deudor
 export interface Deudor {
     id_pago: string;
     id_liquidacion: {
@@ -32,13 +30,12 @@ export interface Deudor {
     id_persona_pago: number;
 }
 
-
-
+// Componente para buscar los pagos iniciados
 export const BuscarPagosIniciados: React.FC = () => {
     const [loading, set_loading] = useState(true);
     const [deudores, set_deudores] = useState<Deudor[]>([]);
 
-
+ 
     const columns_deudores: GridColDef[] = [
 
         {
@@ -180,24 +177,26 @@ export const BuscarPagosIniciados: React.FC = () => {
     ];
 
 
-
-
-
+    // Hook useEffect para cargar los datos de los deudores cuando el componente se monta
     useEffect(() => {
+        // Realiza la solicitud GET para obtener los datos de los deudores
         api.get('recaudo/pagos/consultar/')
             .then((response) => {
+                // Establece los datos de los deudores en el estado
                 set_deudores(response.data.data);
             })
             .catch((error) => {
-                //  console.log('')(error);
+                // Manejo de errores en caso de que falle la solicitud
+                // console.log('')(error);
             }).finally(() => {
+                // Establece el estado de carga como falso después de que se complete la solicitud
                 set_loading(false);
             });
-    }, []);
-
+    }, []); // Se pasa un arreglo vacío para que el efecto se ejecute solo una vez al montar el componente
 
     return (
         <>
+            {/* Contenedor principal */}
             <Grid
                 container
                 sx={{
@@ -209,27 +208,24 @@ export const BuscarPagosIniciados: React.FC = () => {
                     boxShadow: '0px 3px 6px #042F4A26'
                 }}
             >
-
+                {/* Título de la página */}
                 <Grid item xs={12}>
                     <Title title="Pagos Iniciados"></Title>
                 </Grid>
+                {/* Contenedor de la tabla */}
                 <Grid item xs={12} style={{ marginTop: 15 }}>
-
+                    {/* Tabla de datos */}
                     <DataGrid
-                        density='compact'
-                        autoHeight
-                        rows={deudores}
-                        columns={columns_deudores}
-                        pageSize={10}
-                        rowsPerPageOptions={[10]}
-                        experimentalFeatures={{ newEditingApi: true }}
-                        getRowId={(row) => row.id_pago}
-                        loading={loading}
+                        density='compact' // Densidad de la tabla
+                        autoHeight // Altura automática
+                        rows={deudores} // Datos de los deudores
+                        columns={columns_deudores} // Columnas de la tabla
+                        pageSize={10} // Tamaño de página
+                        rowsPerPageOptions={[10]} // Opciones de tamaño de página
+                        loading={loading} // Estado de carga
                     />
-
                 </Grid>
             </Grid>
-
         </>
     );
 };

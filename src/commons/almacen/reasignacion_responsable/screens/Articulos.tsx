@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import FuncionarioResponsable from '../components/FuncionarioResponsable';
-import { interface_activos_asociados, interface_busqueda_responsable, interface_inputs_funcionarios, interface_tipos_documentos } from '../interfaces/types';
+import { interface_activos_asociados, interface_busqueda_responsable, interface_inputs_funcionarios, interface_inputs_responsable, interface_inputs_responsable_actual, interface_tipos_documentos } from '../interfaces/types';
 import { Title } from '../../../../components';
 import TablaActivosAsociados from '../tables/TablaActivosAsociados';
 import TablaActivosAsociadosAgregados from '../tables/TablaActivosAsociadosAgregados';
@@ -12,6 +12,10 @@ interface props {
   set_tipo_funcionario: Dispatch<SetStateAction<string>>;
   inputs_funcionarios: interface_inputs_funcionarios;
   set_inputs_funcionarios: Dispatch<SetStateAction<interface_inputs_funcionarios>>;
+  inputs_responsable: interface_inputs_responsable;
+  set_inputs_responsable: Dispatch<SetStateAction<interface_inputs_responsable>>;
+  inputs_responsable_actual: interface_inputs_responsable_actual;
+  set_inputs_responsable_actual: Dispatch<SetStateAction<interface_inputs_responsable_actual>>;
   tipos_documentos: interface_tipos_documentos[];
   set_mostrar_modal_busqueda_funcionarios: Dispatch<SetStateAction<boolean>>;
   set_funcionario_responsable_actual_seleccionado: Dispatch<SetStateAction<interface_busqueda_responsable>>;
@@ -27,6 +31,10 @@ const Articulos: FC<props> = ({
   set_tipo_funcionario,
   inputs_funcionarios,
   set_inputs_funcionarios,
+  inputs_responsable,
+  set_inputs_responsable,
+  inputs_responsable_actual,
+  set_inputs_responsable_actual,
   tipos_documentos,
   set_mostrar_modal_busqueda_funcionarios,
   set_funcionario_responsable_actual_seleccionado,
@@ -45,6 +53,10 @@ const Articulos: FC<props> = ({
           set_tipo_funcionario={set_tipo_funcionario}
           inputs_funcionarios={inputs_funcionarios}
           set_inputs_funcionarios={set_inputs_funcionarios}
+          inputs_responsable={inputs_responsable}
+          set_inputs_responsable={set_inputs_responsable}
+          inputs_responsable_actual={inputs_responsable_actual}
+          set_inputs_responsable_actual={set_inputs_responsable_actual}
           tipos_documentos={tipos_documentos}
           set_mostrar_modal_busqueda_funcionarios={set_mostrar_modal_busqueda_funcionarios}
           set_funcionario_responsable_actual_seleccionado={set_funcionario_responsable_actual_seleccionado}

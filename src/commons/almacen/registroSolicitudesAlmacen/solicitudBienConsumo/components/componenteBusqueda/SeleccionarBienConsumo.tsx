@@ -303,9 +303,8 @@ const SeleccionarBienConsumo = () => {
                             rules: { required_rule: { rule: true, message: "Código bien requerido" } },
                             label: "Código bien",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
-                            on_blur_function: search_bien
                         },
                         {
                             datum_type: "input_controller",
@@ -317,7 +316,7 @@ const SeleccionarBienConsumo = () => {
                             rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
                             label: "Nombre",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                     ]}

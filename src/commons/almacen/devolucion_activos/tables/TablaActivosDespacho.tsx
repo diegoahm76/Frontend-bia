@@ -69,7 +69,7 @@ const TablaActivosDespacho: React.FC<Props> = ({
       renderCell: (params) => (
         <>
           {/*Mostramos el boton de devolucion si el id no esta en el array selectedRows*/}
-          {!selected_rows.includes(params.row.id_item_despacho_activo) && (
+          {!selected_rows.includes(params.row.id_item_despacho_activo) && !params.row.se_devolvio && (
             <Button
               type="button"
               variant="contained"
@@ -84,7 +84,7 @@ const TablaActivosDespacho: React.FC<Props> = ({
           )}
 
           {/*Mostramos el boton de No devolucionar si el id esta en el array selectedRows*/}
-          {selected_rows.includes(params.row.id_item_despacho_activo) && (
+          {selected_rows.includes(params.row.id_item_despacho_activo) && !params.row.se_devolvio && (
             <Button
               type="button"
               variant="contained"
@@ -104,6 +104,10 @@ const TablaActivosDespacho: React.FC<Props> = ({
             >
               No devolucionar
             </Button>
+          )}
+
+          {params.row.se_devolvio && (
+            <p>Devolucionado</p>
           )}
         </>
       ),
@@ -154,12 +158,12 @@ const TablaActivosDespacho: React.FC<Props> = ({
           }
 
           if(accion === 'ver'){
-            return params.row.cod_estado_activo === 'O' ? 'Óptimo' 
-            : params.row.cod_estado_activo === 'D' ? 'Defectuoso' 
-            : params.row.cod_estado_activo === 'A' ? 'Averiado' 
+            return params.row.cod_estado_activo === 'O' ? 'Óptimo'
+            : params.row.cod_estado_activo === 'D' ? 'Defectuoso'
+            : params.row.cod_estado_activo === 'A' ? 'Averiado'
             : params.row.cod_estado_activo === '' && null;
           }
-          
+
           return null;
         },
       },

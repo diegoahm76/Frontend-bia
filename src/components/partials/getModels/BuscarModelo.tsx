@@ -46,6 +46,7 @@ interface IProps {
   show_inputs?: boolean;
   title_table_modal?: string | null;
   button_submit_disabled?: boolean | null;
+  button_modal_disabled?: boolean | null;
   button_add_selection_hidden?: boolean | null;
   md_button?: number | null;
   button_icon_class?: any;
@@ -83,6 +84,7 @@ const BuscarModelo = ({
   show_inputs,
   title_table_modal,
   button_submit_disabled,
+  button_modal_disabled,
   button_add_selection_hidden,
   md_button,
   button_icon_class,
@@ -429,6 +431,7 @@ const BuscarModelo = ({
         </Grid>
       )}
       <SeleccionarModeloDialogForm
+        button_modal_disabled={button_modal_disabled}
         set_current_model={set_current_model}
         is_modal_active={select_model_is_active}
         set_is_modal_active={set_select_model_is_active}

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Title } from '../../../../components';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import BusquedaFuncionarios from './BusquedaFuncionarios';
-import { interface_activos_asociados, interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_funcionarios, interface_tipos_documentos, response_activos_asociados, response_tipos_documentos } from '../interfaces/types';
+import { interface_activos_asociados, interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_funcionarios, interface_inputs_operario, interface_inputs_responsable, interface_inputs_responsable_actual, interface_tipos_documentos, response_activos_asociados, response_tipos_documentos } from '../interfaces/types';
 import ModalBusquedaFuncionarios from '../manners/ModalBusquedaFuncionarios';
 import Articulos from './Articulos';
 import { useDispatch } from 'react-redux';
@@ -38,6 +38,10 @@ const ReasingnacionResponsable = () => {
   // ---- Estados de pagina 1  ------ //
   // Inputs Búsqueda funcionarios
   const [inputs_funcionarios, set_inputs_funcionarios] = useState<interface_inputs_funcionarios>(Object);
+  const [inputs_responsable, set_inputs_responsable] = useState<interface_inputs_responsable>(Object);
+  const [inputs_operario, set_inputs_operario] = useState<interface_inputs_operario>(Object);
+  const [inputs_responsable_actual, set_inputs_responsable_actual] = useState<interface_inputs_responsable_actual>(Object);
+
   // Tipos de documentos
   const [tipos_documentos, set_tipos_documentos] = useState<interface_tipos_documentos[]>([]);
   // data de funcionario reasignado reasignado seleccionado
@@ -74,6 +78,12 @@ const ReasingnacionResponsable = () => {
         nombres_funcionario_responsable_reasignado: funcionario_responsable_reasignado_seleccionado.primer_nombre,
         apellidos_funcionario_responsable_reasignado: funcionario_responsable_reasignado_seleccionado.primer_apellido,
       });
+      set_inputs_responsable({
+        tp_documento_funcionario_responsable_reasignado: funcionario_responsable_reasignado_seleccionado.tipo_documento,
+        documento_funcionario_responsable_reasignado: funcionario_responsable_reasignado_seleccionado.numero_documento,
+        nombres_funcionario_responsable_reasignado: funcionario_responsable_reasignado_seleccionado.primer_nombre,
+        apellidos_funcionario_responsable_reasignado: funcionario_responsable_reasignado_seleccionado.primer_apellido,
+      });
     }
     // SI hay data de funcionario responsable seleccionado se rellenará los inputs
     if (Object.keys(funcionario_responsable_actual_seleccionado).length !== 0) {
@@ -85,24 +95,37 @@ const ReasingnacionResponsable = () => {
         nombres_funcionario_responsable_actual: funcionario_responsable_actual_seleccionado.primer_nombre,
         apellidos_funcionario_responsable_actual: funcionario_responsable_actual_seleccionado.primer_apellido,
       });
+      set_inputs_responsable_actual({
+        tp_documento_funcionario_responsable_actual: funcionario_responsable_actual_seleccionado.tipo_documento,
+        documento_funcionario_responsable_actual: funcionario_responsable_actual_seleccionado.numero_documento,
+        nombres_funcionario_responsable_actual: funcionario_responsable_actual_seleccionado.primer_nombre,
+        apellidos_funcionario_responsable_actual: funcionario_responsable_actual_seleccionado.primer_apellido,
+
+      })
     }
     // Si hay data de funcionario operario seleccionado se rellenará los inputs
-    // if (Object.keys(funcionario_operario_seleccionado).length !== 0) {
-    //   set_inputs_funcionarios({
-    //     ...inputs_funcionarios,
-    //     tp_documento_funcionario_operario: funcionario_operario_seleccionado.tipo_documento,
-    //     documento_funcionario_operario: funcionario_operario_seleccionado.numero_documento,
-    //     nombres_funcionario_operario: funcionario_operario_seleccionado.primer_nombre,
-    //     apellidos_funcionario_operario: funcionario_operario_seleccionado.primer_apellido,
-    //   });
-    // }
+    if (Object.keys(funcionario_operario_seleccionado).length !== 0) {
+      set_inputs_funcionarios({
+        ...inputs_funcionarios,
+        tp_documento_funcionario_operario: funcionario_operario_seleccionado.tipo_documento,
+        documento_funcionario_operario: funcionario_operario_seleccionado.numero_documento,
+        nombres_funcionario_operario: funcionario_operario_seleccionado.primer_nombre,
+        apellidos_funcionario_operario: funcionario_operario_seleccionado.primer_apellido,
+      });
+      set_inputs_operario({
+        tp_documento_funcionario_operario: funcionario_operario_seleccionado.tipo_documento,
+        documento_funcionario_operario: funcionario_operario_seleccionado.numero_documento,
+        nombres_funcionario_operario: funcionario_operario_seleccionado.primer_nombre,
+        apellidos_funcionario_operario: funcionario_operario_seleccionado.primer_apellido,
+      });
+    }
 
 
   }, [funcionario_operario_seleccionado, funcionario_responsable_reasignado_seleccionado, funcionario_responsable_actual_seleccionado]);
 
-  useEffect(() => {
-    console.log(inputs_funcionarios)
-  }, [inputs_funcionarios])
+  // useEffect(() => {
+  //   console.log(inputs_funcionarios)
+  // }, [inputs_funcionarios])
 
   /**
  * Función para cambiar de tab - Pestaña
@@ -142,13 +165,13 @@ const ReasingnacionResponsable = () => {
     await dispatch(get_obtener_activos_asociados_funcionario_actual(id_persona))
       .then((response: response_activos_asociados) => {
         if (Object.keys(response).length !== 0) {
-          if (response.data.length > 0) {
+          if (response?.data?.length > 0) {
             set_data_activos_asociados(response.data);
             set_loadding_tabla_activos_asociados(false);
           } else {
             set_data_activos_asociados([]);
             set_loadding_tabla_activos_asociados(false);
-            control_error('No se encontraron activos asociados con la que seleccionó');
+            control_error('No se encontraron activos asociados al funcionario seleccionado');
           }
         } else {
           set_loadding_tabla_activos_asociados(false);
@@ -186,6 +209,9 @@ const ReasingnacionResponsable = () => {
     set_data_activos_asociados_agregados([]);
     set_data_activos_asociados([]);
     set_inputs_funcionarios({} as interface_inputs_funcionarios);
+    set_inputs_responsable({} as interface_inputs_responsable);
+    set_inputs_operario({} as interface_inputs_operario);
+    set_inputs_responsable_actual({} as interface_inputs_responsable_actual);
   }
 
   const validar_formulario: () => Promise<boolean> = async () => {
@@ -315,6 +341,12 @@ const ReasingnacionResponsable = () => {
                     set_tipo_funcionario={set_tipo_funcionario}
                     inputs_funcionarios={inputs_funcionarios}
                     set_inputs_funcionarios={set_inputs_funcionarios}
+                    inputs_responsable={inputs_responsable}
+                    set_inputs_responsable={set_inputs_responsable}
+                    inputs_operario={inputs_operario}
+                    set_inputs_operario={set_inputs_operario}
+                    inputs_responsable_actual={inputs_responsable_actual}
+                    set_inputs_responsable_actual={set_inputs_responsable_actual}
                     tipos_documentos={tipos_documentos}
                     set_mostrar_modal_busqueda_funcionarios={set_mostrar_modal_busqueda_funcionarios}
                     set_funcionario_responsable_reasignado_seleccionado={set_funcionario_responsable_reasignado_seleccionado}
@@ -333,6 +365,10 @@ const ReasingnacionResponsable = () => {
                     set_tipo_funcionario={set_tipo_funcionario}
                     inputs_funcionarios={inputs_funcionarios}
                     set_inputs_funcionarios={set_inputs_funcionarios}
+                    inputs_responsable={inputs_responsable}
+                    set_inputs_responsable={set_inputs_responsable}
+                    inputs_responsable_actual={inputs_responsable_actual}
+                    set_inputs_responsable_actual={set_inputs_responsable_actual}
                     tipos_documentos={tipos_documentos}
                     set_mostrar_modal_busqueda_funcionarios={set_mostrar_modal_busqueda_funcionarios}
                     set_funcionario_responsable_actual_seleccionado={set_funcionario_responsable_actual_seleccionado}

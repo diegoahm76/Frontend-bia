@@ -185,14 +185,14 @@ export function CrearHojaVidaVehiculoScreen(): JSX.Element {
                 type_button="button"
               />
             </Grid>}
-          {current_cv_vehicle.id_articulo && <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3}>
             <Button
               variant="contained"
               onClick={programacion_mantenimiento}
             >
               Programar mantenimiento
             </Button>
-          </Grid>}
+          </Grid>
 
 
         </Grid>
