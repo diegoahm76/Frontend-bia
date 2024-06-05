@@ -22,10 +22,13 @@ const TablaArticulosDespachados: React.FC<props> = ({
 
   //TODO: agregar columnas
   let columns: custom_column[] = [
-    {field: 'id_bien_solicitado', headerName:'Código bien', minWidth:150, flex:1},
+    {field: 'cod_tipo_bien_solicitado', headerName:'Código bien', minWidth:150, flex:1},
+    // {field: 'id_bien_solicitado', headerName:'Código bien', minWidth:150, flex:1},
     {field: 'nombre_bien_despachado', headerName:'Nombre del articulo', minWidth:300, flex:1},
     {field: 'nombre_uni_medida_solicitada', headerName:'Unidad medida', minWidth:150, flex:1},
+    {field: 'doc_identificador_nro_bien_despachado', headerName:'Serial/Placa', minWidth:150, flex:1},
     {field: 'cantidad_despachada', headerName:'Cantidad', minWidth:150, flex:1},
+    {field: 'nombre_bodega', headerName:'Bodega', minWidth:150, flex:1},
     {field: 'observacion', headerName:'Observacion', minWidth:600, flex:1},
   ];
 

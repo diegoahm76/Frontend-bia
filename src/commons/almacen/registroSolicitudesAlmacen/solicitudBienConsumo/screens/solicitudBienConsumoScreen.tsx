@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, editar_solicitud, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
-import { set_current_solicitud, set_persona_solicita, reset_state } from '../store/slices/indexSolicitudBienesConsumo';
+import { set_current_solicitud, set_persona_solicita, reset_state, clear_current_solicitud } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
 import SearchIcon from '@mui/icons-material/Search';
@@ -47,6 +47,12 @@ const SolicitudConsumoScreen = () => {
         void dispatch(get_medida_service());
         dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
 
+        return () => {
+            setTimeout(() => {
+                dispatch(clear_current_solicitud())
+                console.log('hola')
+            }, 2000)
+        }
     }, [])
 
     useEffect(() => {

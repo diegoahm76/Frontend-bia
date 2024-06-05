@@ -248,3 +248,33 @@ export const initialData: ElementoPQRS = {
   radicado: '',
   tipo_solicitud: '',
 };
+
+export interface ReferenciaPagoHistorico {
+  id_referencia: number;
+  nombre_completo: string;
+  numero_documento: string;
+  consecutivo: string;
+  ruta_archivo: string;
+  agno_referencia: number;
+  nro_consecutivo: string;
+  fecha_consecutivo: string;
+  id_unidad: number;
+  id_catalogo: number | null;
+  id_persona_solicita: number;
+  id_archivo: number;
+}
+
+export interface FormState{
+  referencia: string;
+  fechaInicio:string;
+  fechaFin: string;
+  idPersona: string;
+}
+
+export const intial_data: FormState = {
+  referencia: '',
+  fechaInicio: '',
+  fechaFin: '',
+  idPersona: ''
+};
+

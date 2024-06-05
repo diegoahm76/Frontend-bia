@@ -224,12 +224,6 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
       }else{
         set_msj_error_vu("");
       }
-    // if(parseInt(e.target.value) >= 0){
-    //   set_valor_unidad(e.target.value);
-    //   set_msj_error_vu("");
-    // }else{
-    //   set_msj_error_vu("El campo Valor unidad no puede ser menor a 0.");
-    // }
   };
 
   const cambio_tipo_documento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
@@ -246,11 +240,11 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
 
   const calcular_totales = (): void => {
       const iva_porcentaje = porcentaje_iva.find((pi: any) => pi.id_porcentaje_iva === iva);
-      const total_iva = ((parseInt(valor_unidad) * (iva_porcentaje.porcentaje/100)));
-      const total_unidad = parseInt(valor_unidad) + total_iva;
-      const total_entrada = total_unidad * parseInt(cantidad);
-      set_valor_iva(total_iva.toString());
-      set_valor_total_item(total_unidad.toString());
+      const total_iva = parseFloat(((parseFloat(valor_unidad) * (iva_porcentaje.porcentaje/100))).toFixed(2));
+      const total_unidad = parseFloat((parseFloat(valor_unidad) + total_iva).toFixed(2));
+      const total_entrada = parseFloat((total_unidad * parseFloat(cantidad)).toFixed(2));
+      set_valor_iva(total_iva.toFixed(2));
+      set_valor_total_item(total_unidad.toFixed(2));
       set_valor_total_entrada(total_entrada);
   }
 
@@ -881,6 +875,10 @@ export const EntradaBienesAlmacenScreen: React.FC = () => {
                   size="small"
                   fullWidth
                   value={valor_unidad}
+                  onBlur={(event) => {
+                    let valor = parseFloat(event.target.value).toFixed(2);
+                    set_valor_unidad(valor);
+                  }}
                   onChange={cambio_valor_unidad}
                   error={msj_error_vu !== ""}
                 />

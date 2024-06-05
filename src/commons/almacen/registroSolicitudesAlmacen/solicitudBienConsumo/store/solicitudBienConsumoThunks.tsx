@@ -202,7 +202,7 @@ export const get_medida_service = (): any => {
 };
 
 
-// obtener bienes de consumo 
+// obtener bienes de consumo
 
 export const get_bienes_consumo = (id: string | null, nombre: string | null): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -255,7 +255,7 @@ export const get_bienes_vivero_consumo = (id: string | null, nombre: string | nu
 };
 
 
-// obtener bienes de consumo 
+// obtener bienes de consumo
 
 export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -283,7 +283,7 @@ export const get_bienes_consumo_codigo_bien = (codigo: string | null): any => {
     };
 };
 
-// OBTENER BIENES PARA VIVERO 
+// OBTENER BIENES PARA VIVERO
 
 export const get_bienes_consumo_vivero_codigo_bien = (codigo: string | null): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -334,7 +334,7 @@ export const get_bienes_solicitud = (
 
 
 
-// OBTENER SOLICITUD POR ID de solicitud por id 
+// OBTENER SOLICITUD POR ID de solicitud por id
 export const get_solicitud_service = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
@@ -351,7 +351,7 @@ export const get_solicitud_service = (id: number | string): any => {
 };
 
 
-// OBTENER SOLICITUD POR ID de solicitud por id 
+// OBTENER SOLICITUD POR ID de solicitud por id
 export const get_solicitud_service_vivero = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
@@ -371,7 +371,7 @@ export const get_solicitud_service_vivero = (id: number | string): any => {
 
 
 
-// OBTENER SOLICITUD POR TIPO Y DOCUMENTO 
+// OBTENER SOLICITUD POR TIPO Y DOCUMENTO
 export const get_solicitud_documento_service = (
 
 ): any => {
@@ -390,7 +390,7 @@ export const get_solicitud_documento_service = (
     };
 };
 
-// obtener solicitudes que no han sido aprobadas id persona para aprobacion 
+// obtener solicitudes que no han sido aprobadas id persona para aprobacion
 
 export const get_solicitudes_id_persona_service = (id: number | string): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -524,6 +524,7 @@ export const get_funcionario_service = (
     primer_nombre: string | null,
     primer_apellido: string | null,
     id_unidad_para_la_que_solicita: number | null | string,
+    id_unidad_organizacional_actual?: number | null | string,
 
 
 ): any => {
@@ -533,20 +534,20 @@ export const get_funcionario_service = (
             const { data } = await api.get(
 
 
-                `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${type ?? ""}&numero_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}`
+                `almacen/solicitudes/search-funcionario-filtros/?tipo_documento=${type ?? ""}&numero_documento=${document ?? ""}&primer_nombre=${primer_nombre ?? ""}&primer_apellido=${primer_apellido ?? ""}&id_unidad_para_la_que_solicita=${id_unidad_para_la_que_solicita ?? ""}&id_unidad_organizacional_actual=${id_unidad_organizacional_actual ?? ""}`
 
             );
             //  console.log('')(data)
             dispatch(set_funcionarios(data.data));
-            // if (data.data.length > 0) {
-            //     control_success("Se econtrarón funcionarios")
-            // } else {
-            //     control_error("No se econtrarón funcionarios")
-            // }
+            if (data.data.length > 0) {
+                control_success("Se econtrarón funcionarios")
+            } else {
+                control_error("No se econtrarón funcionarios")
+            }
             return data;
         } catch (error: any) {
             //  console.log('')(error);
-            control_error(error.response.data.detail);
+            control_error(error.response?.data?.detail);
             return error as AxiosError;
         }
     };
@@ -555,7 +556,7 @@ export const get_funcionario_service = (
 
 
 
-// aprobarr solicitud 
+// aprobarr solicitud
 
 
 export const aprobacion_solicitud_pendiente: any = (
@@ -636,7 +637,7 @@ export const anular_solicitud_service: any = (
 
 
 
-// buscar solicitudes a despachar 
+// buscar solicitudes a despachar
 
 export const get_solicitudes_pendientes_despacho = (): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -652,8 +653,12 @@ export const get_solicitudes_pendientes_despacho = (): any => {
                     control_error("No se encontrarón solicitudes")
                 }
             }
+            if(!data['Solicitudes pendientes por despahcar'].length){
+                control_error("No se encontrarón solicitudes")
+            }
             return data;
         } catch (error: any) {
+            control_error(error.response?.data?.detail);
             return error as AxiosError;
         }
     };
@@ -677,6 +682,7 @@ export const get_solicitudes_despacho_fecha = (fecha: string | number,): any => 
             }
             return data;
         } catch (error: any) {
+            control_error(error.response?.data?.detail);
             return error as AxiosError;
         }
     };

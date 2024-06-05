@@ -52,6 +52,7 @@ interface IProps {
   button_add_selection_hidden?: boolean | null;
   button_origin_show?: boolean | null;
   search_model_function?: any;
+  button_modal_disabled?: boolean | null;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarModeloDialogForm = ({
@@ -70,6 +71,7 @@ const SeleccionarModeloDialogForm = ({
   button_add_selection_hidden,
   button_origin_show,
   search_model_function,
+  button_modal_disabled,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const [selected_row, set_selected_row] = useState([]);
@@ -348,6 +350,7 @@ const SeleccionarModeloDialogForm = ({
                   on_click_function={get_filters_models}
                   icon_class={<SearchIcon />}
                   label="BUSCAR"
+                  disabled={button_modal_disabled ?? false}
                   type_button="button"
                 />
               </Grid>
