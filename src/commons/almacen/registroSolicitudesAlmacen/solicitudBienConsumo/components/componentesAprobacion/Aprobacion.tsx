@@ -96,7 +96,7 @@ const Aprobacion = ({
                         },
 
                         {
-                            datum_type: "input_controller",
+                            datum_type: "date_picker_controller",
                             xs: 12,
                             md: 6,
                             control_form: control_solicitud_aprobacion,
@@ -108,7 +108,7 @@ const Aprobacion = ({
                             multiline_text: true,
                             disabled: true,
                             helper_text: "",
-
+                            format: 'YYYY-MM-DD',
                         },
 
 

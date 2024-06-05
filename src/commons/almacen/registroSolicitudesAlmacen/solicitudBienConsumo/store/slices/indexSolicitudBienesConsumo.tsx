@@ -236,8 +236,28 @@ export const solicitud_consumo_slice = createSlice({
             state.coordinador_vivero = action.payload;
         },
 
+        //Julian
+        clear_current_solicitud: (state) => {
+            state.current_solicitud = initial_state_current_solicitud;
+        },
+
+        clear_persona_solicita: (state) => {
+            state.persona_solicita = initial_state_persona_solicita;
+        },
+
+        clear_current_funcionario: (state) => {
+            state.current_funcionario = initial_state_current_funcionario;
+        },
+
+        clear_bienes: (state) => {
+            state.bienes = [];
+        },
+
+        clear_bienes_solicitud: (state) => {
+            state.bienes_solicitud = [];
+        },
 
     }
 })
 
-export const { reset_state, set_coordinador_vivero, set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_bienes_vivero, set_current_bien_vivero, set_solicitudes_vivero, set_current_solicitud_vivero } = solicitud_consumo_slice.actions;
+export const { reset_state, set_coordinador_vivero, set_unidades_medida, get_unidad_organizacional, set_solicitudes, set_current_solicitud, set_funcionarios, set_current_funcionario, set_numero_solicitud, set_bienes, set_current_bien, set_bienes_solicitud, set_persona_solicita, set_numero_solicitud_vivero, set_bienes_vivero, set_current_bien_vivero, set_solicitudes_vivero, set_current_solicitud_vivero, clear_current_solicitud, clear_current_funcionario, clear_persona_solicita, clear_bienes, clear_bienes_solicitud } = solicitud_consumo_slice.actions;

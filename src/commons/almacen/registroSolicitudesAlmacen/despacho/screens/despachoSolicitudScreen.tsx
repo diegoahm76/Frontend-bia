@@ -50,7 +50,7 @@ import Limpiar from '../../../../conservacion/componentes/Limpiar';
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DespachoBienesConsumoScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, getValues: get_values_solicitud_despacho, } = useForm<IObjSolicitud>();
+  const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, getValues: get_values_solicitud_despacho, watch: watch_solicitud } = useForm<IObjSolicitud>();
   const { control: control_despacho, handleSubmit: handle_submit, reset: reset_despacho, getValues: get_values, } = useForm<IObjDespacho>();
   const [action, set_action] = useState<string>('Guardar');
   const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any }) => state.solic_consumo);
@@ -298,6 +298,10 @@ const DespachoBienesConsumoScreen = () => {
     }
   };
 
+  const clear_fields = (): void => {
+    reset_solicitud_aprobacion();
+  }
+
   return (
     <Grid
       container
@@ -320,6 +324,8 @@ const DespachoBienesConsumoScreen = () => {
           set_open_modal={set_open_search_modal}
         />
         <SeleccionarSolicitudDespacho
+          watch_solicitud={watch_solicitud}
+          clear_fields={clear_fields}
           title={'Información de la solicitud'}
           control_solicitud_despacho={control_solicitud_despacho}
           get_values={get_values_solicitud_despacho} />

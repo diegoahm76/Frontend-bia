@@ -172,21 +172,21 @@ const SeleccionarSolicitud = ({
                             disabled: false,
                             helper_text: ""
                         },
-                        {
-                            datum_type: "select_controller",
-                            xs: 12,
-                            md: 3,
-                            control_form: control_solicitud,
-                            control_name: "id_unidad_para_la_que_solicita",
-                            default_value: "",
-                            rules: { required_rule: { rule: true, message: "requerido" } },
-                            label: "Unidad organizacional",
-                            disabled: false,
-                            helper_text: "debe seleccionar campo",
-                            select_options: unidad_organizacional,
-                            option_label: "nombre",
-                            option_key: "id_unidad_organizacional"
-                        },
+                        // {
+                        //     datum_type: "select_controller",
+                        //     xs: 12,
+                        //     md: 3,
+                        //     control_form: control_solicitud,
+                        //     control_name: "id_unidad_para_la_que_solicita",
+                        //     default_value: "",
+                        //     rules: { required_rule: { rule: true, message: "requerido" } },
+                        //     label: "Unidad organizacional",
+                        //     disabled: false,
+                        //     helper_text: "debe seleccionar campo",
+                        //     select_options: unidad_organizacional,
+                        //     option_label: "nombre",
+                        //     option_key: "id_unidad_organizacional"
+                        // },
 
 
                         {
@@ -205,7 +205,7 @@ const SeleccionarSolicitud = ({
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
+                            md: 6,
                             control_form: control_solicitud,
                             control_name: "nombre_unidad_organizacional",
                             default_value: "",
