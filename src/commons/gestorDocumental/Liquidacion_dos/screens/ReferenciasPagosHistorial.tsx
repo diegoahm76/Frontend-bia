@@ -12,34 +12,7 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { DownloadButton } from '../../../../utils/DownloadButton/DownLoadButton';
 import { api } from '../../../../api/axios';
-
-interface ReferenciaPagoHistorico {
-  id_referencia: number;
-  nombre_completo: string;
-  numero_documento: string;
-  consecutivo: string;
-  ruta_archivo: string;
-  agno_referencia: number;
-  nro_consecutivo: string;
-  fecha_consecutivo: string;
-  id_unidad: number;
-  id_catalogo: number | null;
-  id_persona_solicita: number;
-  id_archivo: number;
-}
-
-interface FormState{
-  referencia: string;
-  fechaInicio:string;
-  fechaFin: string;
-  idPersona: string;
-}
-const intial_data: FormState = {
-  referencia: '',
-  fechaInicio: '',
-  fechaFin: '',
-  idPersona: ''
-};
+import { FormState, ReferenciaPagoHistorico, intial_data } from '../interfaces/InterfacesLiquidacion';
 
 
 export const ReferenciasPagosHistorial = () => {
@@ -57,8 +30,6 @@ export const ReferenciasPagosHistorial = () => {
   const Peticion_Busqueda_Avanzada = async (): Promise<void> => {
     try {
       let url = 'recaudo/configuracion_referencia/referencias/get/';
-    
-
       const res = await api.get(url);
       const Data_consulta = res.data.data;
       set_data_tabla(Data_consulta);
