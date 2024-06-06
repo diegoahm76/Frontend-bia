@@ -128,7 +128,7 @@ const FuncionarioResponsable = ({
         const type = get_values("tipo_documento") ?? ""
         const primer_nombre = get_values("primer_nombre") ?? ""
         const primer_apellido = get_values("primer_apellido") ?? ""
-        const id_unidad_org = get_values("id_unidad_para_la_que_solicita") ?? ""
+        const id_unidad_org = get_values("id_unidad_para_la_que_solicita") || userinfo.id_unidad_organizacional_actual || ""
         void dispatch(get_funcionario_service(type, document, primer_nombre, primer_apellido, id_unidad_org, id_unidad_org))
     })
 
