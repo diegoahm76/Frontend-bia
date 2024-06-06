@@ -28,11 +28,12 @@ const SeleccionarSolicitudAprobada = ({
     const dispatch = useAppDispatch();
 
     const columns_solicitudes: GridColDef[] = [
-        { field: 'id_solicitud_consumibles', headerName: 'ID', width: 100 },
+        { field: 'id_solicitud_consumibles', headerName: 'ID', minWidth: 100, flex: 1 },
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
-            width: 300,
+            minWidth: 300,
+            flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -41,12 +42,11 @@ const SeleccionarSolicitudAprobada = ({
 
         },
 
-
-
         {
             field: 'observacion',
             headerName: 'Observación',
-            width: 400,
+            minWidth: 400,
+            flex: 2,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}

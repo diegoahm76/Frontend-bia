@@ -63,7 +63,6 @@ const AprobacionSolicitudViveroScreen = () => {
     const on_submit_aprobacion = (data: IObjSolicitud): void => {
 
         const form_data = {
-
             estado_aprobacion_responsable: data.estado_aprobacion_responsable,
             justificacion_rechazo_responsable: data.justificacion_rechazo_responsable,
             fecha_aprobacion_responsable: new Date().toString(),
@@ -93,6 +92,7 @@ const AprobacionSolicitudViveroScreen = () => {
 
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitudAprobadaVivero
+                    reset_values={reset_solicitud_aprobacion}
                     title={"Aprobación de solicitudes Vivero"} control_solicitud_aprobacion_vivero={control_solicitud_aprobacion_vivero} get_values={get_values}
                     open_modal={open_search_modal}
                     set_open_modal={set_open_search_modal}

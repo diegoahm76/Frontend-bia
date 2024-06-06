@@ -1,4 +1,4 @@
-import { Chip, Divider, Grid, TextField } from '@mui/material';
+import { Button, Chip, Divider, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { interface_resumen_solicitud_despacho } from '../interfaces/types';
 import TablaArticulosDespachados from '../tables/TablaArticulosDespachados';
+import { baseURL } from '../../../../api/axios';
 
 interface props {
   data_resumen_solicitud_despacho: interface_resumen_solicitud_despacho
@@ -15,6 +16,8 @@ interface props {
 const ResumenSinSolicitudDespacho: React.FC<props> = ({
   data_resumen_solicitud_despacho,
 }) => {
+
+  const url_base = baseURL.replace("/api/", "");
 
   return (
     <>
@@ -180,6 +183,20 @@ const ResumenSinSolicitudDespacho: React.FC<props> = ({
         <TablaArticulosDespachados
           articulos_despachados={data_resumen_solicitud_despacho?.items_despacho}
         />
+
+        <Title title='Anexos'/>
+        {data_resumen_solicitud_despacho?.archivos_digitales?.length > 0 && data_resumen_solicitud_despacho?.archivos_digitales?.map((archivo, index) => (
+          <Button
+            sx={{mt: '1rem'}}
+            key={index}
+            variant="outlined"
+            color="primary"
+            onClick={() => window.open(url_base + archivo.ruta_archivo, '_blank')}
+          >
+            {archivo.nombre_de_Guardado}
+          </Button>
+        ))}
+
 
       </Grid>
     </>

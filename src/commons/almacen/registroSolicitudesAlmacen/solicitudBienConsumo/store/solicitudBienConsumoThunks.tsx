@@ -380,7 +380,11 @@ export const get_solicitud_documento_service = (
             const { data } = await api.get(`almacen/solicitudes/get-solicitudes-pendientes-por-aprobar/`);
             //  console.log('')('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.detail));
-
+            if(data?.detail?.length > 0){
+                control_success("Se encontrarón solicitudes")
+            }else{
+                control_error("No se encontrarón solicitudes")
+            }
             return data;
         } catch (error: any) {
             //  console.log('')('get_solicitud_service');
@@ -392,10 +396,10 @@ export const get_solicitud_documento_service = (
 
 // obtener solicitudes que no han sido aprobadas id persona para aprobacion
 
-export const get_solicitudes_id_persona_service = (id: number | string): any => {
+export const get_solicitudes_id_persona_service = (id: number | string, nro_solicitud_por_tipo?: string, fecha_solicitud_desde?: string, fecha_solicitud_hasta?: string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-no-aprobadas/${id ?? ""}`);
+            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-no-aprobadas/${id ?? ""}/?nro_solicitud_por_tipo=${nro_solicitud_por_tipo ?? ""}&fecha_solicitud_desde=${fecha_solicitud_desde ?? ""}&fecha_solicitud_hasta=${fecha_solicitud_hasta ?? ""}`);
             //  console.log('')('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes(data.data))
             if ('data' in data) {
@@ -417,10 +421,10 @@ export const get_solicitudes_id_persona_service = (id: number | string): any => 
 };
 
 
-export const get_solicitudes_id_persona_service_vivero = (id: number | string): any => {
+export const get_solicitudes_id_persona_service_vivero = (id: number | string, nro_solicitud_por_tipo?: string, fecha_solicitud_desde?: string, fecha_solicitud_hasta?: string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-no-aprobadas/${id ?? ""}`);
+            const { data } = await api.get(`almacen/solicitudes/get-solicitudes-no-aprobadas/${id ?? ""}/?nro_solicitud_por_tipo=${nro_solicitud_por_tipo ?? ""}&fecha_solicitud_desde=${fecha_solicitud_desde ?? ""}&fecha_solicitud_hasta=${fecha_solicitud_hasta ?? ""}`);
             //  console.log('')('Solicitudes recuperadas:', data);
             dispatch(set_solicitudes_vivero(data.data))
             if ('data' in data) {
@@ -639,10 +643,10 @@ export const anular_solicitud_service: any = (
 
 // buscar solicitudes a despachar
 
-export const get_solicitudes_pendientes_despacho = (): any => {
+export const get_solicitudes_pendientes_despacho = (nro_solicitud_por_tipo: number): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get('almacen/solicitudes/solicitudes-pendientes-por-despachar/');
+            const { data } = await api.get(`almacen/solicitudes/solicitudes-pendientes-por-despachar/?nro_solicitud_por_tipo=${nro_solicitud_por_tipo}`);
             dispatch(set_solicitudes(data['Solicitudes pendientes por despahcar']))
             //  console.log('')(data);
             //  console.log('')(data, "data")
@@ -666,10 +670,10 @@ export const get_solicitudes_pendientes_despacho = (): any => {
 
 
 
-export const get_solicitudes_despacho_fecha = (fecha: string | number,): any => {
+export const get_solicitudes_despacho_fecha = (fecha: string | number, fecha_hasta?: string): any => {
     return async (dispatch: Dispatch<any>) => {
         try {
-            const { data } = await api.get(`almacen/despachos/get-solicitudes-aprobados-abiertos/?fecha_despacho=${fecha}`);
+            const { data } = await api.get(`almacen/despachos/get-solicitudes-aprobados-abiertos/?fecha_despacho_desde=${fecha}&fecha_despacho_hasta=${fecha_hasta}`);
             dispatch(set_solicitudes(data.data))
             //  console.log('')(data);
             //  console.log('')(data, "data")

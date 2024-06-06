@@ -7,8 +7,7 @@ import {
   set_current_solicitud,
   set_solicitudes,
 } from '../../store/slices/indexSolicitudBienesConsumo';
-// import type { AuthSlice } from '../../../../auth/interfaces';
-// import { useSelector } from 'react-redux';
+import dayjs from 'dayjs';
 
 interface IProps {
   title: string;
@@ -86,9 +85,14 @@ const SeleccionarSolicitudDespacho = ({
 
 
   const get_solicitudes_filtro: any = async () => {
-    const fecha = new Date(get_values('fecha_despacho') ?? '').toISOString();
-    const fecha_despacho = fecha.slice(0, 10) + ' ' + fecha.slice(11, 19);
-    void dispatch(get_solicitudes_despacho_fecha(fecha_despacho));
+    const fecha = get_values('fecha_despacho_desde')
+    const fecha2 = get_values('fecha_despacho_hasta')
+
+    // Convertir las fechas al formato deseado
+    const fecha_despacho_desde = dayjs(fecha).format('YYYY-MM-DD HH:mm:ss');
+    const fecha_despacho_hasta = dayjs(fecha2).format('YYYY-MM-DD HH:mm:ss');
+
+    void dispatch(get_solicitudes_despacho_fecha(fecha_despacho_desde, fecha_despacho_hasta));
   };
 
 
@@ -104,7 +108,7 @@ const SeleccionarSolicitudDespacho = ({
           get_filters_models={get_solicitudes_filtro}
           title_table_modal={'Solicitudes encontradas'}
           button_submit_label="Buscar solicitud"
-          button_modal_disabled={!watch_solicitud('fecha_despacho')}
+          button_modal_disabled={!watch_solicitud('fecha_despacho_desde')}
           clear_fields={clear_fields}
           set_models={set_solicitudes}
 
@@ -193,9 +197,23 @@ const SeleccionarSolicitudDespacho = ({
             {
               datum_type: 'date_picker_controller',
               xs: 12,
-              md: 2,
+              md: 3,
               control_form: control_solicitud_despacho,
-              control_name: 'fecha_despacho',
+              control_name: 'fecha_despacho_desde',
+              default_value: '',
+              rules: { required_rule: { rule: true, message: 'requerido' } },
+              label: 'Fecha del despacho',
+              type: 'text',
+              disabled: false,
+              helper_text: '',
+              format: 'YYYY-MM-DD',
+            },
+            {
+              datum_type: 'date_picker_controller',
+              xs: 12,
+              md: 3,
+              control_form: control_solicitud_despacho,
+              control_name: 'fecha_despacho_hasta',
               default_value: '',
               rules: { required_rule: { rule: true, message: 'requerido' } },
               label: 'Fecha del despacho',
