@@ -252,15 +252,21 @@ const use_ccd = () => {
   //  UseEffect para obtener series
   //! se retira de momento al mandar un error en la petición durante la primer petición al render de la pantalla
   useEffect(() => {
+    if(ccd_current) {
     void dispatch(get_series_service());
+    }
   }, [ccd_current]);
   //  UseEffect para obtener subSeries
   useEffect(() => {
+    if(ccd_current) {
     void dispatch(get_subseries_service());
+    }
   }, [ccd_current]);
   //  UseEffect para obtener asignaciones
   useEffect(() => {
+    if(ccd_current) {
     dispatch(get_assignments_service(ccd_current));
+    }
   }, [ccd_current]);
 
   //  UseEffect para obtener asignaciones

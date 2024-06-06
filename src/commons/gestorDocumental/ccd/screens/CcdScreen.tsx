@@ -95,9 +95,11 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
   }, [ccd_current?.fecha_terminado]);
 
   useEffect(() => {
-    dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
-    get_assignments_service(ccd_current?.id_ccd)(dispatch);
-  }, [ccd_current]);
+    if(ccd_current) {
+        dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+        get_assignments_service(ccd_current.id_ccd)(dispatch);
+    }
+}, [ccd_current]);
 
   useEffect(() => {
     console.log('hello world ccd');
