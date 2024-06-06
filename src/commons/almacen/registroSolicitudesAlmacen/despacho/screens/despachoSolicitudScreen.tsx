@@ -46,6 +46,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import Limpiar from '../../../../conservacion/componentes/Limpiar';
+import { control_warning } from '../../../configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DespachoBienesConsumoScreen = () => {
@@ -166,9 +167,13 @@ const DespachoBienesConsumoScreen = () => {
         void dispatch(
           get_bienes_despacho(current_despacho.numero_despacho_consumo)
         ); // get bienes despacho
-        void dispatch(
-          get_solicitud_by_id(current_despacho.id_solicitud_consumo ?? 0)
-        );
+        if(current_despacho?.id_solicitud_consumo){
+          void dispatch(
+            get_solicitud_by_id(current_despacho.id_solicitud_consumo)
+          );
+        }else{
+          control_warning('No se encontró solicitud asociada al despacho')
+        }
       }
     }
   }, [current_despacho]);

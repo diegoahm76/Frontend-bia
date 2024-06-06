@@ -78,6 +78,7 @@ const initial_state_persona_solicita = {
     id_persona: null,
     nombre: "",
     unidad_organizacional: "",
+    id_unidad_organizacional_actual: null
 }
 
 

@@ -50,6 +50,7 @@ const SolicitudConsumoViveroScreen = () => {
       nombre: userinfo.nombre,
       id_persona: userinfo.id_persona,
       unidad_organizacional: userinfo.nombre_unidad_organizacional,
+      id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
     }))
     set_action('crear');
   }
@@ -125,6 +126,7 @@ const SolicitudConsumoViveroScreen = () => {
         id_persona_solicita: persona_solicita.id_persona,
         persona_solicita: persona_solicita.nombre,
         nombre_unidad_organizacional: persona_solicita.unidad_organizacional,
+        nombre_unidad_organizacional_solicita: persona_solicita.unidad_organizacional,
         id_unidad_para_la_que_solicita: persona_solicita.id_unidad_organizacional_actual
       })
     );
@@ -168,7 +170,7 @@ const SolicitudConsumoViveroScreen = () => {
           id_funcionario_responsable_unidad: current_funcionario.id_persona,
           observacion,
           motivo,
-
+          id_unidad_para_la_que_solicita
         })
       );
     }

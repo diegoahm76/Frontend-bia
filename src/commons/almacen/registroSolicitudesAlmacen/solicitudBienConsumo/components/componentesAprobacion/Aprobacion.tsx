@@ -6,6 +6,7 @@ import { get_solicitudes_id_persona_service } from '../../store/solicitudBienCon
 import { set_current_solicitud, set_solicitudes } from '../../store/slices/indexSolicitudBienesConsumo';
 import type { AuthSlice } from '../../../../../auth/interfaces';
 import { useSelector } from 'react-redux';
+import dayjs, { Dayjs } from 'dayjs';
 
 
 interface IProps {
@@ -101,7 +102,7 @@ const Aprobacion = ({
                             md: 6,
                             control_form: control_solicitud_aprobacion,
                             control_name: "fecha_aprobacion_responsable",
-                            default_value: "",
+                            default_value: dayjs().format('YYYY-MM-DD'),
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Fecha de aprobación",
                             type: "text",
