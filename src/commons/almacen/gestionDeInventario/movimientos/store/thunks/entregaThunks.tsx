@@ -336,6 +336,11 @@ export const get_entregas_services = (): any => {
 
             if (data.success === true) {
                 dispatch(set_entregas(data.data));
+                if(data?.data?.length > 0){
+                    control_success("Entregas cargadas correctamente")
+                }else{
+                    control_error("No hay entregas disponibles")
+                }
                 //  console.log('')(data);
                 // control_success(data.detail);
             } else {

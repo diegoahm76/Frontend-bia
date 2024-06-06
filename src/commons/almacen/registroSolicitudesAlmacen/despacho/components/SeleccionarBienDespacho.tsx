@@ -265,7 +265,6 @@ const SeleccionarBienDespacho = () => {
           bien_selected.id_bien ?? '',
           fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
 
-
         ));
       //  console.log('')(data);
       set_bienes_aux(data);
@@ -303,6 +302,7 @@ const SeleccionarBienDespacho = () => {
     if (bien_selected.id_bien !== null) {
       //  console.log('')(bien_selected);
       dispatch(set_current_bien(initial_state_current_bien));
+      console.log('hola')
       search_bien();
     }
   }, [bien_selected]);
@@ -448,6 +448,7 @@ const SeleccionarBienDespacho = () => {
           get_filters_models={search_bienes_otros}
           models={bienes}
           set_models={set_bienes}
+          show_search_button={false}
           button_submit_label="Buscar bien"
           form_inputs={[
             {

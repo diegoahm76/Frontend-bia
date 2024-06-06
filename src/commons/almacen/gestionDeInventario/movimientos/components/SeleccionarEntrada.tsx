@@ -8,27 +8,29 @@ import { set_current_entrada, set_entradas, } from '../store/slice/indexEntrega'
 interface IProps {
     control_entrada_entrega: any;
     get_values: any;
+    reset_values: any;
 }
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => {
+const SeleccionarEntrada = ({ control_entrada_entrega, get_values, reset_values }: IProps) => {
 
     const dispatch = useAppDispatch();
 
     const { entradas } = useAppSelector((state) => state.entrega_otros)
 
     const columns_entrada: GridColDef[] = [
-        { field: 'numero_entrada_almacen', headerName: 'Número de entrada', width: 250 },
-        { field: 'tipo_entrada', headerName: 'Tipo de entrada', width: 250 },
+        { field: 'numero_entrada_almacen', headerName: 'Número de entrada', minWidth: 250, flex: 1 },
+        { field: 'tipo_entrada', headerName: 'Tipo de entrada', minWidth: 250, flex: 1 },
 
         {
             field: 'fecha_entrada',
             headerName: 'Fecha de entrada',
-            width: 250,
+            minWidth: 250,
+            flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.fecha_entrada.split('T')[0]}
                 </div>
             ),
         },
@@ -36,8 +38,8 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
         {
             field: 'observacion',
             headerName: 'Observación',
-            width: 350,
-
+            minWidth: 350,
+            flex: 1,
         },
 
     ];
@@ -50,10 +52,21 @@ const SeleccionarEntrada = ({ control_entrada_entrega, get_values }: IProps) => 
 
     };
 
+    const clear_fields = () => {
+        reset_values((prev: any) => {
+            return {
+                ...prev,
+                numero_entrada_almacen: null,
+                id_tipo_entrada: null,
+            }
+        })
+    }
+
     return (
         <>
             <Grid container direction="row" padding={2} borderRadius={2}>
                 <BuscarModelo
+                    clear_fields={clear_fields}
                     set_current_model={set_current_entrada}
                     row_id={'id_entrada_almacen'}
                     columns_model={columns_entrada}

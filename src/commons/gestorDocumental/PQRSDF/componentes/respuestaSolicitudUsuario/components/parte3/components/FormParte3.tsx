@@ -80,6 +80,8 @@ export const FormParte3 = ({
 
   const [documentosFinalizados, setDocumentosFinalizados] = useState<any[]>([]);
   const [docSelected, setDocSelected] = useState<any>('');
+  const [isFileUpload, setIsFileUpload] = useState(false);
+
 
   useEffect(() => {
     if (currentAnexo) {
@@ -234,6 +236,7 @@ export const FormParte3 = ({
     const dataEditAnexo = createAnexoData(currentAnexo);
     // Reset functions that are common to both cases
     resetFormulario();
+    setIsFileUpload(false);
     resetManejoMetadatosModalFunction();
     dispatch(setMetadatos(null as any));
 
@@ -281,7 +284,8 @@ export const FormParte3 = ({
     {
       headerName: 'Acciones',
       field: 'Acciones',
-      minWidth: 300,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params: any) => {
         return (
           <>
@@ -345,7 +349,7 @@ export const FormParte3 = ({
         }}
       >
         <Grid container spacing={2}>
-          {/* <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={4}>
             <Controller
               name="ruta_soporte"
               control={controlFormulario}
@@ -365,6 +369,7 @@ export const FormParte3 = ({
                       marginTop: '.15rem',
                       width: '100%',
                     }}
+                    disabled={docSelected}
                     startIcon={<FilePresentIcon />}
                   >
                     {value === '' || value === null
@@ -378,7 +383,7 @@ export const FormParte3 = ({
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
                           const file = files[0];
-                          console.log(file,"file");
+                          setIsFileUpload(true);
                           controlar_tamagno_archivos(file,onChange)
                         }
                       }}
@@ -404,7 +409,7 @@ export const FormParte3 = ({
                 </>
               )}
             />
-          </Grid> */}
+          </Grid>
           <Grid item xs={12} sm={4}>
             <Controller
               name="ruta_soporte"
@@ -415,6 +420,7 @@ export const FormParte3 = ({
                   <TextField
                     select
                     fullWidth
+                    disabled={isFileUpload}
                     label="Documento a cargar"
                     size="small"
                     variant="outlined"
@@ -478,7 +484,7 @@ export const FormParte3 = ({
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Controller
               name="medio_alamacenamiento"
               control={controlFormulario}
@@ -508,7 +514,7 @@ export const FormParte3 = ({
           <Grid
             item
             xs={12}
-            sm={4}
+            sm={3}
             sx={{
               mb: '2rem',
             }}
@@ -547,7 +553,7 @@ export const FormParte3 = ({
           </Grid>
 
           {/*  modal de metadatos */}
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Button
               sx={{
                 width: '100%',
@@ -565,7 +571,7 @@ export const FormParte3 = ({
             </Button>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Button
               sx={{
                 width: '100%',

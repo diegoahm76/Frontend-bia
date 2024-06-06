@@ -89,8 +89,8 @@ const SeleccionarSolicitudDespacho = ({
     const fecha2 = get_values('fecha_despacho_hasta')
 
     // Convertir las fechas al formato deseado
-    const fecha_despacho_desde = dayjs(fecha).format('YYYY-MM-DD HH:mm:ss');
-    const fecha_despacho_hasta = dayjs(fecha2).format('YYYY-MM-DD HH:mm:ss');
+    const fecha_despacho_desde = fecha ? dayjs(fecha).format('YYYY-MM-DD HH:mm:ss') : '';
+    const fecha_despacho_hasta = fecha2 ? dayjs(fecha2).format('YYYY-MM-DD HH:mm:ss') : '';
 
     void dispatch(get_solicitudes_despacho_fecha(fecha_despacho_desde, fecha_despacho_hasta));
   };
@@ -108,7 +108,7 @@ const SeleccionarSolicitudDespacho = ({
           get_filters_models={get_solicitudes_filtro}
           title_table_modal={'Solicitudes encontradas'}
           button_submit_label="Buscar solicitud"
-          button_modal_disabled={!watch_solicitud('fecha_despacho_desde')}
+          // button_modal_disabled={!watch_solicitud('fecha_despacho_desde')}
           clear_fields={clear_fields}
           set_models={set_solicitudes}
 

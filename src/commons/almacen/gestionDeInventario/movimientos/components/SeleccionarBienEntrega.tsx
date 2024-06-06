@@ -25,6 +25,7 @@ import {
     control_error,
     get_bien_code_service,
 } from '../store/thunks/entregaThunks';
+import { get_bienes_consumo } from '../../../registroSolicitudesAlmacen/solicitudBienConsumo/store/solicitudBienConsumoThunks';
 interface IProps {
     get_values: any;
 }
@@ -388,6 +389,17 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
         });
         set_aux_insumos(aux_items);
     };
+
+    const get_bienes_filtro: any = (async () => {
+        //  console.log('')("buscar...")
+        const codigo_bien = get_values_bien("codigo_bien")
+        const nombre = get_values_bien("nombre")
+        // if (codigo_bien !== null && codigo_bien !== undefined && nombre !== null && nombre !== undefined) {
+            //TODO: Validar si este es el service
+            void dispatch(get_bienes_consumo(codigo_bien, nombre))
+        // }
+    })
+
     return (
         <>
             <Grid container direction="row" padding={2} borderRadius={2}>
@@ -396,9 +408,8 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
                     row_id={'id_inventario'}
                     columns_model={columns_bienes}
                     models={bienes}
-                    get_filters_models={null}
+                    get_filters_models={get_bienes_filtro}
                     set_models={set_bienes_entrada}
-                    show_search_button={false}
                     button_submit_label="Buscar bien"
                     form_inputs={[
                         {
@@ -408,7 +419,7 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 5,
+                            md: 3,
                             control_form: control_bien,
                             control_name: 'codigo_bien',
                             default_value: '',
@@ -420,15 +431,14 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
                             },
                             label: 'Código bien',
                             type: 'number',
-                            disabled: current_entrega.id_despacho_consumo !== null,
+                            disabled: true,
                             helper_text: '',
-                            on_blur_function: search_bien,
                         },
 
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 7,
+                            md: 5,
                             control_form: control_bien,
                             control_name: 'nombre',
                             default_value: '',
@@ -544,8 +554,35 @@ const SeleccionarBienEntrega = ({ get_values }: IProps) => {
                     add_list_button_label={action}
                     columns_list={columns_bienes_despacho}
                     row_list_id={'id_item_despacho_consumo'}
-                    modal_select_model_title="Buscar bien"
-                    modal_form_filters={[]}
+                    modal_select_model_title='Buscar bien'
+                    modal_form_filters={[
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "codigo_bien",
+                            default_value: "",
+                            rules: {},
+                            label: "Código bien",
+                            type: "number",
+                            disabled: false,
+                            helper_text: "",
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 3,
+                            control_form: control_bien,
+                            control_name: "nombre",
+                            default_value: "",
+                            rules: {},
+                            label: "Nombre",
+                            type: "text",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                    ]}
                 />
 
                 <SeleccionarModeloDialogForm
