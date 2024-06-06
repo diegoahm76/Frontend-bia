@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../../solicitudBienConsumo/store/solicitudBienConsumoThunks';
 import dayjs, { Dayjs } from 'dayjs';
 import RechazoSolicitud from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/RechazarSolicitud';
-import { clear_bienes, clear_bienes_solicitud, clear_current_funcionario, clear_current_solicitud, clear_persona_solicita, set_current_solicitud, set_persona_solicita } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
+import { clear_current_funcionario, clear_persona_solicita, set_current_solicitud } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
 import FuncionarioRechazo from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
 import BienRechazado from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/BienesRechazo';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
@@ -81,8 +81,7 @@ const RechazoSolicitudScreen = () => {
             fecha_rechazo_almacen: dayjs().format('YYYY-MM-DD'),
             // fecha_rechazo_almacen: new Date().toString(),
         };
-        void dispatch(rechazar_solicitud_service(form_data, data.id_solicitud_consumibles || 0));
-        //  console.log('')(form_data);
+        void dispatch(rechazar_solicitud_service(form_data, data?.id_solicitud_consumibles || 0));
     };
 
 

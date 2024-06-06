@@ -89,7 +89,8 @@ const SeleccionarSolicitudRechazo = ({
     ];
 
     const get_solicitudes_filtro: any = async () => {
-        void dispatch(get_solicitudes_pendientes_despacho());
+        const param = get_values("nro_solicitud_por_tipo");
+        void dispatch(get_solicitudes_pendientes_despacho(param));
     };
 
     return (

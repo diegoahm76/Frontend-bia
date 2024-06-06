@@ -221,9 +221,9 @@ const DespachoBienesConsumoScreen = () => {
       const data_edit: IObjDespacho = {
         ...data,
         id_bodega_general: bodega_seleccionada.id_bodega,
-        es_despacho_conservacion:
-          current_solicitud.es_solicitud_de_conservacion,
+        es_despacho_conservacion: current_solicitud.es_solicitud_de_conservacion,
         fecha_despacho: formatted_date_time,
+        // fecha_despacho: current_solicitud.fecha_despacho,
         id_solicitud_consumo: current_solicitud.id_solicitud_consumibles,
         fecha_solicitud: current_solicitud.fecha_solicitud,
         numero_solicitud_por_tipo: current_solicitud.nro_solicitud_por_tipo,
@@ -299,7 +299,13 @@ const DespachoBienesConsumoScreen = () => {
   };
 
   const clear_fields = (): void => {
-    reset_solicitud_aprobacion();
+    reset_solicitud_aprobacion((prev: any) => {
+      return {
+        ...prev,
+        fecha_despacho_desde: null,
+        fecha_despacho_hasta: null,
+      }
+    });
   }
 
   return (
@@ -320,6 +326,7 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarDespacho
           control_despacho={control_despacho}
           get_values={get_values}
+          reset_values={reset_despacho}
           open_modal={open_search_modal}
           set_open_modal={set_open_search_modal}
         />

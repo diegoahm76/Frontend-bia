@@ -156,6 +156,7 @@ const SolicitudConsumoScreen = () => {
 
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitud
+                    reset_values={reset_solicitud}
                     control_solicitud={control_solicitud}
                     get_values={get_values}
                     title={"Solicitudes de consumo"}
