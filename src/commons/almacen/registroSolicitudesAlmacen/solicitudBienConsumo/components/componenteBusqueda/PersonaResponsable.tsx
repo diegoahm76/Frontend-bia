@@ -135,7 +135,7 @@ const FuncionarioResponsable = ({
     const clear_filter = () => {
         reset_persona({
             tipo_documento: "",
-            numero_documento: 0,
+            numero_documento: null,
             nombre_completo: "",
             nombre_unidad_organizacional_actual: "",
             id_unidad_para_la_que_solicita: 0

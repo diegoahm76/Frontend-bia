@@ -49,7 +49,7 @@ const SeleccionarBienConsumoVivero = () => {
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 350, flex: 1,
+            width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -59,14 +59,23 @@ const SeleccionarBienConsumoVivero = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 350, flex: 1,
+            width: 200, flex: 2,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
                 </div>
             ),
         },
-
+        {
+            field: 'cod_tipo_elemento_vivero',
+            headerName: 'Tipo bien',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.cod_tipo_elemento_vivero === "IN" ? "Insumo" : params.row.cod_tipo_elemento_vivero === "MV" ? "Material Vegetal" : "Herramienta"}
+                </div>
+            ),
+        },
 
     ];
     const columns_bienes_solicitud: GridColDef[] = [
@@ -91,7 +100,16 @@ const SeleccionarBienConsumoVivero = () => {
                 </div>
             ),
         },
-
+        {
+            field: 'tipo_bien',
+            headerName: 'Tipo bien',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
         {
             field: 'cantidad',
             headerName: 'Cantidad',
@@ -264,6 +282,19 @@ const SeleccionarBienConsumoVivero = () => {
         set_aux_bienes_solicitud(aux_items)
 
     };
+
+    const clear_fields = (): void => {
+        reset_bien_solicitud(prev => {
+            return {
+                ...prev,
+                codigo_bien: "",
+                nombre: "",
+                cod_tipo_elemento_vivero: ""
+            }
+
+        })
+    }
+
     return (
         <>
             <Grid
@@ -273,6 +304,7 @@ const SeleccionarBienConsumoVivero = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
+                    clear_fields={clear_fields}
                     set_current_model={set_current_bien_vivero}
                     row_id={"id_bien"}
                     columns_model={columns_bienes}
@@ -295,7 +327,7 @@ const SeleccionarBienConsumoVivero = () => {
                             rules: { required_rule: { rule: true, message: "Código bien requerido" } },
                             label: "Código bien",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                             on_blur_function: search_bien
                         },
@@ -309,7 +341,7 @@ const SeleccionarBienConsumoVivero = () => {
                             rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
                             label: "Nombre",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                     ]}
