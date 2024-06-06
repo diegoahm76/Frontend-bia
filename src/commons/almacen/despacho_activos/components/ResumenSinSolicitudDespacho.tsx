@@ -1,4 +1,4 @@
-import { Chip, Divider, Grid, TextField } from '@mui/material';
+import { Button, Chip, Divider, Grid, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { Title } from '../../../../components';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
@@ -6,6 +6,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import TablaArticulosDespachados from '../tables/TablaArticulosDespachados';
 import { interface_resumen_despacho_sin_solicitud } from '../interfeces/types';
+import { baseURL } from '../../../../api/axios';
 interface props {
   data_solicitud_ver_por_id_sin_solicitud: interface_resumen_despacho_sin_solicitud
 }
@@ -14,6 +15,8 @@ interface props {
 const ResumenSinSolicitudDespacho: React.FC<props> = ({
   data_solicitud_ver_por_id_sin_solicitud,
 }) => {
+
+  const url_base = baseURL.replace("/api/", "");
 
   return (
     <>
@@ -183,6 +186,20 @@ const ResumenSinSolicitudDespacho: React.FC<props> = ({
         <TablaArticulosDespachados
           articulos_despachados={data_solicitud_ver_por_id_sin_solicitud?.items_despacho}
         />
+
+        <Title title='Anexos'/>
+        {data_solicitud_ver_por_id_sin_solicitud?.archivos_digitales?.length > 0 && data_solicitud_ver_por_id_sin_solicitud?.archivos_digitales?.map((archivo, index) => (
+          <Button
+            sx={{mt: '1rem'}}
+            key={index}
+            variant="outlined"
+            color="primary"
+            onClick={() => window.open(url_base + archivo.ruta_archivo, '_blank')}
+          >
+            {archivo.nombre_de_Guardado}
+          </Button>
+        ))}
+
 
       </Grid>
     </>

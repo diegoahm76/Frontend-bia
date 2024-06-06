@@ -180,7 +180,6 @@ const FuncionarioRechazo = ({ title, get_values_solicitud }: IProps) => {
               rules: { required_rule: { rule: true, message: 'requerido' } },
               label: 'Tipo documento',
               disabled: true,
-              helper_text: 'debe seleccionar campo',
               select_options: document_type,
               option_label: 'label',
               option_key: 'value',
@@ -196,7 +195,6 @@ const FuncionarioRechazo = ({ title, get_values_solicitud }: IProps) => {
               label: 'Número de documento',
               type: 'number',
               disabled: true,
-              helper_text: 'Digite para buscar',
             },
             {
               datum_type: 'input_controller',
@@ -237,7 +235,7 @@ const FuncionarioRechazo = ({ title, get_values_solicitud }: IProps) => {
               rules: { required_rule: { rule: true, message: "requerido" } },
               label: "Unidad organizacional",
               disabled: false,
-              helper_text: "debe seleccionar campo",
+              helper_text: "Seleccione una unidad organizacional",
               select_options: unidad_organizacional,
               option_label: "nombre",
               option_key: "id_unidad_organizacional"

@@ -146,8 +146,8 @@ const SeleccionarBienDespacho = () => {
   const columns_bienes_despacho: GridColDef[] = [
 
     {
-      field: 'codigo_bien',
-      headerName: 'Codigo',
+      field: 'codigo_bien_despacho',
+      headerName: 'Codigo bien',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>

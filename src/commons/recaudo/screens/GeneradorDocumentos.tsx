@@ -390,7 +390,8 @@ export const GeneradorDocumentos: React.FC = () => {
       plantilla: idPlantilla,
       payload: {...data, ...matchingData},
     };
-    if(hasValue(data) || hasValue(matchingData)){
+    // if(hasValue(data) || hasValue(matchingData)){
+    if(true){
 
       if(updateBorrador && !isUploadDocument){
         sendData.variable = 'B'

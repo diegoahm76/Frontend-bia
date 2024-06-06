@@ -34,6 +34,7 @@ interface BuscarProps {
   set_selectedIds: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
+
 export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_selectedIds, selectedIds, set_position_tab, set_cobro_persuasivo_active, is_modal_active, set_is_modal_active }) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [seledexpediente, set_seledexpediente] = useState<readonly string[]>([]);
