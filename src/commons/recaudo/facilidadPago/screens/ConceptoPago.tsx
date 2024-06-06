@@ -80,7 +80,6 @@ export const ConceptoPago: React.FC = () => {
     };
 
 
-
     const ActuailizarEstadoVariable = async (id_valor_varaible: number, usada: boolean) => {
         try {
             const url = `recaudo/configuracion_baisca/valoresvariables_estado/put/${id_valor_varaible}/`;
