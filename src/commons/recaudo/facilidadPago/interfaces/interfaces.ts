@@ -128,6 +128,8 @@ export interface Contribuyente {
   identificacion: string;
   nombre_contribuyente: string;
   obligaciones:any;
+  monto_total_con_intereses:number;
+  monto_total:number
 }
 
 export interface RegistroFacilidadPago {
