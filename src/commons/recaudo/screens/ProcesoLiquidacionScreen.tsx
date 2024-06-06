@@ -125,6 +125,7 @@ const detalles_periodos: DetallesPeriodos = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProcesoLiquidacionScreen: React.FC = () => {
+  
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 
@@ -563,7 +564,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });
@@ -576,12 +576,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   );
 
   const columns_deudores: GridColDef[] = [
-    // {
-    //   field: 'id',
-    //   headerName: 'ID',
-    //   minWidth: 110,
-    //   flex: 0.1,
-    // },
     {
       field: 'identificacion',
       headerName: 'Identificación',

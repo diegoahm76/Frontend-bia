@@ -1,8 +1,8 @@
-import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField } from '@mui/material';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { Grid, Box, IconButton, Avatar, Tooltip, FormControl, Select, InputLabel, MenuItem, Stack, Button, TextField, CircularProgress, ButtonGroup } from '@mui/material';
 import { SearchOutlined, FilterAltOffOutlined, Article } from '@mui/icons-material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { TablaObligacionesUsuarioConsulta } from './TablaObligacionesUsuarioConsulta';
 import { type event, type ObligacionesUsuario, type Contribuyente } from '../interfaces/interfaces';
 import { useSelector, useDispatch } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
@@ -10,6 +10,9 @@ import { get_obligaciones_id } from '../slices/ObligacionesSlice';
 import { get_filtro_deudores, get_deudores } from '../slices/DeudoresSlice';
 import { Title } from '../../../../components';
 import { control_error } from '../../../../helpers';
+import { ModalVerObligaciones } from './ModalVerObligaciones/ModalVerObligaciones';
+import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
+import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface RootStateDeudores {
   deudores: {
@@ -37,7 +40,7 @@ export const TablaDeudores: React.FC = () => {
     {
       field: 'identificacion',
       headerName: 'Número Identificación',
-      width: 250,
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -47,7 +50,27 @@ export const TablaDeudores: React.FC = () => {
     {
       field: 'nombre_contribuyente',
       headerName: 'Nombre Contribuyente',
-      width: 400,
+      flex: 1,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'monto_total',
+      headerName: 'Monto Total',
+      flex: 1,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'monto_total_con_intereses',
+      headerName: 'Monto Total Con Interes',
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -57,14 +80,14 @@ export const TablaDeudores: React.FC = () => {
     {
       field: 'acciones',
       headerName: 'Acción',
-      width: 150,
+      flex: 1,
       renderCell: (params) => {
         // Verificar si 'obligaciones' es false
         if (!params.row.obligaciones) {
           // No renderizar IconButton si 'obligaciones' es false
           return null;
         }
-    
+
         // Renderizar IconButton si 'obligaciones' no es false
         return (
           <>
@@ -100,9 +123,8 @@ export const TablaDeudores: React.FC = () => {
         )
       },
     },
-    
   ];
-//  console.log('')(visible_rows)
+
   useEffect(() => {
     set_visible_rows(deudores)
   }, [deudores])
@@ -123,7 +145,7 @@ export const TablaDeudores: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
-        <Title title='Listado de deudores'/>
+        <Title title='Listado de deudores' />
         <Grid item xs={12}>
           <Box
             component="form"
@@ -136,28 +158,27 @@ export const TablaDeudores: React.FC = () => {
               spacing={2}
               sx={{ mb: '20px', mt: '20px' }}
             >
-              <FormControl sx={{ minWidth: 130 }}>
-                <InputLabel>Filtrar por: </InputLabel>
-                  <Select
-                    label="Filtrar por: "
-                    onChange={(event: event)=>{
-                      const { value } = event.target
-                      set_filter(value)
-                    }}
-                    defaultValue={''}
-                  >
-                    <MenuItem value='identificacion'>Número Identificación</MenuItem>
-                    <MenuItem value='nombre_contribuyente'>Nombre Contribuyente</MenuItem>
-                  </Select>
-              </FormControl>
               <TextField
                 required
-                label="Búsqueda"
+                label="Búsqueda por Número Identificación"
                 size="medium"
-                onChange={(event: event)=>{
+                onChange={(event: event) => {
                   const { value } = event.target
                   set_search(value)
+                  set_filter('identificacion')
                 }}
+                sx={{ width: '300px' }} // Ajusta el ancho aquí
+              />
+              <TextField
+                required
+                label="Búsqueda por Nombre Contribuyente"
+                size="medium"
+                onChange={(event: event) => {
+                  const { value } = event.target
+                  set_search(value)
+                  set_filter('nombre_contribuyente')
+                }}
+                sx={{ width: '300px' }} // Ajusta el ancho aquí
               />
               <Button
                 color='primary'
@@ -165,7 +186,7 @@ export const TablaDeudores: React.FC = () => {
                 startIcon={<SearchOutlined />}
                 onClick={() => {
                   try {
-                    void dispatch(get_filtro_deudores({parametro: filter, valor: search}));
+                    void dispatch(get_filtro_deudores({ parametro: filter, valor: search }));
                   } catch (error: any) {
                     throw new Error(error);
                   }
@@ -188,6 +209,7 @@ export const TablaDeudores: React.FC = () => {
                 Mostrar Todo
               </Button>
             </Stack>
+
           </Box>
         </Grid>
       </Grid>
@@ -208,6 +230,20 @@ export const TablaDeudores: React.FC = () => {
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
+                  <ButtonGroup
+                    style={{
+                      margin: 7,
+                      display: 'flex',
+                      justifyContent: 'flex-end',
+                    }}
+                  >
+                    {download_xls({ nurseries: visible_rows, columns })}
+                    {download_pdf({
+                      nurseries: visible_rows,
+                      columns,
+                      title: 'Listado de proyectos',
+                    })}
+                  </ButtonGroup>
                   <DataGrid
                     autoHeight
                     disableSelectionOnClick
@@ -217,6 +253,7 @@ export const TablaDeudores: React.FC = () => {
                     rowsPerPageOptions={[10]}
                     experimentalFeatures={{ newEditingApi: true }}
                     getRowId={(row) => row.identificacion}
+                    loading={visible_rows.length === 0} // Muestra un loader mientras se cargan los datos
                   />
                 </Box>
               </Grid>
@@ -226,35 +263,45 @@ export const TablaDeudores: React.FC = () => {
       }
       {
         obligaciones_module ? (
-        <Grid
-          container
-          sx={{
-            position: 'relative',
-            // background: '#FAFAFA',
-            borderRadius: '15px',
-            mb: '20px',
-            mt: '20px',
-            p: '20px',
-            // boxShadow: '0px 3px 6px #042F4A26',
-          }}
-        >
-          <Grid item xs={12}>
-            <Box
-              component="form"
-              noValidate
-              autoComplete="off"
-            >
-              {
-                obligaciones.length !== 0 ? (
-                  <>
+          <Grid
+            container
+            sx={{
+              position: 'relative',
+              borderRadius: '15px',
+              mb: '20px',
+              mt: '20px',
+              p: '20px',
+            }}
+          >
+            <Grid item xs={12}>
+              <Box
+                component="form"
+                noValidate
+                autoComplete="off"
+              >
+                {
+                  obligaciones.length !== 0 ? (
+                    <>
+                      <ModalVerObligaciones
+                        is_modal_active={is_modal_active}
+                        set_is_modal_active={set_is_buscar}
 
-                    {/* <TablaObligacionesUsuarioConsulta  is_modal_active={is_modal_active}  set_is_modal_active={set_is_buscar}/> */}
-                  </>
-                ): <p>.</p>
-              }
-            </Box>
+                      />
+                    </>
+                  ) : (
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      alignItems="center"
+                      minHeight={200}
+                    >
+                      <CircularProgress /> {/* Agrega un Circular Progress como loader */}
+                    </Box>
+                  )
+                }
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
         ) : null
       }
     </>

@@ -20,6 +20,8 @@ import { Tasa } from './Tasa';
 import Swal from 'sweetalert2';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 
 interface ConfiguracionBasica {
     valor: any;
@@ -31,6 +33,8 @@ interface ConfiguracionBasica {
     nombre_tipo_cobro: any;
     nombre_tipo_rentaany: any;
     id_valores_variables: any;
+    usada: boolean;
+    estado: boolean;
 }
 
 
@@ -80,7 +84,7 @@ export const ConceptoPago: React.FC = () => {
     const ActuailizarEstadoVariable = async (id_valor_varaible: number, usada: boolean) => {
         try {
             const url = `recaudo/configuracion_baisca/valoresvariables_estado/put/${id_valor_varaible}/`;
-            const data = {"usada": !usada}
+            const data = { "usada": !usada }
             const response = await api.put(url, data);
             let message = !usada ? 'Protegida' : 'Desprotegida';
             Swal.fire({
@@ -92,7 +96,7 @@ export const ConceptoPago: React.FC = () => {
             control_error(error.response.data.detail);
         }
     };
-    
+
 
     const columns = [
         { field: 'nombre_tipo_renta', headerName: 'Tipo de Renta', flex: 1 },
@@ -103,6 +107,28 @@ export const ConceptoPago: React.FC = () => {
 
         { field: 'fecha_inicio', headerName: 'fecha inicio', flex: 1 },
         { field: 'fecha_fin', headerName: 'Fecha fin', flex: 1 },
+        {
+            field: 'estado',
+            headerName: 'Usada',
+            flex: 1,
+            renderCell: (params: any) => (
+                <Chip
+                    icon={
+                        params.row.estado ? (
+                            <CheckCircleIcon style={{ color: 'green' }} />
+                        ) : (
+                            <CancelIcon style={{ color: 'red' }} />
+                        )
+                    }
+                    label={params.row.estado ? 'Usada' : 'No usada'}
+                    style={{
+                        borderColor: params.row.estado ? 'green' : 'red',
+                        color: params.row.estado ? 'green' : 'red',
+                    }}
+                    variant="outlined"
+                />
+            ),
+        },
         {
             field: 'usada',
             headerName: 'Protegida',
@@ -157,7 +183,7 @@ export const ConceptoPago: React.FC = () => {
                         color="primary"
                         onClick={() => ActuailizarEstadoVariable(params.row.id_valores_variables, params.row.usada)}
                     >
-                            {params.row.usada ? <LockIcon /> : <LockOpenIcon />}
+                        {params.row.usada ? <LockIcon /> : <LockOpenIcon />}
                     </IconButton>
 
 
