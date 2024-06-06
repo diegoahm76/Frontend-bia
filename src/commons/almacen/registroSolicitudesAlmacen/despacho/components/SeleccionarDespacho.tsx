@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { get_despachos_service } from '../store/thunks/despachoThunks';
+import dayjs from 'dayjs';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import EditIcon from '@mui/icons-material/Edit';
 
@@ -165,7 +166,8 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
     //  console.log('')("buscar...");
     const nro = get_values('numero_solicitud_por_tipo') ?? '';
     const id_unidad = get_values('id_unidad_para_la_que_solicita') ?? '';
-    const fecha_despacho = get_values('fecha_despacho') ? get_values('fecha_despacho').format('YYYY-MM-DD') : '';
+    const fecha = get_values('fecha_despacho') ?? '';
+    const fecha_despacho = fecha ? dayjs(fecha).format('YYYY-MM-DD') : '';
     const es_conservacion = get_values('es_despacho_conservacion') ?? '';
     void dispatch(get_despachos_service(nro, id_unidad, fecha_despacho, es_conservacion));
   };

@@ -28,7 +28,12 @@ const SeleccionarSolicitudRechazo = ({
 }: IProps) => {
 
     const clear_fields = () => {
-        reset_solicitud_aprobacion();
+        reset_solicitud_aprobacion((prev: any) => {
+            return {
+                ...prev,
+                nro_solicitud_por_tipo: null
+            }
+        });
     }
 
     // const { userinfo } = useSelector((state: AuthSlice) => state.auth);

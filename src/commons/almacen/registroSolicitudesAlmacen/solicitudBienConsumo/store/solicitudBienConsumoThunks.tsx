@@ -647,7 +647,8 @@ export const get_solicitudes_pendientes_despacho = (nro_solicitud_por_tipo: numb
     return async (dispatch: Dispatch<any>) => {
         try {
             const { data } = await api.get(`almacen/solicitudes/solicitudes-pendientes-por-despachar/?nro_solicitud_por_tipo=${nro_solicitud_por_tipo}`);
-            dispatch(set_solicitudes(data['Solicitudes pendientes por despahcar']))
+            console.log(data['Solicitudes pendientes por despachar'], 'hola')
+            dispatch(set_solicitudes(data['Solicitudes pendientes por despachar']))
             //  console.log('')(data);
             //  console.log('')(data, "data")
             if ('data' in data) {
@@ -657,7 +658,7 @@ export const get_solicitudes_pendientes_despacho = (nro_solicitud_por_tipo: numb
                     control_error("No se encontrarón solicitudes")
                 }
             }
-            if(!data['Solicitudes pendientes por despahcar'].length){
+            if(!data['Solicitudes pendientes por despachar'].length){
                 control_error("No se encontrarón solicitudes")
             }
             return data;

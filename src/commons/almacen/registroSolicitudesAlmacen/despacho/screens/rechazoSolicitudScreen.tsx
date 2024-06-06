@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_uni_organizacional, get_person_id_service, get_funcionario_id_service, rechazar_solicitud_service, get_bienes_solicitud } from '../../solicitudBienConsumo/store/solicitudBienConsumoThunks';
 import dayjs, { Dayjs } from 'dayjs';
 import RechazoSolicitud from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/RechazarSolicitud';
-import { clear_current_funcionario, clear_persona_solicita, set_current_solicitud } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
+import { clear_current_funcionario, clear_current_solicitud, clear_persona_solicita, set_current_solicitud } from '../../solicitudBienConsumo/store/slices/indexSolicitudBienesConsumo';
 import FuncionarioRechazo from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/PersonaRechazoSolicitud';
 import BienRechazado from '../../solicitudBienConsumo/components/DespachoRechazoSolicitud/BienesRechazo';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
@@ -32,10 +32,15 @@ const RechazoSolicitudScreen = () => {
     useEffect(() => {
         void dispatch(get_uni_organizacional());
         // dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }));
+        // return () => {
+        //     setTimeout(() => {
+        //         dispatch(clear_current_solicitud())
+        //     }, 2000)
+        // }
     }, []);
 
     useEffect(() => {
-        if(current_solicitud?.id_solicitud_consumibles){
+        // if(current_solicitud?.id_solicitud_consumibles){
             reset_solicitud_aprobacion(current_solicitud);
             if ('persona_solicita' in current_solicitud) {
                 reset_solicitud_aprobacion(current_solicitud);
@@ -55,11 +60,12 @@ const RechazoSolicitudScreen = () => {
                     }
                 }
             }
-        }else{
-            reset_solicitud_aprobacion(current_solicitud)
-            dispatch(clear_persona_solicita())
-            dispatch(clear_current_funcionario())
-        }
+        // }
+        // else{
+        //     reset_solicitud_aprobacion(current_solicitud)
+        //     dispatch(clear_persona_solicita())
+        //     dispatch(clear_current_funcionario())
+        // }
     }, [current_solicitud]);
 
     // useEffect(() => {
