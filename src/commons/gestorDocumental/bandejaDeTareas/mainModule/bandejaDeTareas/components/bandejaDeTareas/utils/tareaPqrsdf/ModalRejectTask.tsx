@@ -41,6 +41,8 @@ import { getListadoTramitesByPerson } from '../../../../../../toolkit/thunks/tra
 import { putRechazarTareaTramite } from '../../../../services/servicesStates/tramites/rechazarTramite/putRechazarTramite.service';
 import { getListadoTareasOpasByPerson } from '../../../../../../toolkit/thunks/opas/getListadoDeOpasByPerson.service';
 import { putRechazarTareaOpa } from '../../../../services/servicesStates/opas/rechazarTarea/RecharOpa.service';
+import { rejectTaskDocs } from '../../../../../../toolkit/thunks/documentos/rechazarTareaDocs.service';
+import { getListadoDocsByPerson } from '../../../../../../toolkit/thunks/documentos/getListDocsByPerson.service';
 
 export const ModalRejectTask: FC = (): JSX.Element => {
   //* dispatch declaration
@@ -99,8 +101,13 @@ export const ModalRejectTask: FC = (): JSX.Element => {
       listadoTareasType: 'ROtros',
     },
     'RESPONDER TRÁMITE': {
-      rejectTask: putRechazarTareaTramite, 
-      getListadoTareas: getListadoTramitesByPerson, 
+      rejectTask: putRechazarTareaTramite,
+      getListadoTareas: getListadoTramitesByPerson,
+      listadoTareasType: '',
+    },
+    'Responder Documentos': {
+      rejectTask: rejectTaskDocs,
+      getListadoTareas: getListadoDocsByPerson,
       listadoTareasType: '',
     },
     'RESPONDER OPA': {
@@ -159,6 +166,7 @@ export const ModalRejectTask: FC = (): JSX.Element => {
         setLoading
       );
 
+      console.log('rejectedTask', rejectedTask)
       if (rejectedTask?.status === 200 || rejectedTask?.success) {
         const listadoTareas = await taskType.getListadoTareas(
           id_persona,

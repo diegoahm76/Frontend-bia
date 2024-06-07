@@ -36,6 +36,10 @@ import { getAnexosOtros } from '../../../../../services/servicesStates/otros/ane
 import { columnsDocumentos } from './columnsDocumentos/ColumnsDocumentos';
 import { DownloadButton } from '../../../../../../../../../../utils/DownloadButton/DownLoadButton';
 import CallMadeIcon from '@mui/icons-material/CallMade';
+import { aceptarTareaDocs } from '../../../../../../../toolkit/thunks/documentos/aceptarTareaDocs.service';
+import { getListadoDocsByPerson } from '../../../../../../../toolkit/thunks/documentos/getListDocsByPerson.service';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import { ModalAsignados } from './ModalAsignados';
 
 export const ElementosDocumentos = (): JSX.Element => {
   //* dispatch declaration
@@ -60,11 +64,64 @@ export const ElementosDocumentos = (): JSX.Element => {
     handleSecondLoading,
     handleOpenModalNuevo,
     handleOpenModalNuevoNumero2,
+    setShowAsignaciones
   } = useContext(ModalAndLoadingContext);
 
 
   // ? FUNCIONES PARA EL COMPONENTE
 
+  const handleAcceptClick = async (row: {
+    id_tarea_asignada: number;
+    tipo_tarea: string;
+  }) => {
+    try {
+      const result = await Swal.fire({
+        title: 'Aceptar tarea',
+        text: `¿Estás seguro que deseas aceptar esta tarea?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+      });
+
+      if (result.isConfirmed) {
+        const res = await aceptarTareaDocs(
+          row.id_tarea_asignada
+        );
+
+        const listadoTareas = await getListadoDocsByPerson(
+          id_persona,
+          handleSecondLoading,
+        );
+
+        dispatch(setListaTareasPqrsdfTramitesUotrosUopas(listadoTareas ?? []));
+        dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(null));
+      } else {
+        await Swal.fire({
+          title: 'La tarea no ha sido aceptada',
+          icon: 'info',
+          showConfirmButton: true,
+        });
+      }
+    } catch (error) {
+      showAlert(
+        'Opps...',
+        'Ha ocurrido un error desconocido, por favor intente de nuevo',
+        'error'
+      );
+      return;
+    }
+  };
+
+  const handleRejectClick = (_row: any) => {
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
+    handleOpenModalNuevo(true);
+  };
+
+  const handleCommentClick = (_row: any) => {
+    handleOpenModalNuevoNumero2(true);
+    dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(_row));
+  };
 
   // ? FUNCIONES PARA EL COMPONENTE ---------------
 
@@ -91,7 +148,6 @@ export const ElementosDocumentos = (): JSX.Element => {
       field: "firma",
       width: 250,
       renderCell: (params: GridCellParams | GridValueGetterParams) => {
-        console.log(params);
         return (
           <Chip
             size="small"
@@ -102,9 +158,78 @@ export const ElementosDocumentos = (): JSX.Element => {
       },
     },
     {
+      headerName: 'Estado asignación de tarea',
+      field: 'estado_asignacion_tarea',
+      minWidth: 220,
+      renderCell: (params: GridCellParams | GridValueGetterParams) => {
+        switch (params.row.estado_asignacion_tarea) {
+          case null:
+            return (
+              <>
+                <Tooltip title="Aceptar tarea">
+                  <DownloadDoneIcon
+                    sx={{ ...iconStyles, background: 'green' }}
+                    onClick={() => handleAcceptClick(params.row)}
+                  />
+                </Tooltip>
+                <Tooltip title="Rechazar tarea">
+                  <ClearIcon
+                    sx={{ ...iconStyles, background: 'red' }}
+                    onClick={() => handleRejectClick(params.row)}
+                  />
+                </Tooltip>
+              </>
+            );
+          case 'Aceptado':
+            return (
+              <Chip
+                label="Tarea aceptada"
+                color="success"
+                variant="outlined"
+                size="small"
+              />
+            );
+          case 'Rechazado':
+            return (
+              <>
+                <Chip
+                  label="Tarea rechazada"
+                  color="error"
+                  variant="outlined"
+                  size="small"
+                />
+                <Tooltip title="Ver motivo de rechazo">
+                  <CommentIcon
+                    sx={{
+                      ...iconStyles,
+                      color: 'primary.main',
+                      background: undefined,
+                    }}
+                    onClick={() => handleCommentClick(params.row)}
+                  />
+                </Tooltip>
+              </>
+            );
+          case 'Cancelado':
+            return (
+              <>
+                <Chip
+                  label="Tarea Cancelada"
+                  color="warning"
+                  variant="outlined"
+                  size="small"
+                />
+              </>
+            );
+          default:
+            return null;
+        }
+      },
+    },
+    {
       headerName: 'Acciones',
       field: 'Acciones',
-      minWidth: 200,
+      minWidth: 220,
       renderCell: (params: GridCellParams | GridValueGetterParams) => {
         return (
           <>
@@ -147,6 +272,20 @@ export const ElementosDocumentos = (): JSX.Element => {
                 </Avatar>
               </IconButton>
             </Tooltip>
+
+            {params.row.documento?.id_persona_genera === id_persona && <Tooltip title="Ver usuarios asignados">
+              <AssignmentIndIcon
+                sx={{
+                  ...iconStyles,
+                  color: 'primary.main',
+                  background: undefined,
+                }}
+                onClick={() => {
+                  dispatch(setCurrentTareaPqrsdfTramitesUotrosUopas(params.row));
+                  setShowAsignaciones(true)
+                }}
+              />
+            </Tooltip>}
           </>
         );
       },
@@ -155,6 +294,11 @@ export const ElementosDocumentos = (): JSX.Element => {
 
   return (
     <>
+      {/*se genera un espacio para el modal que rechaza la tarea*/}
+      <ModalRejectTask />
+      {/*se genera un espacio para el modal que muestra el comentario de rechazo de la tarea*/}
+      <ModalSeeRejectedTask />
+      <ModalAsignados />
       <RenderDataGrid
         rows={
           listaTareasPqrsdfTramitesUotrosUopas /*.filter(

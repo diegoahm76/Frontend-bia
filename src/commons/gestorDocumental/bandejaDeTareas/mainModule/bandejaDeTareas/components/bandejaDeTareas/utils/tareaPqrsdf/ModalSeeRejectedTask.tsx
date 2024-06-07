@@ -42,6 +42,8 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
     ModalAndLoadingContext
   );
 
+  useEffect(() => console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas), [currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas])
+
   //* useState
   const [infoTareaRechazada, setInfoTareaRechazada] = useState('');
 
@@ -76,24 +78,26 @@ export const ModalSeeRejectedTask: FC = (): JSX.Element => {
       try {
         const { tipo_tarea } = listaTareasPqrsdfTramitesUotrosUopas[0] || {};
         const taskType = TASK_TYPES[tipo_tarea];
-
-        if (!taskType || !taskType.getInfoRejectedTask) {
+        if ((!taskType || !taskType.getInfoRejectedTask) && tipo_tarea !== 'Responder Documentos') {
           showAlert(
             'Opss..',
             'No se pudo hacer la petición para obtener la información de la justificación del rechazo, ha ocurrido un error, por favor intente de nuevo',
             'error'
           );
         }
+        if(tipo_tarea !== 'Responder Documentos') {
+          const getJustificacion = await taskType.getInfoRejectedTask(
+            currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
+            handleOpenModalNuevoNumero2
+          );
 
-        const getJustificacion = await taskType.getInfoRejectedTask(
-          currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.id_tarea_asignada,
-          handleOpenModalNuevoNumero2
-        );
-
-        setInfoTareaRechazada(getJustificacion);
-        control_success(
-          'Se ha obtenido la justificación del rechazo de la tarea'
-        );
+          setInfoTareaRechazada(getJustificacion);
+          control_success(
+            'Se ha obtenido la justificación del rechazo de la tarea'
+          );
+        }else{
+          setInfoTareaRechazada(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.justificacion_rechazo);
+        }
       } catch (error) {
         showAlert(
           'Opss..',
