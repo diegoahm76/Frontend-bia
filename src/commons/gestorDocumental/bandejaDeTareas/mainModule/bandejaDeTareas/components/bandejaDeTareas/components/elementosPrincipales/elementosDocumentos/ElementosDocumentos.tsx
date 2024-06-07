@@ -234,15 +234,15 @@ export const ElementosDocumentos = (): JSX.Element => {
         return (
           <>
               <>
-                <DownloadButton
+              {(params.row.estado_asignacion_tarea == 'Aceptado' || params.row.estado_asignacion_tarea == null) && <DownloadButton
                 fileName={params.row?.documento?.archivos_digitales?.nombre_de_Guardado ?? 'Nombre-Bia'}
                 fileUrl={params?.row?.documento?.archivos_digitales?.ruta_archivo ?? ''}
                 condition={false}
-                  />
+                  />}
               </>
             {/* </Link>*/}
 
-            <Tooltip title="Ir a módulo de generador de documentos">
+            {(params.row.estado_asignacion_tarea == 'Aceptado' || params.row.estado_asignacion_tarea == null) &&<Tooltip title="Ir a módulo de generador de documentos">
               <IconButton
                 sx={{
                   marginLeft: '20px',
@@ -271,7 +271,7 @@ export const ElementosDocumentos = (): JSX.Element => {
                   />
                 </Avatar>
               </IconButton>
-            </Tooltip>
+            </Tooltip>}
 
             {params.row.documento?.id_persona_genera === id_persona && <Tooltip title="Ver usuarios asignados">
               <AssignmentIndIcon
