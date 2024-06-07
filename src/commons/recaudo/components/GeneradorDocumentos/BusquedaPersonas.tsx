@@ -40,8 +40,9 @@ interface IProps {
     personaSelected: any;
     setPersona: any;
     plantillaSeleccionada: any;
+    puedeReenviar: boolean;
 }
-export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, setPersona, plantillaSeleccionada }) => {
+export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, setPersona, plantillaSeleccionada, puedeReenviar }) => {
 
     const {
         userinfo
@@ -220,6 +221,7 @@ export const BusquedaPersonasGenerador: React.FC<IProps> = ({ personaSelected, s
                         }}
                         setPersons={setPersons}
                         plantillaSeleccionada={plantillaSeleccionada}
+                        puedeReenviar={puedeReenviar}
                     />
                 </Grid>
                 {personaSelecteda.length > 0 && <RenderDataGrid

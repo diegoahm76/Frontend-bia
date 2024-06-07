@@ -37,6 +37,7 @@ interface PropsBuscador {
   onResult: (data_persona: InfoPersona) => void;
   setPersons: (data: InfoPersona[]) => void;
   plantillaSeleccionada: any;
+  puedeReenviar: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -44,6 +45,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
   onResult,
   setPersons,
   plantillaSeleccionada,
+  puedeReenviar,
 }: PropsBuscador) => {
 
   const [form_search, set_form_search] = useState({
@@ -328,7 +330,7 @@ export const BuscadorPersona2: React.FC<PropsBuscador> = ({
             startIcon={<SearchIcon />}
             type="submit"
             onClick={handle_click_open}
-            disabled={!plantillaSeleccionada?.archivos_digitales}
+            disabled={!plantillaSeleccionada?.archivos_digitales && !puedeReenviar}
           >
             Busqueda Avanzada
           </Button>
