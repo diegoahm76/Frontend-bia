@@ -295,6 +295,7 @@ export const GeneradorDocumentos: React.FC = () => {
       }
       if(resp.data.data?.id_archivo_digital){
         setIsUploadDocument(true);
+        setHasRadicado(false);
         processPlantilla(resp.data.data, true);
         setCurrentBorrador(resp.data.data)
         if(!checked || isFromBandeja) setHasConsecutivo(true);
