@@ -78,17 +78,17 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
       {(file) && (
         <>
           <Grid sx={{display: 'flex', justifyContent: 'center', gap: '1rem', mb: '1.5rem'}}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{width: '200px'}}
-              href={file}
-              download
-              endIcon={<CloudDownloadIcon />}
-            >
-              Descargar
-            </Button>
+            <a href={file} target="_blank" rel="noopener noreferrer">
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{width: '200px'}}
+                endIcon={<CloudDownloadIcon />}
+              >
+                Descargar
+              </Button>
+            </a>
             <Button
               fullWidth
               sx={{width: '250px'}}
@@ -111,11 +111,18 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
               Limpiar Pantalla
             </Button>
           </Grid>
-          <DocViewer
+          {(obtenerExtension(file) == 'docx' || obtenerExtension(file) == 'doc') && <DocViewer
             pluginRenderers={DocViewerRenderers}
             documents={[{ uri: file, fileType: obtenerExtension(file) }]}
-            style={{height: 800, width: '70%', display: 'flex', margin: 'auto'}}
-          />
+            style={{height: 1000, width: '70%', display: 'flex', margin: 'auto'}}
+          />}
+          {(obtenerExtension(file) !== 'docx' && obtenerExtension(file) !== 'doc') && <embed
+            style={{display: 'flex', margin: 'auto'}}
+            src={file}
+            type="application/pdf"
+            width="70%"
+            height="1080px"
+          />}
           <ModalConfirmacionMail
             open={open}
             resetTime={resetTime}
