@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { createContext, type FC } from 'react';
+import { createContext, useState, type FC } from 'react';
 import { useModalAndLoading } from '../hooks/useModalAndLoading/useModalAndLoading';
 
 export const ModalAndLoadingContext = createContext<any>({});
@@ -8,6 +8,7 @@ export const ModalAndLoadingProvider: FC<any> = ({
   children,
 }: any): JSX.Element => {
   // ? hook to manage the loader for the section / sub section selection
+  const [showAsignaciones, setShowAsignaciones] = useState(false);
   const { isLoading: isLoadingSeccionSub, handleLoading: handleModalSecSub } =
     useModalAndLoading('', 'isLoading');
   const {
@@ -54,7 +55,7 @@ export const ModalAndLoadingProvider: FC<any> = ({
 
     const { isLoading: tenLoading, handleLoading: handleTenLoading } =
     useModalAndLoading('', 'isLoading');
-  
+
     const { isLoading: ElevenLoading, handleLoading: handleElevenLoading } =
     useModalAndLoading('', 'isLoading');
 
@@ -75,6 +76,8 @@ export const ModalAndLoadingProvider: FC<any> = ({
   //! you can add more call to hook if needed...
   // ? value object to return the data
   const value = {
+    showAsignaciones,
+    setShowAsignaciones,
     //* carga de seccion / subseccion
     isLoadingSeccionSub,
     handleModalSecSub,

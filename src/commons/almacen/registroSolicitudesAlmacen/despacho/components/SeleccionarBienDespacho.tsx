@@ -448,7 +448,7 @@ const SeleccionarBienDespacho = () => {
           get_filters_models={search_bienes_otros}
           models={bienes}
           set_models={set_bienes}
-          show_search_button={false}
+          // show_search_button={false}
           button_submit_label="Buscar bien"
           form_inputs={[
             {
