@@ -52,6 +52,8 @@ export interface props {
 export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormData, handleInputChange,formData}) => {
   const [asignaciones, setAsignaciones] = useState<AsignacionEncuesta[]>([]);
 
+  useEffect(() => console.log(asignaciones), [asignaciones])
+
   const initialFormData: FormData = {
     id_persona_alertar: null,
     pqrs: '',
@@ -161,7 +163,7 @@ export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormDa
   };
   return (
     <>
-     
+
      <Grid item xs={12} sm={3}>
           <FormControl size="small" fullWidth>
             <InputLabel>Tipos de PQRS</InputLabel>
@@ -207,17 +209,17 @@ export const ConsultaExternoPQR: React.FC<props> = ({setestado, estado,setFormDa
         </Grid>
 
 
-     
-       
-     
+
+
+
         <RenderDataGrid
           title="Resultados de la busqueda"
           rows={asignaciones}
           columns={columns}
         />
-         
-         
-      
+
+
+
     </>
   );
 };

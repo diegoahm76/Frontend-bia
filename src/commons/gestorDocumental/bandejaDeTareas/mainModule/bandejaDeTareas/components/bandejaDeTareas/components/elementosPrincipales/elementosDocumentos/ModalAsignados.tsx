@@ -146,7 +146,7 @@ export const ModalAsignados: FC = (): JSX.Element => {
       flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.row.cod_estado_asignacion == 'Ac' ? 'Aceptado' : (params.row.cod_estado_asignacion == 'Re' ? 'Rechazado' : (params.row.cod_estado_asignacion == 'Ca' ? 'Cancelado' : 'Sin estado'))}
+          {params.row.cod_estado_asignacion == 'Ac' ? 'Aceptado' : (params.row.cod_estado_asignacion == 'Re' ? 'Rechazado' : (params.row.cod_estado_asignacion == 'Ca' ? 'Cancelado' : 'Pendiente'))}
         </div>
       ),
     },
