@@ -20,7 +20,7 @@ export const PersonaTitular = (): JSX.Element => {
         mt: '2rem',
       }}
     >
-      <Title title="Persona titular de la " />
+      <Title title="Persona titular del permiso menor" />
       <form
         style={{
           marginTop: '3rem',

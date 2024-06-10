@@ -113,7 +113,7 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
       width: 80,
       renderCell: (params: any) => (
         <>
-          <Tooltip title="Responder requerimiento de la OPA seleccionada">
+          <Tooltip title="Responder requerimiento del PM seleccionado">
             <IconButton
               onClick={async () => {
                 console.log('siuuuu bor nos fuimos');
@@ -159,10 +159,47 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
         >
           <Loader altura={270} />
         </Grid>
-      ) : listaOpas?.opasSinResponder.length ? (
+      ) : /*listaOpas?.opasSinResponder.length*/ !listaOpas?.opasSinResponder.length ? (
         <RenderDataGrid
           title="Solicitudes de opas presentadas por persona - Existentes"
-          rows={listaOpas?.opasSinResponder ?? []}
+          rows={/*listaOpas?.opasSinResponder ||*/ [
+            {
+              "tipo_solicitud": "OPA",
+              "nombre_proyecto": "Proyecto de Reforestación",
+              "nombre_opa": "Reforestación de áreas degradadas",
+              "nombre_completo_titular": "Juan Pérez García",
+              "costo_proyecto": 50000,
+              "pagado": true,
+              "cantidad_predios": 2,
+              "cantidad_anexos": 5,
+              "radicado": "UNICO-2023-00567",
+              "fecha_radicado": "2023-05-15T10:30:00.000Z",
+              "sede": "Norte",
+              "requiere_digitalizacion": false,
+              "estado_actual": "REVISIÓN TÉCNICA",
+              "estado_asignacion_grupo": "Grupo de Evaluación 1",
+              "persona_asignada": "Ana Martínez",
+              "unidad_asignada": "Unidad de Gestión Ambiental"
+            },
+            {
+              "tipo_solicitud": "OPA",
+              "nombre_proyecto": "Instalación de Paneles Solares",
+              "nombre_opa": "Implementación de energías renovables",
+              "nombre_completo_titular": "Laura Jiménez Rodríguez",
+              "costo_proyecto": 75000,
+              "pagado": false,
+              "cantidad_predios": 1,
+              "cantidad_anexos": 3,
+              "radicado": "UNICO-2023-00892",
+              "fecha_radicado": "2023-08-22T14:20:00.000Z",
+              "sede": "Sur",
+              "requiere_digitalizacion": true,
+              "estado_actual": "PENDIENTE DE PAGO",
+              "estado_asignacion_grupo": "Grupo de Evaluación 2",
+              "persona_asignada": "Carlos Sánchez",
+              "unidad_asignada": "Unidad de Proyectos Especiales"
+            }
+          ]}
           columns={columnsMain ?? []}
         />
       ) : !currentPersonaRespuestaUsuario ? (
@@ -178,7 +215,7 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
           }}
         >
           <Typography variant="body2" color="textSecondary">
-            Este usuario no ha presentado opas y / o no se ha realizado la
+            Este usuario no ha presentado permisos menores y / o no se ha realizado la
             búsqueda
           </Typography>
         </Grid>
@@ -197,10 +234,29 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
         >
           <Loader altura={270} />
         </Grid>
-      ) : listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa.length ? (
+      ) : /*listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa.length*/ !listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa.length ? (
         <RenderDataGrid
           title="Solicitudes de requerimiento por persona - Existentes sin responder"
-          rows={listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa ?? []}
+          rows={/*listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa ??*/ [
+            {
+              "tipo_tramite": "Permiso de construcción",
+              "fecha_radicado": "2023-04-15",
+              "numero_radicado": "RAD-20230415-123",
+              "estado": "En revisión"
+            },
+            {
+              "tipo_tramite": "Licencia ambiental",
+              "fecha_radicado": "2023-03-22",
+              "numero_radicado": "RAD-20230322-456",
+              "estado": "Aprobado"
+            },
+            {
+              "tipo_tramite": "Renovación de permiso",
+              "fecha_radicado": "2023-05-05",
+              "numero_radicado": "RAD-20230505-789",
+              "estado": "Pendiente de pago"
+            }
+          ]}
           columns={columnsReq ?? []}
         />
       ) : !currentPersonaRespuestaUsuario ||
