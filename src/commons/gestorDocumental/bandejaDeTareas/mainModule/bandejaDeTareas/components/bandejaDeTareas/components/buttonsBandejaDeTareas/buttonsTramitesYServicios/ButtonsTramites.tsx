@@ -55,8 +55,6 @@ export const ButtonsTareaTramites: React.FC = (): JSX.Element => {
     () => {
       // console.log('Ver respuestas a requerimientos o solicitudes al usuario')
       handleSixthLoading(true);
-
-      
     }
   );
 
