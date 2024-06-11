@@ -1341,7 +1341,7 @@ export const RegistroFacilidadPago: React.FC = () => {
     if (valorAbonado > totalSum) {
       Swal.fire({
         icon: 'error',
-        title: "Valor Abonado es mayor que Total Suma",
+        title: "Valor abonado es mayor que la suma total",
       });
     } else {
       try {
