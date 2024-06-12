@@ -48,6 +48,9 @@ export const obtener_consumo_bienes_und: any = (filtros: { seleccion_tipo_despac
   return async () => {
     try {
       const { data } = await api.get(`almacen/inventario/control/despachos/get-list/?es_despacho_conservacion=${filtros.seleccion_tipo_despacho === 'Todos' ? '' : filtros.seleccion_tipo_despacho}&id_bien=${filtros.seleccion_bien}&id_unidad_para_la_que_solicita=${filtros.seleccion_unidad_org === 'Todos' ? '' : filtros.seleccion_unidad_org}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&no_discriminar=${filtros.discriminar}&id_funcionario_responsable=${filtros.id_responsable}&id_persona_solicita=${filtros.id_solicita}&id_persona_despacha=${filtros.id_despacha}&id_persona_anula=${filtros.id_anula}&id_bodega_reporte=${filtros.id_bodega_reporte}`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -61,6 +64,9 @@ export const obtener_entradas_inventario: any = (filtros: { seleccion_bodega: st
     try {
 
       const { data } = await api.get(`almacen/reportes/entradas-inventario/get-list/?id_bodega=${filtros.seleccion_bodega === 'Todos' ? '' : filtros.seleccion_bodega}&cod_tipo_bien=${filtros.seleccion_tipo_bien}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&codigo_bien=${filtros.codigo_bien}&nombre_bien=${filtros.nombre_bien}&placa_serial=${filtros.placa_serial}&consecutivo=${filtros.consecutivo}&id_responsable=${filtros.id_responsable}&id_proveedor=${filtros.id_proveedor}`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -73,6 +79,9 @@ export const obtener_control_stock: any = (solicitable_vivero: string, codigo_bi
   return async () => {
     try {
       const { data } = await api.get(`almacen/inventario/control/stock/get-list/?solicitable_vivero=${solicitable_vivero}&codigo_bien=${codigo_bien}&nombre_bien=${nombre_bien}&cod_tipo_entrada=${cod_tipo_entrada}&id_bodega=${id_bodega}&id_persona_responsable=${id_persona_responsable}&id_persona_origen=${id_persona_origen}`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -94,6 +103,9 @@ export const obtener_movimientos_incautados: any = (filtros: {
       }&fecha_hasta=${
         filtros.fecha_hasta
       }`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -106,6 +118,9 @@ export const obtener_mantenimientos_realizados: any = (filtros: { seleccion_tipo
   return async () => {
     try {
       const { data } = await api.get(`almacen/reportes/mantenimientos-realizados/get-list/?cod_tipo_mantenimiento=${filtros.seleccion_tipo_mtto === 'Todos' ? '' : filtros.seleccion_tipo_mtto}&id_persona_realiza=${filtros.realizado === undefined ? '' : filtros.realizado}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -119,6 +134,9 @@ export const obtener_mtto_programados: any = (id_persona_solicita: string, id_pe
     try {
       const url = `almacen/mantenimientos/programados/control/get-list/?id_persona_solicita=${id_persona_solicita}&id_persona_anula=${id_persona_anula}&fecha_desde=${fecha_desde}&fecha_hasta=${fecha_hasta}&cod_tipo_activo=${cod_tipo_activo}&serial_placa=${serial_placa}&consecutivo=${consecutivo}`;
       const { data } = await api.get(url);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -177,6 +195,9 @@ export const get_movimientos_inventario: any = (
       }&fecha_hasta=${
         fecha_hasta
       }`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -210,6 +231,9 @@ export const get_bienes_activos: any = (
       }&fecha_hasta=${
         fecha_hasta
       }`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -228,6 +252,9 @@ export const get_bienes_consumo_entregados: any = (
       }&fecha_hasta=${
         fecha_hasta
       }`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -291,6 +318,9 @@ export const get_historico_vehiculo: any = (id_hoja_de_vida: string) => {
   return async () => {
     try {
       const { data } = await api.get(`/almacen/reportes/busqueda-viajes-agendados/${id_hoja_de_vida}/`);
+      if(!data?.data?.length){
+        control_error('No se encontraron registros con los filtros seleccionados');
+      }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -316,6 +346,9 @@ export const get_historico_todos_vehiculos: any = (
         }&es_arrendado=${
           es_arrendado
         }`);
+        if(!data?.data?.length){
+          control_error('No se encontraron registros con los filtros seleccionados');
+        }
       return data;
     } catch (error: any) {
       return error as AxiosError;
