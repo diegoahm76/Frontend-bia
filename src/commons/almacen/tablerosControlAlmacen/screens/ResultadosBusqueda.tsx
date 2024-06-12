@@ -82,11 +82,37 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             valueGetter: (params) => params.row.nombre_completo_persona_despacha || 'N/A',
                         },
                         {
+                            field: 'fecha_despacho',
+                            headerName: 'Fecha despacho',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_despacho?.split('T')[0],
+                        },
+                        {
                             field: 'nombre_completo_persona_anula',
                             headerName: 'Persona anula',
                             minWidth: 200,
                             flex: 1,
                             valueGetter: (params) => params.row.nombre_completo_persona_anula || 'N/A',
+                        },
+                        {
+                            field: 'fecha_anulacion',
+                            headerName: 'Fecha anulación',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_anulacion?.split('T')[0],
+                        },
+                        {
+                            field: 'justificacion_anulacion',
+                            headerName: 'Justificación anulación',
+                            minWidth: 220,
+                            flex: 1,
+                        },
+                        {
+                            field: 'motivo',
+                            headerName: 'Motivo despacho',
+                            minWidth: 200,
+                            flex: 1,
                         },
                     ]
                     if (props.discriminar)
@@ -187,6 +213,13 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             valueGetter: (params) => params.row.persona_solicita || 'N/A',
                         },
                         {
+                            field: 'fecha_solicitud',
+                            headerName: 'Fecha solicitud',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_solicitud?.split('T')[0],
+                        },
+                        {
                             field: 'persona_anula',
                             headerName: 'Persona anula',
                             minWidth: 200,
@@ -194,11 +227,31 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             valueGetter: (params) => params.row.persona_anula || 'N/A',
                         },
                         {
-                            field: 'observaciones',
-                            headerName: 'Observaciones',
+                            field: 'fecha_anulacion',
+                            headerName: 'Fecha anulación',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_anulacion?.split('T')[0],
+                        },
+                        {
+                            field: 'justificacion_anulacion',
+                            headerName: 'Justificación anulación',
+                            minWidth: 220,
+                            flex: 1,
+                        },
+                        {
+                            field: 'estado',
+                            headerName: 'Estado',
                             minWidth: 200,
                             flex: 1,
-                            valueGetter: (params) => params.row.observaciones || 'N/A',
+                            valueGetter: (params) => params.row.estado || 'N/A',
+                        },
+                        {
+                            field: 'motivo_mantenimiento',
+                            headerName: 'Motivo mantenimiento',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.motivo_mantenimiento || 'N/A',
                         },
                     ])
                     break;
@@ -222,6 +275,12 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             minWidth: 250,
                             flex: 1,
                             valueGetter: (params) => params.row.nombre_bien,
+                        },
+                        {
+                            field: 'nombre_cod_tipo_entrada_stock',
+                            headerName: 'Tipo entrada stock',
+                            minWidth: 220,
+                            flex: 1,
                         },
                         {
                             field: 'stock_minimo',
@@ -278,6 +337,13 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             valueGetter: (params) => params.row.unidad_medida,
                         },
                         {
+                            field: 'fecha_ultimo_mov',
+                            headerName: 'Fecha último movimiento',
+                            minWidth: 220,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_ultimo_mov?.split('T')[0],
+                        },
+                        {
                             field: 'nombre_bodega_stock',
                             headerName: 'Bodega',
                             minWidth: 200,
@@ -332,6 +398,16 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             valueGetter: (params) => params.row.tipo_activo,
                         },
                         {
+                            field: 'codigo_activo_nombre',
+                            headerName: 'Código activo',
+                            minWidth: 180,
+                        },
+                        {
+                            field: 'codigo_estado_nombre',
+                            headerName: 'Código estado',
+                            minWidth: 180,
+                        },
+                        {
                             field: 'cantidad_ingresada',
                             headerName: 'Cantidad ingresada',
                             minWidth: 250,
@@ -340,6 +416,11 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'placa_serial',
                             headerName: 'Placa / Serial',
+                            minWidth: 140,
+                        },
+                        {
+                            field: 'nombre_marca',
+                            headerName: 'Marca',
                             minWidth: 140,
                         },
                         {
@@ -378,6 +459,11 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             headerName: 'Serial / Placa',
                             width: 180,
                             valueGetter: (params) => params.row.serial_placa,
+                        },
+                        {
+                            field: 'marca',
+                            headerName: 'Marca',
+                            width: 180,
                         },
                         {
                             field: 'tipo_mantenimiento',

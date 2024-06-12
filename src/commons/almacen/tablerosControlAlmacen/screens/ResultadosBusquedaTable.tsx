@@ -169,6 +169,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
     codigo_bien: string,
     placa_serial: string,
     cod_tipo_activo: string,
+    cod_tipo_bien: string,
     cantidad_ingresada_total: number,
     responsable_bodega: string,
     nombre_proveedor: string,
@@ -183,6 +184,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
       codigo_bien,
       placa_serial,
       cod_tipo_activo,
+      cod_tipo_bien,
       cantidad_ingresada_total,
       responsable_bodega,
       nombre_proveedor,
@@ -213,6 +215,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
           <TableCell>{row.cantidad_ingresada_total}</TableCell>
           <TableCell>{row.placa_serial}</TableCell>
           <TableCell>{row.cod_tipo_activo}</TableCell>
+          <TableCell>{row.cod_tipo_bien}</TableCell>
           <TableCell>{row.responsable_bodega}</TableCell>
           <TableCell>{row.nombre_proveedor}</TableCell>
         </TableRow>
@@ -268,6 +271,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
                     <TableCell>Cantidad ingresada total&nbsp;</TableCell>
                     <TableCell>Placa / Serial&nbsp;</TableCell>
                     <TableCell>Tipo Activo&nbsp;</TableCell>
+                    <TableCell>Tipo bien&nbsp;</TableCell>
                     <TableCell>Responsable bodega&nbsp;</TableCell>
                     <TableCell>Nombre proveedor&nbsp;</TableCell>
                   </TableRow>

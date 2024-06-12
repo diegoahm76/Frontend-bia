@@ -23,6 +23,8 @@ const TablaHistoricoUsoVehiculos: React.FC<props> = ({
 }) => {
 
   let columns: custom_column[] = [
+    { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 150, flex: 1 },
+    { field: 'codigo_bien', headerName: 'Código bien', minWidth: 150, flex: 1 },
     { field: 'nombre', headerName: 'Nombre del vehículo', minWidth: 150, flex: 1 },
     { field: 'placa', headerName: 'Placa', minWidth: 150, flex: 1 },
     { field: 'marca', headerName: 'Marca', minWidth: 150, flex: 1 },
@@ -32,13 +34,13 @@ const TablaHistoricoUsoVehiculos: React.FC<props> = ({
     },
     {
       field: 'fecha_partida_asignada', headerName: 'Fecha de salida', minWidth: 150, flex: 1,
-      valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY')
+      valueFormatter: (params) => params.value ? dayjs(params.value as string).format('DD/MM/YYYY') : ''
     },
     {
       field: 'hora_partida', headerName: 'Hora de salida', minWidth: 150, flex: 1},
     {
       field: 'fecha_retorno_asignada', headerName: 'Fecha de llegada', minWidth: 150, flex: 1,
-      valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY')
+      valueFormatter: (params) => params.value ? dayjs(params.value as string).format('DD/MM/YYYY') : ''
     },
     {field: 'hora_retorno', headerName: 'Hora de llegada', minWidth: 150, flex: 1},
     { field: 'Municipio_desplazamiento', headerName: 'Municipio de desplazamiento', minWidth: 220, flex: 1 },

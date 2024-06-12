@@ -468,7 +468,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           ids_persons.id_anula,
           inputs_rabp.fecha_desde ?? '',
           inputs_rabp.fecha_hasta ?? '',
-          categoria,
+          categoria ?? '',
           mantenimiento_realized.serial,
           mantenimiento_realized.consecutivo,
         )).then((response: any) => {
