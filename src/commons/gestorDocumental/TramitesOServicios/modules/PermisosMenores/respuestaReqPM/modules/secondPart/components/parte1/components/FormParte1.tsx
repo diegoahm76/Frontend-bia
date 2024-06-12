@@ -137,7 +137,7 @@ export const FormParte1 = ({ controlFormulario }: any): JSX.Element => {
               width: '60%',
             }}
           >
-            Responder / radicar respuesta a requerimiento seleccionado
+            Responder / radicar respuesta a requerimiento de permiso menor seleccionado
           </Button>
         </Grid>
       </form>

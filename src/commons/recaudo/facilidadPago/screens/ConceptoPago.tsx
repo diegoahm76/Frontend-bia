@@ -80,7 +80,6 @@ export const ConceptoPago: React.FC = () => {
     };
 
 
-
     const ActuailizarEstadoVariable = async (id_valor_varaible: number, usada: boolean) => {
         try {
             const url = `recaudo/configuracion_baisca/valoresvariables_estado/put/${id_valor_varaible}/`;
@@ -320,16 +319,16 @@ export const ConceptoPago: React.FC = () => {
                 <Title title="Configuracion " />
 
                 <Grid container item xs={12} spacing={2} marginTop={2}  >
-                    <Grid item xs={4} sm={4}>
+                    <Grid item xs={12} sm={6}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de renta")}>Tipos de renta</Button>
                     </Grid>
-                    <Grid item xs={4} sm={4}>
+                    <Grid item xs={12} sm={6}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de cobro")}>Tipos de cobro</Button>
                     </Grid>
 
-                    <Grid item xs={4} sm={4}>
+                    {/* <Grid item xs={4} sm={4}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Variable")}>Variable</Button>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
 
 
@@ -338,7 +337,7 @@ export const ConceptoPago: React.FC = () => {
 
             {selectedButton === "Tipos de cobro" && <TiposCobro />}
             {selectedButton === "Tipos de renta" && <TipoRenta />}
-            {selectedButton === "Variable" && <Varible />}
+            {/* {selectedButton === "Variable" && <Varible />} */}
 
 
         </>

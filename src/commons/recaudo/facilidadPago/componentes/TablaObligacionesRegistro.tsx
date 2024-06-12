@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import React, { useState, useEffect } from 'react';
 import { Grid, Box, IconButton } from '@mui/material';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useSelector } from 'react-redux';
@@ -6,7 +7,6 @@ import { type Obligacion } from '../interfaces/interfaces';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
 import { TenerEncuenta } from './TenerEncuenta';
-import { useState } from 'react';
 import InfoIcon from '@mui/icons-material/Info';
 
 interface RootState {
@@ -15,9 +15,16 @@ interface RootState {
   }
 }
 
+interface Props {
+  updateTotalSum: (sum: number) => void; // Definimos el tipo de la función de devolución de llamada
+}
+
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TablaObligacionesRegistro: React.FC = () => {
+export const TablaObligacionesRegistro: React.FC<Props> = ({ updateTotalSum }) => {
+
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
+  const [is_modal_active, set_is_buscar] = useState<boolean>(true);
 
   const columns: GridColDef[] = [
     {
@@ -103,10 +110,22 @@ export const TablaObligacionesRegistro: React.FC = () => {
       ),
     },
   ];
-  const [is_modal_active, set_is_buscar] = useState<boolean>(true);
+
+
+
+useEffect(() => {
+    const sum = obligaciones.reduce((acc: number, obligacion: Obligacion) => {
+      const montoInicial = parseFloat(obligacion.monto_inicial) || 0;
+      const valorIntereses = parseFloat(obligacion.valor_intereses) || 0;
+      return acc + montoInicial + valorIntereses;
+    }, 0);
+    updateTotalSum(sum);
+  }, [obligaciones]);
+
   const handleClick = () => {
     set_is_buscar(true);
   };
+
   return (
     <>
       <TenerEncuenta is_modal_active={is_modal_active} set_is_modal_active={set_is_buscar} />
@@ -127,8 +146,6 @@ export const TablaObligacionesRegistro: React.FC = () => {
           </IconButton>
         </Grid>
 
-
-
         <Grid item xs={12}>
           <Grid item>
             <Box sx={{ width: '100%' }}>
@@ -146,6 +163,7 @@ export const TablaObligacionesRegistro: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
+   
     </>
   );
 }

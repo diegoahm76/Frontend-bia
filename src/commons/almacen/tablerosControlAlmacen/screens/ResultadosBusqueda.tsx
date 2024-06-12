@@ -28,58 +28,141 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 case 'CBU':
                     const columnas_cbu: GridColDef[] = [
                         {
-                            field: 'nombre_unidad_para_la_que_solicita',
-                            headerName: 'Unidad organizacional',
-                            width: 400,
-                            valueGetter: (params) => params.row.nombre_unidad_para_la_que_solicita,
+                            field: 'codigo_bien_despachado',
+                            headerName: 'Código bien',
+                            minWidth: 140,
+                            flex: 1,
                         },
                         {
                             field: 'nombre_bien_despachado',
                             headerName: 'Bien',
-                            width: props.discriminar ? 550 : 400,
-                            valueGetter: (params) => params.row.nombre_bien_despachado,
+                            minWidth: 250,
+                            flex: 1,
+                        },
+                        {
+                            field: 'nombre_unidad_para_la_que_solicita',
+                            headerName: 'Unidad organizacional',
+                            minWidth: 250,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_unidad_para_la_que_solicita,
                         },
                         {
                             field: 'cantidad_despachada_unidad',
                             headerName: 'Cantidad despachada',
-                            width: props.discriminar ? 550 : 300,
+                            minWidth: 180,
+                            flex: 1,
                             valueGetter: (params) => params.row.cantidad_despachada_unidad,
-                        }]
+                        },
+                        {
+                            field: 'nombre_bodega',
+                            headerName: 'Bodega',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_bodega,
+                        },
+                        {
+                            field: 'nombre_completo_funcionario_responsable',
+                            headerName: 'Persona responsable',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_completo_funcionario_responsable || 'N/A',
+                        },
+                        {
+                            field: 'nombre_completo_persona_solicita',
+                            headerName: 'Persona solicita',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_completo_persona_solicita || 'N/A',
+                        },
+                        {
+                            field: 'nombre_completo_persona_despacha',
+                            headerName: 'Persona despacha',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_completo_persona_despacha || 'N/A',
+                        },
+                        {
+                            field: 'fecha_despacho',
+                            headerName: 'Fecha despacho',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_despacho?.split('T')[0],
+                        },
+                        {
+                            field: 'nombre_completo_persona_anula',
+                            headerName: 'Persona anula',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_completo_persona_anula || 'N/A',
+                        },
+                        {
+                            field: 'fecha_anulacion',
+                            headerName: 'Fecha anulación',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_anulacion?.split('T')[0],
+                        },
+                        {
+                            field: 'justificacion_anulacion',
+                            headerName: 'Justificación anulación',
+                            minWidth: 220,
+                            flex: 1,
+                        },
+                        {
+                            field: 'motivo',
+                            headerName: 'Motivo despacho',
+                            minWidth: 200,
+                            flex: 1,
+                        },
+                    ]
                     if (props.discriminar)
-                        set_columnas_mp([columnas_cbu[1], columnas_cbu[2]]);
+                        set_columnas_mp(columnas_cbu.filter((_, index) => index !== 2));
                     else
-                        props.seleccion_presentacion === 'UND' ? set_columnas_mp(columnas_cbu) : set_columnas_mp([columnas_cbu[1], columnas_cbu[0], columnas_cbu[2]]);
+                        props.seleccion_presentacion === 'UND' ? set_columnas_mp(columnas_cbu) : set_columnas_mp(columnas_cbu);
+                        // props.seleccion_presentacion === 'UND' ? set_columnas_mp(columnas_cbu) : set_columnas_mp([columnas_cbu[1], columnas_cbu[0], columnas_cbu[2]]);
                     break;
                 case 'MP':
                     set_columnas_mp([
                         {
+                            field: 'consecutivo',
+                            headerName: 'Consecutivo',
+                            minWidth: 120,
+                            flex: 1,
+                        },
+                        {
+                            field: 'codigo_bien',
+                            headerName: 'Código bien',
+                            minWidth: 140,
+                            flex: 1,
+                        },
+                        {
                             field: 'nombre_bien',
                             headerName: 'Bien',
-                            width: 220,
+                            minWidth: 220,
                             valueGetter: (params) => params.row.nombre_bien,
                         },
                         {
                             field: 'tipo_activo',
                             headerName: 'Tipo de bien',
-                            width: 150,
+                            minWidth: 150,
                             valueGetter: (params) => params.row.tipo_activo,
                         },
                         {
                             field: 'serial_placa',
                             headerName: 'Serial / Placa',
-                            width: 150,
+                            minWidth: 150,
                             valueGetter: (params) => params.row.serial_placa,
                         },
                         {
                             field: 'tipo_mantenimiento',
                             headerName: 'Tipo mantenimiento',
-                            width: 170,
+                            minWidth: 170,
                             valueGetter: (params) => params.row.tipo_mantenimiento,
                         },
                         {
                             field: 'fecha_programada',
                             headerName: 'Fecha programada',
-                            width: 200,
+                            minWidth: 200,
                             cellClassName: (params: GridCellParams<any>) => {
                                 if (params.row.dias_kilometros_vencidos === null || params.row.kilometraje_programado !== 'N/A') {
                                     return '';
@@ -98,7 +181,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'kilometraje_programado',
                             headerName: 'Kilómetraje programado',
-                            width: 200,
+                            minWidth: 200,
                             cellClassName: (params: GridCellParams<any>) => {
                                 if (params.row.dias_kilometros_vencidos == null || params.row.fecha_programada !== 'N/A') {
                                     return '';
@@ -113,35 +196,97 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'kilometraje_actual',
                             headerName: 'Kilómetraje actual',
-                            width: 200,
+                            minWidth: 200,
                             valueGetter: (params) => params.row.kilometraje_actual,
                         },
                         {
                             field: 'dias_kilometros_vencidos',
                             headerName: 'Días vencido / Km vencido',
-                            width: 200,
+                            minWidth: 200,
                             valueGetter: (params) => params.row.dias_kilometros_vencidos,
-                        }
+                        },
+                        {
+                            field: 'persona_solicita',
+                            headerName: 'Persona solicita',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.persona_solicita || 'N/A',
+                        },
+                        {
+                            field: 'fecha_solicitud',
+                            headerName: 'Fecha solicitud',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_solicitud?.split('T')[0],
+                        },
+                        {
+                            field: 'persona_anula',
+                            headerName: 'Persona anula',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.persona_anula || 'N/A',
+                        },
+                        {
+                            field: 'fecha_anulacion',
+                            headerName: 'Fecha anulación',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_anulacion?.split('T')[0],
+                        },
+                        {
+                            field: 'justificacion_anulacion',
+                            headerName: 'Justificación anulación',
+                            minWidth: 220,
+                            flex: 1,
+                        },
+                        {
+                            field: 'estado',
+                            headerName: 'Estado',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.estado || 'N/A',
+                        },
+                        {
+                            field: 'motivo_mantenimiento',
+                            headerName: 'Motivo mantenimiento',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.motivo_mantenimiento || 'N/A',
+                        },
                     ])
                     break;
                 case 'CS':
                     set_columnas_mp([
                         {
-                            field: 'nombre_bien',
-                            headerName: 'Bien',
-                            width: 250,
-                            valueGetter: (params) => params.row.nombre_bien,
+                            field: 'cod_tipo_entrada_stock',
+                            headerName: 'Código entrada',
+                            minWidth: 120,
+                            flex: 1,
+                        },
+                        {
+                            field: 'codigo_bien',
+                            headerName: 'Código bien',
+                            minWidth: 140,
+                            flex: 1,
                         },
                         {
                             field: 'nombre_bien',
                             headerName: 'Bien',
-                            width: 200,
+                            minWidth: 250,
+                            flex: 1,
                             valueGetter: (params) => params.row.nombre_bien,
+                        },
+                        {
+                            field: 'nombre_cod_tipo_entrada_stock',
+                            headerName: 'Tipo entrada stock',
+                            minWidth: 220,
+                            flex: 1,
                         },
                         {
                             field: 'stock_minimo',
-                            headerName: 'Stock miíimo',
-                            width: 200,
+                            headerName: 'Stock mínimo',
+                            minWidth: 200,
+                            flex: 1,
                             cellClassName: (params: GridCellParams<any>) => {
                                 if (params.row.stock_minimo === null || params.row.cantidad_existente === null) {
                                     return '';
@@ -155,7 +300,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'stock_maximo',
                             headerName: 'Stock máximo',
-                            width: 200,
+                            minWidth: 200,
+                            flex: 1,
                             cellClassName: (params: GridCellParams<any>) => {
                                 if (params.row.stock_maximo == null || params.row.cantidad_existente === null) {
                                     return '';
@@ -169,7 +315,8 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'cantidad_existente',
                             headerName: 'Cantidad existente',
-                            width: 200,
+                            minWidth: 200,
+                            flex: 1,
                             cellClassName: (params: GridCellParams<any>) => {
                                 if (params.row.stock_minimo === null || params.row.cantidad_existente === null) {
                                     return '';
@@ -185,42 +332,116 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'unidad_medida',
                             headerName: 'Unidad de medidad',
-                            width: 200,
-
+                            minWidth: 200,
+                            flex: 1,
                             valueGetter: (params) => params.row.unidad_medida,
-                        }
+                        },
+                        {
+                            field: 'fecha_ultimo_mov',
+                            headerName: 'Fecha último movimiento',
+                            minWidth: 220,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_ultimo_mov?.split('T')[0],
+                        },
+                        {
+                            field: 'nombre_bodega_stock',
+                            headerName: 'Bodega',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_bodega_stock,
+                        },
+                        {
+                            field: 'nombre_completo_responsable',
+                            headerName: 'Persona responsable',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_completo_responsable || 'N/A',
+                        },
+                        {
+                            field: 'nombre_completo_persona_origen',
+                            headerName: 'Persona origen',
+                            minWidth: 200,
+                            flex: 1,
+                            valueGetter: (params) => params.row.nombre_completo_persona_origen || 'N/A',
+                        },
                     ])
                     break;
                 case 'MSI':
                     set_columnas_mp([
                         {
+                            field: 'consecutivo',
+                            headerName: 'Consecutivo',
+                            minWidth: 120,
+                        },
+                        {
                             field: 'nombre_bodega',
                             headerName: 'Bodega',
-                            width: 350,
+                            minWidth: 300,
                             valueGetter: (params) => params.row.nombre_bien,
+                        },
+                        {
+                            field: 'codigo_bien',
+                            headerName: 'Código bien',
+                            minWidth: 140,
+                            flex: 1,
                         },
                         {
                             field: 'nombre_bien',
                             headerName: 'Bien',
-                            width: 300,
+                            minWidth: 300,
                             valueGetter: (params) => params.row.nombre_bien,
                         },
                         {
                             field: 'tipo_activo',
                             headerName: 'Tipo de activo',
-                            width: 250,
+                            minWidth: 250,
                             valueGetter: (params) => params.row.tipo_activo,
+                        },
+                        {
+                            field: 'codigo_activo_nombre',
+                            headerName: 'Código activo',
+                            minWidth: 180,
+                        },
+                        {
+                            field: 'codigo_estado_nombre',
+                            headerName: 'Código estado',
+                            minWidth: 180,
                         },
                         {
                             field: 'cantidad_ingresada',
                             headerName: 'Cantidad ingresada',
-                            width: 250,
+                            minWidth: 250,
                             valueGetter: (params) => params.row.cantidad_ingresada,
-                        }
+                        },
+                        {
+                            field: 'placa_serial',
+                            headerName: 'Placa / Serial',
+                            minWidth: 140,
+                        },
+                        {
+                            field: 'nombre_marca',
+                            headerName: 'Marca',
+                            minWidth: 140,
+                        },
+                        {
+                            field: 'responsable_bodega',
+                            headerName: 'Responsable bodega',
+                            minWidth: 300,
+                        },
                     ])
                     break;
                 case 'MR':
                     set_columnas_mp([
+                        {
+                            field: 'consecutivo',
+                            headerName: 'Consecutivo',
+                            width: 120,
+                        },
+                        {
+                            field: 'codigo_bien',
+                            headerName: 'Código bien',
+                            width: 160,
+                        },
                         {
                             field: 'nombre_bien',
                             headerName: 'Bien',
@@ -228,27 +449,38 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             valueGetter: (params) => params.row.nombre_bien,
                         },
                         {
+                            field: 'cod_tipo_activo',
+                            headerName: 'Tipo activo',
+                            width: 250,
+                            valueGetter: (params) => params.row.cod_tipo_activo,
+                        },
+                        {
                             field: 'serial_placa',
                             headerName: 'Serial / Placa',
-                            width: 250,
+                            width: 180,
                             valueGetter: (params) => params.row.serial_placa,
+                        },
+                        {
+                            field: 'marca',
+                            headerName: 'Marca',
+                            width: 180,
                         },
                         {
                             field: 'tipo_mantenimiento',
                             headerName: 'Tipo mantenimiento',
-                            width: 250,
+                            width: 180,
                             valueGetter: (params) => params.row.tipo_mantenimiento,
                         },
                         {
                             field: 'fecha_ejecutado',
                             headerName: 'Fecha mantenimiento',
-                            width: 250,
+                            width: 200,
                             valueGetter: (params) => dayjs(params.row.fecha_ejecutado).format('DD/MM/YYYY'),
                         },
                         {
                             field: 'realizado_por',
                             headerName: 'Realizado por',
-                            width: 250,
+                            width: 200,
                             valueGetter: (params) => params.row.realizado_por,
                         },
                         {
@@ -262,10 +494,22 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                 case 'EI':
                     set_columnas_mp([
                         {
+                            field: 'consecutivo',
+                            headerName: 'Consecutivo',
+                            minWidth: 120,
+                            flex: 1,
+                        },
+                        {
                             field: 'nombre_bodega',
                             headerName: 'Bodega',
                             width: 300,
                             valueGetter: (params) => params.row.nombre_bodega
+                        },
+                        {
+                            field: 'codigo_bien',
+                            headerName: 'Código bien',
+                            minWidth: 140,
+                            flex: 1,
                         },
                         {
                             field: 'nombre_bien',
@@ -278,6 +522,18 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             headerName: 'Cantidad ingresada total',
                             width: 300,
                             valueGetter: (params) => params.row.cantidad_ingresada_total
+                        },
+                        {
+                            field: 'placa_serial',
+                            headerName: 'Placa / Serial',
+                            minWidth: 140,
+                            flex: 1,
+                        },
+                        {
+                            field: 'cod_tipo_activo',
+                            headerName: 'Tipo Activo',
+                            minWidth: 140,
+                            flex: 1,
                         },
                         {
                             field: 'responsable_bodega',
