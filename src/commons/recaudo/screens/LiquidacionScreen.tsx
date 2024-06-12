@@ -314,7 +314,7 @@ export const LiquidacionScreen = (): JSX.Element => {
         }}
       >
         <Grid item xs={12}>
-          <Title title="Liquidación" />
+          <Title title="Liquidaciónn" />
           {/* <Button color='success'
           variant='contained'
           onClick={handleClick}>CONSOLE </Button> */}
