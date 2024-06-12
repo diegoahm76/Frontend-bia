@@ -24,17 +24,27 @@ const TablaReportesAlmacenBienesPrestamo: React.FC<props> = ({
   let columns: custom_column[] = [
     {field: 'codigo_bien', headerName:'Código bien', minWidth:150, flex:1},
     {field: 'nombre_bien', headerName:'Nombre bien', minWidth:250, flex:1},
-    {field: 'identificador_bien', headerName:'Identificador del bien', minWidth:150, flex:1},
+    {field: 'identificador_bien', headerName:'Placa / Serial', minWidth:150, flex:1},
     {field: 'nombre_marca', headerName:'Marca del bien', minWidth:150, flex:1},
+    {field: 'fecha_ingreso', headerName:'Fecha ingreso', minWidth:180, flex:1,
+      valueFormatter: (params) => params.value ? dayjs(params.value as string).format('DD/MM/YYYY') : '',
+    },
     {field: 'fecha_ultimo_movimiento', headerName:'Fecha del prestamo', minWidth:180, flex:1,
-      valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY'),
+      valueFormatter: (params) => params.value ? dayjs(params.value as string).format('DD/MM/YYYY') : '',
     },
     {field: 'nombre_persona_responsable', headerName:'Funcionario responsable', minWidth:240, flex:1},
+    {field: 'nombre_persona_origen', headerName:'Persona origen', minWidth:240, flex:1},
+    {field: 'tipo_movimiento', headerName:'Tipo movimiento', minWidth:180, flex:1},
     {field: 'ubicacion', headerName:'Ubicación', minWidth:200, flex:1},
+    {field: 'cantidad', headerName:'Cantidad', minWidth:120, flex:1},
+    {field: 'valor_unitario', headerName:'Valor unitario', minWidth:140, flex:1},
+    {field: 'valor_ingreso', headerName:'Valor ingreso', minWidth:140, flex:1},
+    {field: 'nombre_bodega', headerName:'Bodega', minWidth:200, flex:1},
     {field: 'nombre_categoria', headerName:'Categoria', minWidth:200, flex:1},
+    {field: 'estado', headerName:'Estado', minWidth:180, flex:1},
   ];
 
- 
+
   return (
     <>
       <Grid item xs={12} container
@@ -68,6 +78,6 @@ const TablaReportesAlmacenBienesPrestamo: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaReportesAlmacenBienesPrestamo;

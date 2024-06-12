@@ -67,6 +67,8 @@ const DespachoBienesConsumoScreen = () => {
       set_persona_despacha({
         nombre_completo: userinfo.nombre,
         id_persona: userinfo.id_persona,
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
+        id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
       }))
     set_action('crear');
   };
@@ -78,29 +80,39 @@ const DespachoBienesConsumoScreen = () => {
       set_persona_despacha({
         nombre_completo: userinfo.nombre,
         id_persona: userinfo.id_persona,
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
+        id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
       })
     );
   }, []);
-  useEffect(() => {
-    dispatch(
-      set_current_despacho({
-        ...current_despacho,
-        id_persona_despacha: persona_despacha.id_persona,
-        persona_crea: persona_despacha.nombre_completo ?? '',
-      })
-    );
-  }, [persona_despacha]);
+  // useEffect(() => {
+  //   if(persona_despacha?.id_persona){
+  //     setTimeout(() => {
+  //       dispatch(
+  //         set_current_despacho({
+  //           ...current_despacho,
+  //           id_persona_despacha: persona_despacha.id_persona,
+  //           persona_crea: persona_despacha.nombre_completo ?? '',
+  //         })
+  //       );
+  //     }, 2000)
+  //   }
+  // }, [persona_despacha]);
 
   useEffect(() => {
-    dispatch(
-      set_current_despacho({
-        ...current_despacho,
-        numero_despacho_consumo: nro_despacho,
-        id_persona_despacha: persona_despacha.id_persona,
-        persona_crea: persona_despacha.nombre_completo ?? '',
-      })
-    );
-  }, [nro_despacho]);
+    if(persona_despacha?.id_persona){
+      setTimeout(() => {
+        dispatch(
+          set_current_despacho({
+            ...current_despacho,
+            numero_despacho_consumo: nro_despacho,
+            id_persona_despacha: persona_despacha.id_persona,
+            persona_crea: persona_despacha.nombre_completo ?? '',
+          })
+        );
+      }, 2000)
+    }
+  }, [nro_despacho, persona_despacha]);
 
   useEffect(() => {
     reset_solicitud_aprobacion(current_solicitud);
@@ -141,6 +153,7 @@ const DespachoBienesConsumoScreen = () => {
   }, [current_solicitud]);
 
   useEffect(() => {
+    console.log(current_despacho)
     // //  console.log('')(current_solicitud)
     //  console.log('')(current_despacho);
     reset_despacho(current_despacho);

@@ -31,7 +31,7 @@ const SeleccionarSolicitudRechazo = ({
         reset_solicitud_aprobacion((prev: any) => {
             return {
                 ...prev,
-                nro_solicitud_por_tipo: null
+                nro_solicitud_por_tipo: ''
             }
         });
     }
@@ -47,17 +47,32 @@ const SeleccionarSolicitudRechazo = ({
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
-            width: 200, flex: 1.5,
+            minWidth: 200, flex: 1.5,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.fecha_solicitud?.split('T')[0]}
                 </div>
             ),
         },
         {
             field: 'fecha_aprobacion_responsable',
             headerName: 'Fecha de aprobación',
-            width: 200, flex: 1.5,
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.fecha_aprobacion_responsable?.split('T')[0]}
+                </div>
+            ),
+        },
+        {
+            field: 'persona_solicita',
+            headerName: 'Solicitud elaborada por:',
+            minWidth: 300, flex: 2,
+        },
+        {
+            field: 'persona_responsable',
+            headerName: 'Responsable',
+            minWidth: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -65,14 +80,9 @@ const SeleccionarSolicitudRechazo = ({
             ),
         },
         {
-            field: 'persona_solicita',
-            headerName: 'Solicitud elaborada por:',
-            width: 300, flex: 2,
-        },
-        {
             field: 'observacion',
             headerName: 'Observación',
-            width: 400, flex: 2,
+            minWidth: 400, flex: 2,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -82,7 +92,7 @@ const SeleccionarSolicitudRechazo = ({
         {
             field: 'es_solicitud_de_conservacion',
             headerName: 'Solicitud de conservación',
-            width: 400, flex: 1,
+            minWidth: 400, flex: 1,
             renderCell: (params) => {
                 return params.row.es_solicitud_de_conservacion === true ? (
                     <Chip size="small" label="SI" color="success" variant="outlined" />
