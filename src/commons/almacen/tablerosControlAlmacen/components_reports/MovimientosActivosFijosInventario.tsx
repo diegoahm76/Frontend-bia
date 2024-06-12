@@ -73,6 +73,7 @@ const MovimientosActivosFijosInventario: FC<props> = ({
                 });
               }}
             >
+              <MenuItem value={'Todos'}>Todos</MenuItem>
               {tipos_movimientos?.length !== 0 ? (
                 tipos_movimientos?.map((tipo_movimiento) => (
                   <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
@@ -100,7 +101,7 @@ const MovimientosActivosFijosInventario: FC<props> = ({
               renderInput={(params) => (
                 <TextField required fullWidth size="small" {...params} />
               )}
-              
+
             />
           </LocalizationProvider>
         </Grid>

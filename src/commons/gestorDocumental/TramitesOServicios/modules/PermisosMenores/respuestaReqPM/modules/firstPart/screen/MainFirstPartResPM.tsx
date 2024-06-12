@@ -68,7 +68,7 @@ export const MainFirstPartResReqOpa = (): JSX.Element => {
         }}
       >
         <Grid item xs={12} marginY={4}>
-          <Title title="Respuesta solicitud / requerimiento OPAS"></Title>
+          <Title title="Respuesta solicitud / requerimiento permisos menores"></Title>
         </Grid>
 
         {representacion_legal.tipo_sesion === 'I' && <SelccionarPersona />}
@@ -77,7 +77,7 @@ export const MainFirstPartResReqOpa = (): JSX.Element => {
 
         <Grid container direction="row" padding={2} spacing={2}></Grid>
         <Button
-          href={`/#/app/gestor_documental/tramites/tramites_o_servicios/`}
+          href={`/#/app/gestor_documental/tramites/permisos_menores/`}
           variant="contained"
           color="primary"
           startIcon={<ArrowBackIcon />}

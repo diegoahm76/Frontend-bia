@@ -29,7 +29,7 @@ const TablaActivosAsociados: React.FC<props> = ({
   set_data_activos_asociados_agregados,
   loadding_tabla_activos_asociados,
   }) => {
-    
+
 
   const agregar_activos = (params: interface_activos_asociados) => {
     // agregamos el activos a la lista de activos agregados, y quitarlo de la lista de activos asociados
@@ -50,9 +50,15 @@ const TablaActivosAsociados: React.FC<props> = ({
     { field: 'nombre_bien', headerName: 'Nombre del articulos', minWidth: 120, flex: 1,},
     { field: 'identificador_bien', headerName: 'Identificador Único', minWidth: 120, flex: 1,},
     { field: 'nombre_marca', headerName: 'Marca', minWidth: 120, flex: 1,},
+    { field: 'fecha_ingreso', headerName: 'Fecha ingreso', minWidth: 120, flex: 1,},
+    { field: 'fecha_ultimo_movimiento', headerName: 'Fecha último movimiento', minWidth: 120, flex: 1,},
     { field: 'valor_unitario', headerName: 'Valor', minWidth: 120, flex: 1,},
+    { field: 'valor_iva', headerName: 'Valor iva', minWidth: 120, flex: 1,},
+    { field: 'valor_residual', headerName: 'Valor resid', minWidth: 120, flex: 1,},
+    { field: 'valor_total', headerName: 'Valor total', minWidth: 120, flex: 1,},
+    { field: 'ubicacion', headerName: 'Ubicación', minWidth: 250, flex: 1,},
     { field: 'estado', headerName: 'Estado', minWidth: 120, flex: 1,},
-    { field: 'add', headerName: 'Agregar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
+    { field: 'add', headerName: 'Agregar', minWidth: 100, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => {
         return (
           <ControlPointIcon style={{cursor: 'pointer', fontSize: '30px', color: 'green'}} onClick={() => agregar_activos(params.row)} />
@@ -115,6 +121,6 @@ const TablaActivosAsociados: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaActivosAsociados;

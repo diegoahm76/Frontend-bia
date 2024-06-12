@@ -20,6 +20,7 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { control_error } from '../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from 'sweetalert2';
 
 interface RootStateDeudor {
   deudores: {
@@ -76,6 +77,9 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [garantias_options, set_garantias_options] = useState<GarantiaInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<RelacionBien>);
+
+  console.log("rows_bienes", rows_bienes);
+
   const [tipo_bien, set_tipo_bien] = useState(0);
   const [tipos_bienes, set_tipos_bienes] = useState(Array<number>);
   const [identificacion_bien, set_identificacion_bien] = useState('');
@@ -91,6 +95,7 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [respuesta_registro, set_respuesta_registro] = useState<RespuestaRegistroFacilidad>();
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
+  
   const { form_files, name_files, handle_change_file, handle_delete_file } = useFormFiles({});
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
@@ -100,14 +105,6 @@ export const RegistroFacilidadPago: React.FC = () => {
     set_date_abono(date);
   };
 
-  // const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
-  //   const selected_file =
-  //     event.target.files != null ? event.target.files[0] : null;
-  //   if (selected_file != null) {
-  //     set_archivo_bien(selected_file);
-  //     set_nombre_archivo_bien(selected_file.name);
-  //   }
-  // };
   const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file = event.target.files != null ? event.target.files[0] : null;
     set_archivo_bien(selected_file);
@@ -220,31 +217,17 @@ export const RegistroFacilidadPago: React.FC = () => {
         </div>
       ),
     },
-    // {
-    //   field: 'documento_soporte',
-    //   headerName: 'Doc. Impuestos',
-    //   width: 150,
-    //   renderCell: (params) => (
-    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-    //       <Button
-    //         color='primary'
-    //         variant='outlined'
-    //         size='small'
-    //         onClick={() => { }}
-    //       >
-    //         Ver Documento
-    //       </Button>
-    //     </div>
-    //   ),
-    // },
   ];
-
-
+  const [totalSum, setTotalSum] = useState<number>(0);
+  console.log("totalSum", totalSum)
+  const updateTotalSum = (sum: number) => {
+    setTotalSum(sum);
+  };
   return (
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
       <EncabezadoRegistro />
-      <TablaObligacionesRegistro />
+      <TablaObligacionesRegistro updateTotalSum={updateTotalSum} />
       <Grid
         container
         sx={{
@@ -1227,19 +1210,19 @@ export const RegistroFacilidadPago: React.FC = () => {
                       onChange={handle_file_bienes}
                     />
                   </Button>
-                </Tooltip> 
+                </Tooltip>
               </Grid>
               {nombre_archivo_bien && (
                 <Grid item>
                   <IconButton
                     color="error"
                     onClick={eliminarArchivoSeleccionado}
-                   >
+                  >
                     <DeleteIcon />
 
                   </IconButton>
-                </Grid> 
-              )} 
+                </Grid>
+              )}
               <Grid item xs={12} sm={3.1}>
                 <Button
                   color='primary'
@@ -1348,50 +1331,55 @@ export const RegistroFacilidadPago: React.FC = () => {
               spacing={2}
               sx={{ mb: '20px', mt: '20px' }}
             >
-              <Button
-                color='primary'
-                variant='contained'
-                startIcon={<Save />}
-                onClick={() => {
-                  const post_registro = async (): Promise<void> => {
-                    try {
-                      const { data: { data: res_registro } } = await post_registro_fac_pago({
-                        ...form_state,
-                        id_deudor: deudores.id,
-                        id_tipo_actuacion: persona,
-                        fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
-                        periodicidad: num_periodicidad,
-                        cuotas: plazo,
-                        fecha_abono: dayjs(date_abono).format('YYYY-MM-DD'),
-                        documento_no_enajenacion: form_files.documento_no_enajenacion,
-                        consignacion_soporte: form_files.consignacion_soporte,
-                        documento_soporte: form_files.documento_soporte,
-                        id_funcionario: 1,
-                        notificaciones: autorizacion_notificacion,
-                        documento_garantia: form_files.documento_garantia,
-                        ids_obligaciones: obligaciones_ids,
-                        documento_deudor1: form_files.documento_identidad,
-                        documento_deudor2: form_files.documento_respaldo,
-                        documento_deudor3: form_files.certificado_legal,
-                        id_tipo_bienes: tipos_bienes,
-                        identificaciones: identificaciones_bienes,
-                        direcciones: direcciones_bienes,
-                        valores: valores_bienes,
-                        documentos_soporte_bien: archivos_bienes,
-                        id_ubicaciones: ubicaciones_bienes,
-                      })
-                      set_respuesta_registro(res_registro ?? {});
-                    } catch (error: any) {
-                      // throw new Error(error);
-                      control_error(error.response.data.detail);
+            <Button
+  color='primary'
+  variant='contained'
+  startIcon={<Save />}
+  onClick={async () => {
+    const valorAbonado = form_state.valor_abonado;
 
-                    }
-                  }
-                  void post_registro();
-                }}
-              >
-                Enviar Solicitud
-              </Button>
+    if (valorAbonado > totalSum) {
+      Swal.fire({
+        icon: 'error',
+        title: "Valor abonado es mayor que la suma total",
+      });
+    } else {
+      try {
+        const { data: { data: res_registro } } = await post_registro_fac_pago({
+          ...form_state,
+          id_deudor: deudores.id,
+          id_tipo_actuacion: persona,
+          fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
+          periodicidad: num_periodicidad,
+          cuotas: plazo,
+          fecha_abono: dayjs(date_abono).format('YYYY-MM-DD'),
+          documento_no_enajenacion: form_files.documento_no_enajenacion,
+          consignacion_soporte: form_files.consignacion_soporte,
+          documento_soporte: form_files.documento_soporte,
+          id_funcionario: 1,
+          notificaciones: autorizacion_notificacion,
+          documento_garantia: form_files.documento_garantia,
+          ids_obligaciones: obligaciones_ids,
+          documento_deudor1: form_files.documento_identidad,
+          documento_deudor2: form_files.documento_respaldo,
+          documento_deudor3: form_files.certificado_legal,
+          id_tipo_bienes: tipos_bienes,
+          identificaciones: identificaciones_bienes,
+          direcciones: direcciones_bienes,
+          valores: valores_bienes,
+          documentos_soporte_bien: archivos_bienes,
+          id_ubicaciones: ubicaciones_bienes,
+        });
+        set_respuesta_registro(res_registro ?? {});
+      } catch (error: any) {
+        control_error(error.response.data.detail);
+      }
+    }
+  }}
+>
+  Enviar Solicitud
+</Button>
+
             </Stack>
           </Box>
         </Grid>

@@ -9,7 +9,7 @@ import { api } from '../../../../../api/axios';
 import { type Dispatch } from 'react';
 import { type AxiosError } from 'axios';
 // import { log } from 'console';
-import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, set_current_solicitud_vivero, set_solicitudes_vivero, set_current_bien_vivero, set_bienes_vivero, set_coordinador_vivero } from './slices/indexSolicitudBienesConsumo';
+import { get_unidad_organizacional, set_numero_solicitud, set_bienes, set_unidades_medida, set_solicitudes, set_current_solicitud, set_bienes_solicitud, set_persona_solicita, set_current_bien, set_current_funcionario, set_funcionarios, set_numero_solicitud_vivero, set_current_solicitud_vivero, set_solicitudes_vivero, set_current_bien_vivero, set_bienes_vivero, set_coordinador_vivero, clear_current_solicitud } from './slices/indexSolicitudBienesConsumo';
 
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -708,7 +708,8 @@ export const rechazar_solicitud_service: any = (
 
             );
             //  console.log('')(data)
-            dispatch(get_solicitud_service(id));
+            // dispatch(get_solicitud_service(id));
+            dispatch(clear_current_solicitud())
             control_success('Se rechazó la solicitud');
 
             return data;
