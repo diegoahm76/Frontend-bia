@@ -53,7 +53,7 @@ const FuncionarioRechazo = ({ title, get_values_solicitud }: IProps) => {
   const [document_type, set_document_type] = useState<IList[]>(initial_options);
 
   const columns_personas: GridColDef[] = [
-    { field: 'id_persona', headerName: 'ID', minWidth: 40, flex: 1 },
+    // { field: 'id_persona', headerName: 'ID', minWidth: 40, flex: 1 },
     {
       field: 'numero_documento',
       headerName: 'Número de documento',
@@ -87,6 +87,34 @@ const FuncionarioRechazo = ({ title, get_values_solicitud }: IProps) => {
           {params.value}
         </div>
       ),
+    },
+    {
+      field: 'tipo_documento',
+      headerName: 'Tipo de documento',
+      minWidth: 200,
+      flex: 1,
+      renderCell: (params) => {
+        switch (params.row.tipo_documento) {
+          case 'CC':
+            return 'Cédula de ciudadanía';
+          case 'CE':
+            return 'Cédula de extranjería';
+          case 'TI':
+            return 'Tarjeta de identidad';
+          case 'RC':
+            return 'Registro civil';
+          case 'PA':
+            return 'Pasaporte';
+          case 'NU':
+            return 'NUIP';
+          case 'PE':
+            return 'Permiso especial de permanencia';
+          case 'NT':
+            return 'NIT';
+          default:
+            return 'No definido';
+        }
+      },
     },
   ];
 
@@ -249,7 +277,7 @@ const FuncionarioRechazo = ({ title, get_values_solicitud }: IProps) => {
               default_value: '',
               rules: {},
               label: 'Tipo documento',
-              disabled: true,
+              disabled: false,
               helper_text: '',
               select_options: document_type,
               option_label: 'label',

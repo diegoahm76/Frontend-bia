@@ -67,6 +67,8 @@ const DespachoBienesConsumoScreen = () => {
       set_persona_despacha({
         nombre_completo: userinfo.nombre,
         id_persona: userinfo.id_persona,
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
+        id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
       }))
     set_action('crear');
   };
@@ -74,21 +76,26 @@ const DespachoBienesConsumoScreen = () => {
   useEffect(() => {
     void dispatch(get_uni_organizacional());
     void dispatch(get_num_despacho());
+    console.log('holas')
     dispatch(
       set_persona_despacha({
         nombre_completo: userinfo.nombre,
         id_persona: userinfo.id_persona,
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
+        id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
       })
     );
   }, []);
   useEffect(() => {
-    dispatch(
-      set_current_despacho({
-        ...current_despacho,
-        id_persona_despacha: persona_despacha.id_persona,
-        persona_crea: persona_despacha.nombre_completo ?? '',
-      })
-    );
+    if(persona_despacha.id_persona){
+      dispatch(
+        set_current_despacho({
+          ...current_despacho,
+          id_persona_despacha: persona_despacha.id_persona,
+          persona_crea: persona_despacha.nombre_completo ?? '',
+        })
+      );
+    }
   }, [persona_despacha]);
 
   useEffect(() => {
@@ -141,6 +148,7 @@ const DespachoBienesConsumoScreen = () => {
   }, [current_solicitud]);
 
   useEffect(() => {
+    console.log(current_despacho)
     // //  console.log('')(current_solicitud)
     //  console.log('')(current_despacho);
     reset_despacho(current_despacho);

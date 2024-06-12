@@ -64,7 +64,7 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
             <InputLabel>Categoria: </InputLabel>
             <Select
               label="Categoria :"
-              value={inputs_rabp.tipo_categoria}
+              value={inputs_rabp.tipo_categoria || ''}
               fullWidth
               onChange={(e: SelectChangeEvent) => {
                 set_inputs_rabp({
@@ -73,6 +73,7 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
                 });
               }}
             >
+              <MenuItem value={'Todos'}>Todos</MenuItem>
               {tipos_categoria?.length !== 0 ? (
                 tipos_categoria?.map((tipo_movimiento) => (
                   <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
@@ -100,7 +101,7 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
               renderInput={(params) => (
                 <TextField required fullWidth size="small" {...params} />
               )}
-              
+
             />
           </LocalizationProvider>
         </Grid>

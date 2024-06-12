@@ -32,9 +32,11 @@ const TablaBienesConsumoEntregados: React.FC<props> = ({
       valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY'),
     },
     {field: 'responsable', headerName:'Responsable', minWidth:150, flex:1},
+    {field: 'nombre_bodega', headerName:'Nombre bodega', minWidth:180, flex:1},
+    {field: 'observacion', headerName:'Observación', minWidth:200, flex:1},
   ];
 
- 
+
   return (
     <>
       <Grid item xs={12} container
@@ -68,6 +70,6 @@ const TablaBienesConsumoEntregados: React.FC<props> = ({
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaBienesConsumoEntregados;
