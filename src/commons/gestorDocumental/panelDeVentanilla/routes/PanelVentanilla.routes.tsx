@@ -13,6 +13,8 @@ import { MainAsigGrupoOpaScreen } from '../module/entrega122GrupoOpa/screen/Main
 import { AsignacionGrupoOpaProvider } from '../module/entrega122GrupoOpa/context/AsignacionGrupoOpaContext';
 import { AsignacionGrupoTramiteProvider } from '../module/entrega125GrupoTramite/context/AsignacionGrupoTramiteContext';
 import { MainAsigGrupoTramiteScreen } from '../module/entrega125GrupoTramite/screen/MainAsigGrupoTramiteScreen';
+import { ExpeAutoDeInicioTram } from '../module/expedientes/expeAutoInicioTramite/screen/ExpeAutoInicioTra';
+import { AutoInicioProvider } from '../module/expedientes/expeAutoInicioTramite/context/ExpedienteContext';
 
 const routes = [
   {
@@ -71,7 +73,14 @@ const routes = [
     path: 'complemento_info/:id',
     component: () => <VistaComplemento />,
   },
-
+  {
+    path: 'expediente_auto_inicio_tramite/',
+    component: () => (
+      <AutoInicioProvider>
+        <ExpeAutoDeInicioTram />
+      </AutoInicioProvider>
+    ),
+  },
 
   // tramite
   {
@@ -83,7 +92,6 @@ const routes = [
     path: '---',
     component: () => <></>,
   },
-
 ];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

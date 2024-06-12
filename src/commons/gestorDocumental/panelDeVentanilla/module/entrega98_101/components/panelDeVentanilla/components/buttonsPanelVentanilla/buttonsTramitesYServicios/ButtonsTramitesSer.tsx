@@ -67,6 +67,10 @@ export const ButtonsTramites: React.FC = (): JSX.Element => {
     console.log('ir a revisión jurídica')
   );
 
+  const expediente = withValidation(() =>
+    console.log('ir a revisión expediente')
+  );
+
 
   interface action {
     [key: string]: any;
@@ -77,6 +81,7 @@ export const ButtonsTramites: React.FC = (): JSX.Element => {
     AsigGrup: handleAsignacionGrupo,
     Jurídica: handleAsignacionJurídica,
     Pay: handleLiquidacion,
+    exp: expediente,
   };
 
   const handleClickActionsGeneral = (action: any) => {

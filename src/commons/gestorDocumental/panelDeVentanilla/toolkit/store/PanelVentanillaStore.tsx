@@ -7,6 +7,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import PaidIcon from '@mui/icons-material/Paid';
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 
 // ? icons necesarios para los botones de acciones de tramites y servicios
 import BalanceIcon from '@mui/icons-material/Balance';
@@ -79,7 +80,14 @@ const actionsTramitesYServicios: any[] = [
     id: 'Pay',
     icon: <PaidIcon />,
     name: 'Liquidación',
-    path: '/app/gestor_documental/liquidacion/activacion', // pendiente por definir
+    path: '/app/gestor_documental/liquidacion/activacion',
+    disabled: false,
+  },
+  {
+    id: 'exp',
+    icon: <FolderCopyIcon />,
+    name: 'Expediente / auto de inicio de trámite',
+    path: '/app/gestor_documental/panel_ventanilla/expediente_auto_inicio_tramite/',
     disabled: false,
   },
 ];
