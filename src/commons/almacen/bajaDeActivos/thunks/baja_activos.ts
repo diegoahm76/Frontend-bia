@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from "../../../../api/axios";
+import { control_error } from "../../../../helpers";
 
 export const get_obtener_consecutivo: any = () => {
   return async () => {
@@ -43,6 +44,7 @@ export const post_enviar_baja_activos: any = (form_data: any) => {
       const { data } = await api.post('/almacen/activos/crear-baja-activos/create/', form_data);
       return data;
     } catch (error: any) {
+      control_error(error?.response?.data?.detail || error?.detail)
       return error as AxiosError;
     }
   };
