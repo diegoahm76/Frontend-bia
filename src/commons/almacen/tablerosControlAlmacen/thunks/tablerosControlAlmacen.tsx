@@ -269,9 +269,9 @@ export const get_bienes_consumo_entregados: any = (
   return async () => {
     try {
       const { data } = await api.get(`/almacen/reportes/reporte-bienes-consumo/get-list/?fecha_desde=${fecha_desde}&fecha_hasta=${fecha_hasta}&cod_tipo_activo=${cod_tipo_activo}&id_persona_responsable=${id_persona_responsable}&id_persona_solicita=${id_persona_solicita}&id_persona_despacha=${id_persona_despacha}&id_persona_anula=${id_persona_anula}`);
-      if(!data?.data?.length){
-        control_error('No se encontraron registros con los filtros seleccionados');
-      }
+      // if(!data?.data?.length){
+      //   control_error('No se encontraron registros con los filtros seleccionados');
+      // }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -352,6 +352,7 @@ export const get_historico_todos_vehiculos: any = (
   fecha_hasta: string,
   es_arrendado: string,
   id_responsable: string,
+  id_persona_autoriza: string,
 ) => {
   return async () => {
     try {
@@ -365,7 +366,8 @@ export const get_historico_todos_vehiculos: any = (
           es_arrendado
         }&id_responsable=${
           id_responsable
-        }`);
+        }&id_persona_autoriza=${
+          id_persona_autoriza}`);
         // if(!data?.data?.length){
         //   control_error('No se encontraron registros con los filtros seleccionados');
         // }
