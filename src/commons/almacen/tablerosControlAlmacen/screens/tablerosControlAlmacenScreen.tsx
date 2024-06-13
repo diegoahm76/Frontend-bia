@@ -72,6 +72,7 @@ import HistoricoUsoVehiculos from '../components_reports/HistoricoUsoVehiculos';
 import TablaHistoricoUsoVehiculos from '../tables/TablaHistoricoUsoVehiculos';
 import { BuscadorPersonasReports } from '../components_reports/BuscadorPersonasReports';
 import { Persona } from '../../../../interfaces/globalModels';
+import { get_tipo_entrada } from '../../gestionDeInventario/movimientos/store/thunks/entregaThunks';
 
 interface ids_interface {
   id_responsable: string;
@@ -149,6 +150,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     id_origen: '',
     id_proveedor: '',
   });
+  const [tipos_entradas, set_tipos_entradas] = useState<any[]>([]);
+
 
   const on_result = async (info_persona: Persona, param: string): Promise<void> => {
     set_persona(info_persona);
@@ -246,7 +249,16 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     obtener_tipos_mantenimiento_fc();
     obtener_bodegas_fc();
     obtener_tipos_bien_fc();
+    tipo_entrada();
   }, []);
+
+  const tipo_entrada = () => {
+    dispatch(get_tipo_entrada()).then((response: any) => {
+      set_tipos_entradas(response?.data);
+    })
+  }
+
+  useEffect(() => console.log(tipos_entradas), [tipos_entradas])
 
   const obtener_unidades_organizacionales_fc: () => void = () => {
     dispatch(obtener_unidades_organizacionales()).then((response: any) => {
@@ -286,6 +298,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     { id: 'BCE', value: 'Bienes de consumo entregados' },
     { id: 'HUV', value: 'Histórico de Uso de Vehículos' },
   ];
+
+  const [new_title, set_new_title] = useState<string>('');
+
 
   const lt_tipo_despacho = [{ id: 'DG', value: 'Despacho general' }, { id: 'DV', value: 'Despacho a vivero' }];
   const lt_presentacion = [{ id: "UND", value: "Unidad" }, { id: "BN", value: "Bien" }];
@@ -449,19 +464,21 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     crear_objeto_filtro();
     switch (seleccion_tablero_control) {
       case 'CBU':
-        if (fecha_desde === null || fecha_hasta === null) {
-          set_error_fecha_desde(fecha_desde === null);
-          set_error_fecha_hasta(fecha_hasta === null);
-          return
-        }
+        set_new_title('Consumo de bienes por unidad');
+        // if (fecha_desde === null || fecha_hasta === null) {
+        //   set_error_fecha_desde(fecha_desde === null);
+        //   set_error_fecha_hasta(fecha_hasta === null);
+        //   return
+        // }
         const tipo_despacho = (seleccion_tipo_despacho === 'Todos' || seleccion_tipo_despacho === '') ? seleccion_tipo_despacho : seleccion_tipo_despacho === 'DV';
         const id_bodega_reporte = (seleccion_bodega === 'Todos' || seleccion_bodega === '') ? '' : seleccion_bodega;
         const id_bien = seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.id_bien : '';
-        dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), id_responsable: ids_persons.id_responsable, id_solicita: ids_persons.id_solicitante, id_despacha: ids_persons.id_despacha, id_anula: ids_persons.id_anula, id_bodega_reporte })).then((response: any) => {
+        dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', id_responsable: ids_persons.id_responsable, id_solicita: ids_persons.id_solicitante, id_despacha: ids_persons.id_despacha, id_anula: ids_persons.id_anula, id_bodega_reporte })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'MP':
+        set_new_title('Mantenimientos programados');
         const categoria = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
         dispatch(obtener_mtto_programados(
           ids_persons.id_solicitante,
@@ -503,6 +520,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'CS':
+        set_new_title('Control de stock');
         const solicitable = seleccion_tipo_bien === 'SV' ? 'true' : (seleccion_tipo_bien === 'NSV' ? 'false' : '');
         const id_bodega_reporte2 = (seleccion_bodega === 'Todos' || seleccion_bodega === '') ? '' : seleccion_bodega;
         dispatch(obtener_control_stock(
@@ -518,6 +536,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'MSI':
+        set_new_title('Movimientos sobre incautados');
         set_loadding_consultar(true);
         // MSI - Movimientos sobre incautados
         if(inputs_msi?.tipo_bien === '' || inputs_msi?.tipo_bien === undefined){
@@ -526,6 +545,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           return;
         } else {
           const categoria = inputs_msi?.tipo_bien === 'Todos' ? '' : inputs_msi?.tipo_bien;
+          const categoria_msi = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
             if (fecha_desde === null || fecha_hasta === null) {
               control_error('Debe seleccionar un rango de fechas para realizar la consulta');
               set_loadding_consultar(false);
@@ -535,7 +555,10 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
               obtener_movimientos_incautados({
                 categoria,
                 fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'),
-                fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD')
+                fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'),
+                id_responsable: ids_persons.id_responsable,
+                id_proveedor: ids_persons.id_proveedor,
+                cod_tipo_activo: categoria_msi ?? '',
               }))
                 .then((response: any) => {
                   if(Object.keys(response).length === 0){
@@ -550,40 +573,51 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       set_loadding_consultar(false);
                     }
                   }
+            }).catch((error: any) => {
+              set_loadding_consultar(false);
             });
         }
 
         break;
       case 'MR':
-        if (fecha_desde === null || fecha_hasta === null) {
-          set_error_fecha_desde(fecha_desde === null);
-          set_error_fecha_hasta(fecha_hasta === null);
-          return;
-        }
-        dispatch(obtener_mantenimientos_realizados({ seleccion_tipo_mtto, realizado: realizado.id_persona, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        const categoria_mr = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
+        set_new_title('Mantenimientos realizados');
+        // if (fecha_desde === null || fecha_hasta === null) {
+        //   set_error_fecha_desde(fecha_desde === null);
+        //   set_error_fecha_hasta(fecha_hasta === null);
+        //   return;
+        // }
+        dispatch(obtener_mantenimientos_realizados({ seleccion_tipo_mtto, realizado: realizado.id_persona, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', cod_tipo_activo: categoria_mr ?? '' })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'EI':
-        const tipo_bien = seleccion_tipo_bien === 'Todos' ? '' : seleccion_tipo_bien;
-        if (fecha_desde === null || fecha_hasta === null) {
-          set_error_fecha_desde(fecha_desde === null);
-          set_error_fecha_hasta(fecha_hasta === null);
-          return;
-        }
-        dispatch(obtener_entradas_inventario({ seleccion_bodega, seleccion_tipo_bien: tipo_bien, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'), codigo_bien: control_stock.codigo_bien, nombre_bien: control_stock.nombre_bien, placa_serial: mantenimiento_realized.serial, consecutivo: mantenimiento_realized.consecutivo, id_responsable: ids_persons.id_responsable, id_proveedor: ids_persons.id_proveedor })).then((response: any) => {
+      set_new_title('Entradas a inventario');
+      const categoria_ei = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
+      const tipo_bien = seleccion_tipo_bien === 'Todos' ? '' : seleccion_tipo_bien;
+        // if (fecha_desde === null || fecha_hasta === null) {
+        //   set_error_fecha_desde(fecha_desde === null);
+        //   set_error_fecha_hasta(fecha_hasta === null);
+        //   return;
+        // }
+        dispatch(obtener_entradas_inventario({ seleccion_bodega, seleccion_tipo_bien: tipo_bien, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', codigo_bien: control_stock.codigo_bien, nombre_bien: control_stock.nombre_bien, placa_serial: mantenimiento_realized.serial, consecutivo: mantenimiento_realized.consecutivo, id_responsable: ids_persons.id_responsable, id_proveedor: ids_persons.id_proveedor, cod_tipo_activo: categoria_ei ?? '' })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'MAFI':
+        set_new_title('Movimientos sobre los bienes (activos fijos) del inventario');
         const tipo_activo = inputs_mafi.tipo_activo === 'Todos' ? '' : inputs_mafi.tipo_activo;
         // MAFI - Movimientos sobre los bienes (activos fijos) del inventario
+        const categoria_mafi = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
         set_loadding_consultar(true);
         dispatch(
           get_movimientos_inventario(
             tipo_activo ?? '',
             inputs_mafi.fecha_desde ?? '',
-            inputs_mafi.fecha_hasta ?? ''
+            inputs_mafi.fecha_hasta ?? '',
+            categoria_mafi ?? '',
+            ids_persons.id_responsable,
+            ids_persons.id_origen,
           )
         ).then((response: response_movimientos_inventario) => {
           if (Object.keys(response)?.length !== 0) {
@@ -602,6 +636,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'RABP':
+        set_new_title('Reportes Almacén – Bienes (activos fijos) en préstamo');
         const categoria2 = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
         // RABP - Reportes Almacén – Bienes (activos fijos) en préstamo
         set_loadding_consultar(true);
@@ -609,7 +644,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           get_bienes_activos(
             categoria2 ?? '',
             inputs_rabp.fecha_desde ?? '',
-            inputs_rabp.fecha_hasta ?? ''
+            inputs_rabp.fecha_hasta ?? '',
+            ids_persons.id_responsable ?? '',
+            ids_persons.id_origen ?? '',
           )
         ).then((response: any) => {
           if (Object.keys(response)?.length !== 0) {
@@ -628,12 +665,19 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'BCE':
+        set_new_title('Bienes de consumo entregados');
+        const categoria_bce = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
         // Bienes de consumo entregados
         set_loadding_consultar(true);
         dispatch(
           get_bienes_consumo_entregados(
             inputs_rabp.fecha_desde ?? '',
-            inputs_rabp.fecha_hasta ?? ''
+            inputs_rabp.fecha_hasta ?? '',
+            categoria_bce ?? '',
+            ids_persons.id_responsable ?? '',
+            ids_persons.id_solicitante ?? '',
+            ids_persons.id_despacha ?? '',
+            ids_persons.id_anula ?? '',
           )
         ).then((response: response_bienes_consumo_entregado) => {
           if (Object.keys(response)?.length !== 0) {
@@ -652,6 +696,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'HUV':
+        set_new_title('Histórico de Uso de Vehículos');
         // Histórico de Uso de Vehículos
         if (inputs_huv.tipo_consulta === 'vehiculo_especifico') {
           // En caso que el tipo de consulta del input de seleccion sea por vehiculo especifico
@@ -680,13 +725,15 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           }
         } else if (inputs_huv.tipo_consulta === 'todos_vehiculos') {
           // En caso que el tipo de consulta del input de seleccion sea por todos los vehiculos
+          const tipo_veh = inputs_huv.tipo_vehiculo === 'Todos' ? '' : inputs_huv.tipo_vehiculo;
           set_loadding_consultar(true);
           dispatch(
             get_historico_todos_vehiculos(
-              inputs_huv.tipo_vehiculo ?? '',
+              tipo_veh ?? '',
               inputs_huv.fecha_desde ?? '',
               inputs_huv.fecha_hasta ?? '',
               inputs_huv.propiedad === 'true' ? 'True' : inputs_huv.propiedad === 'false' ? 'False' : '',
+              ids_persons.id_responsable ?? '',
             )
           ).then((response: response_historico_vehiculo) => {
             if (Object.keys(response)?.length !== 0) {
@@ -977,21 +1024,20 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                               }}
                               renderInput={(params) => (
                                 <TextField
-                                  required
                                   fullWidth
                                   size="small"
                                   {...params}
-                                  error={error_fecha_desde}
+                                  // error={error_fecha_desde}
                                 />
                               )}
                               maxDate={fecha_hasta}
                             />
                           </LocalizationProvider>
-                          {error_fecha_desde && (
+                          {/* {error_fecha_desde && (
                             <FormHelperText error>
                               {'El campo es obligatorio.'}
                             </FormHelperText>
-                          )}
+                          )} */}
                         </Grid>
                       </Stack>
                     </Grid>
@@ -1011,22 +1057,21 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                               }}
                               renderInput={(params) => (
                                 <TextField
-                                  required
                                   fullWidth
                                   size="small"
                                   {...params}
-                                  error={error_fecha_hasta}
+                                  // error={error_fecha_hasta}
                                 />
                               )}
                               minDate={fecha_desde}
                               disabled={fecha_desde == null}
                             />
                           </LocalizationProvider>
-                          {error_fecha_hasta && (
+                          {/* {error_fecha_hasta && (
                             <FormHelperText error>
                               {'El campo es obligatorio.'}
                             </FormHelperText>
-                          )}
+                          )} */}
                         </Grid>
                       </Stack>
                     </Grid>
@@ -1064,6 +1109,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     <ReportesAlmacenBienesPrestamo
                       inputs_rabp={inputs_rabp}
                       set_inputs_rabp={set_inputs_rabp}
+                      set_clear_persons={set_clear_persons}
+                      onResult={on_result}
+                      seleccion_tablero_control={seleccion_tablero_control}
                     />
                     <BuscadorPersonasReports
                       set_clear_persons={set_clear_persons}
@@ -1132,12 +1180,20 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <TextField
-                        label="Código tipo entrada"
+                        select
+                        label="Tipo entrada"
                         size="small"
                         fullWidth
                         value={control_stock.codigo_tipo_entrada}
                         onChange={handle_codigo_tipo_entrada_stock}
-                      />
+                      >
+                        <MenuItem value={'Todos'}>Todos</MenuItem>
+                        {tipos_entradas.map((lt: any) => (
+                            <MenuItem key={lt.cod_tipo_entrada} value={lt.cod_tipo_entrada}>
+                              {lt.nombre}
+                            </MenuItem>
+                        ))}
+                      </TextField>
                     </Grid>
                     <Grid item xs={12} sm={6}>
                       <FormControl size="small" fullWidth>
@@ -1165,7 +1221,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                 )}
                 {seleccion_tablero_control === 'MSI' && (
                   <Grid item container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                           size="small"
                           select
@@ -1194,7 +1250,33 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           )}
                         </TextField>
                     </Grid>
-
+                    <Grid item xs={12} lg={6}>
+                      <FormControl required size="small" fullWidth>
+                        <InputLabel>Categoria: </InputLabel>
+                        <Select
+                          label="Categoria :"
+                          value={inputs_rabp.tipo_categoria || ''}
+                          fullWidth
+                          onChange={(e: SelectChangeEvent) => {
+                            set_inputs_rabp({
+                              ...inputs_rabp,
+                              tipo_categoria: e.target.value,
+                            });
+                          }}
+                        >
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
+                          {tipos_categoria?.length !== 0 ? (
+                            tipos_categoria?.map((tipo_movimiento) => (
+                              <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
+                                {tipo_movimiento[1]}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value={''}>Cargando...</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                     {/* {inputs_msi?.tipo_bien === 'A' &&
                       <Grid item xs={12} lg={4}>
                         <FormControl required size="small" fullWidth>
@@ -1271,6 +1353,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         />
                       </LocalizationProvider>
                     </Grid>
+                    <BuscadorPersonasReports
+                      set_clear_persons={set_clear_persons}
+                      onResult={on_result}
+                      seleccion_tablero_control={seleccion_tablero_control}
+                    />
                   </Grid>
                 )}
                 {seleccion_tablero_control === 'MR' && (
@@ -1321,80 +1408,89 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         set_persona={set_realizado}
                       />
                     )}
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha desde"
-                              value={fecha_desde}
-                              onChange={(newValue) => {
-                                handle_change_fecha_desde(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_desde}
-                                />
-                              )}
-                              maxDate={fecha_hasta}
-                            />
-                          </LocalizationProvider>
-                          {error_fecha_desde && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
-                          )}
-                        </Grid>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-start"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha hasta"
-                              value={fecha_hasta}
-                              onChange={(newValue) => {
-                                handle_change_fecha_hasta(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_hasta}
-                                />
-                              )}
-                              minDate={fecha_desde}
-                              disabled={fecha_desde == null}
-                            />
-                          </LocalizationProvider>
-                          {error_fecha_hasta && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
-                          )}
-                        </Grid>
-                      </Stack>
-                    </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <FormControl required size="small" fullWidth>
+                          <InputLabel>Categoria: </InputLabel>
+                          <Select
+                            label="Categoria :"
+                            value={inputs_rabp.tipo_categoria || ''}
+                            fullWidth
+                            onChange={(e: SelectChangeEvent) => {
+                              set_inputs_rabp({
+                                ...inputs_rabp,
+                                tipo_categoria: e.target.value,
+                              });
+                            }}
+                          >
+                            <MenuItem value={'Todos'}>Todos</MenuItem>
+                            {tipos_categoria?.length !== 0 ? (
+                              tipos_categoria?.map((tipo_movimiento) => (
+                                <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
+                                  {tipo_movimiento[1]}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              <MenuItem value={''}>Cargando...</MenuItem>
+                            )}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Fecha desde"
+                            value={fecha_desde}
+                            onChange={(newValue) => {
+                              handle_change_fecha_desde(newValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                fullWidth
+                                size="small"
+                                {...params}
+                                // error={error_fecha_desde}
+                              />
+                            )}
+                            maxDate={fecha_hasta}
+                          />
+                        </LocalizationProvider>
+                        {/* {error_fecha_desde && (
+                          <FormHelperText error>
+                            {'El campo es obligatorio.'}
+                          </FormHelperText>
+                        )} */}
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Fecha hasta"
+                            value={fecha_hasta}
+                            onChange={(newValue) => {
+                              handle_change_fecha_hasta(newValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                fullWidth
+                                size="small"
+                                {...params}
+                                // error={error_fecha_hasta}
+                              />
+                            )}
+                            minDate={fecha_desde}
+                            disabled={fecha_desde == null}
+                          />
+                        </LocalizationProvider>
+                        {/* {error_fecha_hasta && (
+                          <FormHelperText error>
+                            {'El campo es obligatorio.'}
+                          </FormHelperText>
+                        )} */}
+                      </Grid>
                   </Grid>
                 )}
                 {seleccion_tablero_control === 'EI' && (
                   <Grid item container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                       <FormControl size="small" fullWidth>
                         <InputLabel>Bodega</InputLabel>
                         <Select
@@ -1411,7 +1507,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                       <FormControl size="small" fullWidth>
                         <InputLabel>Tipo de bien</InputLabel>
                         <Select
@@ -1425,6 +1521,33 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                               {lt[1]}
                             </MenuItem>
                           ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} lg={4}>
+                      <FormControl required size="small" fullWidth>
+                        <InputLabel>Categoria: </InputLabel>
+                        <Select
+                          label="Categoria :"
+                          value={inputs_rabp.tipo_categoria || ''}
+                          fullWidth
+                          onChange={(e: SelectChangeEvent) => {
+                            set_inputs_rabp({
+                              ...inputs_rabp,
+                              tipo_categoria: e.target.value,
+                            });
+                          }}
+                        >
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
+                          {tipos_categoria?.length !== 0 ? (
+                            tipos_categoria?.map((tipo_movimiento) => (
+                              <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
+                                {tipo_movimiento[1]}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value={''}>Cargando...</MenuItem>
+                          )}
                         </Select>
                       </FormControl>
                     </Grid>
@@ -1474,21 +1597,20 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                             }}
                             renderInput={(params) => (
                               <TextField
-                                required
                                 fullWidth
                                 size="small"
                                 {...params}
-                                error={error_fecha_desde}
+                                // error={error_fecha_desde}
                               />
                             )}
                             maxDate={fecha_hasta}
                           />
                         </LocalizationProvider>
-                        {error_fecha_desde && (
+                        {/* {error_fecha_desde && (
                           <FormHelperText error>
                             {'El campo es obligatorio.'}
                           </FormHelperText>
-                        )}
+                        )} */}
                       </Grid>
                       <Grid item xs={12} sm={4}>
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -1500,22 +1622,21 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                             }}
                             renderInput={(params) => (
                               <TextField
-                                required
                                 fullWidth
                                 size="small"
                                 {...params}
-                                error={error_fecha_hasta}
+                                // error={error_fecha_hasta}
                               />
                             )}
                             minDate={fecha_desde}
-                            disabled={fecha_desde == null}
+                            // disabled={fecha_desde == null}
                           />
                         </LocalizationProvider>
-                        {error_fecha_hasta && (
+                        {/* {error_fecha_hasta && (
                           <FormHelperText error>
                             {'El campo es obligatorio.'}
                           </FormHelperText>
-                        )}
+                        )} */}
                       </Grid>
                       <BuscadorPersonasReports
                         set_clear_persons={set_clear_persons}
@@ -1555,6 +1676,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   <MovimientosActivosFijosInventario
                     inputs_mafi={inputs_mafi}
                     set_inputs_mafi={set_inputs_mafi}
+                    inputs_rabp={inputs_rabp}
+                    set_inputs_rabp={set_inputs_rabp}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
                   />
                 )}
                 {/* RABP - Reportes Almacén – Bienes (activos fijos) en préstamo */}
@@ -1562,6 +1688,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   <ReportesAlmacenBienesPrestamo
                     inputs_rabp={inputs_rabp}
                     set_inputs_rabp={set_inputs_rabp}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
                   />
                 )}
                 {/* BCE - Bienes de consumo entregados */}
@@ -1569,6 +1698,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   <BienesConsumoEntregados
                     inputs_bce={inputs_bce}
                     set_inputs_bce={set_inputs_bce}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
                   />
                 )}
 
@@ -1578,6 +1710,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     set_inputs_huv={set_inputs_huv}
                     set_data_huv={set_data_huv}
                     set_data_vehiculo_seleccionado={set_data_vehiculo_seleccionado}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
                   />
                 }
 
@@ -1654,6 +1789,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           {seleccion_tablero_control !== 'EI' && (
             <Grid item md={12} xs={12}>
               <ResultadosBusqueda
+                title={new_title}
                 resultado_busqueda={resultado_busqueda}
                 seleccion_presentacion={seleccion_presentacion}
                 titulo={'Resultado de búsqueda'}
@@ -1668,6 +1804,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           {seleccion_tablero_control === 'EI' && (
             <Grid item md={12} xs={12}>
               <ResultadosBusquedaTable
+                title={new_title}
                 resultado_busqueda={resultado_busqueda}
                 seleccion_presentacion={seleccion_presentacion}
                 titulo={'Resultado de búsqueda'}

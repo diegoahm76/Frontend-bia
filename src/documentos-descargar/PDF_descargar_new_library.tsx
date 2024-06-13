@@ -9,9 +9,10 @@ import { useSelector } from 'react-redux';
 import { AuthSlice } from '../commons/auth/interfaces';
 import { useEffect } from 'react';
 import pdfMake from "pdfmake/build/pdfmake";
-import { logo_cormacarena_h } from '../commons/conservacion/Reportes/logos/logos';
+import { new_logo_corma_h } from '../commons/conservacion/Reportes/logos/logos';
 
 interface DownloadPDFProps {
+    isEI?: boolean,
     nurseries: any[];
     columns: any[];
     filtrers: any;
@@ -68,9 +69,10 @@ export const download_new_pdf_props : React.FC<DownloadPDFProps> = (props: Downl
   const handleClick = (): void => {
     const anchoPagina = 595.28;
     const docDefinition = {
-      pageSize: 'A4',
+      extend: 'pdfHtml5',
+      pageSize: 'A2',
       pageOrientation: 'landscape',
-      pageMargins: [30, 190, 30, 80], // Márgenes de la página: [izquierda, arriba, derecha, abajo]
+      pageMargins: [30, 250, 30, 80], // Márgenes de la página: [izquierda, arriba, derecha, abajo]
       header: function(currentPage: any, pageCount: any) {
         return [
           {
@@ -81,7 +83,7 @@ export const download_new_pdf_props : React.FC<DownloadPDFProps> = (props: Downl
                 [
                   {
                     text: 'Cormacarena',
-                    fontSize: 14,
+                    fontSize: 20,
                     bold: true,
                     colSpan: 4,
                     alignment: 'center',
@@ -94,27 +96,29 @@ export const download_new_pdf_props : React.FC<DownloadPDFProps> = (props: Downl
                 ],
                 [
                   {
-                    image: logo_cormacarena_h,
-                    width: 130,
-                    height: 40,
+                    image: new_logo_corma_h,
+                    width: 270,
+                    height: 70,
                     alignment: 'left',
                     border: [true, false, true, true], // Bordes excepto el derecho
                     margin: [5, 5, 5, 5] // Márgenes internos
                   },
                   {
-                    fontSize: 13,
+                    fontSize: 18,
                     text: titulo,
                     alignment: 'center',
                     border: [true, false, true, true], // Bordes excepto el derecho
                     margin: [5, 5, 5, 5] // Márgenes internos
                   },
                   {
+                    fontSize: 16,
                     text: 'Fecha: ' + new Date().toLocaleDateString(),
                     alignment: 'right',
                     border: [true, false, true, true], // Bordes excepto el derecho
                     margin: [5, 5, 5, 5] // Márgenes internos
                   },
                   {
+                    fontSize: 16,
                     text: 'Versión: 1',
                     alignment: 'right',
                     border: [true, false, true, true], // Bordes completos
@@ -130,8 +134,8 @@ export const download_new_pdf_props : React.FC<DownloadPDFProps> = (props: Downl
               paddingBottom: function(i: any, node: any) { return 5; },
             }
           },
-          { text: `Tercero: ${userinfo.numero_documento}`, alignment: 'justify', fontSize: 10, margin: [30, 15, 30, 0]},
-          { text: `Nombre: ${userinfo.nombre}`, alignment: 'justify', fontSize: 10, margin: [30, 4, 30, 0]},
+          { text: `Identificación: ${userinfo.numero_documento}`, alignment: 'justify', fontSize: 16, margin: [30, 15, 30, 0]},
+          { text: `Generado por: ${userinfo.nombre}`, alignment: 'justify', fontSize: 16, margin: [30, 4, 30, 0]},
         ];
       },
 
@@ -167,7 +171,8 @@ export const download_new_pdf_props : React.FC<DownloadPDFProps> = (props: Downl
         {
           table: {
             headerRows: 1,
-            widths: props.columns.map(() => '*'), // asumiendo igualdad de anchura para todas las columnas
+            widths: props.isEI ? props.columns.map(() => '*') : props.columns.map(column => column.width || 'auto'),
+            // widths: props.columns.map(column => column.width || 'auto'),
             body: buildTableBody(props.nurseries, props.columns)
           },
           layout: {
