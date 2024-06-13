@@ -59,11 +59,11 @@ export const obtener_consumo_bienes_und: any = (filtros: { seleccion_tipo_despac
   };
 };
 // Obtiene entradas a inventarios
-export const obtener_entradas_inventario: any = (filtros: { seleccion_bodega: string, seleccion_tipo_bien: string,fecha_desde: string,fecha_hasta: string, codigo_bien: string, nombre_bien: string, placa_serial: string, consecutivo: string, id_responsable: string, id_proveedor: string }) => {
+export const obtener_entradas_inventario: any = (filtros: { seleccion_bodega: string, seleccion_tipo_bien: string,fecha_desde: string,fecha_hasta: string, codigo_bien: string, nombre_bien: string, placa_serial: string, consecutivo: string, id_responsable: string, id_proveedor: string, cod_tipo_activo: string }) => {
   return async () => {
     try {
 
-      const { data } = await api.get(`almacen/reportes/entradas-inventario/get-list/?id_bodega=${filtros.seleccion_bodega === 'Todos' ? '' : filtros.seleccion_bodega}&cod_tipo_bien=${filtros.seleccion_tipo_bien}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&codigo_bien=${filtros.codigo_bien}&nombre_bien=${filtros.nombre_bien}&placa_serial=${filtros.placa_serial}&consecutivo=${filtros.consecutivo}&id_responsable=${filtros.id_responsable}&id_proveedor=${filtros.id_proveedor}`);
+      const { data } = await api.get(`almacen/reportes/entradas-inventario/get-list/?id_bodega=${filtros.seleccion_bodega === 'Todos' ? '' : filtros.seleccion_bodega}&cod_tipo_bien=${filtros.seleccion_tipo_bien}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&codigo_bien=${filtros.codigo_bien}&nombre_bien=${filtros.nombre_bien}&placa_serial=${filtros.placa_serial}&consecutivo=${filtros.consecutivo}&id_responsable=${filtros.id_responsable}&id_proveedor=${filtros.id_proveedor}&cod_tipo_activo=${filtros.cod_tipo_activo}`);
       if(!data?.data?.length){
         control_error('No se encontraron registros con los filtros seleccionados');
       }
@@ -93,19 +93,17 @@ export const obtener_control_stock: any = (solicitable_vivero: string, codigo_bi
 export const obtener_movimientos_incautados: any = (filtros: {
   categoria: string,
   fecha_desde: string,
-  fecha_hasta: string }) => {
+  fecha_hasta: string,
+  id_responsable: string,
+  id_proveedor: string,
+  cod_tipo_activo: string,
+}) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/reportes/movimientos-incautados/get-list/?categoria=${
-        filtros.categoria
-      }&fecha_desde=${
-        filtros.fecha_desde
-      }&fecha_hasta=${
-        filtros.fecha_hasta
-      }`);
-      if(!data?.data?.length){
-        control_error('No se encontraron registros con los filtros seleccionados');
-      }
+      const { data } = await api.get(`almacen/reportes/movimientos-incautados/get-list/?categoria=${filtros.categoria}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&id_responsable=${filtros.id_responsable}&id_proveedor=${filtros.id_proveedor}&cod_tipo_activo=${filtros.cod_tipo_activo}`);
+      // if(!data?.data?.length){
+      //   control_error('No se encontraron registros con los filtros seleccionados');
+      // }
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);
@@ -114,10 +112,10 @@ export const obtener_movimientos_incautados: any = (filtros: {
   };
 };
 // Mantenimientos realizados
-export const obtener_mantenimientos_realizados: any = (filtros: { seleccion_tipo_mtto: string, realizado: string,seleccion_unidad_org: string, discriminar: boolean | string,  fecha_desde: string,fecha_hasta: string }) => {
+export const obtener_mantenimientos_realizados: any = (filtros: { seleccion_tipo_mtto: string, realizado: string,seleccion_unidad_org: string, discriminar: boolean | string,  fecha_desde: string,fecha_hasta: string, cod_tipo_activo: string }) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/reportes/mantenimientos-realizados/get-list/?cod_tipo_mantenimiento=${filtros.seleccion_tipo_mtto === 'Todos' ? '' : filtros.seleccion_tipo_mtto}&id_persona_realiza=${filtros.realizado === undefined ? '' : filtros.realizado}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}`);
+      const { data } = await api.get(`almacen/reportes/mantenimientos-realizados/get-list/?cod_tipo_mantenimiento=${filtros.seleccion_tipo_mtto === 'Todos' ? '' : filtros.seleccion_tipo_mtto}&id_persona_realiza=${filtros.realizado === undefined ? '' : filtros.realizado}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&cod_tipo_activo=${filtros.cod_tipo_activo}`);
       if(!data?.data?.length){
         control_error('No se encontraron registros con los filtros seleccionados');
       }
@@ -185,6 +183,9 @@ export const get_movimientos_inventario: any = (
   tipo_movimiento: string,
   fecha_desde: string,
   fecha_hasta: string,
+  cod_tipo_activo: string,
+  id_persona_responsable: string,
+  id_persona_origen: string
   ) => {
   return async () => {
     try {
@@ -194,10 +195,19 @@ export const get_movimientos_inventario: any = (
         fecha_desde
       }&fecha_hasta=${
         fecha_hasta
+      }&cod_tipo_activo=${
+        cod_tipo_activo
+      }&id_persona_responsable=${
+        id_persona_responsable
+      }&id_persona_origen=${
+        id_persona_origen
       }`);
-      if(!data?.data?.length){
-        control_error('No se encontraron registros con los filtros seleccionados');
-      }
+      //   &cod_tipo_activo=${
+      //   cod_tipo_activo
+      // }`);
+      // if(!data?.data?.length){
+      //   control_error('No se encontraron registros con los filtros seleccionados');
+      // }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -221,6 +231,8 @@ export const get_bienes_activos: any = (
   cod_tipo_activo: string,
   fecha_desde: string,
   fecha_hasta: string,
+  id_persona_responsable: string,
+  id_persona_origen: string,
   ) => {
   return async () => {
     try {
@@ -230,10 +242,14 @@ export const get_bienes_activos: any = (
         fecha_desde
       }&fecha_hasta=${
         fecha_hasta
+      }&id_persona_responsable=${
+        id_persona_responsable
+      }&id_persona_origen=${
+        id_persona_origen
       }`);
-      if(!data?.data?.length){
-        control_error('No se encontraron registros con los filtros seleccionados');
-      }
+      // if(!data?.data?.length){
+      //   control_error('No se encontraron registros con los filtros seleccionados');
+      // }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -244,14 +260,15 @@ export const get_bienes_activos: any = (
 export const get_bienes_consumo_entregados: any = (
   fecha_desde: string,
   fecha_hasta: string,
+  cod_tipo_activo: string,
+  id_persona_responsable: string,
+  id_persona_solicita: string,
+  id_persona_despacha: string,
+  id_persona_anula: string,
   ) => {
   return async () => {
     try {
-      const { data } = await api.get(`/almacen/reportes/reporte-bienes-consumo/get-list/?fecha_desde=${
-        fecha_desde
-      }&fecha_hasta=${
-        fecha_hasta
-      }`);
+      const { data } = await api.get(`/almacen/reportes/reporte-bienes-consumo/get-list/?fecha_desde=${fecha_desde}&fecha_hasta=${fecha_hasta}&cod_tipo_activo=${cod_tipo_activo}&id_persona_responsable=${id_persona_responsable}&id_persona_solicita=${id_persona_solicita}&id_persona_despacha=${id_persona_despacha}&id_persona_anula=${id_persona_anula}`);
       if(!data?.data?.length){
         control_error('No se encontraron registros con los filtros seleccionados');
       }
@@ -318,9 +335,9 @@ export const get_historico_vehiculo: any = (id_hoja_de_vida: string) => {
   return async () => {
     try {
       const { data } = await api.get(`/almacen/reportes/busqueda-viajes-agendados/${id_hoja_de_vida}/`);
-      if(!data?.data?.length){
-        control_error('No se encontraron registros con los filtros seleccionados');
-      }
+      // if(!data?.data?.length){
+      //   control_error('No se encontraron registros con los filtros seleccionados');
+      // }
       return data;
     } catch (error: any) {
       return error as AxiosError;
@@ -334,6 +351,7 @@ export const get_historico_todos_vehiculos: any = (
   fecha_desde: string,
   fecha_hasta: string,
   es_arrendado: string,
+  id_responsable: string,
 ) => {
   return async () => {
     try {
@@ -345,10 +363,12 @@ export const get_historico_todos_vehiculos: any = (
           fecha_hasta
         }&es_arrendado=${
           es_arrendado
+        }&id_responsable=${
+          id_responsable
         }`);
-        if(!data?.data?.length){
-          control_error('No se encontraron registros con los filtros seleccionados');
-        }
+        // if(!data?.data?.length){
+        //   control_error('No se encontraron registros con los filtros seleccionados');
+        // }
       return data;
     } catch (error: any) {
       return error as AxiosError;
