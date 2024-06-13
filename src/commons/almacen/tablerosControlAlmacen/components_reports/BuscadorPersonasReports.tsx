@@ -241,17 +241,6 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
           });
           break;
     }
-    // set_form_search({
-    //   ...form_search,
-    //   persona_tipo_documento: data.persona_tipo_documento!,
-    //   tipo_documento: data.tipo_documento,
-    //   numero_documento: data.numero_documento,
-    //   primer_nombre: data?.primer_nombre,
-    //   primer_apellido: data?.primer_apellido,
-    //   razon_social: data?.razon_social,
-    //   nombre_comercial: data?.nombre_comercial,
-    //   nombre_completo: (data?.primer_nombre || data?.razon_social || data?.nombre_comercial || '') + ' ' + (data?.primer_apellido || ''),
-    // });
   }
 
   const handle_click_open = (): void => {
@@ -619,7 +608,6 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
             <Button
               variant="contained"
               startIcon={<SearchIcon />}
-              type="submit"
               onClick={handle_click_open}
             >
               Busqueda Avanzada
