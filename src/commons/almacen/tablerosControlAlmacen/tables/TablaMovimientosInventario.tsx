@@ -11,6 +11,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import EditIcon from '@mui/icons-material/Edit';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 import { interface_movimientos_inventario } from '../interfaces/types';
+import ExportDocs from '../../controlDeInventario/screens/ExportDocs';
 
 interface custom_column extends GridColDef {
   renderCell?: (params: { row: interface_movimientos_inventario }) => React.ReactNode;
@@ -25,7 +26,7 @@ const TablaMovimientosInventario: React.FC<props> = ({
 }) => {
 
   let columns: custom_column[] = [
-    {field: 'consecutivo',headerName: 'Consecutivo',width: 120,},
+    {field: 'consecutivo',headerName: 'Consecutivo',minWidth: 120, flex: 1},
     {field: 'codigo_bien', headerName:'Código bien', minWidth:150, flex:1},
     {field: 'nombre_bien', headerName:'Nombre bien', minWidth:250, flex:1},
     {field: 'estado', headerName:'Estado bien', minWidth:150, flex:1},
@@ -49,34 +50,24 @@ const TablaMovimientosInventario: React.FC<props> = ({
 
   return (
     <>
-      <Grid item xs={12} container
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center" >
-        <Grid item sx={{cursor: 'pointer'}}>
-          <ButtonGroup style={{ margin: 5,}}>
-              {download_xls({ nurseries: data, columns })}
-              {download_pdf({
-                  nurseries: data,
-                  columns,
-                  title: 'Articulos agregados a la solicitud',
-              })}
-          </ButtonGroup>
+      <Grid item container spacing={2}>
+        <Grid item xs={12} sm={12}>
+          <ExportDocs cols={columns} resultado_busqueda={data} filtros={null} title={'Movimientos sobre los bienes (activos fijos) del inventario'} nombre_archivo={'Movimientos sobre los bienes (activos fijos) del inventario'} filtros_pdf={null}></ExportDocs>
+          <DataGrid
+            style={{margin:'15px 0px'}}
+            density="compact"
+            autoHeight
+            rows={data ?? []}
+            columns={columns ?? []}
+            pageSize={5}
+            rowHeight={75}
+            rowsPerPageOptions={[5]}
+            experimentalFeatures={{ newEditingApi: true }}
+            getRowId={(row) => row.id_bien === undefined ? uuidv4() : row.id_bien}
+          />
         </Grid>
       </Grid>
 
-      <DataGrid
-        style={{margin:'15px 0px'}}
-        density="compact"
-        autoHeight
-        rows={data ?? []}
-        columns={columns ?? []}
-        pageSize={5}
-        rowHeight={75}
-        rowsPerPageOptions={[5]}
-        experimentalFeatures={{ newEditingApi: true }}
-        getRowId={(row) => row.id_bien === undefined ? uuidv4() : row.id_bien}
-      />
     </>
   );
 }

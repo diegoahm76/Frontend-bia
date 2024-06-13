@@ -55,6 +55,8 @@ export const ControlDeInventariosScreen: React.FC = () => {
   { value: 'Inventario por categoría', id: 'IPC' },
   { value: 'Ver inventario propio', id: 'IP' },
   { value: 'Inventario por tipo por bodega', id: 'ITB' }];
+
+  let new_title: string = '';
   const lt_bienes_consumo = [{ value: 'Todo el inventario', id: 'TIC' },
   { value: 'Bienes solicitables por vivero', id: 'BSV' }];
   const lt_ubicaciones = [{ id: "Asignado", value: "Asignado" }, { id: "Prestado", value: "Prestado" }, { id: "En Bodega", value: "En Bodega" }];
@@ -194,10 +196,12 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const busqueda_control: () => void = () => {
     switch (seleccion_tipo_consulta) {
       case 'TI':
+        new_title = 'Todo el inventario';
         obtener_inventario_af_fc();
         break;
       case 'BE':
-        if(seleccion_bien !== undefined && seleccion_bien !== ''){        
+        new_title = 'Bien específico';
+        if(seleccion_bien !== undefined && seleccion_bien !== ''){
           dispatch(obtener_bien_especifico_af(seleccion_bien.id_bien)).then((response: any) => {
           response.data.fecha_ingreso = dayjs(response.data.fecha_ingreso).format('DD/MM/YYYY');
           response.data.fecha_ultimo_movimiento = dayjs(response.data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
@@ -207,6 +211,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
           set_msj_error_bien('El campo es obligatorio');
         break;
       case 'IPC':
+        new_title = 'Inventario por categoría';
         dispatch(obtener_inventario_categoria({ seleccion_bodega, seleccion_categoria })).then((response: any) => {
           response.data.forEach((data: any) => {
             data.inventario.forEach((inv: any) => {
@@ -218,9 +223,11 @@ export const ControlDeInventariosScreen: React.FC = () => {
         });
         break;
       case 'ISO':
+        new_title = 'Inventario según origen';
         obtener_inventario_af_fc();
         break;
       case 'IP':
+        new_title = 'Ver inventario propio';
         dispatch(obtener_inventario_propio({ seleccion_bodega, seleccion_categoria, agrupar })).then((response: any) => {
           if (agrupar) {
             response.data.forEach((data: any) => {
@@ -239,14 +246,17 @@ export const ControlDeInventariosScreen: React.FC = () => {
         });
         break;
       case 'ITB':
+        new_title = 'Inventario por tipo por bodega';
         dispatch(obtener_inventario_tipo({ seleccion_bodega, mostrar })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'TIC':
+        new_title = 'Todo el inventario';
         obtener_inventario_consumo_fc();
         break;
       case 'BSV':
+        new_title = 'Bienes solicitables por vivero';
         obtener_inventario_consumo_fc();
         break;
       default:
@@ -803,7 +813,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios} nombre_archivo={nombre_archivo ?? ''}></ResultadosBusqueda>
+          <ResultadosBusqueda title={new_title} resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios} nombre_archivo={nombre_archivo ?? ''}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">

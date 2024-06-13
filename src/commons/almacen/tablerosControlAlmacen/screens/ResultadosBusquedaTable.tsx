@@ -13,6 +13,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 interface IProps {
+  title: string,
   resultado_busqueda: any[],
   seleccion_presentacion: string,
   seleccion_tablero_control: string,
@@ -257,7 +258,7 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
       <Box component="form" sx={{ mt: '20px', '& .super-app.positive_green': { backgroundColor: '#C4DFAA' }, '& .super-app.positive': { backgroundColor: '#fdfd96' }, '& .super-app.warning': { backgroundColor: '#ffa07a' }, '& .super-app.danger': { backgroundColor: '#ff6961' } }} noValidate autoComplete="off">
         <Grid item container spacing={2}>
           <Grid item xs={12} sm={12}>
-            <ExportDocs cols={columnas_mp} resultado_busqueda={reporte} filtros={props.filtros} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
+            <ExportDocs title={props.title} isEI={true} cols={columnas_mp} resultado_busqueda={reporte} filtros={props.filtros} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer component={Paper}>
               <Table aria-label="collapsible table">

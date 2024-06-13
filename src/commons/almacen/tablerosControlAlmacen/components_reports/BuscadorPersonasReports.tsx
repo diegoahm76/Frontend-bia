@@ -79,24 +79,25 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
     numero_documento_o: '',
     nombre_completo_o: '',
   });
+
   const [form_search_p, set_form_search_p] = useState<any>({
     tipo_documento_p: '',
     numero_documento_p: '',
     nombre_completo_p: '',
   });
+
   const [is_search, set_is_search] = useState(false);
   const [options_doc_type, set_options_doc_type] = useState<IList[]>([]);
   const [open_dialog, set_open_dialog] = useState(false);
   const [rows, set_rows] = useState<InfoPersona[]>([]);
-  const [local_ids_persons, set_local_ids_persons] = useState<number[]>([]);
 
   const personas = [
     ...(seleccion_tablero_control !== 'MP' ? [{ value: 'R', label: 'Responsable' }] : []),
-    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' ? [{ value: 'S', label: 'Solicita' }] : []),
-    ...(seleccion_tablero_control !== 'MP' && seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' ? [{ value: 'D', label: 'Despacha' }] : []),
-    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' ? [{ value: 'A', label: 'Anula' }] : []),
-    ...(seleccion_tablero_control === 'CS' ? [{ value: 'O', label: 'Origen' }] : []),
-    ...(seleccion_tablero_control === 'EI' ? [{ value: 'P', label: 'Proveedor' }] : []),
+    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' ? [{ value: 'S', label: 'Solicita' }] : []),
+    ...(seleccion_tablero_control !== 'MP' && seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI'  && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' ? [{ value: 'D', label: 'Despacha' }] : []),
+    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI'  && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' ? [{ value: 'A', label: 'Anula' }] : []),
+    ...(seleccion_tablero_control === 'CS' || seleccion_tablero_control === 'MAFI' || seleccion_tablero_control === 'RABP'  ? [{ value: 'O', label: 'Origen' }] : []),
+    ...(seleccion_tablero_control === 'EI' || seleccion_tablero_control === 'MSI' ? [{ value: 'P', label: 'Proveedor' }] : []),
   ]
 
   const columns: GridColDef[] = [
@@ -223,6 +224,22 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
           nombre_completo_a: (data?.primer_nombre || data?.razon_social || data?.nombre_comercial || '') + ' ' + (data?.primer_apellido || ''),
         });
         break;
+        case 'O':
+          set_form_search_o({
+            ...form_search_o,
+            tipo_documento_o: data.tipo_documento,
+            numero_documento_o: data.numero_documento,
+            nombre_completo_o: (data?.primer_nombre || data?.razon_social || data?.nombre_comercial || '') + ' ' + (data?.primer_apellido || ''),
+          });
+          break;
+        case 'P':
+          set_form_search_p({
+            ...form_search_p,
+            tipo_documento_p: data.tipo_documento,
+            numero_documento_p: data.numero_documento,
+            nombre_completo_p: (data?.primer_nombre || data?.razon_social || data?.nombre_comercial || '') + ' ' + (data?.primer_apellido || ''),
+          });
+          break;
     }
     // set_form_search({
     //   ...form_search,
@@ -337,11 +354,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
       );
 
       if (data?.length > 0) {
-        const new_data: any = data.map(item => ({
-          ...item,
-          require_firma: false
-        }));
-        set_rows(new_data);
+        set_rows(data);
       }else{
         control_error('No se encontraron resultados');
       }
@@ -353,10 +366,6 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
       set_is_search(false);
     }
   }
-
-  const handle_selection = (newSelection: any) => {
-    set_local_ids_persons(newSelection);
-  };
 
   const handle_change_number = (e: any) => {
     set_form_search({
@@ -393,11 +402,6 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
     });
   };
 
-  const send_persons = () => {
-    const persons = rows.filter((row) => local_ids_persons.includes(row.id_persona));
-    handle_close();
-  }
-
   useEffect(() => {
     void get_selects_options();
     clean_all();
@@ -406,7 +410,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
   return (
     <>
       <Grid container spacing={2} sx={{ mt: '10px', mb: '20px', mx: '1px' }}>
-        {(seleccion_tablero_control === 'CBU' || seleccion_tablero_control === 'CS' || seleccion_tablero_control === 'EI') && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
+        {form_search_r.numero_documento_r !== '' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
           <Grid item xs={12} md={6} lg={3}>
             <TextField
               size='small'
@@ -440,7 +444,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
           </Grid>
         </Grid>}
 
-        {seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
+        {form_search_s.numero_documento_s !== '' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
           <Grid item xs={12} md={6} lg={3}>
             <TextField
               size='small'
@@ -474,7 +478,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
           </Grid>
         </Grid>}
 
-        {seleccion_tablero_control !== 'MP' && seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
+        {form_search_d.numero_documento_d !== '' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
           <Grid item xs={12} md={6} lg={3}>
             <TextField
               size='small'
@@ -508,7 +512,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
           </Grid>
         </Grid>}
 
-        {seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
+        {form_search_a.numero_documento_a !== '' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
           <Grid item xs={12} md={6} lg={3}>
             <TextField
               size='small'
@@ -541,7 +545,8 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
             />
           </Grid>
         </Grid>}
-        {seleccion_tablero_control === 'CS' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
+
+        {form_search_o.numero_documento_o !== '' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
           <Grid item xs={12} md={6} lg={3}>
             <TextField
               size='small'
@@ -574,7 +579,8 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
             />
           </Grid>
         </Grid>}
-        {seleccion_tablero_control === 'EI' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
+
+        {form_search_p.numero_documento_p !== '' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
           <Grid item xs={12} md={6} lg={3}>
             <TextField
               size='small'
@@ -773,7 +779,6 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
             </Grid>
         </DialogContent>
         <DialogActions>
-          <Button color='primary' variant="contained" disabled={!local_ids_persons.length} sx={{m: '1rem'}} startIcon={<AddIcon />} onClick={send_persons}>Agregar Personas</Button>
           <Button color='error' variant="outlined" sx={{m: '1rem'}} startIcon={<ClearIcon />} onClick={handle_close}>Salir</Button>
         </DialogActions>
       </Dialog>

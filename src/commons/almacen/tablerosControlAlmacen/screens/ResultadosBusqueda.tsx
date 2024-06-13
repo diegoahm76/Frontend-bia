@@ -14,6 +14,7 @@ interface IProps {
     seleccion_tablero_control: string,
     discriminar: boolean,
     titulo: string,
+    title: string,
     nombre_archivo: string,
     filtros: any,
     filtros_pdf: any
@@ -128,12 +129,14 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             headerName: 'Consecutivo',
                             minWidth: 120,
                             flex: 1,
+                            valueGetter: (params) => params.row.consecutivo,
                         },
                         {
                             field: 'codigo_bien',
                             headerName: 'Código bien',
                             minWidth: 140,
                             flex: 1,
+                            valueGetter: (params) => params.row.codigo_bien,
                         },
                         {
                             field: 'nombre_bien',
@@ -238,6 +241,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             headerName: 'Justificación anulación',
                             minWidth: 220,
                             flex: 1,
+                            valueGetter: (params) => params.row.justificacion_anulacion || 'N/A',
                         },
                         {
                             field: 'estado',
@@ -372,11 +376,13 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             field: 'consecutivo',
                             headerName: 'Consecutivo',
                             minWidth: 120,
+                            flex: 1,
                         },
                         {
                             field: 'nombre_bodega',
                             headerName: 'Bodega',
                             minWidth: 300,
+                            flex: 1,
                             valueGetter: (params) => params.row.nombre_bien,
                         },
                         {
@@ -389,44 +395,58 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             field: 'nombre_bien',
                             headerName: 'Bien',
                             minWidth: 300,
+                            flex: 1,
                             valueGetter: (params) => params.row.nombre_bien,
                         },
                         {
                             field: 'tipo_activo',
                             headerName: 'Tipo de activo',
                             minWidth: 250,
+                            flex: 1,
                             valueGetter: (params) => params.row.tipo_activo,
                         },
                         {
                             field: 'codigo_activo_nombre',
                             headerName: 'Código activo',
                             minWidth: 180,
+                            flex: 1,
                         },
                         {
                             field: 'codigo_estado_nombre',
                             headerName: 'Código estado',
                             minWidth: 180,
+                            flex: 1,
                         },
                         {
                             field: 'cantidad_ingresada',
                             headerName: 'Cantidad ingresada',
                             minWidth: 250,
+                            flex: 1,
                             valueGetter: (params) => params.row.cantidad_ingresada,
                         },
                         {
                             field: 'placa_serial',
                             headerName: 'Placa / Serial',
                             minWidth: 140,
+                            flex: 1,
                         },
                         {
                             field: 'nombre_marca',
                             headerName: 'Marca',
                             minWidth: 140,
+                            flex: 1,
                         },
                         {
                             field: 'responsable_bodega',
                             headerName: 'Responsable bodega',
                             minWidth: 300,
+                            flex: 1,
+                        },
+                        {
+                            field: 'proveedor_bodega',
+                            headerName: 'Proveedor bodega',
+                            minWidth: 300,
+                            flex: 1,
                         },
                     ])
                     break;
@@ -435,58 +455,68 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                         {
                             field: 'consecutivo',
                             headerName: 'Consecutivo',
-                            width: 120,
+                            minWidth: 120,
+                            flex: 1,
                         },
                         {
                             field: 'codigo_bien',
                             headerName: 'Código bien',
-                            width: 160,
+                            minWidth: 160,
+                            flex: 1,
                         },
                         {
                             field: 'nombre_bien',
                             headerName: 'Bien',
-                            width: 250,
+                            minWidth: 250,
+                            flex: 1,
                             valueGetter: (params) => params.row.nombre_bien,
                         },
                         {
                             field: 'cod_tipo_activo',
                             headerName: 'Tipo activo',
-                            width: 250,
+                            minWidth: 250,
+                            flex: 1,
                             valueGetter: (params) => params.row.cod_tipo_activo,
                         },
                         {
                             field: 'serial_placa',
                             headerName: 'Serial / Placa',
-                            width: 180,
+                            minWidth: 180,
+                            flex: 1,
                             valueGetter: (params) => params.row.serial_placa,
                         },
                         {
                             field: 'marca',
                             headerName: 'Marca',
-                            width: 180,
+                            minWidth: 180,
+                            flex: 1,
                         },
                         {
                             field: 'tipo_mantenimiento',
                             headerName: 'Tipo mantenimiento',
-                            width: 180,
+                            minWidth: 180,
+                            flex: 1,
                             valueGetter: (params) => params.row.tipo_mantenimiento,
                         },
                         {
                             field: 'fecha_ejecutado',
                             headerName: 'Fecha mantenimiento',
-                            width: 200,
+                            minWidth: 200,
+                            flex: 1,
                             valueGetter: (params) => dayjs(params.row.fecha_ejecutado).format('DD/MM/YYYY'),
                         },
                         {
                             field: 'realizado_por',
                             headerName: 'Realizado por',
-                            width: 200,
+                            minWidth: 200,
+                            flex: 1,
                             valueGetter: (params) => params.row.realizado_por,
                         },
                         {
                             field: 'estado_final',
                             headerName: 'Estado final',
-                            width: 250,
+                            minWidth: 250,
+                            flex: 1,
                             valueGetter: (params) => params.row.estado_final,
                         }
                     ])
@@ -556,7 +586,7 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
             <Box component="form" sx={{ mt: '20px','& .super-app.positive_green': { backgroundColor: '#C4DFAA' },  '& .super-app.positive': { backgroundColor: '#fdfd96' }, '& .super-app.warning': { backgroundColor: '#ffa07a' }, '& .super-app.danger': { backgroundColor: '#ff6961' }}} noValidate autoComplete="off">
                 <Grid item container spacing={2}>
                     <Grid item xs={12} sm={12}>
-                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={props.filtros} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
+                        <ExportDocs cols={columnas_mp} resultado_busqueda={props.resultado_busqueda} filtros={props.filtros} title={props.title} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
                         {
                             (props?.resultado_busqueda && props?.resultado_busqueda.length > 0) ? (
                                 <DataGrid

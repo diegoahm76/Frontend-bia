@@ -22,18 +22,28 @@ import { useDispatch } from 'react-redux';
 import { control_error } from '../../../../helpers';
 import { interface_inputs_rabp } from '../interfaces/types';
 import { get_tipos_categorias } from '../thunks/tablerosControlAlmacen';
+import { BuscadorPersonasReports } from './BuscadorPersonasReports';
+import { InfoPersona } from '../../../../interfaces/globalModels';
 
 interface props {
   inputs_rabp: interface_inputs_rabp;
   set_inputs_rabp: Dispatch<SetStateAction<interface_inputs_rabp>>;
+  onResult: (data_persona: InfoPersona, param: string) => void;
+  set_clear_persons: (bool: boolean) => void;
+  seleccion_tablero_control: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ReportesAlmacenBienesPrestamo: FC<props> = ({
   inputs_rabp,
   set_inputs_rabp,
+  onResult,
+  set_clear_persons,
+  seleccion_tablero_control,
 }) => {
   const dispatch = useDispatch();
+
+  useEffect(() => console.log(seleccion_tablero_control), [seleccion_tablero_control])
 
   const [tipos_categoria, set_tipos_categoria] = useState<any[]>([]);
 
@@ -123,6 +133,11 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
             />
           </LocalizationProvider>
         </Grid>
+        {seleccion_tablero_control == 'RABP' && <BuscadorPersonasReports
+          set_clear_persons={set_clear_persons}
+          onResult={onResult}
+          seleccion_tablero_control={seleccion_tablero_control}
+        />}
       </Grid>
     </>
   );
