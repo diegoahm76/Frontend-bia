@@ -31,6 +31,8 @@ interface props {
   onResult: (data_persona: InfoPersona, param: string) => void;
   set_clear_persons: (bool: boolean) => void;
   seleccion_tablero_control: string;
+  is_clear_filtros?: boolean;
+  set_is_clear_filtros?: (bool: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -40,7 +42,28 @@ const BienesConsumoEntregados: FC<props> = ({
   onResult,
   set_clear_persons,
   seleccion_tablero_control,
+  is_clear_filtros,
+  set_is_clear_filtros,
 }) => {
+
+  const clear_fields = () => {
+    set_inputs_bce({
+      fecha_desde: null,
+      fecha_hasta: null,
+    });
+    set_clear_persons(true);
+    if (set_is_clear_filtros) {
+      set_is_clear_filtros(true);
+    }
+  };
+
+  useEffect(() => {
+    if (is_clear_filtros) {
+      clear_fields();
+    }
+  }, [is_clear_filtros]);
+
+  // ...
 
 
   return (
@@ -86,6 +109,8 @@ const BienesConsumoEntregados: FC<props> = ({
           set_clear_persons={set_clear_persons}
           onResult={onResult}
           seleccion_tablero_control={seleccion_tablero_control}
+          is_clear_filtros={is_clear_filtros}
+          set_is_clear_filtros={set_is_clear_filtros}
         />
       </Grid>
     </>

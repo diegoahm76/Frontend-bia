@@ -81,6 +81,7 @@ interface ids_interface {
   id_anula: string;
   id_origen: string;
   id_proveedor: string;
+  id_autoriza: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -138,6 +139,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   const [inputs_msi, set_inputs_msi] = useState<interface_inputs_msi>(Object)
 
   const [clear_persons, set_clear_persons] = useState<boolean>(false);
+  const [is_clear_filtros, set_is_clear_filtros] = useState<boolean>(false);
   const [tipo_persona, set_tipo_persona] = useState<string>('');
   const [persona, set_persona] = useState<Persona>({
     id_persona: null,
@@ -149,6 +151,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     id_anula: '',
     id_origen: '',
     id_proveedor: '',
+    id_autoriza: '',
   });
   const [tipos_entradas, set_tipos_entradas] = useState<any[]>([]);
 
@@ -179,27 +182,14 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         case 'P':
           set_ids_persons((prevState: any) => ({ ...prevState, id_proveedor: persona.id_persona }));
           break;
+        case 'AU':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_autoriza: persona.id_persona }));
+          break;
         default:
           break;
       }
     }
   }, [persona, tipo_persona]);
-
-  useEffect(() => {
-    if(clear_persons){
-      set_ids_persons({
-        id_responsable: '',
-        id_solicitante: '',
-        id_despacha: '',
-        id_anula: '',
-        id_origen: '',
-        id_proveedor: '',
-      })
-      set_clear_persons(false);
-    }
-  }, [clear_persons])
-
-
 
   const get_tipos_categoria_fc = async () => {
     dispatch(get_tipos_categorias()).then((response: any) => {
@@ -238,7 +228,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
       set_inputs_huv((prev) => {
         return {
           ...prev,
-          nombre_vehiculo: data_vehiculo_seleccionado.nombre
+          consecutivo: data_vehiculo_seleccionado.consecutivo,
+          codigo_bien: data_vehiculo_seleccionado.codigo_bien,
+          nombre_vehiculo: data_vehiculo_seleccionado.nombre,
+          placa: data_vehiculo_seleccionado.placa,
+          marca: data_vehiculo_seleccionado.marca,
         }
       })
     }
@@ -432,9 +426,50 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     set_inputs_huv({} as interface_inputs_huv);
   };
 
+  const clear_persons_function = (): void => {
+    set_ids_persons({
+      id_responsable: '',
+      id_solicitante: '',
+      id_despacha: '',
+      id_anula: '',
+      id_origen: '',
+      id_proveedor: '',
+      id_autoriza: '',
+    })
+  }
+
+  const clean_filtros_screen = (): void => {
+    set_is_clear_filtros(true);
+    set_seleccion_tipo_despacho('');
+    set_seleccion_bien('');
+    set_seleccion_unidad_org('');
+    set_seleccion_bodega('');
+    set_mantenimiento_realized({ serial: '', consecutivo: '' });
+    set_seleccion_tipo_bien('');
+    set_control_stock({ codigo_bien: '', nombre_bien: '', codigo_tipo_entrada: '' });
+    set_inputs_msi({} as interface_inputs_msi);
+    set_inputs_rabp({ tipo_categoria: '', fecha_desde: '', fecha_hasta: '' });
+    set_fecha_desde(null);
+    set_fecha_hasta(null);
+    set_error_fecha_desde(false);
+    set_error_fecha_hasta(false);
+    set_seleccion_tipo_mtto('');
+    set_realizado({ nombre_completo: '' });
+    set_discriminar(false);
+    clear_persons_function();
+  }
+
+  useEffect(() => {
+    if(clear_persons){
+      clear_persons_function();
+      set_clear_persons(false);
+    }
+  }, [clear_persons])
+
   const limpiar_todo: () => void = () => {
     set_seleccion_tablero_control('');
     limpiar_filtros();
+    clear_persons_function();
   }
 
   const salir_entrada: () => void = () => {
@@ -671,8 +706,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         set_loadding_consultar(true);
         dispatch(
           get_bienes_consumo_entregados(
-            inputs_rabp.fecha_desde ?? '',
-            inputs_rabp.fecha_hasta ?? '',
+            inputs_bce.fecha_desde ?? '',
+            inputs_bce.fecha_hasta ?? '',
             categoria_bce ?? '',
             ids_persons.id_responsable ?? '',
             ids_persons.id_solicitante ?? '',
@@ -734,6 +769,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
               inputs_huv.fecha_hasta ?? '',
               inputs_huv.propiedad === 'true' ? 'True' : inputs_huv.propiedad === 'false' ? 'False' : '',
               ids_persons.id_responsable ?? '',
+              ids_persons.id_autoriza ?? '',
             )
           ).then((response: response_historico_vehiculo) => {
             if (Object.keys(response)?.length !== 0) {
@@ -986,6 +1022,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       </Stack>
                     </Grid>
                     <BuscadorPersonasReports
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
                       set_clear_persons={set_clear_persons}
                       onResult={on_result}
                       seleccion_tablero_control={seleccion_tablero_control}
@@ -1112,8 +1150,12 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       set_clear_persons={set_clear_persons}
                       onResult={on_result}
                       seleccion_tablero_control={seleccion_tablero_control}
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
                     />
                     <BuscadorPersonasReports
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
                       set_clear_persons={set_clear_persons}
                       onResult={on_result}
                       seleccion_tablero_control={seleccion_tablero_control}
@@ -1131,6 +1173,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       <Grid item xs={12} sm={4}>
                         <TextField
                           label="Consecutivo"
+                          type='number'
                           size="small"
                           fullWidth
                           value={mantenimiento_realized.consecutivo}
@@ -1216,6 +1259,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       set_clear_persons={set_clear_persons}
                       onResult={on_result}
                       seleccion_tablero_control={seleccion_tablero_control}
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
                     />
                   </Grid>
                 )}
@@ -1357,6 +1402,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       set_clear_persons={set_clear_persons}
                       onResult={on_result}
                       seleccion_tablero_control={seleccion_tablero_control}
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
                     />
                   </Grid>
                 )}
@@ -1581,6 +1628,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     <Grid item xs={12} sm={4}>
                         <TextField
                           label="Consecutivo"
+                          type='number'
                           size="small"
                           fullWidth
                           value={mantenimiento_realized.consecutivo}
@@ -1639,6 +1687,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         )} */}
                       </Grid>
                       <BuscadorPersonasReports
+                        is_clear_filtros={is_clear_filtros}
+                        set_is_clear_filtros={set_is_clear_filtros}
                         set_clear_persons={set_clear_persons}
                         onResult={on_result}
                         seleccion_tablero_control={seleccion_tablero_control}
@@ -1681,6 +1731,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     set_clear_persons={set_clear_persons}
                     onResult={on_result}
                     seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 )}
                 {/* RABP - Reportes Almacén – Bienes (activos fijos) en préstamo */}
@@ -1691,6 +1743,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     set_clear_persons={set_clear_persons}
                     onResult={on_result}
                     seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 )}
                 {/* BCE - Bienes de consumo entregados */}
@@ -1701,6 +1755,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     set_clear_persons={set_clear_persons}
                     onResult={on_result}
                     seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 )}
 
@@ -1713,6 +1769,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     set_clear_persons={set_clear_persons}
                     onResult={on_result}
                     seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 }
 
@@ -1726,6 +1784,15 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     justifyContent: 'end',
                   }}
                 >
+                  <Grid item sx={{mx: '1rem'}}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={clean_filtros_screen}
+                    >
+                      Limpiar filtros
+                    </Button>
+                  </Grid>
                   <Grid item xs={12} lg={3}>
                     <Button
                       fullWidth

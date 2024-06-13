@@ -31,6 +31,8 @@ interface props {
   onResult: (data_persona: InfoPersona, param: string) => void;
   set_clear_persons: (bool: boolean) => void;
   seleccion_tablero_control: string;
+  is_clear_filtros?: boolean;
+  set_is_clear_filtros?: (bool: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -40,6 +42,8 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
   onResult,
   set_clear_persons,
   seleccion_tablero_control,
+  is_clear_filtros,
+  set_is_clear_filtros,
 }) => {
   const dispatch = useDispatch();
 
@@ -65,6 +69,22 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
       servicios_obtenidos.current = true;
     }
   }, [servicios_obtenidos]);
+
+  const clear_inputs = () => {
+    set_inputs_rabp({
+      tipo_categoria: '',
+      fecha_desde: null,
+      fecha_hasta: null,
+    });
+  };
+
+  useEffect(() => {
+    if (is_clear_filtros) {
+      clear_inputs();
+      set_is_clear_filtros && set_is_clear_filtros(false);
+    }
+  }, [is_clear_filtros]);
+
 
   return (
     <>
@@ -137,6 +157,8 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
           set_clear_persons={set_clear_persons}
           onResult={onResult}
           seleccion_tablero_control={seleccion_tablero_control}
+          is_clear_filtros={is_clear_filtros}
+          set_is_clear_filtros={set_is_clear_filtros}
         />}
       </Grid>
     </>

@@ -30,6 +30,8 @@ interface PropsBuscador {
   onResult: (data_persona: InfoPersona, param: string) => void;
   set_clear_persons: (bool: boolean) => void;
   seleccion_tablero_control: string;
+  is_clear_filtros?: boolean;
+  set_is_clear_filtros?: (bool: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -37,6 +39,8 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
   onResult,
   set_clear_persons,
   seleccion_tablero_control,
+  is_clear_filtros,
+  set_is_clear_filtros,
 }: PropsBuscador) => {
 
   const [form_search, set_form_search] = useState<any>({
@@ -86,6 +90,12 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
     nombre_completo_p: '',
   });
 
+  const [form_searh_auto, set_form_search_auto] = useState<any>({
+    tipo_documento_auto: '',
+    numero_documento_auto: '',
+    nombre_completo_auto: '',
+  });
+
   const [is_search, set_is_search] = useState(false);
   const [options_doc_type, set_options_doc_type] = useState<IList[]>([]);
   const [open_dialog, set_open_dialog] = useState(false);
@@ -98,6 +108,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
     ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI'  && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' ? [{ value: 'A', label: 'Anula' }] : []),
     ...(seleccion_tablero_control === 'CS' || seleccion_tablero_control === 'MAFI' || seleccion_tablero_control === 'RABP'  ? [{ value: 'O', label: 'Origen' }] : []),
     ...(seleccion_tablero_control === 'EI' || seleccion_tablero_control === 'MSI' ? [{ value: 'P', label: 'Proveedor' }] : []),
+    ...(seleccion_tablero_control === 'HUV' ? [{ value: 'AU', label: 'Autoriza' }] : []),
   ]
 
   const columns: GridColDef[] = [
@@ -240,6 +251,14 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
             nombre_completo_p: (data?.primer_nombre || data?.razon_social || data?.nombre_comercial || '') + ' ' + (data?.primer_apellido || ''),
           });
           break;
+        case 'AU':
+          set_form_search_auto({
+            ...form_searh_auto,
+            tipo_documento_auto: data.tipo_documento,
+            numero_documento_auto: data.numero_documento,
+            nombre_completo_auto: (data?.primer_nombre || data?.razon_social || data?.nombre_comercial || '') + ' ' + (data?.primer_apellido || ''),
+          });
+          break;
     }
   }
 
@@ -262,6 +281,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
   }
 
   const clean_all = (): void => {
+    set_clear_persons(true);
     clean_form();
     set_form_search_r({
       tipo_documento_r: '',
@@ -293,7 +313,11 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
       numero_documento_p: '',
       nombre_completo_p: '',
     });
-    set_clear_persons(true);
+    set_form_search_auto({
+      tipo_documento_auto: '',
+      numero_documento_auto: '',
+      nombre_completo_auto: '',
+    });
   }
 
   const handle_close = (): void => {
@@ -395,6 +419,13 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
     void get_selects_options();
     clean_all();
   }, []);
+
+  useEffect(() => {
+    if(is_clear_filtros){
+      clean_all();
+      set_is_clear_filtros && set_is_clear_filtros(false);
+    }
+  }, [is_clear_filtros])
 
   return (
     <>
@@ -599,6 +630,40 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
               disabled
               multiline
               value={form_search_p.nombre_completo_p}
+            />
+          </Grid>
+        </Grid>}
+
+        {form_searh_auto.numero_documento_auto !== '' && <Grid container spacing={2} sx={{display: 'flex', margin: 'auto', justifyContent: 'center'}}>
+          <Grid item xs={12} md={6} lg={3}>
+            <TextField
+              size='small'
+              fullWidth
+              label="Tipo de documento autoriza"
+              name="tipo_documento_auto"
+              value={form_searh_auto.tipo_documento_auto}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} md={6} lg={3}>
+            <TextField
+              size="small"
+              fullWidth
+              label="Número de documento autoriza"
+              name='numero_documento_auto'
+              value={form_searh_auto.numero_documento_auto}
+              disabled
+            />
+          </Grid>
+          <Grid item xs={12} md={6} lg={3}>
+            <TextField
+              size="small"
+              fullWidth
+              label="Nombre autoriza"
+              name='nombre_completo_auto'
+              disabled
+              multiline
+              value={form_searh_auto.nombre_completo_auto}
             />
           </Grid>
         </Grid>}
