@@ -63,7 +63,7 @@ export const ModalAsignados: FC = (): JSX.Element => {
       console.log(data)
       if (data && data?.data?.length) {
         setAsignaciones(data.data);
-        control_success('Asignaciones encontradas correctamente');
+        // control_success('Asignaciones encontradas correctamente');
         return data.data;
       }
     } catch (error) {
