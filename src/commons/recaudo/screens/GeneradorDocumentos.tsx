@@ -124,7 +124,7 @@ export const GeneradorDocumentos: React.FC = () => {
           setVariablesPlantilla(arr);
         }
         if(currentElement?.consecutivo) setHasConsecutivo(true);
-        if(currentElement?.documento?.archivos_digitales_copia){
+        if(currentElement?.documento?.archivos_digitales_copia || currentElement?.documento?.cargado){
           setIsUploadDocument(true);
         }
         if(currentElement?.radicado){

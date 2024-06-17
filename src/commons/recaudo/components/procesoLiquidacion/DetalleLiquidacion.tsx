@@ -76,6 +76,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
       });
   }, []);
 
+  useEffect(() => console.log(estado_expediente), [estado_expediente])
+
   const get_calculated_variables = (funcion: string, variables: Record<string, string>): string => {
     const regex = new RegExp(Object.keys(variables).map((propiedad) => `\\b${propiedad}\\b`).join('|'), 'g');
     const formula = funcion.replace(regex, matched => variables[matched]);
@@ -322,7 +324,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
   ]
   console.log("rows_detalles", rows_detalles, estado_expediente);
-  //codigo miguel para visor de factura 
+  //codigo miguel para visor de factura
   const encodedHtml = encodeURIComponent(htmlContent);
   const dataUri = 'data:text/html;charset=utf-8,' + encodedHtml;
   const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
@@ -518,7 +520,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
           <div dangerouslySetInnerHTML={{ __html: htmlContent }} style={{ width: '50%', height: '50%' }} />
         </Grid>
 
-        <Grid item xs={12} sm={12}> 
+        <Grid item xs={12} sm={12}>
           <embed src={dataUri} type="text/html" width="100%" height="100%" />
         </Grid>
 
