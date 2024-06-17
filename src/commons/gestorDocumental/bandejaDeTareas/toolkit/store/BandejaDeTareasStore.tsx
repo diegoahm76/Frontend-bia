@@ -89,7 +89,7 @@ const actionsTramitesYServicios: Action[] = [
   {
      id: 'RequerimientoUsuario',
      icon: <SendIcon />,
-     name: 'Enviar requerimiento al usuario',
+     name: 'Enviar requerimiento al usuario trámite o servicio',
      path: '/app/gestor_documental/bandeja_tareas/requerimiento_usuario_tramites/',
      disabled: false,
   },

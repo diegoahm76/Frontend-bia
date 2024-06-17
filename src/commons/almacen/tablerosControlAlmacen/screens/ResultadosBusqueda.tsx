@@ -55,6 +55,12 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             valueGetter: (params) => params.row.cantidad_despachada_unidad,
                         },
                         {
+                            field: 'cantidad_existente',
+                            headerName: 'Cantidad existente',
+                            minWidth: 200,
+                            flex: 1,
+                        },
+                        {
                             field: 'nombre_bodega',
                             headerName: 'Bodega',
                             minWidth: 200,
@@ -81,6 +87,13 @@ export const ResultadosBusqueda: React.FC<IProps> = (props: IProps) => {
                             minWidth: 200,
                             flex: 1,
                             valueGetter: (params) => params.row.nombre_completo_persona_despacha || 'N/A',
+                        },
+                        {
+                            field: 'fecha_registro',
+                            headerName: 'Fecha registro',
+                            minWidth: 180,
+                            flex: 1,
+                            valueGetter: (params) => params.row.fecha_registro?.split('T')[0],
                         },
                         {
                             field: 'fecha_despacho',

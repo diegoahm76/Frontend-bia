@@ -103,9 +103,9 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
 
   const personas = [
     ...(seleccion_tablero_control !== 'MP' ? [{ value: 'R', label: 'Responsable' }] : []),
-    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' ? [{ value: 'S', label: 'Solicita' }] : []),
-    ...(seleccion_tablero_control !== 'MP' && seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI'  && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' ? [{ value: 'D', label: 'Despacha' }] : []),
-    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI'  && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' ? [{ value: 'A', label: 'Anula' }] : []),
+    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI' && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' && seleccion_tablero_control !== 'TI' ? [{ value: 'S', label: 'Solicita' }] : []),
+    ...(seleccion_tablero_control !== 'MP' && seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI'  && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' && seleccion_tablero_control !== 'TI' ? [{ value: 'D', label: 'Despacha' }] : []),
+    ...(seleccion_tablero_control !== 'CS' && seleccion_tablero_control !== 'EI'  && seleccion_tablero_control !== 'MSI' && seleccion_tablero_control !== 'MAFI' && seleccion_tablero_control !== 'RABP' && seleccion_tablero_control !== 'HUV' && seleccion_tablero_control !== 'TI' ? [{ value: 'A', label: 'Anula' }] : []),
     ...(seleccion_tablero_control === 'CS' || seleccion_tablero_control === 'MAFI' || seleccion_tablero_control === 'RABP'  ? [{ value: 'O', label: 'Origen' }] : []),
     ...(seleccion_tablero_control === 'EI' || seleccion_tablero_control === 'MSI' ? [{ value: 'P', label: 'Proveedor' }] : []),
     ...(seleccion_tablero_control === 'HUV' ? [{ value: 'AU', label: 'Autoriza' }] : []),
@@ -675,7 +675,7 @@ export const BuscadorPersonasReports: React.FC<PropsBuscador> = ({
               startIcon={<SearchIcon />}
               onClick={handle_click_open}
             >
-              Busqueda Avanzada
+              Busqueda Personas
             </Button>
           </Grid>
           <Grid item>

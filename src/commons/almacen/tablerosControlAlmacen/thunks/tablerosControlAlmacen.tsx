@@ -44,10 +44,10 @@ export const obtener_bien_especifico_af: any = (seleccion_bien: string) => {
   };
 };
 // Bienes por Unidad
-export const obtener_consumo_bienes_und: any = (filtros: { seleccion_tipo_despacho: boolean | string, seleccion_bien: string,seleccion_unidad_org: string, discriminar: boolean | string,  fecha_desde: string,fecha_hasta: string, id_responsable: string, id_solicita: string, id_despacha: string, id_anula: string, id_bodega_reporte: string }) => {
+export const obtener_consumo_bienes_und: any = (filtros: { seleccion_tipo_despacho: boolean | string, seleccion_bien: string,seleccion_unidad_org: string, discriminar: boolean | string,  fecha_desde: string,fecha_hasta: string, id_responsable: string, id_solicita: string, id_despacha: string, id_anula: string, id_bodega_reporte: string, codigo_bien_despachado: string, nombre_bien_despachado: string }) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/inventario/control/despachos/get-list/?es_despacho_conservacion=${filtros.seleccion_tipo_despacho === 'Todos' ? '' : filtros.seleccion_tipo_despacho}&id_bien=${filtros.seleccion_bien}&id_unidad_para_la_que_solicita=${filtros.seleccion_unidad_org === 'Todos' ? '' : filtros.seleccion_unidad_org}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&no_discriminar=${filtros.discriminar}&id_funcionario_responsable=${filtros.id_responsable}&id_persona_solicita=${filtros.id_solicita}&id_persona_despacha=${filtros.id_despacha}&id_persona_anula=${filtros.id_anula}&id_bodega_reporte=${filtros.id_bodega_reporte}`);
+      const { data } = await api.get(`almacen/inventario/control/despachos/get-list/?es_despacho_conservacion=${filtros.seleccion_tipo_despacho === 'Todos' ? '' : filtros.seleccion_tipo_despacho}&id_bien=${filtros.seleccion_bien}&id_unidad_para_la_que_solicita=${filtros.seleccion_unidad_org === 'Todos' ? '' : filtros.seleccion_unidad_org}&fecha_desde=${filtros.fecha_desde}&fecha_hasta=${filtros.fecha_hasta}&no_discriminar=${filtros.discriminar}&id_funcionario_responsable=${filtros.id_responsable}&id_persona_solicita=${filtros.id_solicita}&id_persona_despacha=${filtros.id_despacha}&id_persona_anula=${filtros.id_anula}&id_bodega_reporte=${filtros.id_bodega_reporte}&codigo_bien_despachado=${filtros.codigo_bien_despachado}&nombre_bien_despachado=${filtros.nombre_bien_despachado}`);
       if(!data?.data?.length){
         control_error('No se encontraron registros con los filtros seleccionados');
       }

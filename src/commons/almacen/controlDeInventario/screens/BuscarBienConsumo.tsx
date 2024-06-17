@@ -51,17 +51,7 @@ const BuscarBienConsumo = (props: IProps) => {
 
   useEffect(() => {
     obtener_tipos_fc();
-    dispatch(obtener_bienes_consumo()).then((response: any) => {
-      response.data.map((resp: any, index: number) => {
-        resp.id = index;
-        if (resp.codigo_bien === null || resp.codigo_bien === undefined)
-          resp.codigo_bien = 'N/A';
-        if (resp.tipo_consumo_vivero === null || resp.tipo_consumo_vivero === undefined)
-          resp.tipo_consumo_vivero = 'N/A';
-      });
-      set_data_bienes(response.data);
-      set_data_filtrada(response.data);
-    });
+    buscar_bien();
   }, []);
 
   const obtener_tipos_fc: () => void = () => {
@@ -77,28 +67,35 @@ const BuscarBienConsumo = (props: IProps) => {
     set_codigo_bien(e.target.value);
   };
   const cambio_tipo_elemento: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
-    if (e.target.value === 'STE') {
-      set_seleccion_tipo("");
-      return
-    }
     set_seleccion_tipo(e.target.value);
   }
 
   const buscar_bien = (): void => {
-    let data_filter: any = [...data_bienes];
-    if (nombre === '' && codigo_bien === '' && seleccion_tipo === '') {
-      set_data_filtrada(data_bienes);
-      return;
-    }
-    if (codigo_bien !== '')
-      data_filter = [...data_filter.filter((da: any) => da.codigo_bien.includes(codigo_bien))];
-    if (nombre !== '')
-      data_filter = [...data_filter.filter((da: any) => da.nombre_bien.toLowerCase().includes(nombre.toLowerCase()))];
-    if (seleccion_tipo !== '')
-      data_filter = [...data_filter.filter((da: any) => da.cod_tipo_elemento_vivero === seleccion_tipo)];
+    dispatch(obtener_bienes_consumo(codigo_bien, nombre, seleccion_tipo == 'Todos' ? '' : seleccion_tipo, solicitable ? 'True' : 'False')).then((response: any) => {
+      response.data.map((resp: any, index: number) => {
+        resp.id = index;
+        if (resp.codigo_bien === null || resp.codigo_bien === undefined)
+          resp.codigo_bien = 'N/A';
+        if (resp.tipo_consumo_vivero === null || resp.tipo_consumo_vivero === undefined)
+          resp.tipo_consumo_vivero = 'N/A';
+      });
+      set_data_bienes(response.data);
+      set_data_filtrada(response.data);
+    });
+    // let data_filter: any = [...data_bienes];
+    // if (nombre === '' && codigo_bien === '' && seleccion_tipo === '') {
+    //   set_data_filtrada(data_bienes);
+    //   return;
+    // }
+    // if (codigo_bien !== '')
+    //   data_filter = [...data_filter.filter((da: any) => da.codigo_bien.includes(codigo_bien))];
+    // if (nombre !== '')
+    //   data_filter = [...data_filter.filter((da: any) => da.nombre_bien.toLowerCase().includes(nombre.toLowerCase()))];
+    // if (seleccion_tipo !== '')
+    //   data_filter = [...data_filter.filter((da: any) => da.cod_tipo_elemento_vivero === seleccion_tipo)];
 
-    data_filter = [...data_filter.filter((da: any) => da.solicitable_vivero === solicitable)];
-    set_data_filtrada(data_filter);
+    // data_filter = [...data_filter.filter((da: any) => da.solicitable_vivero === solicitable)];
+    // set_data_filtrada(data_filter);
   };
 
   const seleccionar_bien = (): void => {
@@ -180,7 +177,7 @@ const BuscarBienConsumo = (props: IProps) => {
                           label="Tipo elemento"
                           onChange={cambio_tipo_elemento}
                         >
-                          <MenuItem value={"STE"}>Seleccionar tipo elemento</MenuItem>
+                          <MenuItem value={"Todos"}>Todos</MenuItem>
                           {lt_tipos.map((lt: any) => (
                             <MenuItem key={lt[0]} value={lt[0]}>
                               {lt[1]}
