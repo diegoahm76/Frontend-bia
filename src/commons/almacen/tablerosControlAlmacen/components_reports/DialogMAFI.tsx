@@ -135,6 +135,12 @@ export const DialogMAFI: React.FC<props> = ({showDialog, setShowDialog, currentB
       flex: 1,
     },
     {
+      field: 'tipo_doc_ultimo_movimiento_nombre',
+      headerName: 'Tipo movimiento',
+      minWidth: 160,
+      flex: 1,
+    },
+    {
       field: 'responsable_actual',
       headerName: 'Responsable actual',
       minWidth: 160,

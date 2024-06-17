@@ -508,7 +508,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         const tipo_despacho = (seleccion_tipo_despacho === 'Todos' || seleccion_tipo_despacho === '') ? seleccion_tipo_despacho : seleccion_tipo_despacho === 'DV';
         const id_bodega_reporte = (seleccion_bodega === 'Todos' || seleccion_bodega === '') ? '' : seleccion_bodega;
         const id_bien = seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.id_bien : '';
-        dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', id_responsable: ids_persons.id_responsable, id_solicita: ids_persons.id_solicitante, id_despacha: ids_persons.id_despacha, id_anula: ids_persons.id_anula, id_bodega_reporte })).then((response: any) => {
+        dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', id_responsable: ids_persons.id_responsable, id_solicita: ids_persons.id_solicitante, id_despacha: ids_persons.id_despacha, id_anula: ids_persons.id_anula, id_bodega_reporte, codigo_bien_despachado: control_stock.codigo_bien, nombre_bien_despachado: control_stock.nombre_bien })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
@@ -850,9 +850,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     return data;
   };
 
-  useEffect(()=>{
-    console.log(inputs_msi)
-  },[inputs_msi])
+  // useEffect(()=>{
+  //   console.log(inputs_msi)
+  // },[inputs_msi])
 
   return (
     <>
@@ -1020,6 +1020,24 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           </FormControl>
                         </Grid>
                       </Stack>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Código bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.codigo_bien}
+                        onChange={handle_codigo_bien_stock}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Nombre bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.nombre_bien}
+                        onChange={handle_nombre_bien_stock}
+                      />
                     </Grid>
                     <BuscadorPersonasReports
                       is_clear_filtros={is_clear_filtros}
