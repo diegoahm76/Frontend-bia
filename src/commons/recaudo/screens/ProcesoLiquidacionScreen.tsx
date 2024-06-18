@@ -981,6 +981,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
               {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
                   <DocumentoPagoPersuasivo
+                    set_cobro_coactivo_active={set_cobro_coactivo_active}
+                    set_position_tab_up={set_position_tab}
                     // datos={datos}
                   ></DocumentoPagoPersuasivo>
               </TabPanel>}
