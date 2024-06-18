@@ -17,6 +17,8 @@ import { Title } from '../../../../../../../../components';
 import { getOutModule, reset_all } from '../../../../../../../../utils/functions/getOutOfModule';
 import { resetPanelVentanillaFull } from '../../../../../toolkit/store/PanelVentanillaStore';
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
+import { getExpedienteRelacionado } from '../../services/getExpedienteRelacionado.service';
+import { getAutosDeInicioCreados } from '../../services/getAutosCreados.service';
 
 export const AccionesFinales = (): JSX.Element => {
   //* conetxt declaration
@@ -25,6 +27,8 @@ export const AccionesFinales = (): JSX.Element => {
     liderAsignado,
     currentGrupo,
     setListaAsignaciones,
+    setExpediente,
+    setListaAutoDeInicio,
   } = useContext(AutoInicioContext);
   const { secondLoading, handleSecondLoading, handleGeneralLoading } =
     useContext(ModalAndLoadingContext);
@@ -127,6 +131,29 @@ export const AccionesFinales = (): JSX.Element => {
             currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
             handleGeneralLoading
           );
+          (async () => {
+            try {
+              const res = await getAutosDeInicioCreados(
+                currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
+                handleGeneralLoading
+              );
+              setListaAutoDeInicio(res);
+            } catch (error) {
+              console.error(error);
+            }
+          })();
+          //* get expediente relacionado
+          (async () => {
+            try {
+              const res = await getExpedienteRelacionado(
+                currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
+                handleGeneralLoading
+              );
+              setExpediente(res);
+            } catch (error) {
+              console.error(error);
+            }
+          })();
           break;
         default:
           // Default fetch call or no fetch call
