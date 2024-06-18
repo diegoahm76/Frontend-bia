@@ -1,7 +1,7 @@
 
 export interface Rows {
   id: number;
-  nombre: string;
+  nombre:   string | undefined ;
   variable: any;
 }
 export interface TipoCobro {

@@ -15,7 +15,6 @@ import { control_error } from '../../../../helpers';
 import { ConceptoEditar } from './ConceptoEditar';
 import { TiposCobro } from './TiposCobro';
 import { TipoRenta } from './TipoRenta';
-import { Varible } from './Varible';
 import { Tasa } from './Tasa';
 import Swal from 'sweetalert2';
 import LockIcon from '@mui/icons-material/Lock';
