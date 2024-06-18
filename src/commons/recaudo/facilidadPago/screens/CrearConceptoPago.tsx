@@ -8,7 +8,6 @@ import SaveIcon from '@mui/icons-material/Save';
 import React, { useEffect, useState } from 'react';
 import { MenuItem } from '@mui/material';
 import { control_error, control_success } from '../../../../helpers';
-import dayjs from 'dayjs';
 import TextField from '@mui/material/TextField';
 
 interface BuscarProps {
@@ -52,14 +51,19 @@ interface ConfiguracionBasicados {
 }
 
 export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones, is_modal_active, set_is_modal_active }) => {
+
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
+    const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
+    const [PreformValues, PresetFormValues] = useState<ConfiguracionBasicados>({
+        id_variables: "",
+        nombre: "",
+        tipo_cobro: "",
+        tipo_renta: ""
+    });
+    const [activador, set_activador] = useState<boolean>(false);
+    const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
 
 
-    useEffect(() => {
-        void fetchConfiguraciones();
-    }, []);
-
-    //// editar tipos de cobro 
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         valor: selectedConfiguracion?.valor || "",
         fecha_fin: selectedConfiguracion?.fecha_fin || "",
@@ -69,20 +73,11 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     });
 
 
+
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         setFormValues({ ...formValues, [name]: value });
     };
-
-
-    useEffect(() => {
-        if (selectedConfiguracion) {
-            setFormValues(selectedConfiguracion);
-        }
-    }, [selectedConfiguracion]);
-
-
-
 
     const handleSubmitCrear = async () => {
         try {
@@ -93,50 +88,13 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
             control_success("Guardado exitosamente");
 
         } catch (error: any) {
-            //  console.log('')(error.response.data.detail.detail);
+
             control_error(error.response.data.detail?.error);
         }
     };
-    //////
-    const [variables, setVariables] = useState<Variable[]>([]);
 
-    const fetchVariables = async () => {
-        try {
-            const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
-            setVariables(res.data.data);
-        } catch (error) {
-            console.error("Error al obtener las variables", error);
-        }
-    };
 
-    useEffect(() => {
-        fetchVariables();
-    }, []);
 
-    useEffect(() => {
-        if (is_modal_active) {
-            fetchVariables();
-        }
-    }, [is_modal_active]);
-
-    // fecha de finalizacion 
-    const [fechaFin, setFechaFin] = useState((formValues.fecha_fin));
-    const today = dayjs();
-
-    const handle_close = (): void => {
-        set_is_modal_active(false);
-    };
-
-    const [PreformValues, PresetFormValues] = useState<ConfiguracionBasicados>({
-        id_variables: "",
-        nombre: "",
-        tipo_cobro: "",
-        tipo_renta: ""
-    });
-    console.log("PreformValues", PreformValues)
-
-    const [activador, set_activador] = useState<boolean>(false);
- 
     const CrearVariablePrecargada = async () => {
         try {
             const url = "/recaudo/configuracion_baisca/variables/post/";
@@ -156,9 +114,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
         }
     };
     
-    
 
-    const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
     const fetchTiposRenta = async () => {
         try {
             const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
@@ -168,12 +124,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
         }
     };
 
-    useEffect(() => {
-        fetchTiposRenta();
-    }, []);
 
-
-    const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
     const fetchTiposCobro = async () => {
         try {
             const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
@@ -183,24 +134,49 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
         }
     };
 
-    useEffect(() => {
-        fetchTiposCobro();
-    }, []);
-
+ 
     const PrehandleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = event.target;
         PresetFormValues({ ...PreformValues, [name]: value });
     };
 
+
+    const handle_close = (): void => {
+        set_is_modal_active(false);
+    };
+
+
     useEffect(() => {
-        handleSubmitCrear()
+        fetchTiposCobro();
+    }, []);
+
+    useEffect(() => {
+        if (activador) {
+            handleSubmitCrear();
+            set_activador(false);
+        }
     }, [activador]);
+
+    useEffect(() => {
+        if (selectedConfiguracion) {
+            setFormValues(selectedConfiguracion);
+        }
+    }, [selectedConfiguracion]);
+
+    useEffect(() => {
+        void fetchConfiguraciones();
+    }, []);
+
+
+    useEffect(() => {
+        fetchTiposRenta();
+    }, []);
+
 
     return (
 
         <>
             <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl" >
-                {/* <button onClick={() => //  console.log('')(tiposCobro)}>Mostrar zonahidrica en la consola</button> */}
                 <Grid container
                     item
                     xs={12}
@@ -217,9 +193,6 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                 >
                     <Title title="Crear" />
                     <Grid container item xs={12} spacing={2} marginTop={2}>
-                
-
-
                         <Grid item xs={12} sm={4}>
                             <TextField
                                 select
@@ -265,13 +238,6 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
 
 
 
-
-
-
-
-
-
-
                         <Grid item xs={12} sm={4}>
                             <TextField
                                 required
@@ -284,12 +250,6 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 value={PreformValues.nombre}
                             />
                         </Grid>
-
-
-
-
-
-
 
 
                         <Grid item xs={12} sm={4}>
@@ -364,9 +324,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                     Guardar
                                 </Button>
                             </Grid>
-
                         </Grid>
-
                     </Grid>
                 </Grid>
             </Dialog>
