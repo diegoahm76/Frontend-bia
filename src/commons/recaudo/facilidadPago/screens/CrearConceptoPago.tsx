@@ -88,7 +88,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
             control_success("Guardado exitosamente");
 
         } catch (error: any) {
-            //  console.log('')(error.response.data.detail.detail);
+
             control_error(error.response.data.detail?.error);
         }
     };
@@ -151,9 +151,11 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     }, []);
 
     useEffect(() => {
-        handleSubmitCrear()
-        set_activador(false)
-    }, [activador==true]);
+        if (activador) {
+            handleSubmitCrear();
+            set_activador(false);
+        }
+    }, [activador]);
 
     useEffect(() => {
         if (selectedConfiguracion) {
