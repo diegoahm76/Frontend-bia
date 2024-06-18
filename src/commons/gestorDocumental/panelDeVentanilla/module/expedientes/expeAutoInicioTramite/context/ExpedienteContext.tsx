@@ -13,6 +13,7 @@ export const AutoInicioProvider = ({ children }: any): JSX.Element => {
 
     const [listaAutoDeInicio, setListaAutoDeInicio] =
     useState<any>();
+    const [expediente, setExpediente] = useState([])
 
     const [listaSubGrupos, setListaSubGrupos] = useState<any>([]);
     const [listaSeries, setListaSeries] = useState<any>([])
@@ -44,7 +45,10 @@ export const AutoInicioProvider = ({ children }: any): JSX.Element => {
     setListaAsignaciones,
 
     listaAutoDeInicio,
-    setListaAutoDeInicio
+    setListaAutoDeInicio,
+
+    expediente,
+    setExpediente,
   };
 
   return (

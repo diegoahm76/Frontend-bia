@@ -48,6 +48,7 @@ export const AutosCreados = (): JSX.Element => {
 
   // Eliminada la condición redundante de autosIni
   return (
+    autosIni &&
     <RenderDataGrid
       title="Autos de inicio creados por expediente"
       columns={columns ?? []}

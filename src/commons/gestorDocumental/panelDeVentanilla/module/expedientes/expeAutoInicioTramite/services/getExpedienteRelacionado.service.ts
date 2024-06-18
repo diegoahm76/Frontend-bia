@@ -4,22 +4,21 @@ import { handleApiError } from '../../../../../../../utils/functions/errorManage
 import { control_warning } from '../../../../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const getAutosDeInicioCreados = async (
+export const getExpedienteRelacionado = async (
   id_solicitud_tramite: number,
   handleGeneralLoading: any
 ) => {
   try {
     handleGeneralLoading(true);
 
-    const url = `gestor/panel_ventanilla/listar-auto/${id_solicitud_tramite}`;
-    //const url = `gestor/panel_ventanilla/listar-auto/${id_solicitud_tramite}/`
+    const url = `gestor/panel_ventanilla/tramites/expediente/get/${id_solicitud_tramite}`;
     const { data } = await api.get(url);
 
     if (data?.data?.length === 0) {
-      control_warning('No se encontraron auto de inicio creados para este expediente');
+      control_warning('No se encontraron expedientes relacionados a este trámite');
       return [];
     } else {
-      control_success('Auto de inicio obtenidos');
+      control_success('Expediente obtenido');
       console.log('data?.data', data?.data);
       return data?.data;
     }
