@@ -40,7 +40,8 @@ export const SeguirAdelanteDoc: React.FC<any> = ({
   ];
 
   useEffect(() => {
-    if(datos?.id_deudor) generatePDF();
+    // if(datos?.id_deudor) generatePDF();
+    generatePDF();
   }, [datos])
 
   const generatePDF = () => {

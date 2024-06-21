@@ -213,7 +213,7 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             name="documento"
             label="Documento"
             helperText="Documento"
-            value={current_deudor?.numero_identificacion || datos.id_deudor.identificacion}
+            value={current_deudor?.numero_identificacion || datos?.id_deudor.identificacion}
             disabled
           />
         </Grid>
@@ -224,7 +224,7 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             name="nombreDeudor"
             label="Nombre deudor"
             helperText="Nombre deudor"
-            value={current_deudor?.nombre_completo || datos.id_deudor.nombres + ' ' + datos.id_deudor.apellidos}
+            value={current_deudor?.nombre_completo || datos?.id_deudor.nombres + ' ' + datos?.id_deudor.apellidos}
             disabled
           />
         </Grid>
