@@ -27,11 +27,11 @@ export const LiquidacionCredito: React.FC<any> = ({
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
 
   useEffect(() => {
-    if(datos?.id_deudor){
+    // if(datos?.id_deudor){
       if(id_subetapa == '5') generateLiquidacion();
       if(id_subetapa == '6') generateAprobacion();
       if(id_subetapa == '8') generateTerminacion();
-    }
+    // }
   }, [datos, id_subetapa])
 
   const generateLiquidacion = () => {

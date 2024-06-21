@@ -34,6 +34,7 @@ import { control_error } from "../../../../helpers";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { current } from '@reduxjs/toolkit';
 import { AprobadoresProps } from "./models/interfaces";
+import swal from 'sweetalert2';
 
 interface IProps {
   id_flujo_destino: string;
@@ -62,8 +63,10 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DocumentoPagoPersuasivo: React.FC<any> = ({
-  datos
-}: {datos: any}) => {
+  datos,
+  set_cobro_coactivo_active,
+  set_position_tab_up,
+}: {datos: any, set_cobro_coactivo_active: (b: boolean) => void, set_position_tab_up: (str: string) => void}) => {
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: '#', minWidth: 100, flex: 1, valueGetter: (params) => params.row.id + 1},
@@ -166,6 +169,24 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
     set_is_generate_cobro(true);
     set_cobro_url(null);
     set_position_tab('2');
+  }
+
+  const handle_click_to_coactivo = () => {
+    swal.fire({
+      title: '¿Deseas avanzar al proceso coactivo?',
+      text: '',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Continuar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        set_cobro_coactivo_active(true)
+        set_position_tab_up('4')
+      }
+    });
   }
 
   const handle_change_subetapa = (event: any) => {
@@ -498,16 +519,29 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
         </Grid>
         <Grid item xs={12} md={6} lg={5} sx={{margin: 'auto'}}>
           <Button
-              variant="outlined"
-              fullWidth
-              size='medium'
-              component="label"
-              startIcon={<DescriptionIcon />}
-              disabled={is_generate_resolucion}
-              onClick={handle_click_generate_cobro}
-            >
-              GENERAR DOCUMENTO DE COBRO
-            </Button>
+            variant="outlined"
+            fullWidth
+            size='medium'
+            component="label"
+            startIcon={<DescriptionIcon />}
+            disabled={is_generate_resolucion}
+            onClick={handle_click_generate_cobro}
+          >
+            GENERAR DOCUMENTO DE COBRO
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid container sx={{display: 'flex', justifyContent: 'end', mt: '1rem'}}>
+        <Grid item>
+          <Button
+            variant="outlined"
+            fullWidth
+            size='medium'
+            component="label"
+            onClick={handle_click_to_coactivo}
+          >
+            AVANZAR AL PROCESO COACTIVO
+          </Button>
         </Grid>
       </Grid>
     </Grid>
