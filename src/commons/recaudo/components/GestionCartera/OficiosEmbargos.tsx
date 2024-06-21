@@ -26,10 +26,10 @@ export const OficiosEmbargos: React.FC<any> = ({
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
 
   useEffect(() => {
-    if(datos?.id_deudor){
+    // if(datos?.id_deudor){
       if(id_subetapa == '7') generateTerminacion();
       // if(id_subetapa == '6') generateAprobacion();
-    }
+    // }
   }, [datos, id_subetapa])
 
   const generateAprobacion = () => {
