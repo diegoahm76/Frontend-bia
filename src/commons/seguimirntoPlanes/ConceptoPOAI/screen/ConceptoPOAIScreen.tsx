@@ -509,7 +509,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12} sm={12}>
-          <Title title="Registro de consepto POAI" />
+          <Title title="Registro de Conceptos POAI" />
         </Grid>
       </Grid>
 
@@ -529,7 +529,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
         }}
       >
         <Grid item xs={12} sm={12}>
-          <Title title="Busquea por  Meta/Rubro" />
+          <Title title="Busquea por  Meta / Rubro" />
         </Grid>
         {/* {selectedConceptoId} */}
         <Grid item xs={12} sm={6}>
