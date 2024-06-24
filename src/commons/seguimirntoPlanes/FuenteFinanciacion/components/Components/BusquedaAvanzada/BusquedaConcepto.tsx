@@ -11,8 +11,12 @@ import {
   DialogActions,
   DialogContent,
   Divider,
+  FormControl,
   Grid,
   IconButton,
+  InputLabel,
+  MenuItem,
+  Select,
   TextField,
 } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
@@ -36,7 +40,16 @@ import { search_concepto_poai } from '../../../../DetalleInversionCuentas/servic
 import { IBusquedaConceptoPOAI } from '../../../../ConceptoPOAI/components/Components/BusquedaAvanzada/types';
 import { DataContextFuentesFinanciacion } from '../../../context/context';
 import ChecklistOutlinedIcon from '@mui/icons-material/ChecklistOutlined';
-
+import { api } from '../../../../../../api/axios';
+export interface Planes {
+  id_plan: number;
+  nombre_plan: string;
+  sigla_plan: string;
+  tipo_plan: string;
+  agno_inicio: number;
+  agno_fin: number;
+  estado_vigencia: boolean;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaConcepto: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
@@ -200,6 +213,34 @@ export const BusquedaConcepto: React.FC = () => {
     set_is_search(false);
   }, []);
 
+
+
+  const [planes, setPlanes] = useState<Planes[]>([]);
+  const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null); // Estado para almacenar el ID del plan seleccionado
+  const handlePlanChange = (event: any) => {
+    const selectedPlan = planes.find(
+      (plan) => plan.nombre_plan === event.target.value
+    );
+    if (selectedPlan) {
+      setSelectedPlanId(selectedPlan.id_plan);
+    }
+  };
+  const fetplames = async () => {
+    try {
+      const url = 'seguimiento/planes/consultar-planes/';
+      const res = await api.get(url);
+      const unidadesData = res.data.data;
+      setPlanes(unidadesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetplames();
+  }, []);
+
+
   return (
     <>
       <Grid
@@ -223,26 +264,52 @@ export const BusquedaConcepto: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Controller
-            name="concepto"
-            control={control}
-            render={(
-              { field: { onChange, value } } // formState: { errors }
-            ) => (
-              <TextField
-                fullWidth
-                label="Concepto"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6}  >
+                <Controller
+                  name="concepto"
+                  control={control}
+                  disabled
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <Controller
+                    name="concepto"
+                    control={control}
+                    
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <FormControl fullWidth size="small">
+                        <InputLabel id="si-no-select-label">
+                          {' '}
+                          Nombre de plan
+                        </InputLabel>
+                        <Select
+                          name="nombre_plan"
+                          label=" Nombre de plan"
+                          value={value}
+                          // onChange={onChange}
+                          onChange={(event) => {
+                            onChange(event);
+                            handlePlanChange(event);
+                          }}
+                        >
+                          {planes.map((unidad: any) => (
+                            <MenuItem
+                              key={unidad.id_plan}
+                              value={unidad.nombre_plan}
+                            >
+                              {unidad.nombre_plan}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    )}
+                  />
+                  )}
+                />
+              </Grid>
+        {/* <Grid item xs={12} sm={6} md={3}>
           <Controller
             name="nombre"
             control={control}
@@ -260,8 +327,8 @@ export const BusquedaConcepto: React.FC = () => {
               />
             )}
           />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        </Grid> */}
+        {/* <Grid item xs={12} sm={6} md={3}>
           <Controller
             name="nombre_indicador"
             control={control}
@@ -279,8 +346,8 @@ export const BusquedaConcepto: React.FC = () => {
               />
             )}
           />
-        </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        </Grid> */}
+        <Grid item xs={12} sm={6} >
           <Button
             variant="contained"
             color="primary"
@@ -311,26 +378,50 @@ export const BusquedaConcepto: React.FC = () => {
           >
             <Title title="Búsqueda avanzada concepto POAI" />
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6}  >
                 <Controller
                   name="concepto"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
-                    <TextField
-                      fullWidth
-                      label="Concepto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
+                    <Controller
+                    name="concepto"
+                    control={control}
+                    render={(
+                      { field: { onChange, value } } // formState: { errors }
+                    ) => (
+                      <FormControl fullWidth size="small">
+                        <InputLabel id="si-no-select-label">
+                          {' '}
+                          Nombre de plan
+                        </InputLabel>
+                        <Select
+                          name="nombre_plan"
+                          label=" Nombre de plan"
+                          value={value}
+                          // onChange={onChange}
+                          onChange={(event) => {
+                            onChange(event);
+                            handlePlanChange(event);
+                          }}
+                        >
+                          {planes.map((unidad: any) => (
+                            <MenuItem
+                              key={unidad.id_plan}
+                              value={unidad.nombre_plan}
+                            >
+                              {unidad.nombre_plan}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    )}
+                  />
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              {/* <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre"
                   control={control}
@@ -348,8 +439,8 @@ export const BusquedaConcepto: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              </Grid> */}
+              {/* <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre_indicador"
                   control={control}
@@ -367,8 +458,8 @@ export const BusquedaConcepto: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              </Grid> */}
+              <Grid item xs={12} sm={6}   container justifyContent="end">
                 <LoadingButton
                   type="submit"
                   variant="contained"
