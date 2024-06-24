@@ -70,6 +70,19 @@ import BienesConsumoEntregados from '../components_reports/BienesConsumoEntregad
 import TablaBienesConsumoEntregados from '../tables/TablaBienesConsumoEntregados';
 import HistoricoUsoVehiculos from '../components_reports/HistoricoUsoVehiculos';
 import TablaHistoricoUsoVehiculos from '../tables/TablaHistoricoUsoVehiculos';
+import { BuscadorPersonasReports } from '../components_reports/BuscadorPersonasReports';
+import { Persona } from '../../../../interfaces/globalModels';
+import { get_tipo_entrada } from '../../gestionDeInventario/movimientos/store/thunks/entregaThunks';
+
+interface ids_interface {
+  id_responsable: string;
+  id_solicitante: string;
+  id_despacha: string;
+  id_anula: string;
+  id_origen: string;
+  id_proveedor: string;
+  id_autoriza: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablerosControlAlmacenScreen: React.FC = () => {
@@ -95,7 +108,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
 
   // Estados para RABP - Reportes Almacén – Bienes (activos fijos) en préstamo
   //se guardar un objeto con los valores de los inputs de la busqueda
-  const [inputs_rabp, set_inputs_rabp] = useState<interface_inputs_rabp>(Object);
+  const [inputs_rabp, set_inputs_rabp] = useState<interface_inputs_rabp>({
+    tipo_categoria: '',
+    fecha_desde: '',
+    fecha_hasta: '',
+  });
   // data de los movimientos de inventario traidos por la busqueda
   const [data_rabp, set_data_rabp] = useState<any[]>([]);
 
@@ -121,6 +138,58 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   // input agregados a la actualizacion de MSI
   const [inputs_msi, set_inputs_msi] = useState<interface_inputs_msi>(Object)
 
+  const [clear_persons, set_clear_persons] = useState<boolean>(false);
+  const [is_clear_filtros, set_is_clear_filtros] = useState<boolean>(false);
+  const [tipo_persona, set_tipo_persona] = useState<string>('');
+  const [persona, set_persona] = useState<Persona>({
+    id_persona: null,
+  }); //Se usa cuando se elige una sola persona
+  const [ids_persons, set_ids_persons] = useState<ids_interface>({
+    id_responsable: '',
+    id_solicitante: '',
+    id_despacha: '',
+    id_anula: '',
+    id_origen: '',
+    id_proveedor: '',
+    id_autoriza: '',
+  });
+  const [tipos_entradas, set_tipos_entradas] = useState<any[]>([]);
+
+
+  const on_result = async (info_persona: Persona, param: string): Promise<void> => {
+    set_persona(info_persona);
+    set_tipo_persona(param);
+  } //Se usa cuando se elige una sola persona
+
+  useEffect(() => {
+    if(persona?.id_persona){
+      switch (tipo_persona) {
+        case 'R':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_responsable: persona.id_persona }));
+          break;
+        case 'S':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_solicitante: persona.id_persona }));
+          break;
+        case 'D':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_despacha: persona.id_persona }));
+          break;
+        case 'A':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_anula: persona.id_persona }));
+          break;
+        case 'O':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_origen: persona.id_persona }));
+          break;
+        case 'P':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_proveedor: persona.id_persona }));
+          break;
+        case 'AU':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_autoriza: persona.id_persona }));
+          break;
+        default:
+          break;
+      }
+    }
+  }, [persona, tipo_persona]);
 
   const get_tipos_categoria_fc = async () => {
     dispatch(get_tipos_categorias()).then((response: any) => {
@@ -159,7 +228,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
       set_inputs_huv((prev) => {
         return {
           ...prev,
-          nombre_vehiculo: data_vehiculo_seleccionado.nombre
+          consecutivo: data_vehiculo_seleccionado.consecutivo,
+          codigo_bien: data_vehiculo_seleccionado.codigo_bien,
+          nombre_vehiculo: data_vehiculo_seleccionado.nombre,
+          placa: data_vehiculo_seleccionado.placa,
+          marca: data_vehiculo_seleccionado.marca,
         }
       })
     }
@@ -170,7 +243,16 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     obtener_tipos_mantenimiento_fc();
     obtener_bodegas_fc();
     obtener_tipos_bien_fc();
+    tipo_entrada();
   }, []);
+
+  const tipo_entrada = () => {
+    dispatch(get_tipo_entrada()).then((response: any) => {
+      set_tipos_entradas(response?.data);
+    })
+  }
+
+  useEffect(() => console.log(tipos_entradas), [tipos_entradas])
 
   const obtener_unidades_organizacionales_fc: () => void = () => {
     dispatch(obtener_unidades_organizacionales()).then((response: any) => {
@@ -211,6 +293,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     { id: 'HUV', value: 'Histórico de Uso de Vehículos' },
   ];
 
+  const [new_title, set_new_title] = useState<string>('');
+
+
   const lt_tipo_despacho = [{ id: 'DG', value: 'Despacho general' }, { id: 'DV', value: 'Despacho a vivero' }];
   const lt_presentacion = [{ id: "UND", value: "Unidad" }, { id: "BN", value: "Bien" }];
   const lt_presentacion_b = [{ id: "BD", value: "Bodega" }, { id: "BN", value: "Bien" }];
@@ -229,6 +314,15 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
   const [seleccion_bodega, set_seleccion_bodega] = useState<string>("");
   const [nombre_archivo, set_nombre_archivo] = useState<string>("");
   const [realizado, set_realizado] = useState<any | null>({ nombre_completo: "" });
+  const [mantenimiento_realized, set_mantenimiento_realized] = useState<any>({
+    serial: '',
+    consecutivo: ''
+  })
+  const [control_stock, set_control_stock] = useState<any>({
+    codigo_bien: '',
+    nombre_bien: '',
+    codigo_tipo_entrada: '',
+  });
   const [seleccion_bien, set_seleccion_bien] = useState<any>("");
   const [filtros, set_filtros] = useState<any[]>([]);
   const [filtros_pdf, set_filtros_pdf] = useState<any[]>([]);
@@ -273,6 +367,39 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     set_fecha_hasta(date);
     set_error_fecha_hasta(date === null);
   };
+  const handle_serial_mp = (event: any): void => {
+    set_mantenimiento_realized({
+      ...mantenimiento_realized,
+      serial: event.target.value
+    })
+  }
+  const handle_consecutivo_mp = (event: any): void => {
+    set_mantenimiento_realized({
+      ...mantenimiento_realized,
+      consecutivo: event.target.value
+    })
+  }
+
+  const handle_codigo_bien_stock = (event: any): void => {
+    set_control_stock({
+      ...control_stock,
+      codigo_bien: event.target.value
+    })
+  }
+
+  const handle_nombre_bien_stock = (event: any): void => {
+    set_control_stock({
+      ...control_stock,
+      nombre_bien: event.target.value
+    })
+  }
+
+  const handle_codigo_tipo_entrada_stock = (event: any): void => {
+    set_control_stock({
+      ...control_stock,
+      codigo_tipo_entrada: event.target.value
+    })
+  }
 
   const limpiar_filtros: () => void = () => {
     set_seleccion_unidad_org('');
@@ -299,9 +426,50 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     set_inputs_huv({} as interface_inputs_huv);
   };
 
+  const clear_persons_function = (): void => {
+    set_ids_persons({
+      id_responsable: '',
+      id_solicitante: '',
+      id_despacha: '',
+      id_anula: '',
+      id_origen: '',
+      id_proveedor: '',
+      id_autoriza: '',
+    })
+  }
+
+  const clean_filtros_screen = (): void => {
+    set_is_clear_filtros(true);
+    set_seleccion_tipo_despacho('');
+    set_seleccion_bien('');
+    set_seleccion_unidad_org('');
+    set_seleccion_bodega('');
+    set_mantenimiento_realized({ serial: '', consecutivo: '' });
+    set_seleccion_tipo_bien('');
+    set_control_stock({ codigo_bien: '', nombre_bien: '', codigo_tipo_entrada: '' });
+    set_inputs_msi({} as interface_inputs_msi);
+    set_inputs_rabp({ tipo_categoria: '', fecha_desde: '', fecha_hasta: '' });
+    set_fecha_desde(null);
+    set_fecha_hasta(null);
+    set_error_fecha_desde(false);
+    set_error_fecha_hasta(false);
+    set_seleccion_tipo_mtto('');
+    set_realizado({ nombre_completo: '' });
+    set_discriminar(false);
+    clear_persons_function();
+  }
+
+  useEffect(() => {
+    if(clear_persons){
+      clear_persons_function();
+      set_clear_persons(false);
+    }
+  }, [clear_persons])
+
   const limpiar_todo: () => void = () => {
     set_seleccion_tablero_control('');
     limpiar_filtros();
+    clear_persons_function();
   }
 
   const salir_entrada: () => void = () => {
@@ -331,19 +499,31 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     crear_objeto_filtro();
     switch (seleccion_tablero_control) {
       case 'CBU':
-        if (fecha_desde === null || fecha_hasta === null) {
-          set_error_fecha_desde(fecha_desde === null);
-          set_error_fecha_hasta(fecha_hasta === null);
-          return
-        }
+        set_new_title('Consumo de bienes por unidad');
+        // if (fecha_desde === null || fecha_hasta === null) {
+        //   set_error_fecha_desde(fecha_desde === null);
+        //   set_error_fecha_hasta(fecha_hasta === null);
+        //   return
+        // }
         const tipo_despacho = (seleccion_tipo_despacho === 'Todos' || seleccion_tipo_despacho === '') ? seleccion_tipo_despacho : seleccion_tipo_despacho === 'DV';
+        const id_bodega_reporte = (seleccion_bodega === 'Todos' || seleccion_bodega === '') ? '' : seleccion_bodega;
         const id_bien = seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.id_bien : '';
-        dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        dispatch(obtener_consumo_bienes_und({ seleccion_tipo_despacho: tipo_despacho, seleccion_bien: id_bien, seleccion_unidad_org, discriminar, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', id_responsable: ids_persons.id_responsable, id_solicita: ids_persons.id_solicitante, id_despacha: ids_persons.id_despacha, id_anula: ids_persons.id_anula, id_bodega_reporte, codigo_bien_despachado: control_stock.codigo_bien, nombre_bien_despachado: control_stock.nombre_bien })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'MP':
-        dispatch(obtener_mtto_programados()).then((response: any) => {
+        set_new_title('Mantenimientos programados');
+        const categoria = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
+        dispatch(obtener_mtto_programados(
+          ids_persons.id_solicitante,
+          ids_persons.id_anula,
+          inputs_rabp.fecha_desde ?? '',
+          inputs_rabp.fecha_hasta ?? '',
+          categoria ?? '',
+          mantenimiento_realized.serial,
+          mantenimiento_realized.consecutivo,
+        )).then((response: any) => {
           let resultado: any[] = [];
           let data = ordenar_fechas(response.data, 'fecha_programada', 'desc');
           let data_programada_v = data.filter((d: any) => (d.fecha_programada !== null && d.dias_kilometros_vencidos !== null));
@@ -375,12 +555,23 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'CS':
-        const solictiable = seleccion_tipo_bien === 'SV';
-        dispatch(obtener_control_stock(solictiable)).then((response: any) => {
+        set_new_title('Control de stock');
+        const solicitable = seleccion_tipo_bien === 'SV' ? 'true' : (seleccion_tipo_bien === 'NSV' ? 'false' : '');
+        const id_bodega_reporte2 = (seleccion_bodega === 'Todos' || seleccion_bodega === '') ? '' : seleccion_bodega;
+        dispatch(obtener_control_stock(
+          solicitable,
+          control_stock.codigo_bien,
+          control_stock.nombre_bien,
+          control_stock.codigo_tipo_entrada,
+          id_bodega_reporte2,
+          ids_persons.id_responsable,
+          ids_persons.id_origen
+        )).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'MSI':
+        set_new_title('Movimientos sobre incautados');
         set_loadding_consultar(true);
         // MSI - Movimientos sobre incautados
         if(inputs_msi?.tipo_bien === '' || inputs_msi?.tipo_bien === undefined){
@@ -388,6 +579,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           set_loadding_consultar(false);
           return;
         } else {
+          const categoria = inputs_msi?.tipo_bien === 'Todos' ? '' : inputs_msi?.tipo_bien;
+          const categoria_msi = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
             if (fecha_desde === null || fecha_hasta === null) {
               control_error('Debe seleccionar un rango de fechas para realizar la consulta');
               set_loadding_consultar(false);
@@ -395,9 +588,12 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
             }
             dispatch(
               obtener_movimientos_incautados({
-                categoria: inputs_msi?.tipo_bien,
+                categoria,
                 fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'),
-                fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD')
+                fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD'),
+                id_responsable: ids_persons.id_responsable,
+                id_proveedor: ids_persons.id_proveedor,
+                cod_tipo_activo: categoria_msi ?? '',
               }))
                 .then((response: any) => {
                   if(Object.keys(response).length === 0){
@@ -412,38 +608,51 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                       set_loadding_consultar(false);
                     }
                   }
+            }).catch((error: any) => {
+              set_loadding_consultar(false);
             });
         }
 
         break;
       case 'MR':
-        if (fecha_desde === null || fecha_hasta === null) {
-          set_error_fecha_desde(fecha_desde === null);
-          set_error_fecha_hasta(fecha_hasta === null);
-          return;
-        }
-        dispatch(obtener_mantenimientos_realizados({ seleccion_tipo_mtto, realizado: realizado.id_persona, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+        const categoria_mr = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
+        set_new_title('Mantenimientos realizados');
+        // if (fecha_desde === null || fecha_hasta === null) {
+        //   set_error_fecha_desde(fecha_desde === null);
+        //   set_error_fecha_hasta(fecha_hasta === null);
+        //   return;
+        // }
+        dispatch(obtener_mantenimientos_realizados({ seleccion_tipo_mtto, realizado: realizado.id_persona, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', cod_tipo_activo: categoria_mr ?? '' })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'EI':
-        if (fecha_desde === null || fecha_hasta === null) {
-          set_error_fecha_desde(fecha_desde === null);
-          set_error_fecha_hasta(fecha_hasta === null);
-          return;
-        }
-        dispatch(obtener_entradas_inventario({ seleccion_bodega, seleccion_tipo_bien, fecha_desde: dayjs(fecha_desde).format('YYYY-MM-DD'), fecha_hasta: dayjs(fecha_hasta).format('YYYY-MM-DD') })).then((response: any) => {
+      set_new_title('Entradas a inventario');
+      const categoria_ei = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
+      const tipo_bien = seleccion_tipo_bien === 'Todos' ? '' : seleccion_tipo_bien;
+        // if (fecha_desde === null || fecha_hasta === null) {
+        //   set_error_fecha_desde(fecha_desde === null);
+        //   set_error_fecha_hasta(fecha_hasta === null);
+        //   return;
+        // }
+        dispatch(obtener_entradas_inventario({ seleccion_bodega, seleccion_tipo_bien: tipo_bien, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', codigo_bien: control_stock.codigo_bien, nombre_bien: control_stock.nombre_bien, placa_serial: mantenimiento_realized.serial, consecutivo: mantenimiento_realized.consecutivo, id_responsable: ids_persons.id_responsable, id_proveedor: ids_persons.id_proveedor, cod_tipo_activo: categoria_ei ?? '' })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'MAFI':
+        set_new_title('Movimientos sobre los bienes (activos fijos) del inventario');
+        const tipo_activo = inputs_mafi.tipo_activo === 'Todos' ? '' : inputs_mafi.tipo_activo;
         // MAFI - Movimientos sobre los bienes (activos fijos) del inventario
+        const categoria_mafi = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
         set_loadding_consultar(true);
         dispatch(
           get_movimientos_inventario(
-            inputs_mafi.tipo_activo ?? '',
+            tipo_activo ?? '',
             inputs_mafi.fecha_desde ?? '',
-            inputs_mafi.fecha_hasta ?? ''
+            inputs_mafi.fecha_hasta ?? '',
+            categoria_mafi ?? '',
+            ids_persons.id_responsable,
+            ids_persons.id_origen,
           )
         ).then((response: response_movimientos_inventario) => {
           if (Object.keys(response)?.length !== 0) {
@@ -462,13 +671,17 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'RABP':
+        set_new_title('Reportes Almacén – Bienes (activos fijos) en préstamo');
+        const categoria2 = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
         // RABP - Reportes Almacén – Bienes (activos fijos) en préstamo
         set_loadding_consultar(true);
         dispatch(
           get_bienes_activos(
-            inputs_rabp.tipo_categoria ?? '',
+            categoria2 ?? '',
             inputs_rabp.fecha_desde ?? '',
-            inputs_rabp.fecha_hasta ?? ''
+            inputs_rabp.fecha_hasta ?? '',
+            ids_persons.id_responsable ?? '',
+            ids_persons.id_origen ?? '',
           )
         ).then((response: any) => {
           if (Object.keys(response)?.length !== 0) {
@@ -487,12 +700,19 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'BCE':
+        set_new_title('Bienes de consumo entregados');
+        const categoria_bce = inputs_rabp.tipo_categoria == 'Todos' ? '' : inputs_rabp.tipo_categoria;
         // Bienes de consumo entregados
         set_loadding_consultar(true);
         dispatch(
           get_bienes_consumo_entregados(
-            inputs_rabp.fecha_desde ?? '',
-            inputs_rabp.fecha_hasta ?? ''
+            inputs_bce.fecha_desde ?? '',
+            inputs_bce.fecha_hasta ?? '',
+            categoria_bce ?? '',
+            ids_persons.id_responsable ?? '',
+            ids_persons.id_solicitante ?? '',
+            ids_persons.id_despacha ?? '',
+            ids_persons.id_anula ?? '',
           )
         ).then((response: response_bienes_consumo_entregado) => {
           if (Object.keys(response)?.length !== 0) {
@@ -511,6 +731,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
         });
         break;
       case 'HUV':
+        set_new_title('Histórico de Uso de Vehículos');
         // Histórico de Uso de Vehículos
         if (inputs_huv.tipo_consulta === 'vehiculo_especifico') {
           // En caso que el tipo de consulta del input de seleccion sea por vehiculo especifico
@@ -539,13 +760,16 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           }
         } else if (inputs_huv.tipo_consulta === 'todos_vehiculos') {
           // En caso que el tipo de consulta del input de seleccion sea por todos los vehiculos
+          const tipo_veh = inputs_huv.tipo_vehiculo === 'Todos' ? '' : inputs_huv.tipo_vehiculo;
           set_loadding_consultar(true);
           dispatch(
             get_historico_todos_vehiculos(
-              inputs_huv.tipo_vehiculo ?? '',
+              tipo_veh ?? '',
               inputs_huv.fecha_desde ?? '',
               inputs_huv.fecha_hasta ?? '',
               inputs_huv.propiedad === 'true' ? 'True' : inputs_huv.propiedad === 'false' ? 'False' : '',
+              ids_persons.id_responsable ?? '',
+              ids_persons.id_autoriza ?? '',
             )
           ).then((response: response_historico_vehiculo) => {
             if (Object.keys(response)?.length !== 0) {
@@ -626,9 +850,9 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
     return data;
   };
 
-  useEffect(()=>{
-    console.log(inputs_msi)
-  },[inputs_msi])
+  // useEffect(()=>{
+  //   console.log(inputs_msi)
+  // },[inputs_msi])
 
   return (
     <>
@@ -662,7 +886,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   </Grid>
                 </Stack>
               </Grid>
-              {seleccion_tablero_control == 'MP' && (
+              {/* {seleccion_tablero_control == 'MP' && (
                 <Grid item xs={12} sm={12} sx={{ p: '10px' }}>
                   <Stack direction="row" justifyContent="center" spacing={2}>
                     <Button
@@ -674,13 +898,12 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     </Button>
                   </Stack>
                 </Grid>
-              )}
+              )} */}
             </Grid>
           </Box>
         </Grid>
       </Grid>
-      {seleccion_tablero_control !== '' &&
-        seleccion_tablero_control !== 'MP' && (
+      {seleccion_tablero_control !== '' && (
           <Grid container sx={estilo_seccion}>
             <Grid item md={12} xs={12}>
               <Title title="Filtros de búsqueda" />
@@ -709,19 +932,17 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={3}>
                       <TextField
                         label="Bien"
                         type={'text'}
                         size="small"
+                        disabled
                         fullWidth
                         value={seleccion_bien.nombre_bien ?? ''}
-                        InputProps={{
-                          readOnly: true,
-                        }}
                       />
                     </Grid>
-                    <Grid item xs={12} sm={2}>
+                    <Grid item>
                       <Stack direction="row" justifyContent="center">
                         <Button
                           color="primary"
@@ -743,13 +964,23 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         )}
                       </Stack>
                     </Grid>
+                    <Grid item>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        startIcon={<CleanIcon />}
+                        onClick={() => set_seleccion_bien('')}
+                      >
+                        Limpiar bien
+                      </Button>
+                    </Grid>
                     <Grid item xs={12} sm={12}>
                       <Stack
                         direction="row"
-                        justifyContent="center"
+                        // justifyContent="center"
                         spacing={2}
                       >
-                        <Grid item xs={12} sm={8}>
+                        <Grid item xs={12} sm={6}>
                           <FormControl size="small" fullWidth>
                             <InputLabel>
                               Unidad organizacional que recibe
@@ -771,8 +1002,50 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                             </Select>
                           </FormControl>
                         </Grid>
+                        <Grid item xs={12} sm={6}>
+                          <FormControl size="small" fullWidth>
+                            <InputLabel>Bodega</InputLabel>
+                            <Select
+                              value={seleccion_bodega}
+                              label="Bodega"
+                              onChange={cambio_bodega}
+                            >
+                              <MenuItem value={'Todos'}>Todos</MenuItem>
+                              {lt_bodegas.map((lt: any) => (
+                                <MenuItem key={lt.id_bodega} value={lt.id_bodega}>
+                                  {lt.nombre}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </FormControl>
+                        </Grid>
                       </Stack>
                     </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Código bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.codigo_bien}
+                        onChange={handle_codigo_bien_stock}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        label="Nombre bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.nombre_bien}
+                        onChange={handle_nombre_bien_stock}
+                      />
+                    </Grid>
+                    <BuscadorPersonasReports
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
+                      set_clear_persons={set_clear_persons}
+                      onResult={on_result}
+                      seleccion_tablero_control={seleccion_tablero_control}
+                    />
                     <Grid item xs={12} sm={12}>
                       <Stack
                         direction="row"
@@ -807,21 +1080,20 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                               }}
                               renderInput={(params) => (
                                 <TextField
-                                  required
                                   fullWidth
                                   size="small"
                                   {...params}
-                                  error={error_fecha_desde}
+                                  // error={error_fecha_desde}
                                 />
                               )}
                               maxDate={fecha_hasta}
                             />
                           </LocalizationProvider>
-                          {error_fecha_desde && (
+                          {/* {error_fecha_desde && (
                             <FormHelperText error>
                               {'El campo es obligatorio.'}
                             </FormHelperText>
-                          )}
+                          )} */}
                         </Grid>
                       </Stack>
                     </Grid>
@@ -841,22 +1113,21 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                               }}
                               renderInput={(params) => (
                                 <TextField
-                                  required
                                   fullWidth
                                   size="small"
                                   {...params}
-                                  error={error_fecha_hasta}
+                                  // error={error_fecha_hasta}
                                 />
                               )}
                               minDate={fecha_desde}
                               disabled={fecha_desde == null}
                             />
                           </LocalizationProvider>
-                          {error_fecha_hasta && (
+                          {/* {error_fecha_hasta && (
                             <FormHelperText error>
                               {'El campo es obligatorio.'}
                             </FormHelperText>
-                          )}
+                          )} */}
                         </Grid>
                       </Stack>
                     </Grid>
@@ -867,7 +1138,8 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           justifyContent="center"
                           spacing={2}
                         >
-                          <Grid item xs={12} sm={4}>
+                          {/* TODO: Revisar si es necesario */}
+                          {/* <Grid item xs={12} sm={4}>
                             <FormControl size="small" fullWidth>
                               <InputLabel>Presentación</InputLabel>
                               <Select
@@ -882,42 +1154,141 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                                 ))}
                               </Select>
                             </FormControl>
-                          </Grid>
+                          </Grid> */}
                         </Stack>
                       </Grid>
                     )}
                   </Grid>
                 )}
-                {seleccion_tablero_control === 'CS' && (
-                  <Grid item container spacing={2}>
-                    <Grid item xs={12} sm={12}>
-                      <Stack direction="row" justifyContent="center">
-                        <Grid item xs={12} sm={7}>
-                          <FormControl size="small" fullWidth>
-                            <InputLabel>Tipo de bien</InputLabel>
-                            <Select
-                              value={seleccion_tipo_bien}
-                              label="Tipo de bien"
-                              onChange={cambio_tipo_bien}
-                            >
-                              <MenuItem value={'Todos'}>Todos</MenuItem>
-                              <MenuItem value={'SV'}>
-                                Solicitable por vivero
-                              </MenuItem>
-                            </Select>
-                          </FormControl>
-                        </Grid>
-                      </Stack>
+                {seleccion_tablero_control === 'MP' && (
+                  <>
+                    <ReportesAlmacenBienesPrestamo
+                      inputs_rabp={inputs_rabp}
+                      set_inputs_rabp={set_inputs_rabp}
+                      set_clear_persons={set_clear_persons}
+                      onResult={on_result}
+                      seleccion_tablero_control={seleccion_tablero_control}
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
+                    />
+                    <BuscadorPersonasReports
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
+                      set_clear_persons={set_clear_persons}
+                      onResult={on_result}
+                      seleccion_tablero_control={seleccion_tablero_control}
+                    />
+                    <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'center'}}>
+                      <Grid item xs={12} sm={4}>
+                        <TextField
+                          label="Serial / Placa"
+                          size="small"
+                          fullWidth
+                          value={mantenimiento_realized.serial}
+                          onChange={handle_serial_mp}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <TextField
+                          label="Consecutivo"
+                          type='number'
+                          size="small"
+                          fullWidth
+                          value={mantenimiento_realized.consecutivo}
+                          onChange={handle_consecutivo_mp}
+                        />
+                      </Grid>
                     </Grid>
+                  </>
+                )}
+                {seleccion_tablero_control === 'CS' && (
+                  <Grid container spacing={2}>
+                    <Grid item xs={12} sm={4}>
+                      <FormControl size="small" fullWidth>
+                        <InputLabel>Tipo de bien</InputLabel>
+                        <Select
+                          value={seleccion_tipo_bien}
+                          label="Tipo de bien"
+                          onChange={cambio_tipo_bien}
+                        >
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
+                          <MenuItem value={'SV'}>
+                            Solicitable por vivero
+                          </MenuItem>
+                          <MenuItem value={'NSV'}>
+                            No solicitable por vivero
+                          </MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Código bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.codigo_bien}
+                        onChange={handle_codigo_bien_stock}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Nombre bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.nombre_bien}
+                        onChange={handle_nombre_bien_stock}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        select
+                        label="Tipo entrada"
+                        size="small"
+                        fullWidth
+                        value={control_stock.codigo_tipo_entrada}
+                        onChange={handle_codigo_tipo_entrada_stock}
+                      >
+                        <MenuItem value={'Todos'}>Todos</MenuItem>
+                        {tipos_entradas.map((lt: any) => (
+                            <MenuItem key={lt.cod_tipo_entrada} value={lt.cod_tipo_entrada}>
+                              {lt.nombre}
+                            </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <FormControl size="small" fullWidth>
+                        <InputLabel>Bodega</InputLabel>
+                        <Select
+                          value={seleccion_bodega}
+                          label="Bodega"
+                          onChange={cambio_bodega}
+                        >
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
+                          {lt_bodegas.map((lt: any) => (
+                            <MenuItem key={lt.id_bodega} value={lt.id_bodega}>
+                              {lt.nombre}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
+                    <BuscadorPersonasReports
+                      set_clear_persons={set_clear_persons}
+                      onResult={on_result}
+                      seleccion_tablero_control={seleccion_tablero_control}
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
+                    />
                   </Grid>
                 )}
                 {seleccion_tablero_control === 'MSI' && (
                   <Grid item container spacing={2}>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                           size="small"
                           select
-                          label="Tipo bien :"
+                          label="Tipo bien"
                           value={inputs_msi.tipo_bien}
                           fullWidth
                           onChange={(e: any) => {
@@ -930,7 +1301,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                             });
                           }}
                         >
-                          <MenuItem value={''}><em>Selecciona una opción</em></MenuItem>
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
                           {tipos_bienes?.length !== 0 ? (
                             tipos_bienes?.map((tipo_bien) => (
                               <MenuItem key={tipo_bien[0]} value={tipo_bien[0]}>
@@ -942,7 +1313,33 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           )}
                         </TextField>
                     </Grid>
-
+                    <Grid item xs={12} lg={6}>
+                      <FormControl required size="small" fullWidth>
+                        <InputLabel>Categoria: </InputLabel>
+                        <Select
+                          label="Categoria :"
+                          value={inputs_rabp.tipo_categoria || ''}
+                          fullWidth
+                          onChange={(e: SelectChangeEvent) => {
+                            set_inputs_rabp({
+                              ...inputs_rabp,
+                              tipo_categoria: e.target.value,
+                            });
+                          }}
+                        >
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
+                          {tipos_categoria?.length !== 0 ? (
+                            tipos_categoria?.map((tipo_movimiento) => (
+                              <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
+                                {tipo_movimiento[1]}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value={''}>Cargando...</MenuItem>
+                          )}
+                        </Select>
+                      </FormControl>
+                    </Grid>
                     {/* {inputs_msi?.tipo_bien === 'A' &&
                       <Grid item xs={12} lg={4}>
                         <FormControl required size="small" fullWidth>
@@ -1019,6 +1416,13 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         />
                       </LocalizationProvider>
                     </Grid>
+                    <BuscadorPersonasReports
+                      set_clear_persons={set_clear_persons}
+                      onResult={on_result}
+                      seleccion_tablero_control={seleccion_tablero_control}
+                      is_clear_filtros={is_clear_filtros}
+                      set_is_clear_filtros={set_is_clear_filtros}
+                    />
                   </Grid>
                 )}
                 {seleccion_tablero_control === 'MR' && (
@@ -1069,80 +1473,89 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         set_persona={set_realizado}
                       />
                     )}
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha desde"
-                              value={fecha_desde}
-                              onChange={(newValue) => {
-                                handle_change_fecha_desde(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_desde}
-                                />
-                              )}
-                              maxDate={fecha_hasta}
-                            />
-                          </LocalizationProvider>
-                          {error_fecha_desde && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
-                          )}
-                        </Grid>
-                      </Stack>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-start"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha hasta"
-                              value={fecha_hasta}
-                              onChange={(newValue) => {
-                                handle_change_fecha_hasta(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_hasta}
-                                />
-                              )}
-                              minDate={fecha_desde}
-                              disabled={fecha_desde == null}
-                            />
-                          </LocalizationProvider>
-                          {error_fecha_hasta && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
-                          )}
-                        </Grid>
-                      </Stack>
-                    </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <FormControl required size="small" fullWidth>
+                          <InputLabel>Categoria: </InputLabel>
+                          <Select
+                            label="Categoria :"
+                            value={inputs_rabp.tipo_categoria || ''}
+                            fullWidth
+                            onChange={(e: SelectChangeEvent) => {
+                              set_inputs_rabp({
+                                ...inputs_rabp,
+                                tipo_categoria: e.target.value,
+                              });
+                            }}
+                          >
+                            <MenuItem value={'Todos'}>Todos</MenuItem>
+                            {tipos_categoria?.length !== 0 ? (
+                              tipos_categoria?.map((tipo_movimiento) => (
+                                <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
+                                  {tipo_movimiento[1]}
+                                </MenuItem>
+                              ))
+                            ) : (
+                              <MenuItem value={''}>Cargando...</MenuItem>
+                            )}
+                          </Select>
+                        </FormControl>
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Fecha desde"
+                            value={fecha_desde}
+                            onChange={(newValue) => {
+                              handle_change_fecha_desde(newValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                fullWidth
+                                size="small"
+                                {...params}
+                                // error={error_fecha_desde}
+                              />
+                            )}
+                            maxDate={fecha_hasta}
+                          />
+                        </LocalizationProvider>
+                        {/* {error_fecha_desde && (
+                          <FormHelperText error>
+                            {'El campo es obligatorio.'}
+                          </FormHelperText>
+                        )} */}
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Fecha hasta"
+                            value={fecha_hasta}
+                            onChange={(newValue) => {
+                              handle_change_fecha_hasta(newValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                fullWidth
+                                size="small"
+                                {...params}
+                                // error={error_fecha_hasta}
+                              />
+                            )}
+                            minDate={fecha_desde}
+                            disabled={fecha_desde == null}
+                          />
+                        </LocalizationProvider>
+                        {/* {error_fecha_hasta && (
+                          <FormHelperText error>
+                            {'El campo es obligatorio.'}
+                          </FormHelperText>
+                        )} */}
+                      </Grid>
                   </Grid>
                 )}
                 {seleccion_tablero_control === 'EI' && (
                   <Grid item container spacing={2}>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                       <FormControl size="small" fullWidth>
                         <InputLabel>Bodega</InputLabel>
                         <Select
@@ -1159,7 +1572,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
+                    <Grid item xs={12} sm={4}>
                       <FormControl size="small" fullWidth>
                         <InputLabel>Tipo de bien</InputLabel>
                         <Select
@@ -1167,6 +1580,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           label="Tipo de bien"
                           onChange={cambio_tipo_bien}
                         >
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
                           {lt_tipo_bien.map((lt: any) => (
                             <MenuItem key={lt[0]} value={lt[0]}>
                               {lt[1]}
@@ -1175,76 +1589,130 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-end"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha desde"
-                              value={fecha_desde}
-                              onChange={(newValue) => {
-                                handle_change_fecha_desde(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_desde}
-                                />
-                              )}
-                              maxDate={fecha_hasta}
-                            />
-                          </LocalizationProvider>
-                          {error_fecha_desde && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
+                    <Grid item xs={12} lg={4}>
+                      <FormControl required size="small" fullWidth>
+                        <InputLabel>Categoria: </InputLabel>
+                        <Select
+                          label="Categoria :"
+                          value={inputs_rabp.tipo_categoria || ''}
+                          fullWidth
+                          onChange={(e: SelectChangeEvent) => {
+                            set_inputs_rabp({
+                              ...inputs_rabp,
+                              tipo_categoria: e.target.value,
+                            });
+                          }}
+                        >
+                          <MenuItem value={'Todos'}>Todos</MenuItem>
+                          {tipos_categoria?.length !== 0 ? (
+                            tipos_categoria?.map((tipo_movimiento) => (
+                              <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
+                                {tipo_movimiento[1]}
+                              </MenuItem>
+                            ))
+                          ) : (
+                            <MenuItem value={''}>Cargando...</MenuItem>
                           )}
-                        </Grid>
-                      </Stack>
+                        </Select>
+                      </FormControl>
                     </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <Stack
-                        direction="row"
-                        justifyContent="flex-start"
-                        spacing={2}
-                      >
-                        <Grid item xs={12} sm={6}>
-                          <LocalizationProvider dateAdapter={AdapterDayjs}>
-                            <DatePicker
-                              label="Fecha hasta"
-                              value={fecha_hasta}
-                              onChange={(newValue) => {
-                                handle_change_fecha_hasta(newValue);
-                              }}
-                              renderInput={(params) => (
-                                <TextField
-                                  required
-                                  fullWidth
-                                  size="small"
-                                  {...params}
-                                  error={error_fecha_hasta}
-                                />
-                              )}
-                              minDate={fecha_desde}
-                              disabled={fecha_desde == null}
-                            />
-                          </LocalizationProvider>
-                          {error_fecha_hasta && (
-                            <FormHelperText error>
-                              {'El campo es obligatorio.'}
-                            </FormHelperText>
-                          )}
-                        </Grid>
-                      </Stack>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Código bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.codigo_bien}
+                        onChange={handle_codigo_bien_stock}
+                      />
                     </Grid>
-                    <Grid item xs={12} sm={12}>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Nombre bien"
+                        size="small"
+                        fullWidth
+                        value={control_stock.nombre_bien}
+                        onChange={handle_nombre_bien_stock}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                      <TextField
+                        label="Serial / Placa"
+                        size="small"
+                        fullWidth
+                        value={mantenimiento_realized.serial}
+                        onChange={handle_serial_mp}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                          label="Consecutivo"
+                          type='number'
+                          size="small"
+                          fullWidth
+                          value={mantenimiento_realized.consecutivo}
+                          onChange={handle_consecutivo_mp}
+                        />
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Fecha desde"
+                            value={fecha_desde}
+                            onChange={(newValue) => {
+                              handle_change_fecha_desde(newValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                fullWidth
+                                size="small"
+                                {...params}
+                                // error={error_fecha_desde}
+                              />
+                            )}
+                            maxDate={fecha_hasta}
+                          />
+                        </LocalizationProvider>
+                        {/* {error_fecha_desde && (
+                          <FormHelperText error>
+                            {'El campo es obligatorio.'}
+                          </FormHelperText>
+                        )} */}
+                      </Grid>
+                      <Grid item xs={12} sm={4}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                          <DatePicker
+                            label="Fecha hasta"
+                            value={fecha_hasta}
+                            onChange={(newValue) => {
+                              handle_change_fecha_hasta(newValue);
+                            }}
+                            renderInput={(params) => (
+                              <TextField
+                                fullWidth
+                                size="small"
+                                {...params}
+                                // error={error_fecha_hasta}
+                              />
+                            )}
+                            minDate={fecha_desde}
+                            // disabled={fecha_desde == null}
+                          />
+                        </LocalizationProvider>
+                        {/* {error_fecha_hasta && (
+                          <FormHelperText error>
+                            {'El campo es obligatorio.'}
+                          </FormHelperText>
+                        )} */}
+                      </Grid>
+                      <BuscadorPersonasReports
+                        is_clear_filtros={is_clear_filtros}
+                        set_is_clear_filtros={set_is_clear_filtros}
+                        set_clear_persons={set_clear_persons}
+                        onResult={on_result}
+                        seleccion_tablero_control={seleccion_tablero_control}
+                      />
+                    {/* TODO: Revisar si es necesario */}
+                    {/* <Grid item xs={12} sm={12}>
                       <Stack
                         direction="row"
                         justifyContent="center"
@@ -1267,7 +1735,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                           </FormControl>
                         </Grid>
                       </Stack>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                 )}
 
@@ -1276,6 +1744,13 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   <MovimientosActivosFijosInventario
                     inputs_mafi={inputs_mafi}
                     set_inputs_mafi={set_inputs_mafi}
+                    inputs_rabp={inputs_rabp}
+                    set_inputs_rabp={set_inputs_rabp}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 )}
                 {/* RABP - Reportes Almacén – Bienes (activos fijos) en préstamo */}
@@ -1283,6 +1758,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   <ReportesAlmacenBienesPrestamo
                     inputs_rabp={inputs_rabp}
                     set_inputs_rabp={set_inputs_rabp}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 )}
                 {/* BCE - Bienes de consumo entregados */}
@@ -1290,6 +1770,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                   <BienesConsumoEntregados
                     inputs_bce={inputs_bce}
                     set_inputs_bce={set_inputs_bce}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 )}
 
@@ -1299,6 +1784,11 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     set_inputs_huv={set_inputs_huv}
                     set_data_huv={set_data_huv}
                     set_data_vehiculo_seleccionado={set_data_vehiculo_seleccionado}
+                    set_clear_persons={set_clear_persons}
+                    onResult={on_result}
+                    seleccion_tablero_control={seleccion_tablero_control}
+                    is_clear_filtros={is_clear_filtros}
+                    set_is_clear_filtros={set_is_clear_filtros}
                   />
                 }
 
@@ -1312,6 +1802,15 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
                     justifyContent: 'end',
                   }}
                 >
+                  <Grid item sx={{mx: '1rem'}}>
+                    <Button
+                      variant="outlined"
+                      startIcon={<CleanIcon />}
+                      onClick={clean_filtros_screen}
+                    >
+                      Limpiar filtros
+                    </Button>
+                  </Grid>
                   <Grid item xs={12} lg={3}>
                     <Button
                       fullWidth
@@ -1375,6 +1874,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           {seleccion_tablero_control !== 'EI' && (
             <Grid item md={12} xs={12}>
               <ResultadosBusqueda
+                title={new_title}
                 resultado_busqueda={resultado_busqueda}
                 seleccion_presentacion={seleccion_presentacion}
                 titulo={'Resultado de búsqueda'}
@@ -1389,6 +1889,7 @@ export const TablerosControlAlmacenScreen: React.FC = () => {
           {seleccion_tablero_control === 'EI' && (
             <Grid item md={12} xs={12}>
               <ResultadosBusquedaTable
+                title={new_title}
                 resultado_busqueda={resultado_busqueda}
                 seleccion_presentacion={seleccion_presentacion}
                 titulo={'Resultado de búsqueda'}

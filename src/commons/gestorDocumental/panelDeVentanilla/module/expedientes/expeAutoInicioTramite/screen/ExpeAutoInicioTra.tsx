@@ -15,6 +15,8 @@ import { AutoInicioContext } from '../context/ExpedienteContext';
 import { AutoScreen } from '../components/AutoDeInicio/AutoScreen';
 import { AutosCreados } from '../components/AutoCreados/AutosCreados';
 import { getAutosDeInicioCreados } from '../services/getAutosCreados.service';
+import { getExpedienteRelacionado } from '../services/getExpedienteRelacionado.service';
+import { ExpedienteCreado } from '../components/ExpedienteCreado/ExpedienteCreado';
 
 export const ExpeAutoDeInicioTram: React.FC = (): JSX.Element => {
   //* redux states
@@ -27,9 +29,13 @@ export const ExpeAutoDeInicioTram: React.FC = (): JSX.Element => {
 
   //* context loading declaration
   const { handleGeneralLoading } = useContext(ModalAndLoadingContext);
-  const { setListaSeccionesSubsecciones, setListaAsignaciones, setListaAutoDeInicio } = useContext(
-    AutoInicioContext
-  );
+  const {
+    setListaSeccionesSubsecciones,
+    setListaAsignaciones,
+    setListaAutoDeInicio,
+    expediente,
+    setExpediente,
+  } = useContext(AutoInicioContext);
   // ? quitar mientras se termina de desarrollar el módulo
   useEffect(() => {
     if (!currentElementPqrsdComplementoTramitesYotros) {
@@ -71,6 +77,18 @@ export const ExpeAutoDeInicioTram: React.FC = (): JSX.Element => {
             console.error(error);
           }
         })();
+        //* get expediente relacionado
+        (async () => {
+          try {
+            const res = await getExpedienteRelacionado(
+              currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite,
+              handleGeneralLoading
+            );
+            setExpediente(res);
+          } catch (error) {
+            console.error(error);
+          }
+        })();
         break;
       default:
         console.log('No hay tipo de solicitud');
@@ -107,7 +125,7 @@ export const ExpeAutoDeInicioTram: React.FC = (): JSX.Element => {
         <InformacionElemento />
       </Grid>
 
-      <AutoScreen/>
+      <AutoScreen />
 
       {/* segunda parte, seleccion de seccion y subseccion */}
       <SeleccionUnidadSecSub />
@@ -116,8 +134,9 @@ export const ExpeAutoDeInicioTram: React.FC = (): JSX.Element => {
       <SeleccionGrupo />
 
       {/* asignaciones realizadas, (en espera, rechazadas, aceptadas) */}
-      <Asignaciones />
-      <AutosCreados/>
+      <ExpedienteCreado/>
+      {/*<Asignaciones />*/}
+      <AutosCreados />
       {/*acciones finales del módulo*/}
       <AccionesFinales />
     </>

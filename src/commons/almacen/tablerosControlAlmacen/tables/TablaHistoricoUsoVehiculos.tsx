@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { set } from 'date-fns';
 import dayjs, { Dayjs } from 'dayjs';
 import { interface_historico_vehiculo } from '../interfaces/types';
+import ExportDocs from '../../controlDeInventario/screens/ExportDocs';
 
 interface custom_column extends GridColDef {
   renderCell?: (params: { row: interface_historico_vehiculo }) => React.ReactNode;
@@ -23,6 +24,8 @@ const TablaHistoricoUsoVehiculos: React.FC<props> = ({
 }) => {
 
   let columns: custom_column[] = [
+    { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 150, flex: 1 },
+    { field: 'codigo_bien', headerName: 'Código bien', minWidth: 150, flex: 1 },
     { field: 'nombre', headerName: 'Nombre del vehículo', minWidth: 150, flex: 1 },
     { field: 'placa', headerName: 'Placa', minWidth: 150, flex: 1 },
     { field: 'marca', headerName: 'Marca', minWidth: 150, flex: 1 },
@@ -32,13 +35,13 @@ const TablaHistoricoUsoVehiculos: React.FC<props> = ({
     },
     {
       field: 'fecha_partida_asignada', headerName: 'Fecha de salida', minWidth: 150, flex: 1,
-      valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY')
+      valueFormatter: (params) => params.value ? dayjs(params.value as string).format('DD/MM/YYYY') : ''
     },
     {
       field: 'hora_partida', headerName: 'Hora de salida', minWidth: 150, flex: 1},
     {
       field: 'fecha_retorno_asignada', headerName: 'Fecha de llegada', minWidth: 150, flex: 1,
-      valueFormatter: (params) => dayjs(params.value as string).format('DD/MM/YYYY')
+      valueFormatter: (params) => params.value ? dayjs(params.value as string).format('DD/MM/YYYY') : ''
     },
     {field: 'hora_retorno', headerName: 'Hora de llegada', minWidth: 150, flex: 1},
     { field: 'Municipio_desplazamiento', headerName: 'Municipio de desplazamiento', minWidth: 220, flex: 1 },
@@ -53,34 +56,23 @@ const TablaHistoricoUsoVehiculos: React.FC<props> = ({
 
   return (
     <>
-      <Grid item xs={12} container
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center" >
-        <Grid item sx={{ cursor: 'pointer' }}>
-          <ButtonGroup style={{ margin: 5, }}>
-            {download_xls({ nurseries: data, columns })}
-            {download_pdf({
-              nurseries: data,
-              columns,
-              title: 'Articulos agregados a la solicitud',
-            })}
-          </ButtonGroup>
-        </Grid>
+     <Grid item container spacing={2}>
+      <Grid item xs={12} sm={12}>
+        <ExportDocs cols={columns} resultado_busqueda={data} filtros={null} title={'Histórico de Uso de Vehículos'} nombre_archivo={'Histórico de Uso de Vehículos'} filtros_pdf={null}></ExportDocs>
+        <DataGrid
+          style={{ margin: '15px 0px' }}
+          density="compact"
+          autoHeight
+          rows={data ?? []}
+          columns={columns ?? []}
+          pageSize={5}
+          rowHeight={75}
+          rowsPerPageOptions={[5]}
+          experimentalFeatures={{ newEditingApi: true }}
+          getRowId={(row) => row.id_bien === undefined ? uuidv4() : row.id_bien}
+        />
       </Grid>
-
-      <DataGrid
-        style={{ margin: '15px 0px' }}
-        density="compact"
-        autoHeight
-        rows={data ?? []}
-        columns={columns ?? []}
-        pageSize={5}
-        rowHeight={75}
-        rowsPerPageOptions={[5]}
-        experimentalFeatures={{ newEditingApi: true }}
-        getRowId={(row) => row.id_bien === undefined ? uuidv4() : row.id_bien}
-      />
+     </Grid>
     </>
   );
 }

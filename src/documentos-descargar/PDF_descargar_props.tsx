@@ -1,5 +1,9 @@
+import { Button } from '@mui/material';
 import JsPDF from 'jspdf';
 import 'jspdf-autotable'; // Importa la librería jspdf-autotable para habilitar la función autoTable
+import { useSelector } from 'react-redux';
+import { AuthSlice } from '../commons/auth/interfaces';
+import { useEffect } from 'react';
 
 interface DownloadPDFProps {
     nurseries: any[];
@@ -10,6 +14,12 @@ interface DownloadPDFProps {
   }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const download_pdf_props : React.FC<DownloadPDFProps> = (props: DownloadPDFProps) => {
+
+    const {
+        userinfo
+      } = useSelector((state: AuthSlice) => state.auth);
+
+    useEffect(() => console.log(userinfo, props), [props])
 
     const titulo:any = props.title;
     // //  console.log('')(titulo);
@@ -67,6 +77,10 @@ export const download_pdf_props : React.FC<DownloadPDFProps> = (props: DownloadP
 
 
     const start_y = img_y + 5 + img_height -25; // Posición vertical para iniciar los encabezados y datos
+    doc.setFontSize(12);
+    doc.text(`Tercero: ${userinfo.numero_documento}`, img_x, start_y);
+    doc.text(`Nombre: ${userinfo.nombre}`, img_x, start_y + 6);
+
 
     const data: any[][] = [];
     const headers: any[] = [];
@@ -92,7 +106,7 @@ export const download_pdf_props : React.FC<DownloadPDFProps> = (props: DownloadP
     (doc as any).autoTable({
         head: [headers],
         body: data,
-        startY: start_y, // Utiliza la variable start_y para la posición vertical de inicio
+        startY: start_y + 40, // Utiliza la variable start_y para la posición vertical de inicio
     });
 
     const file_id = Math.floor(Math.random() * 99999);
@@ -101,9 +115,9 @@ export const download_pdf_props : React.FC<DownloadPDFProps> = (props: DownloadP
     };
 
     return (
-        <button style={button_style} onClick={handleClick}>
+        <Button style={button_style} onClick={handleClick}>
             <img style={{ width: 45 }} src="../image/botones/PDF.png" alt="XLS Button" />
-        </button>
+        </Button>
     );
 };
 

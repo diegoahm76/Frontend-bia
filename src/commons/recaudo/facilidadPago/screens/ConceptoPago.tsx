@@ -6,7 +6,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import { useState, useEffect } from 'react';
 import AddIcon from "@mui/icons-material/Add";
 import { Title } from '../../../../components';
-import { Divider, Button, Grid, Dialog, TextField, Chip, } from '@mui/material';
+import { Divider, Button, Grid, Chip } from '@mui/material';
 import { CrearConceptoPago } from './CrearConceptoPago';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -15,7 +15,6 @@ import { control_error } from '../../../../helpers';
 import { ConceptoEditar } from './ConceptoEditar';
 import { TiposCobro } from './TiposCobro';
 import { TipoRenta } from './TipoRenta';
-import { Varible } from './Varible';
 import { Tasa } from './Tasa';
 import Swal from 'sweetalert2';
 import LockIcon from '@mui/icons-material/Lock';
@@ -64,8 +63,6 @@ export const ConceptoPago: React.FC = () => {
 
 
 
-
-
     const handleEliminarConfiguracion = async (id_valores_variables: number) => {
         try {
             const url = `/recaudo/configuracion_baisca/valoresvariables/delete/${id_valores_variables}/`;
@@ -78,7 +75,6 @@ export const ConceptoPago: React.FC = () => {
             fetchConfiguraciones();
         }
     };
-
 
 
     const ActuailizarEstadoVariable = async (id_valor_varaible: number, usada: boolean) => {
@@ -97,16 +93,13 @@ export const ConceptoPago: React.FC = () => {
         }
     };
 
-
     const columns = [
         { field: 'nombre_tipo_renta', headerName: 'Tipo de Renta', flex: 1 },
         { field: 'nombre_tipo_cobro', headerName: 'Tipo de Cobro', flex: 1 },
         { field: 'descripccion', headerName: 'Descripción', flex: 1 },
-
-        { field: 'nombre_variable', headerName: 'varible', flex: 1 },
-
-        { field: 'fecha_inicio', headerName: 'fecha inicio', flex: 1 },
-        { field: 'fecha_fin', headerName: 'Fecha fin', flex: 1 },
+        { field: 'nombre_variable', headerName: 'Variable', flex: 1 },
+        { field: 'fecha_inicio', headerName: 'Fecha de Inicio', flex: 1 },
+        { field: 'fecha_fin', headerName: 'Fecha de Fin', flex: 1 },
         {
             field: 'estado',
             headerName: 'Usada',
@@ -145,7 +138,6 @@ export const ConceptoPago: React.FC = () => {
         {
             field: 'valor',
             headerName: 'Valor',
-
             flex: 1,
             renderCell: (params: any) => {
                 // Formatear el valor a pesos colombianos
@@ -154,45 +146,42 @@ export const ConceptoPago: React.FC = () => {
                     currency: 'COP',
                     minimumFractionDigits: 0, // Ajusta según la precisión deseada
                 }).format(params.value);
-
+    
                 return <>{valorFormateado}</>;
             },
         },
         {
             field: 'Acciones',
             headerName: 'Acciones',
-
             flex: 1,
             renderCell: (params: any) => (
                 <>
-                    <IconButton
-                        color="error"
-                        onClick={() => handleEliminarConfiguracion(params.row.id_valores_variables)}
-                    >
-                        <DeleteIcon />
-                    </IconButton>
-
+                    {/* Mostrar el botón de eliminar solo si 'usada' y 'estado' no son ambos true */}
+                    {!(params.row.usada && params.row.estado) && (
+                        <IconButton
+                            color="error"
+                            onClick={() => handleEliminarConfiguracion(params.row.id_valores_variables)}
+                        >
+                            <DeleteIcon />
+                        </IconButton>
+                    )}
                     <IconButton
                         color="primary"
                         onClick={() => handleAbrirEditar(params.row)}
                     >
                         <EditIcon />
                     </IconButton>
-
                     <IconButton
                         color="primary"
                         onClick={() => ActuailizarEstadoVariable(params.row.id_valores_variables, params.row.usada)}
                     >
                         {params.row.usada ? <LockIcon /> : <LockOpenIcon />}
                     </IconButton>
-
-
                 </>
             )
         },
-
     ];
-
+    
 
     const handle_open_buscar = (): void => {
         set_is_buscar(true);
@@ -217,8 +206,6 @@ export const ConceptoPago: React.FC = () => {
     const handle_close = (): void => {
         set_is_tasa(false);
     };
-
-
 
     // Manejador para decrementar el valor
     const handleDecrement = () => {
@@ -320,16 +307,16 @@ export const ConceptoPago: React.FC = () => {
                 <Title title="Configuracion " />
 
                 <Grid container item xs={12} spacing={2} marginTop={2}  >
-                    <Grid item xs={4} sm={4}>
+                    <Grid item xs={12} sm={6}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de renta")}>Tipos de renta</Button>
                     </Grid>
-                    <Grid item xs={4} sm={4}>
+                    <Grid item xs={12} sm={6}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Tipos de cobro")}>Tipos de cobro</Button>
                     </Grid>
 
-                    <Grid item xs={4} sm={4}>
+                    {/* <Grid item xs={4} sm={4}>
                         <Button fullWidth variant="contained" onClick={() => handleButtonClick("Variable")}>Variable</Button>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
 
 
@@ -338,7 +325,7 @@ export const ConceptoPago: React.FC = () => {
 
             {selectedButton === "Tipos de cobro" && <TiposCobro />}
             {selectedButton === "Tipos de renta" && <TipoRenta />}
-            {selectedButton === "Variable" && <Varible />}
+            {/* {selectedButton === "Variable" && <Varible />} */}
 
 
         </>

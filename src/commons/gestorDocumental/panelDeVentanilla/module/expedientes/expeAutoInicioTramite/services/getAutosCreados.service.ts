@@ -11,7 +11,7 @@ export const getAutosDeInicioCreados = async (
   try {
     handleGeneralLoading(true);
 
-    const url = `gestor/panel_ventanilla/listar-auto/2716/`;
+    const url = `gestor/panel_ventanilla/listar-auto/${id_solicitud_tramite}`;
     //const url = `gestor/panel_ventanilla/listar-auto/${id_solicitud_tramite}/`
     const { data } = await api.get(url);
 

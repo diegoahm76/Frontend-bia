@@ -14,6 +14,7 @@ import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 import { jsPDF } from 'jspdf';
 import { htmlContent } from "./cons";
+import { DocumentoPagoTUA } from "./DocumentoPagoTUA";
 interface LiquidacionResponse {
   success: boolean;
   detail: string;
@@ -63,6 +64,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
   const [concepto, set_concepto] = useState('');
   const [variables_datos, set_variables_datos] = useState<Record<string, string>>({});
+  const [ver_factura, set_ver_factura] = useState(false);
 
   const opcion_liquidacion: OpcionLiquidacion = useMemo(() => opciones_liquidacion.filter(opcion_liquidacion => opcion_liquidacion.id === Number(id_opcion_liquidacion))[0], [id_opcion_liquidacion]);
 
@@ -75,6 +77,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
         //  console.log('')(error);
       });
   }, []);
+
+  useEffect(() => console.log(estado_expediente), [estado_expediente])
 
   const get_calculated_variables = (funcion: string, variables: Record<string, string>): string => {
     const regex = new RegExp(Object.keys(variables).map((propiedad) => `\\b${propiedad}\\b`).join('|'), 'g');
@@ -160,6 +164,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
   const [ciclo, set_ciclo] = useState(`${form_liquidacion.periodo_liquidacion}`);
   const handleAddDetail = () => {
     set_ciclo(form_liquidacion.periodo_liquidacion);
+    set_ver_factura(false)
   };
 
 
@@ -322,7 +327,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
   ]
   console.log("rows_detalles", rows_detalles, estado_expediente);
-  //codigo miguel para visor de factura 
+  //codigo miguel para visor de factura
   const encodedHtml = encodeURIComponent(htmlContent);
   const dataUri = 'data:text/html;charset=utf-8,' + encodedHtml;
   const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
@@ -454,7 +459,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
             <Grid container justifyContent='center' sx={{ my: '20px' }}>
               <Grid item xs={3}>
-                {estado_expediente?.toLowerCase() === 'activo' && (
+                {/* {estado_expediente?.toLowerCase() === 'activo' && ( */}
                   <Button
                     type="submit"
                     variant="contained"
@@ -467,12 +472,22 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
                   >
                     Agregar detalle de liquidación
                   </Button>
-                )}
+                {/* )} */}
               </Grid>
             </Grid>
           </Box>
 
           <Box sx={{ width: '100%', mt: '20px' }}>
+            <Grid sx={{display: 'flex', justifyContent: 'end', mb: '1rem'}}>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={ver_factura || rows_detalles.length === 0}
+                onClick={() => set_ver_factura(true)}
+              >
+                Ver factura
+              </Button>
+            </Grid>
             <DataGrid
               density="compact"
               autoHeight
@@ -497,6 +512,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
               </Grid>
             </Grid>
           </Box>
+          {ver_factura && <DocumentoPagoTUA datos={rows_detalles}/>}
         </Grid>
       </Grid>
 
@@ -518,7 +534,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
           <div dangerouslySetInnerHTML={{ __html: htmlContent }} style={{ width: '50%', height: '50%' }} />
         </Grid>
 
-        <Grid item xs={12} sm={12}> 
+        <Grid item xs={12} sm={12}>
           <embed src={dataUri} type="text/html" width="100%" height="100%" />
         </Grid>
 
