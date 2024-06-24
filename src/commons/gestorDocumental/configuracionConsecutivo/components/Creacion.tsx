@@ -67,15 +67,7 @@ export const Creacion: React.FC = () => {
 
     const [formData, setFormData] = useState<FormData>(initialFormData);
 
-    // const handleInputChange = (event: any) => {
-    //     const target = event.target as HTMLInputElement;
-    //     const { name, value } = target;
-    //     const numericFields = ['agno_consecutivo', 'consecutivo_inicial', 'cantidad_digitos'];
-    //     const updatedValue = numericFields.includes(name) ? Number(value) : value;
-
-
-    //     setFormData(prevState => ({ ...prevState, [name]: updatedValue }));
-    // };
+ 
     const handleInputChange = (event: any) => {
         const target = event.target as HTMLInputElement;
         const { name, value } = target;
