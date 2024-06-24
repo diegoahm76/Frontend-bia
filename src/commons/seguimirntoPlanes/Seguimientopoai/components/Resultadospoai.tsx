@@ -54,7 +54,7 @@ export interface SucursalEmpresa {
 
 
 
-export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento ,consultarSeguimiento, seteditarr,editartabla, seteditar, setselectid, handle ,selectedConceptoId }) => {
+export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, ConsultarSeguimiento ,consultarSeguimiento, seteditarr,editartabla, seteditar, setselectid, handle ,selectedConceptoId }) => {
   // const [ConsultarSeguimiento, setconsultarSeguimiento] = useState<Seguimiento[]>([]);
 
   // const consultarSeguimiento = async (): Promise<void> => {
@@ -171,7 +171,10 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
       headerName: 'Modalidad de contratación',
       minWidth: 300,
       valueGetter: (params:any) => {
-        return modalidadMap[params.value] || params.value;
+        // return modalidadMap[params.value] || params.value;
+        return modalidadMap[params.value] || selecTodosId.nombre_modalidad;
+
+        
       },
     },
     
@@ -180,7 +183,7 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     {
       field: 'id_fuente1',
       headerName: 'FTE financiación 1',
-      minWidth: 300,
+      minWidth: 400,
       valueGetter: (params:any) => {
         return fuenteMap[params.value] || params.value;
       },
@@ -199,7 +202,7 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     { field: 'adicion1', headerName: 'Adicción 1', minWidth: 300, renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
-    { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 300 ,   valueGetter: (params:any) => {
+    { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
     { field: 'valor_fte2', headerName: 'Valor 2', minWidth: 300,renderCell: (params: any) => {
@@ -215,7 +218,7 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     { field: 'adicion2', headerName: 'Adicción 2', minWidth: 300 ,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     },},
-    { field: 'id_fuente3', headerName: 'FTE financiación 3', minWidth: 300,   valueGetter: (params:any) => {
+    { field: 'id_fuente3', headerName: 'FTE financiación 3', minWidth: 400,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     }, },
     { field: 'valor_fte3', headerName: 'Valor 3', minWidth: 300,renderCell: (params: any) => {
@@ -231,7 +234,7 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     { field: 'adicion3', headerName: 'Adicción 3', minWidth: 300,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
-    { field: 'id_fuente4', headerName: 'FTE financiación 4 ', minWidth: 300 ,   valueGetter: (params:any) => {
+    { field: 'id_fuente4', headerName: 'FTE financiación 4 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
     { field: 'valor_fte4', headerName: 'Valor 4', minWidth: 300 ,renderCell: (params: any) => {

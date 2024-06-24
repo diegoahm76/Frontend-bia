@@ -732,6 +732,7 @@ export const Seguimiento: React.FC = () => {
           >
             <Grid item xs={12}>
               <Resultadospoai
+              selecTodosId={selecTodosId}
                 setselectid={setselectid}
                 selectedConceptoId={selectedConceptoId}
                 handle={handle}
