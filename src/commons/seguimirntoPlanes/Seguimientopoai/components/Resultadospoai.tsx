@@ -22,6 +22,15 @@ export const miEstilo = {
   boxShadow: '0px 3px 6px #042F4A26',
 };
 
+interface Modalidad {
+  id_modalidad: number;
+  nombre_modalidad: string;
+  codigo_modalidad: string;
+  activo: boolean;
+  item_ya_usado: boolean;
+  registro_precargado: boolean;
+}
+
 export interface SucursalEmpresa {
   id_sucursal_empresa: number;
   numero_sucursal: number;
@@ -51,8 +60,46 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
   }, [selectedConceptoId]);
 
   // const [selectid, setselectid] = useState('');
+  const [modalidad, fetmodalidad] = useState<Modalidad[]>([]);
 
+  const fetcodigoo = async () => {
+    try {
+      const url = 'seguimiento-planes/consultar-modalidades/';
+      const res = await api.get(url);
+      const unidadesData = res.data.results; // Ajusta la estructura según tus datos
+      fetmodalidad(unidadesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetcodigoo();
+  }, []);
   
+
+  const [modalidades, setModalidades] = useState<Modalidad[]>([]);
+  const [rows, setRows] = useState<any[]>([]);
+
+  const fetchModalidades = async () => {
+    try {
+      const url = 'seguimiento-planes/consultar-modalidades/';
+      const res = await api.get(url);
+      const modalidadesData = res.data.results; // Ajusta la estructura según tus datos
+      setModalidades(modalidadesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchModalidades();
+  }, []);
+
+  const modalidadMap = (modalidades ?? []).reduce((acc, modalidad) => {
+    acc[modalidad.id_modalidad] = modalidad.nombre_modalidad;
+    return acc;
+  }, {} as Record<number, string>);
+
   const columns = [
     { field: 'descripcion', headerName: 'Descripción', minWidth: 400 },
     // { field: 'id_prioridad', headerName: 'Prioridad', minWidth: 150 },
@@ -76,7 +123,17 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     { field: 'codigo_pre', headerName: 'Código PPTAL', minWidth: 400 },
     { field: 'cuenta', headerName: 'Cuenta', minWidth: 500 },
     { field: 'lugar_ejecucion', headerName: 'Responsable ', minWidth: 300 },
-    { field: 'nombre_contratista', headerName: 'Modalidad de contratación', minWidth: 300 },
+    
+    // { field: 'id_modalidad', headerName: 'Modalidad de contratación', minWidth: 300 },
+    {
+      field: 'id_modalidad',
+      headerName: 'Modalidad de contratación',
+      minWidth: 300,
+      valueGetter: (params:any) => {
+        return modalidadMap[params.value] || params.value;
+      },
+    },
+    
     { field: 'id_fuente1', headerName: 'FTE financiación 1', minWidth: 300 },
     { field: 'valor_fte1', headerName: 'Valor 1', minWidth: 300 ,renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
