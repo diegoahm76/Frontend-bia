@@ -30,7 +30,20 @@ interface Modalidad {
   item_ya_usado: boolean;
   registro_precargado: boolean;
 }
-
+export interface Fuente {
+  id_fuente: number;
+  nombre_fuente: string;
+  vano_1: number | null;
+  vano_2: number | null;
+  vano_3: number | null;
+  vano_4: number | null;
+  vadicion1: number | null;
+  vadicion2: number | null;
+  vadicion3: number | null;
+  vadicion4: boolean | null;
+  valor_total: number;
+  id_plan: number;
+}
 export interface SucursalEmpresa {
   id_sucursal_empresa: number;
   numero_sucursal: number;
@@ -100,6 +113,34 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     return acc;
   }, {} as Record<number, string>);
 
+
+
+
+  const [fuentes, setFuentes] = useState<Fuente[]>([]);
+
+  const fetchFuentes = async () => {
+    try {
+      const url = 'seguimiento-planes/consultar-fuentes-financiacion-indicadores-lista/';
+      const res = await api.get(url);
+      const fuentesData = res.data.data;
+      setFuentes(fuentesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFuentes();
+  }, []);
+  const fuenteMap = (fuentes ?? []).reduce((acc, fuente) => {
+    acc[fuente.id_fuente] = fuente.nombre_fuente;
+    return acc;
+  }, {} as Record<number, string>);
+
+  // useEffect(() => {
+  //   fetfuented();
+  // }, []);
+
   const columns = [
     { field: 'descripcion', headerName: 'Descripción', minWidth: 400 },
     // { field: 'id_prioridad', headerName: 'Prioridad', minWidth: 150 },
@@ -134,7 +175,17 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
       },
     },
     
-    { field: 'id_fuente1', headerName: 'FTE financiación 1', minWidth: 300 },
+    // { field: 'id_fuente1', headerName: 'FTE financiación 1', minWidth: 300 },
+
+    {
+      field: 'id_fuente1',
+      headerName: 'FTE financiación 1',
+      minWidth: 300,
+      valueGetter: (params:any) => {
+        return fuenteMap[params.value] || params.value;
+      },
+    },
+
     { field: 'valor_fte1', headerName: 'Valor 1', minWidth: 300 ,renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
       const valorFormateado = new Intl.NumberFormat('es-CO', {
@@ -148,7 +199,9 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     { field: 'adicion1', headerName: 'Adicción 1', minWidth: 300, renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
-    { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 300 },
+    { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 300 ,   valueGetter: (params:any) => {
+      return fuenteMap[params.value] || params.value;
+    },},
     { field: 'valor_fte2', headerName: 'Valor 2', minWidth: 300,renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
       const valorFormateado = new Intl.NumberFormat('es-CO', {
@@ -162,7 +215,9 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     { field: 'adicion2', headerName: 'Adicción 2', minWidth: 300 ,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     },},
-    { field: 'id_fuente3', headerName: 'FTE financiación 3', minWidth: 300 },
+    { field: 'id_fuente3', headerName: 'FTE financiación 3', minWidth: 300,   valueGetter: (params:any) => {
+      return fuenteMap[params.value] || params.value;
+    }, },
     { field: 'valor_fte3', headerName: 'Valor 3', minWidth: 300,renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
       const valorFormateado = new Intl.NumberFormat('es-CO', {
@@ -176,7 +231,9 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({ ConsultarSeguimiento
     { field: 'adicion3', headerName: 'Adicción 3', minWidth: 300,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
-    { field: 'id_fuente4', headerName: 'FTE financiación 4 ', minWidth: 300 },
+    { field: 'id_fuente4', headerName: 'FTE financiación 4 ', minWidth: 300 ,   valueGetter: (params:any) => {
+      return fuenteMap[params.value] || params.value;
+    },},
     { field: 'valor_fte4', headerName: 'Valor 4', minWidth: 300 ,renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
       const valorFormateado = new Intl.NumberFormat('es-CO', {
