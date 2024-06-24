@@ -31,7 +31,7 @@ export interface BuscarProps {
 export interface ResultadosProps {
   handle:any;
   setselectid:any;
-  
+  selecTodosId:any;
   selectedConceptoId:any;
   seteditar:any;
   editartabla:any;

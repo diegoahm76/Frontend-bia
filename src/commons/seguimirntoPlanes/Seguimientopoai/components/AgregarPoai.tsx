@@ -349,7 +349,9 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             label=" Modalidad de contratación  "
             name="id_modalidad"
             disabled
-            value={formDatagregar.id_modalidad}
+            // value={formDatagregar.id_modalidad}
+            value={selecTodosId.nombre_modalidad}
+
             onChange={handleInputChange}
           />
         </Grid>
