@@ -4,8 +4,6 @@ import { DataGrid, GridRenderCellParams, type GridColDef } from '@mui/x-data-gri
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { type TablasAmortizacion, type Obligacion } from '../interfaces/interfaces';
-import { faker } from '@faker-js/faker';
-import dayjs from 'dayjs';
 import { RenderDataGrid } from '../../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 import MonetizationOnOutlinedIcon from '@mui/icons-material/MonetizationOnOutlined';
 
@@ -14,22 +12,18 @@ interface RootState {
     plan_pagos: TablasAmortizacion;
   }
 }
-
+interface Abono {
+  [key: string]: string;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const TablaLiquidacion: React.FC = () => {
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
   const [lista, set_lista] = useState(Array<Obligacion>);
-  console.log("lista", lista, total, intereses, capital)
   const { plan_pagos } = useSelector((state: RootState) => state.plan_pagos);
   const { deudores } = useSelector((state: any) => state.deudores);
   const [saldoCapital, setSaldoCapital] = useState<number | undefined>(0); // Inicializado con 0 o undefined^M
-  const valor_abono_cop = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "COP",
-  }).format(parseFloat(deudores.valor_abonado))
-
 
 
   const total_cop = new Intl.NumberFormat("es-ES", {
@@ -57,9 +51,6 @@ export const TablaLiquidacion: React.FC = () => {
 
 
 
-  interface Abono {
-    [key: string]: string;
-  }
   const [valoresAbonados, setValoresAbonados] = useState<Abono>({});
 
   const handleValorAbonadoChange = (event: any, fieldName: string, fieldId: string) => {
@@ -67,9 +58,7 @@ export const TablaLiquidacion: React.FC = () => {
     setValoresAbonados(prevState => ({
       ...prevState,
       [fieldId]: newValue
-    }));
-    // console.log(valoresAbonados); // Agregar esta línea para imprimir los valores
-
+    }))
   };
 
   const sumarValoresAbonados = (valoresAbonados: Abono) => {
@@ -93,26 +82,6 @@ export const TablaLiquidacion: React.FC = () => {
 
 
   const columns: GridColDef[] = [
-    // {
-    //   field: 'id',
-    //   headerName: 'Item',
-    //   width: 50,
-    //   renderCell: (params) => (
-    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-    //       {params.value}
-    //     </div>
-    //   ),
-    // },
-    // {
-    //   field: 'nombre',
-    //   headerName: 'Resolución',
-    //   width: 300,
-    //   renderCell: (params) => (
-    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-    //       {params.value}
-    //     </div>
-    //   ),
-    // },
     {
       field: 'monto_inicial',
       headerName: 'Valor Capital',
@@ -189,27 +158,11 @@ export const TablaLiquidacion: React.FC = () => {
 
         const handleAbonoButtonClick = () => {
 
-          const precio_cop = new Intl.NumberFormat("es-ES", {
-            style: "currency",
-            currency: "COP",
-          }).format(params.value)
           const valorColumna1 = params.row.valor_capital_intereses * 1000;
           const valor_abonado_inicial = deudores.valor_abonado;
-
           const valor_capital = params.row.monto_inicial * 1000;
           const respuesta = valor_capital / valorColumna1;
-
-          console.log("valor_capital", valor_capital)
-          console.log("valorColumna1", valorColumna1)
-          console.log("valor_abonado_inicial", valor_abonado_inicial)
-          console.log("respuesta", respuesta);
           const total = Math.round(valor_abonado_inicial * respuesta);
-          const totalFormateado = total.toLocaleString('es-ES');
-
-
-
-          console.log("11111111111111", valor_abonado_inicial, deudores.valor_abonado)
-
           handleValorAbonadoChange({ target: { value: total } }, 'valor_abonado', `valor_abonado_${params.id}`);
         };
 
@@ -235,27 +188,6 @@ export const TablaLiquidacion: React.FC = () => {
         );
       },
     },
-
-    // {
-    //   field: 'valor_abonado',
-    //   headerName: 'Valor Abonado',
-    //   width: 150,
-    //   renderCell: (params: GridRenderCellParams<any, any, any>) => (
-
-    //     <TextField
-    //           required
-    //           label="Valor Abonado"
-    //           size="small"
-    //           fullWidth
-    //           type='number'
-    //           key={`valor_abonado_${params.id}`}
-    //           id={`valor_abonado_${params.id}`}
-    //           value={valoresAbonados[`valor_abonado_${params.id}`] || ''}
-    //           onChange={(event) => handleValorAbonadoChange(event, params.field as string, `valor_abonado_${params.id}`)}
-    //         />
-
-    //   ),
-    // },
     {
       field: 'porcentaje_abonado',
       headerName: '% del Abono',
@@ -281,7 +213,6 @@ export const TablaLiquidacion: React.FC = () => {
         const dato = valoresAbonados[`valor_abonado_${params.id}`];
         const nuevoValor = params.row.valor_intereses;
         const resultado = parseFloat(dato) - parseFloat(nuevoValor);
-        console.log(resultado)
         const totalFormateado = (valoresAbonados[`valor_abonado_${params.id}`] || 0).toLocaleString('es-ES');
         return (
           <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -333,7 +264,6 @@ export const TablaLiquidacion: React.FC = () => {
             </div>
           );
         }
-        console.log("informacion", valor_Abonado, valor_capital.toFixed(2), valor_interes)
         const resultado = valor_capital - valor_Abonado;
         setSaldoCapital(resultado);
         return (
@@ -401,7 +331,7 @@ export const TablaLiquidacion: React.FC = () => {
                 <Grid item>
                   <Box sx={{ width: '100%' }}>
                     <RenderDataGrid
-                      title="Datos de liquidación"
+                      title="Datos de liquidaciónx"
                       rows={lista}
                       columns={columns}
                     />
