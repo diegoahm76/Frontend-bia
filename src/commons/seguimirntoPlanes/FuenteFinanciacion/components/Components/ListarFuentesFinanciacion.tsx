@@ -32,18 +32,18 @@ export const ListarFuentesFinanciacion: React.FC = () => {
   const columns_fuente: GridColDef[] = [
     {
       field: 'concepto',
-      headerName: 'CONCEPTO',
+      headerName: 'Nombre de fuente',
       sortable: true,
       minWidth: 250,
       flex: 1
     },
-    {
-      field: 'nombre_fuente',
-      headerName: 'Nombre de la Fuente',
-      sortable: true,
-      minWidth: 250,
-      flex: 1
-    },
+    // {
+    //   field: 'nombre_fuente',
+    //   headerName: 'Nombre de la Fuente',
+    //   sortable: true,
+    //   minWidth: 250,
+    //   flex: 1
+    // },
     {
       field: 'vano_1',
       headerName: 'AÑO 1',
@@ -116,6 +116,50 @@ export const ListarFuentesFinanciacion: React.FC = () => {
         return formattedInversion;
       },
     },
+
+
+    {
+      field: 'concevpto',
+      headerName: 'Valor de adicion año 1',
+      sortable: true,
+      minWidth: 250,
+      flex: 1
+    },
+
+
+    {
+      field: 'concevptdo',
+      headerName: 'Valor de adicion año 2',
+      sortable: true,
+      minWidth: 250,
+      flex: 1
+    },
+
+
+    {
+      field: 'concevpto3',
+      headerName: 'Valor de adicion año 3',
+      sortable: true,
+      minWidth: 250,
+      flex: 1
+    },
+    {
+      field: 'concevpto4',
+      headerName: 'Valor de adicion año 4',
+      sortable: true,
+      minWidth: 250,
+      flex: 1
+    },
+    {
+      field: 'concevptovd3',
+      headerName: 'Valor total',
+      sortable: true,
+      minWidth: 250,
+      flex: 1
+    },
+
+
+
     {
       field: 'acciones',
       headerName: 'ACCIONES',

@@ -444,12 +444,11 @@ export const Encabezado: React.FC = () => {
     setQuestionGridRows([]);
     setSelectedOption(null);
     setItemYaUsado(false);
-    // setSelectedEncuestaId(null);
     setTempOption('');
     setEditMode(false);
     setFormData({
+
       ...formData,
-      // nombre_encuesta: "",
       descripcion: '',
       activo: '',
       preguntas: [

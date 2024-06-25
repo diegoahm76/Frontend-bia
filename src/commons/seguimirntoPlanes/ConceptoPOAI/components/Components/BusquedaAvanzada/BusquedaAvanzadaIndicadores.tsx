@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { LoadingButton } from '@mui/lab';
@@ -14,6 +15,8 @@ import {
   IconButton,
   TextField,
 } from '@mui/material';
+
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
@@ -27,13 +30,153 @@ import { control_error } from '../../../../../../helpers';
 import { Title } from '../../../../../../components/Title';
 import { download_xls } from '../../../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../../../documentos-descargar/PDF_descargar';
-import {
-  set_current_mode_planes,
-} from '../../../../store/slice/indexPlanes';
+import { set_current_mode_planes } from '../../../../store/slice/indexPlanes';
 import { search_indicadores } from '../../../../Indicadores/services/services';
 import { DataContextConceptoPOAI } from '../../../context/context';
 import { IBusquedaIndicador } from '../../../../Indicadores/components/Programas/BusquedaAvanzada/types';
+import { api } from '../../../../../../api/axios';
+export interface Planes {
+  id_plan: number;
+  nombre_plan: string;
+  sigla_plan: string;
+  tipo_plan: string;
+  agno_inicio: number;
+  agno_fin: number;
+  estado_vigencia: boolean;
+}
+export interface Indicador {
+  id_indicador: number;
+  nombre_medicion: string;
+  nombre_tipo: string | null;
+  nombre_plan: string | null;
+  nombre_programa: string | null;
+  nombre_proyecto: string | null;
+  nombre_producto: string | null;
+  nombre_actividad: string;
+  nombre_unidad_org: string | null;
+  nombre_eje_estrategico: string | null;
+  nombre_meta: string | null;
+  nombre_linea_base: string | null;
+  metas: any[];
+  nombre_indicador: string;
+  numero_indicador: string;
+  linea_base: string | null;
+  medida: string;
+  tipo_indicador: string;
+  fecha_creacion: string; // o Date si prefieres manejarlo como objeto Date
+  cumplio: boolean;
+  entidad_responsable: string | null;
+  id_medicion: number;
+  id_tipo: number | null;
+  id_producto: number | null;
+  id_actividad: number;
+  id_plan: number | null;
+  id_proyecto: number | null;
+  id_programa: number | null;
+  id_linea_base: number | null;
+  id_meta_eje: number | null;
+  id_eje_estrategico: number | null;
+  id_unidad_organizacional: number | null;
+}
+export interface Actividad {
+  id_actividad: number;
+  nombre_plan: string;
+  nombre_programa: string;
+  nombre_proyecto: string;
+  nombre_producto: string;
+  numero_producto: string;
+  // indicadores: Indicador[];
+  numero_actividad: string;
+  nombre_actividad: string;
+  fecha_creacion: string; // o Date si prefieres manejarlo como objeto Date
+  cumplio: boolean;
+  id_producto: number;
+  id_plan: number;
+  id_proyecto: number;
+  id_programa: number;
+  id_linea_base: number | null;
+  id_meta_eje: number | null;
+  id_objetivo: number | null;
+  id_eje_estrategico: number | null;
+}
 
+export interface Producto {
+  id_producto: number;
+  nombre_plan: string;
+  nombre_programa: string;
+  nombre_proyecto: string;
+  numero_producto: string;
+  nombre_producto: string;
+  fecha_creacion: string; // o Date si prefieres manejarlo como objeto Date
+  cumplio: boolean;
+  id_proyecto: number;
+  id_plan: number;
+  id_programa: number;
+}
+export interface Proyecto {
+  id_proyecto: number;
+  nombre_plan: string;
+  nombre_programa: string;
+  numero_proyecto: string;
+  nombre_proyecto: string;
+  pondera_1: number;
+  pondera_2: number;
+  pondera_3: number;
+  pondera_4: number;
+  cumplio: boolean;
+  fecha_creacion: string; // o Date si prefieres manejarlo como objeto Date
+  id_programa: number;
+  id_plan: number;
+}
+export interface EjeEstrategico {
+  id_eje_estrategico: number;
+  nombre_plan: string;
+  sigla_plan: string;
+  nombre_tipo_eje: string;
+  nombre_objetivo: string | null;
+  nombre_plan_objetivo: string | null;
+  sigla_plan_objetivo: string | null;
+  nombre: string;
+  id_tipo_eje: number;
+  id_plan: number;
+  id_objetivo: number | null;
+}
+export interface EjeEstrategico {
+  id_eje_estrategico: number;
+  nombre_plan: string;
+  sigla_plan: string;
+  nombre_tipo_eje: string;
+  nombre_objetivo: string | null;
+  nombre_plan_objetivo: string | null;
+  sigla_plan_objetivo: string | null;
+  nombre: string;
+  id_tipo_eje: number;
+  id_plan: number;
+  id_objetivo: number | null;
+}
+export interface metas {
+  id_meta: number;
+  nombre_meta: string;
+  unidad_meta: string;
+  porcentaje_meta: number;
+  valor_meta: string;
+  cumplio: boolean;
+  fecha_creacion_meta: string;
+}
+export interface Programa {
+  id_programa: number;
+  nombre_eje_estrategico: string;
+  nombre_programa: string;
+  numero_programa: string;
+  porcentaje_1: number;
+  porcentaje_2: number;
+  porcentaje_3: number;
+  porcentaje_4: number;
+  cumplio: boolean;
+  fecha_creacion: string; // o Date si prefieres manejarlo como objeto Date
+  id_eje_estrategico: number;
+  id_sector: number;
+}
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const BusquedaAvanzadaIndicadores: React.FC = () => {
   // const { id_deposito, sucusal_selected } = useContext(DataContext);
@@ -44,56 +187,56 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       headerName: 'Nombre del Plan',
       sortable: true,
       minWidth: 250,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'nombre_programa',
       headerName: 'Nombre del Programa',
       sortable: true,
       minWidth: 250,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'nombre_proyecto',
       headerName: 'Nombre del Proyecto',
       sortable: true,
       minWidth: 250,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'nombre_producto',
       headerName: 'Nombre del Producto',
       sortable: true,
       minWidth: 250,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'nombre_actividad',
       headerName: 'Nombre de la Actividad',
       sortable: true,
       minWidth: 250,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'nombre_indicador',
       headerName: 'Nombre del Indicador',
       sortable: true,
       minWidth: 250,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'nombre_medicion',
       headerName: 'Nombre de Medición',
       sortable: true,
       minWidth: 150,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'nombre_tipo',
       headerName: 'Nombre de Tipo',
       sortable: true,
       minWidth: 150,
-      flex: 1
+      flex: 1,
     },
 
     {
@@ -109,7 +252,7 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
       headerName: 'Fecha de Creación',
       sortable: true,
       minWidth: 150,
-      flex: 1
+      flex: 1,
     },
     {
       field: 'acciones',
@@ -139,6 +282,8 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               reset({
                 nombre_plan: params.row.nombre_plan,
                 nombre_programa: params.row.nombre_programa,
+                nombre_eje: params.row.nombre_eje,
+                nombre_meta: params.row.nombre_meta,
                 nombre_proyecto: params.row.nombre_proyecto,
                 nombre_producto: params.row.nombre_producto,
                 nombre_actividad: params.row.nombre_actividad,
@@ -178,6 +323,8 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
   } = useForm({
     defaultValues: {
       nombre_plan: '',
+      nombre_eje: '',
+      nombre_meta: '',
       nombre_programa: '',
       nombre_proyecto: '',
       nombre_producto: '',
@@ -205,6 +352,8 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     async ({
       nombre_plan,
       nombre_programa,
+      nombre_eje,
+      nombre_meta,
       nombre_proyecto,
       nombre_producto,
       nombre_actividad,
@@ -218,6 +367,8 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
         } = await search_indicadores({
           nombre_plan,
           nombre_programa,
+          nombre_eje,
+          nombre_meta,
           nombre_proyecto,
           nombre_producto,
           nombre_actividad,
@@ -252,6 +403,223 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
     set_is_search(false);
   }, []);
 
+  const [planes, setPlanes] = useState<Planes[]>([]);
+  const [selectedPlanId, setSelectedPlanId] = useState<number | null>(null); // Estado para almacenar el ID del plan seleccionado
+  const handlePlanChange = (event: any) => {
+    const selectedPlan = planes.find(
+      (plan) => plan.nombre_plan === event.target.value
+    );
+    if (selectedPlan) {
+      setSelectedPlanId(selectedPlan.id_plan);
+    }
+  };
+  const fetplames = async () => {
+    try {
+      const url = 'seguimiento/planes/consultar-planes/';
+      const res = await api.get(url);
+      const unidadesData = res.data.data;
+      setPlanes(unidadesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetplames();
+  }, []);
+
+  const [ejeplan, setejeplan] = useState<EjeEstrategico[]>([]);
+
+  const [selectedPlanIdeje, setSelectedPlanIdeje] = useState<number | null>(
+    null
+  ); // Estado para almacenar el ID del plan seleccionado
+  const handlePlanChangeeje = (event: any) => {
+    const selectedPlan = ejeplan.find(
+      (plan) => plan.nombre === event.target.value
+    );
+    if (selectedPlan) {
+      setSelectedPlanIdeje(selectedPlan.id_eje_estrategico);
+    }
+  };
+
+  const fetejeplan = async () => {
+    try {
+      const url = `seguimiento/planes/consultar-ejes-estrategicos-id-planes/${selectedPlanId}/`;
+      const res = await api.get(url);
+      const datas = res.data.data;
+      setejeplan(datas);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetejeplan();
+  }, [selectedPlanId]);
+
+  // programa
+  const [programa, setPrograma] = useState<Programa[]>([]);
+  const [selectedProgramaId, setSelectedProgramaId] = useState<number | null>(
+    null
+  ); // Estado para almacenar el ID del programa seleccionado
+
+  const handleProgramaChange = (event: any) => {
+    const selectedPrograma = programa.find(
+      (programa) => programa.nombre_programa === event.target.value
+    );
+    if (selectedPrograma) {
+      setSelectedProgramaId(selectedPrograma.id_programa);
+    }
+  };
+  const fetprogramas = async () => {
+    try {
+      const url = `seguimiento/planes/consultar-programas-id-eje-estrategico/${selectedPlanIdeje}/`;
+      const res = await api.get(url);
+      const datas = res.data.data;
+      setPrograma(datas);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetprogramas();
+  }, [selectedPlanIdeje]);
+
+  // proyecto
+  const [proyecto, setProyecto] = useState<Proyecto[]>([]);
+  const [selectedProyectoId, setSelectedProyectoId] = useState<number | null>(
+    null
+  ); // Estado para almacenar el ID del programa seleccionado
+
+  const handleProyectoChange = (event: any) => {
+    const selectedPrograma = proyecto.find(
+      (proyecto) => proyecto.nombre_proyecto === event.target.value
+    );
+    if (selectedPrograma) {
+      setSelectedProyectoId(selectedPrograma.id_proyecto);
+    }
+  };
+  const fetproyecto = async () => {
+    try {
+      const url = `/seguimiento/planes/consultar-proyectos-id-programas/${selectedProgramaId}/`;
+      const res = await api.get(url);
+      const datas = res.data.data;
+      setProyecto(datas);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetproyecto();
+  }, [selectedProgramaId]);
+
+  // producto
+
+  const [producto, setProducto] = useState<Producto[]>([]);
+
+  const [selectedProductoId, setSelectedProductoId] = useState<number | null>(
+    null
+  );
+
+  const handleProductoChange = (event: any) => {
+    const selectedPrograma = producto.find(
+      (producto) => producto.nombre_producto === event.target.value
+    );
+    if (selectedPrograma) {
+      setSelectedProductoId(selectedPrograma.id_producto);
+    }
+  };
+  const fetproducto = async () => {
+    try {
+      const url = `seguimiento/planes/consultar-productos-id-proyectos/${selectedProyectoId}/`;
+      const res = await api.get(url);
+      const datas = res.data.data;
+      setProducto(datas);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetproducto();
+  }, [selectedProyectoId]);
+
+  // actividad
+  const [actividad, setactividad] = useState<Actividad[]>([]);
+
+  const [selectedactividadId, setSelectedactividadId] = useState<number | null>(
+    null
+  );
+
+  const handleactividadChange = (event: any) => {
+    const selectedPrograma = actividad.find(
+      (actividad) => actividad.nombre_actividad === event.target.value
+    );
+    if (selectedPrograma) {
+      setSelectedactividadId(selectedPrograma.id_actividad);
+    }
+  };
+  const fetactividad = async () => {
+    try {
+      const url = `seguimiento/planes/consultar-actividades-id-productos/${selectedProductoId}/`;
+      const res = await api.get(url);
+      const datas = res.data.data;
+      setactividad(datas);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetactividad();
+  }, [selectedProductoId]);
+
+  // indicador
+
+  const [indicador, setindicador] = useState<Indicador[]>([]);
+
+  const [selecteindicadorId, setSelecteindicadorId] = useState<number | null>(
+    null
+  );
+
+  const handleindicadorChange = (event: any) => {
+    const selectedPrograma = indicador.find(
+      (indicador) => indicador.nombre_indicador === event.target.value
+    );
+    if (selectedPrograma) {
+      setSelecteindicadorId(selectedPrograma.id_indicador);
+    }
+  };
+  const fetindicador = async () => {
+    try {
+      const url = `seguimiento/planes/consultar-indicadores-id-actividad/${selectedactividadId}/`;
+      const res = await api.get(url);
+      const datas = res.data.data;
+      setindicador(datas);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetindicador();
+  }, [selectedactividadId]);
+
+  // meta
+
+  const [metas, setmetas] = useState<metas[]>([]);
+
+  const fetmetas = async () => {
+    try {
+      const url = `seguimiento/planes/consultar-metas-id-indicador/${selecteindicadorId}/`;
+      const res = await api.get(url);
+      const datas = res.data.data;
+      setmetas(datas);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetmetas();
+  }, [selecteindicadorId]);
+
   return (
     <>
       <Grid
@@ -275,132 +643,303 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
         <Grid item xs={12}>
           <Divider />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        <Grid item xs={12} sm={6}>
           <Controller
             name="nombre_plan"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
-              <TextField
-                fullWidth
-                label="Nombre plan"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label"> Nombre de plan</InputLabel>
+                <Select
+                  name="nombre_plan"
+                  label=" Nombre de plan"
+                  value={value}
+                  // onChange={onChange}
+                  onChange={(event) => {
+                    onChange(event);
+                    handlePlanChange(event);
+                  }}
+                  disabled
+                >
+                  {planes.map((unidad: any) => (
+                    <MenuItem key={unidad.id_plan} value={unidad.nombre_plan}>
+                      {unidad.nombre_plan}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="nombre_eje"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label"> Nombre de eje</InputLabel>
+                <Select
+                  name="nombre_eje"
+                  label="Nombre de plan"
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event);
+                    handlePlanChangeeje(event);
+                  }}
+                  disabled
+                >
+                  {ejeplan.map((unidad: any) => (
+                    <MenuItem
+                      key={unidad.id_eje_estrategico}
+                      value={unidad.nombre}
+                    >
+                      {unidad.nombre}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+        </Grid>
+        {/* {selectedPlanIdeje} */}
+        <Grid item xs={12} sm={6}>
           <Controller
             name="nombre_programa"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
-              <TextField
-                fullWidth
-                label="Nombre programa"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  {' '}
+                  Nombre de programa
+                </InputLabel>
+                <Select
+                  name="nombre_programa"
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event);
+                    handleProgramaChange(event);
+                  }}
+                  disabled
+                  label="Nombre de programa"
+                >
+                  {programa.map((programa: any) => (
+                    <MenuItem
+                      key={programa.id_programa}
+                      value={programa.nombre_programa}
+                    >
+                      {programa.nombre_programa}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        {/* {selectedProgramaId} */}
+        <Grid item xs={12} sm={6}>
           <Controller
             name="nombre_proyecto"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
-              <TextField
-                fullWidth
-                label="Nombre proyecto"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel>Nombre del proyecto </InputLabel>
+                <Select
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event);
+                    handleProyectoChange(event);
+                  }}
+                  disabled
+                  name="nombre_proyecto"
+                  label="Nombre del proyecto"
+                >
+                  {proyecto.map((Proyecto: any) => (
+                    <MenuItem
+                      key={Proyecto.id_proyecto}
+                      value={Proyecto.nombre_proyecto}
+                    >
+                      {Proyecto.nombre_proyecto}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        {/* {selectedProyectoId} */}
+        <Grid item xs={12} sm={6}>
           <Controller
             name="nombre_producto"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
-              <TextField
-                fullWidth
-                label="Nombre producto"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  Nombre del producto
+                </InputLabel>
+                <Select
+                  name="nombre_producto"
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event);
+                    handleProductoChange(event);
+                  }}
+                  disabled
+                  label="Nombre del producto"
+                >
+                  {producto.map((Proyecto: any) => (
+                    <MenuItem
+                      key={Proyecto.id_producto}
+                      value={Proyecto.nombre_producto}
+                    >
+                      {Proyecto.nombre_producto}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        {/* {selectedProductoId} */}
+
+        <Grid item xs={12} sm={6}>
           <Controller
             name="nombre_actividad"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
-              <TextField
-                fullWidth
-                label="Nombre actividad"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  Nombre del la actividad
+                </InputLabel>
+                <Select
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event);
+                    handleactividadChange(event);
+                  }}
+                  disabled
+                  name="nombre_actividad"
+                  label="Nombre del la actividad "
+                >
+                  {actividad.map((Proyecto: any) => (
+                    <MenuItem
+                      key={Proyecto.id_actividad}
+                      value={Proyecto.nombre_actividad}
+                    >
+                      {Proyecto.nombre_actividad}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
+        {/* {selectedactividadId} */}
+        <Grid item xs={12} sm={6}>
           <Controller
             name="nombre_indicador"
             control={control}
             render={(
               { field: { onChange, value } } // formState: { errors }
             ) => (
-              <TextField
-                fullWidth
-                label="Nombre indicador"
-                value={value}
-                onChange={onChange}
-                size="small"
-                margin="dense"
-                disabled={true}
-              />
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  Nombre del indicador
+                </InputLabel>
+                <Select
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event);
+                    handleindicadorChange(event);
+                  }}
+                  disabled
+                  name="nombre_indicador"
+                  label="Nombre del la indicador "
+                >
+                  {indicador.map((Proyecto: any) => (
+                    <MenuItem
+                      key={Proyecto.id_indicador}
+                      value={Proyecto.nombre_indicador}
+                    >
+                      {Proyecto.nombre_indicador}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             )}
           />
         </Grid>
-        <Grid item xs={12} sm={6} md={3}>
-          <Button
-            variant="contained"
-            color="primary"
-            startIcon={<SearchIcon />}
-            onClick={() => {
-              handle_click_open();
-            }}
-          >
-            Buscar
-          </Button>
+        {/* {selecteindicadorId} */}
+
+        <Grid item xs={12} sm={6}>
+          <Controller
+            name="nombre_meta"
+            control={control}
+            render={(
+              { field: { onChange, value } } // formState: { errors }
+            ) => (
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  {' '}
+                  Nombre del la Meta{' '}
+                </InputLabel>
+                <Select
+                  disabled
+                  name="nombre_meta"
+                  value={value}
+                  onChange={(event) => {
+                    onChange(event);
+                  }}
+                  label="Nombre del la Meta"
+                >
+                  {metas.map((Proyecto: any) => (
+                    <MenuItem
+                      key={Proyecto.id_meta}
+                      value={Proyecto.nombre_indicador}
+                    >
+                      {Proyecto.nombre_indicador}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
         </Grid>
+        <Grid
+          container
+          spacing={2}
+          marginTop={2}
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+        >
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              startIcon={<SearchIcon />}
+              onClick={() => {
+                handle_click_open();
+              }}
+            >
+              Buscar
+            </Button>
+          </Grid>
+        </Grid>
+
         {/* {id_deposito && (
           <>
             <Grid container spacing={2} justifyContent="flex-end">
@@ -456,125 +995,295 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
               }}
             > */}
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={4}>
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_plan"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre plan"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="si-no-select-label">
+                        {' '}
+                        Nombre de plan
+                      </InputLabel>
+                      <Select
+                        name="nombre_plan"
+                        label=" Nombre de plan"
+                        value={value}
+                        // onChange={onChange}
+                        onChange={(event) => {
+                          onChange(event);
+                          handlePlanChange(event);
+                        }}
+                      >
+                        {planes.map((unidad: any) => (
+                          <MenuItem
+                            key={unidad.id_plan}
+                            value={unidad.nombre_plan}
+                          >
+                            {unidad.nombre_plan}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="nombre_eje"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="si-no-select-label">
+                        {' '}
+                        Nombre de eje
+                      </InputLabel>
+                      <Select
+                        name="nombre_eje"
+                        label="Nombre de plan"
+                        value={value}
+                        onChange={(event) => {
+                          onChange(event);
+                          handlePlanChangeeje(event);
+                        }}
+                      >
+                        {ejeplan.map((unidad: any) => (
+                          <MenuItem
+                            key={unidad.id_eje_estrategico}
+                            value={unidad.nombre}
+                          >
+                            {unidad.nombre}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+              {/* {selectedPlanIdeje} */}
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_programa"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre programa"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="si-no-select-label">
+                        {' '}
+                        Nombre de programa
+                      </InputLabel>
+                      <Select
+                        name="nombre_programa"
+                        value={value}
+                        onChange={(event) => {
+                          onChange(event);
+                          handleProgramaChange(event);
+                        }}
+                        label="Nombre de programa"
+                      >
+                        {programa.map((programa: any) => (
+                          <MenuItem
+                            key={programa.id_programa}
+                            value={programa.nombre_programa}
+                          >
+                            {programa.nombre_programa}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={4}>
+              {/* {selectedProgramaId} */}
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_proyecto"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre proyecto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
+                    <FormControl fullWidth size="small">
+                      <InputLabel>Nombre del proyecto </InputLabel>
+                      <Select
+                        value={value}
+                        onChange={(event) => {
+                          onChange(event);
+                          handleProyectoChange(event);
+                        }}
+                        name="nombre_proyecto"
+                        label="Nombre del proyecto"
+                      >
+                        {proyecto.map((Proyecto: any) => (
+                          <MenuItem
+                            key={Proyecto.id_proyecto}
+                            value={Proyecto.nombre_proyecto}
+                          >
+                            {Proyecto.nombre_proyecto}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              {/* {selectedProyectoId} */}
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_producto"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre producto"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="si-no-select-label">
+                        Nombre del producto
+                      </InputLabel>
+                      <Select
+                        name="nombre_producto"
+                        value={value}
+                        onChange={(event) => {
+                          onChange(event);
+                          handleProductoChange(event);
+                        }}
+                        label="Nombre del producto"
+                      >
+                        {producto.map((Proyecto: any) => (
+                          <MenuItem
+                            key={Proyecto.id_producto}
+                            value={Proyecto.nombre_producto}
+                          >
+                            {Proyecto.nombre_producto}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              {/* {selectedProductoId} */}
+
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_actividad"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre actividad"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="si-no-select-label">
+                        Nombre del la actividad
+                      </InputLabel>
+                      <Select
+                        value={value}
+                        onChange={(event) => {
+                          onChange(event);
+                          handleactividadChange(event);
+                        }}
+                        name="nombre_actividad"
+                        label="Nombre del la actividad "
+                      >
+                        {actividad.map((Proyecto: any) => (
+                          <MenuItem
+                            key={Proyecto.id_actividad}
+                            value={Proyecto.nombre_actividad}
+                          >
+                            {Proyecto.nombre_actividad}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              {/* {selectedactividadId} */}
+              <Grid item xs={12} sm={6}>
                 <Controller
                   name="nombre_indicador"
                   control={control}
                   render={(
                     { field: { onChange, value } } // formState: { errors }
                   ) => (
-                    <TextField
-                      fullWidth
-                      label="Nombre indicador"
-                      value={value}
-                      onChange={onChange}
-                      size="small"
-                      margin="dense"
-                      disabled={false}
-                    />
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="si-no-select-label">
+                        Nombre del indicador
+                      </InputLabel>
+                      <Select
+                        value={value}
+                        onChange={(event) => {
+                          onChange(event);
+                          handleindicadorChange(event);
+                        }}
+                        name="nombre_indicador"
+                        label="Nombre del la indicador "
+                      >
+                        {indicador.map((Proyecto: any) => (
+                          <MenuItem
+                            key={Proyecto.id_indicador}
+                            value={Proyecto.nombre_indicador}
+                          >
+                            {Proyecto.nombre_indicador}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              {/* {selecteindicadorId} */}
+
+              <Grid item xs={12} sm={6}>
+                <Controller
+                  name="nombre_meta"
+                  control={control}
+                  render={(
+                    { field: { onChange, value } } // formState: { errors }
+                  ) => (
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="si-no-select-label">
+                        {' '}
+                        Nombre del la Meta{' '}
+                      </InputLabel>
+                      <Select
+                        name="nombre_meta"
+                        value={value}
+                        onChange={(event) => {
+                          onChange(event);
+                        }}
+                        label="Nombre del la Meta"
+                      >
+                        {metas.map((Proyecto: any) => (
+                          <MenuItem
+                            key={Proyecto.id_meta}
+                            value={Proyecto.nombre_indicador}
+                          >
+                            {Proyecto.nombre_indicador}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  )}
+                />
+              </Grid>
+              <Grid
+          container
+          spacing={2}
+          marginTop={2}
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+        >
+           <Grid item >
                 <LoadingButton
                   type="submit"
                   variant="contained"
                   color="primary"
+                  fullWidth
                   startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
@@ -585,6 +1294,8 @@ export const BusquedaAvanzadaIndicadores: React.FC = () => {
                   Buscar
                 </LoadingButton>
               </Grid>
+        </Grid>
+             
               {rows.length > 0 && (
                 <>
                   <Grid item xs={12}>
