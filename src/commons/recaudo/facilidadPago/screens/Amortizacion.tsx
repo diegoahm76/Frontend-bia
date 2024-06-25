@@ -1,15 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import {
-  Box,
-  Button,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField, } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { Title } from '../../../../components/Title';
 import { useState, useEffect } from 'react';
@@ -29,6 +19,7 @@ import { ResumenLiquidacionFacilidad } from '../componentes/ResumenLiquidacionFa
 import dayjs from 'dayjs';
 import { control_error } from '../../../gestorDocumental/alertasgestor/utils/control_error_or_success';
 import { api } from '../../../../api/axios';
+import { AmortizacionModalPlanPagos } from './AmortizacionModalPlanPagos/AmortizacionModalPlanPagos';
 
 interface RootStateDeudor {
   deudores: {
@@ -126,6 +117,7 @@ export const Amortizacion: React.FC = () => {
       const configuracionInteresData: ConfiguracionInteres[] =
         res.data?.data || [];
       setConfiguracionInteres(configuracionInteresData);
+      console.log("configuracionInteresData", configuracionInteresData)
     } catch (error: any) {
       control_error(error.response.data.detail);
     }
@@ -137,11 +129,7 @@ export const Amortizacion: React.FC = () => {
       fetchConfiguracionInteres(); // Llamar a la función solo si hay un valor de año
     }
   }, [currentYear]);
-  const handleClick = () => {
-    console.log(configuracionInteres);
-    console.log(currentYear);
-    console.log('2222222');
-  };
+
 
   const [selectedInterest, setSelectedInterest] = useState<string>('');
 
@@ -235,21 +223,8 @@ export const Amortizacion: React.FC = () => {
             <Box component="form" noValidate autoComplete="off">
               <Title title="1. Datos Base para Liquidación al día de Abono" />
 
-              {/* <h3>1. Datos Base para Liquidación al día de Abono</h3> */}
               <Grid container marginTop={2} spacing={2}>
-                {/* <Grid item xs={12} sm={3}>
-                  <TextField
-                    required
-                    label="Tasa de Usura a Aplicar"
-                    size="small"
-                    fullWidth
-                    type="number"
-                    onChange={(event: event) => {
-                      const { value } = event.target;
-                      set_tasa_usura(parseFloat(value));
-                    }}
-                  />
-                </Grid> */}
+
 
                 <Grid item xs={12} sm={3}>
                   <FormControl fullWidth size="small" required>
@@ -264,7 +239,6 @@ export const Amortizacion: React.FC = () => {
                     >
                       {configuracionInteres.map((item) => (
                         <MenuItem key={item.id} value={item.valor_interes}>
-                          {/* {item.mes} */}
                           {meses[item.mes - 1]} ( {item.valor_interes}% )
                         </MenuItem>
                       ))}
@@ -272,37 +246,7 @@ export const Amortizacion: React.FC = () => {
                   </FormControl>
                 </Grid>
 
-                {/* <Button
-                  color="success"
-                  variant="contained"
-                  onClick={handleClick}
-                >
-                  CONSOLE{' '}
-                </Button> */}
 
-                {/* <Grid item xs={12} sm={3}>
-                    <FormControl required size='small' fullWidth>
-                        <InputLabel>Mes de Tasa</InputLabel>
-                        <Select
-                          label="Mes de Tasa"
-                          defaultValue={""}
-                          onChange={() => {}}
-                        >
-                          <MenuItem value='1'>Enero</MenuItem>
-                          <MenuItem value='2'>Febrero</MenuItem>
-                          <MenuItem value='3'>Marzo</MenuItem>
-                          <MenuItem value='4'>Abril</MenuItem>
-                          <MenuItem value='5'>Mayo</MenuItem>
-                          <MenuItem value='6'>Junio</MenuItem>
-                          <MenuItem value='7'>Julio</MenuItem>
-                          <MenuItem value='8'>Agosto</MenuItem>
-                          <MenuItem value='9'>Septiembre</MenuItem>
-                          <MenuItem value='10'>Octubre</MenuItem>
-                          <MenuItem value='11'>Noviembre</MenuItem>
-                          <MenuItem value='12'>Diciembre</MenuItem>
-                        </Select>
-                      </FormControl>
-                  </Grid> */}
                 <Grid item xs={12} sm={3}>
                   <TextField
                     disabled
@@ -351,12 +295,12 @@ export const Amortizacion: React.FC = () => {
                         deudores.periodicidad.toString() === '1'
                           ? '1'
                           : deudores.periodicidad.toString() === '3'
-                          ? '3'
-                          : deudores.periodicidad.toString() === '6'
-                          ? '6'
-                          : deudores.periodicidad.toString() === '12'
-                          ? '12'
-                          : deudores.periodicidad.toString()
+                            ? '3'
+                            : deudores.periodicidad.toString() === '6'
+                              ? '6'
+                              : deudores.periodicidad.toString() === '12'
+                                ? '12'
+                                : deudores.periodicidad.toString()
                       }
                       onChange={(event: event) => {
                         const { value } = event.target;
@@ -414,6 +358,17 @@ export const Amortizacion: React.FC = () => {
                     disabled
                   />
                 </Grid>
+
+
+                <Grid container justifyContent="center" spacing={2}>
+            <Grid item xs={12} sm={6} md={4}>
+                <Grid container justifyContent="center">
+                    <AmortizacionModalPlanPagos />
+                </Grid>
+            </Grid>
+        </Grid>
+
+
               </Grid>
             </Box>
           ) : null}
@@ -423,6 +378,10 @@ export const Amortizacion: React.FC = () => {
             spacing={2}
             sx={{ mb: '20px' }}
           >
+
+
+
+
             <Button
               color="primary"
               variant="contained"
@@ -474,6 +433,7 @@ export const Amortizacion: React.FC = () => {
           <TablaProyeccionPagos />
         </>
       ) : null}
+
     </>
   );
 };
