@@ -26,6 +26,8 @@ import { ConsultasRoutes } from '../Tableros/router/ConsultasRoutes';
 import { SeguimientoPOAIRoutes } from '../SeguiminetoPOAI/router/SeguimientoPOAIRoutes';
 import { SeguimientoPgarRoutes } from '../SeguimientoPGAR/routes/SeguimientoPgarRoutes';
 import { TablerosControlRoutes } from '../TablerosControlPGAR/routes/TablerosControlRoutes';
+import { RouteSeguimientoPoai } from '../Seguimientopoai/routes/RouteSeguimientoPoai';
+import { RouteEjeEstrategico } from '../EjeEstategico/routes/RoutesEjeEstrategico';
 
 const routes = [
   {
@@ -119,6 +121,20 @@ const routes = [
     name: 'poai',
     component: () => <ConceptoPOAIRoutes />,
   },
+  // Seguimieto POAI
+  {
+    path: 'Seguimiento_poai/',
+    name: 'Seguimiento_poai',
+    component: () => <RouteSeguimientoPoai />,
+  },
+
+    // Eje estrategico
+    {
+      path: 'eje_estrategico/',
+      name: 'eje_estrategico',
+      component: () => <RouteEjeEstrategico />,
+    },
+  
   // * Fuentes de financiacion poai
   {
     path: 'fuentes/',

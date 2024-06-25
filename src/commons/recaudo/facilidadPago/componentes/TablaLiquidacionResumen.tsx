@@ -213,7 +213,7 @@ export const TablaLiquidacionResumen: React.FC = () => {
 
 
                   <RenderDataGrid
-                    title="Datos de liquidaciónx"
+                    title="Datos de liquidación"
                     rows={lista}
                     columns={columns}
                   />

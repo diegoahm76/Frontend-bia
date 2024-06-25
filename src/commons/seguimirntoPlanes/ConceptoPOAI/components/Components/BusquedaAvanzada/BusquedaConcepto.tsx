@@ -247,7 +247,7 @@ export const BusquedaConcepto: React.FC = () => {
           >
             <Title title="Búsqueda avanzada concepto POAI" />
             <Grid container spacing={2} sx={{ mt: '10px', mb: '20px' }}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6}  >
                 <Controller
                   name="concepto"
                   control={control}
@@ -256,7 +256,7 @@ export const BusquedaConcepto: React.FC = () => {
                   ) => (
                     <TextField
                       fullWidth
-                      label="Concepto"
+                      label="CODPRE"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -266,7 +266,7 @@ export const BusquedaConcepto: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              {/* <Grid item xs={12} sm={6} md={3}>
                 <Controller
                   name="nombre"
                   control={control}
@@ -284,8 +284,8 @@ export const BusquedaConcepto: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              </Grid> */}
+              <Grid item xs={12} sm={6}  >
                 <Controller
                   name="nombre_indicador"
                   control={control}
@@ -294,7 +294,7 @@ export const BusquedaConcepto: React.FC = () => {
                   ) => (
                     <TextField
                       fullWidth
-                      label="Nombre indicador"
+                      label="Cuenta"
                       value={value}
                       onChange={onChange}
                       size="small"
@@ -304,11 +304,20 @@ export const BusquedaConcepto: React.FC = () => {
                   )}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={3} container justifyContent="end">
+              <Grid
+              container
+              spacing={2}
+              marginTop={2}
+              direction="row"
+              justifyContent="flex-end"
+              alignItems="center"
+            >
+            <Grid item >
                 <LoadingButton
                   type="submit"
                   variant="contained"
                   color="primary"
+                  fullWidth
                   startIcon={<SearchIcon />}
                   loading={is_search}
                   disabled={is_search}
@@ -318,7 +327,9 @@ export const BusquedaConcepto: React.FC = () => {
                 >
                   Buscar
                 </LoadingButton>
-              </Grid>
+              </Grid>    
+            </Grid>
+            
               {rows.length > 0 && (
                 <>
                   <Grid item xs={12}>

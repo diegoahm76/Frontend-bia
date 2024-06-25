@@ -593,9 +593,9 @@ export const Archibo: React.FC<IProps> = (props: IProps) => {
 
 
 
-                <Grid item xs={12} sm={6}>
+                {/* <Grid item xs={12} sm={6}>
                     <button onClick={() => console.log(lt_tipologias)} >Haz clic aquí</button>
-                </Grid>
+                </Grid> */}
                 {/* {props.expediente.cod_tipo_expediente} */}
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
