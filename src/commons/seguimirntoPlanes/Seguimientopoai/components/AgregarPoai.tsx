@@ -193,12 +193,24 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
     // console.log(formDatagregar.fechaTerminacion);
     console.log('2222222');
   };
-
+  const transformEmptyFieldsToNull = (obj: any) => {
+    const result: any = {};
+    for (const key in obj) {
+      if (obj[key] === '') {
+        result[key] = null;
+      } else {
+        result[key] = obj[key];
+      }
+    }
+    return result;
+  };
   // selecTodosId.id_seguimiento
   const editartabla = async () => {
     try {
+      const formDatagregarToSend = transformEmptyFieldsToNull(formDatagregar);
+
       const url = `seguimiento-planes/actualizar-seguimiento-poai/${selectid.id_seguimiento}/`;
-      const res = await api.put(url, formDatagregar);
+      const res = await api.put(url, formDatagregarToSend);
       console.log('Configuración actualizada con éxito', res.data);
       consultarSeguimiento();
       control_success('Editado correctamente');
@@ -210,8 +222,9 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
 
   const crearConfiguracion = async () => {
     try {
+      const formDatagregarToSend = transformEmptyFieldsToNull(formDatagregar);
       const url = '/seguimiento-planes/crear-seguimiento-poai/';
-      const res = await api.post(url, formDatagregar);
+      const res = await api.post(url, formDatagregarToSend);
       console.log('Formulario creado con éxito', res.data);
       control_success('Formulario creado con éxito');
       setFormDataCrear(initialFormDataCrear);
@@ -362,7 +375,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             size="small"
             variant="outlined"
             label="Responsable "
-            // name="id_unidad_organizacional"
+            name="id_unidad_organizacional"
             disabled
             // value={formDatagregar.id_unidad_organizacional}
             value={selecTodosId.nombre_responsable}

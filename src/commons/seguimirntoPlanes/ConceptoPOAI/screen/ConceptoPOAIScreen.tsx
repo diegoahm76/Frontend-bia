@@ -34,7 +34,7 @@ import {
   Actividad,
   Indicador,
   metas,
-  EjeEstrategico, 
+  EjeEstrategico,
 } from '../../Seguimientopoai/interface/types';
 import {
   fetplames,
@@ -70,13 +70,15 @@ export interface UnidadOrganizaciona {
 export interface FormData {
   meta: any;
   plan: any;
-  rubro:any;
+  rubro: any;
   programa: any;
   proyecto: any;
   producto: any;
   actividad: any;
   indicador: any;
   eje: any;
+  cuenta: any;
+  cod_presupuestal: any;
 }
 interface Modalidad {
   id_modalidad: number;
@@ -88,15 +90,15 @@ interface Modalidad {
 }
 
 interface ConceptoPoai {
-  id_plan: any;
-  id_proyecto: any;
-  id_rubro: any;
-  id_indicador: any;
-  id_meta: any;
-  id_modalidad: any;
-  id_unidad_organizacional: any;
-  nombre_concepto: string;
-  valor_inicial: any;
+  id_plan: number | null;
+  id_proyecto: number | null;
+  id_rubro: number | null;
+  id_indicador: number | null;
+  id_meta: number | null;
+  id_modalidad: number | null;
+  id_unidad_organizacional: number | null;
+  nombre_concepto: string | null;
+  valor_inicial: number | null;
 }
 interface Rubro {
   id_rubro: number;
@@ -116,13 +118,15 @@ export const ConceptoPOAIScreen: React.FC = () => {
   const initialFormData: FormData = {
     eje: '',
     meta: '',
-    rubro:"",
+    rubro: '',
     plan: '',
     programa: '',
     proyecto: '',
     producto: '',
     actividad: '',
     indicador: '',
+    cod_presupuestal: '',
+    cuenta: '',
   };
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
@@ -133,49 +137,48 @@ export const ConceptoPOAIScreen: React.FC = () => {
   };
 
   const initialConceptoPoai: ConceptoPoai = {
-    id_plan: '',
-    id_proyecto: '',
-    id_rubro: '',
-    id_indicador: '',
-    id_meta: '',
-    id_modalidad: '',
-    id_unidad_organizacional: '',
-    nombre_concepto: '',
-    valor_inicial: '',
+    id_plan: null,
+    id_proyecto: null,
+    id_rubro: null,
+    id_indicador: null,
+    id_meta: null,
+    id_modalidad: null,
+    id_unidad_organizacional: null,
+    nombre_concepto: null,
+    valor_inicial: null,
   };
   const [conceptoPoai, setConceptoPoai] =
     useState<ConceptoPoai>(initialConceptoPoai);
 
-  const handleInputChange = (event: any) => {
-    const { name, value } = event.target;
-
-    const numberFields = [
-      'id_plan',
-      'id_proyecto',
-      'id_rubro',
-      'id_indicador',
-      'id_meta',
-      'id_modalidad',
-      'id_unidad_organizacional',
-      'valor_inicial',
-    ];
-
-    if (numberFields.includes(name)) {
-      if (!/^\d*$/.test(value)) {
-        return;
-      }
-    }
-
-    const convertValue = (name: string, value: string): any => {
-      if (numberFields.includes(name)) {
-        return value === '' ? '' : Number(value);
-      } else {
-        return value;
-      }
+    const handleInputChange = (event: any) => {
+      const { name, value } = event.target;
+    
+      const numberFields = [
+        'id_plan',
+        'id_proyecto',
+        'id_rubro',
+        'id_indicador',
+        'id_meta',
+        'id_modalidad',
+        'id_unidad_organizacional',
+        'valor_inicial',
+      ];
+    
+      const convertValue = (name: string, value: string): any => {
+        if (value === '') {
+          return null;
+        }
+    
+        if (numberFields.includes(name)) {
+          return Number(value);
+        } else {
+          return value;
+        }
+      };
+    
+      setConceptoPoai({ ...conceptoPoai, [name]: convertValue(name, value) });
     };
-
-    setConceptoPoai({ ...conceptoPoai, [name]: convertValue(name, value) });
-  };
+    
   const [selecTodosId, setSelecTodosId] = useState<any>('');
   useEffect(() => {
     if (selecTodosId) {
@@ -211,7 +214,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
     }
   }, [selecTodosId]);
 
-  
   useEffect(() => {
     setConceptoPoai((prevData: any) => ({
       ...prevData,
@@ -229,12 +231,29 @@ export const ConceptoPOAIScreen: React.FC = () => {
 
   const [abrir0, setabrir0] = useState(false);
   const [abrir1, setabrir1] = useState(false);
+  const [uno1, setuno1] = useState(false);
 
   const [Historico, setHistorico] = useState<Concepto[]>([]);
   const fetchHistorico = async (): Promise<void> => {
     try {
       const url = `seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`;
+      setuno1(true)
+      // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
+      const res = await api.get(url);
+      const HistoricoData: Concepto[] = res.data?.data || [];
+      setHistorico(HistoricoData); 
+      setabrir0(true);
+      control_success('Datos encontrados con exito');
+    } catch (error: any) {
+      // console.error(error);
+      control_error(error.response.data.detail);
+    }
+  };
 
+  const fetchbusquedaDos = async (): Promise<void> => {
+    try {
+      const url = `seguimiento-planes/consultar-conceptos-poai-avanzado/?cod_pre=${formData.cod_presupuestal}&cuenta=${formData.cuenta}`;
+      setuno1(false)
       // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
       const res = await api.get(url);
       const HistoricoData: Concepto[] = res.data?.data || [];
@@ -246,6 +265,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
       control_error(error.response.data.detail);
     }
   };
+
   const [editar, seteditar] = useState(false);
 
   const handlcerrar = () => {
@@ -319,8 +339,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
   const [actividad, setactividad] = useState<Actividad[]>([]);
   const [indicador, setindicador] = useState<Indicador[]>([]);
   const [ejeplan, setejeplan] = useState<EjeEstrategico[]>([]);
- 
-  
 
   useEffect(() => {
     fetplames({ setPlanes });
@@ -362,14 +380,31 @@ export const ConceptoPOAIScreen: React.FC = () => {
     fetmetas({ setmetas, formData });
   }, [formData.indicador]);
 
+  
+  const transformEmptyFieldsToNull = (obj: any) => {
+    const result: any = {};
+    for (const key in obj) {
+      if (obj[key] === '') {
+        result[key] = null;
+      } else {
+        result[key] = obj[key];
+      }
+    }
+    return result;
+  };
   //actualizar
   const editartabla = async () => {
     try {
+      const conceptoPoaiToSend = transformEmptyFieldsToNull(conceptoPoai);
       const url = `seguimiento-planes/actualizar-conceptos-poai/${selecTodosId.id_concepto}/`;
-      const res = await api.put(url, conceptoPoai);
+      const res = await api.put(url, conceptoPoaiToSend);
       console.log('Configuración actualizada con éxito', res.data);
       control_success('Editado correctamente');
-      fetchHistorico();
+      if (uno1) {
+        fetchHistorico();
+      } else {
+        fetchbusquedaDos();
+      }
     } catch (error: any) {
       console.error('Error al actualizar la configuración', error);
       control_error(error.response.data.detail);
@@ -377,20 +412,28 @@ export const ConceptoPOAIScreen: React.FC = () => {
   };
 
   //crear
+
+  
   const crearConfiguracion = async () => {
     try {
+      const conceptoPoaiToSend = transformEmptyFieldsToNull(conceptoPoai);
+  
       const url = 'seguimiento-planes/crear-conceptos-poai/';
-      const res = await api.post(url, conceptoPoai);
+      const res = await api.post(url, conceptoPoaiToSend);
       console.log('Formulario creado con éxito', res.data);
       control_success('Formulario creado con éxito');
       setConceptoPoai(initialConceptoPoai);
-      fetchHistorico();
+      if (uno1) {
+        fetchHistorico();
+      } else {
+        fetchbusquedaDos();
+      }
     } catch (error: any) {
       console.error('Error al crear el formulario', error);
       control_error(error.response.data.detail);
     }
   };
-
+  
   const handlecrear = () => {
     setabrir1(true);
     seteditar(false);
@@ -407,7 +450,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
       valor_inicial: '',
       id_unidad_organizacional: '',
       id_modalidad: '',
-
     }));
   };
 
@@ -416,13 +458,13 @@ export const ConceptoPOAIScreen: React.FC = () => {
   };
 
   const handleLimpiarClick = () => {
-    // setConceptoPoai((prevData: any) => ({
-    //   ...prevData,
-    //   nombre_concepto: '',
-    //   valor_inicial: '',
-    //   id_unidad_organizacional: '',
-    //   id_modalidad: '',
-    // }));
+    setConceptoPoai((prevData: any) => ({
+      ...prevData,
+      nombre_concepto: '',
+      valor_inicial: '',
+      id_unidad_organizacional: '',
+      id_modalidad: '',
+    }));
   };
 
   const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
@@ -460,12 +502,11 @@ export const ConceptoPOAIScreen: React.FC = () => {
     fetchmodalidad();
   }, []);
   const limpiartodo = (): void => {
-    setFormData(initialFormData)
-   };
+    setFormData(initialFormData);
+  };
 
-
-   const [cuenca, setcuenca] = useState<Rubro[]>([]);
-   const fetchcuenca = async () => {
+  const [cuenca, setcuenca] = useState<Rubro[]>([]);
+  const fetchcuenca = async () => {
     try {
       const url = `seguimiento/planes/consultar-rubros-id-meta/${formData.meta}/`;
       const res = await api.get(url);
@@ -481,10 +522,9 @@ export const ConceptoPOAIScreen: React.FC = () => {
     fetchcuenca();
   }, [formData.meta]);
 
-
   return (
     <>
-    {/* <Button
+      {/* <Button
                 color="primary"
                 variant="outlined"
                 fullWidth
@@ -686,7 +726,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
           </FormControl>
         </Grid>
 
- 
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label">
@@ -710,7 +749,10 @@ export const ConceptoPOAIScreen: React.FC = () => {
 
         <Grid item xs={12} sm={12}>
           <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label"> Nombre de la cuenta</InputLabel>
+            <InputLabel id="si-no-select-label">
+              {' '}
+              Nombre de la cuenta
+            </InputLabel>
             <Select
               name="rubro"
               // disabled
@@ -718,7 +760,12 @@ export const ConceptoPOAIScreen: React.FC = () => {
               value={formData.rubro}
               onChange={handleInputSelect}
             >
-              {cuenca.map((unidad: any) => (
+              {/* {cuenca.map((unidad: any) => (
+                <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
+                  {unidad.cuenta}
+                </MenuItem>
+              ))} */}
+              {cuenca.slice(0, 4).map((unidad: any) => (
                 <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
                   {unidad.cuenta}
                 </MenuItem>
@@ -726,8 +773,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
-
 
         <Grid
           container
@@ -789,9 +834,9 @@ export const ConceptoPOAIScreen: React.FC = () => {
             size="small"
             variant="outlined"
             label="Codigo presupuestal"
-            // name="id_unidad_organizacional"
-            // value={conceptoPoai.id_unidad_organizacional}
-            // onChange={handleInputChange}
+            name="cod_presupuestal"
+            value={formData.cod_presupuestal}
+            onChange={handleInputSelect}
           />
         </Grid>
 
@@ -801,9 +846,9 @@ export const ConceptoPOAIScreen: React.FC = () => {
             size="small"
             variant="outlined"
             label="Cuenta"
-            // name="id_unidad_organizacional"
-            // value={conceptoPoai.id_unidad_organizacional}
-            // onChange={handleInputChange}
+            name="cuenta"
+            value={formData.cuenta}
+            onChange={handleInputSelect}
           />
         </Grid>
 
@@ -820,7 +865,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
-              onClick={fetchHistorico}
+              onClick={fetchbusquedaDos}
             >
               Buscar
             </Button>
@@ -940,7 +985,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
               />
             </Grid>
 
-          
             <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
@@ -1014,7 +1058,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
                 </Select>
               </FormControl>
             </Grid>
-           
 
             <Grid
               container

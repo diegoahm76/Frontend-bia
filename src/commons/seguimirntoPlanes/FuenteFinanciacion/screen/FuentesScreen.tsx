@@ -375,8 +375,7 @@ export const FuentesScreen: React.FC = () => {
             color="primary"
             aria-label="Ver"
             onClick={() => {
-              setSelecTodosId(params.row);
-            
+              setSelecTodosId(params.row); 
               setConceptoPoai((prevData: any) => ({
                 ...prevData,
                 id_plan: formData.plan,
@@ -391,10 +390,7 @@ export const FuentesScreen: React.FC = () => {
                 vadicion4: selecTodosId.vadicion4 ,
                 valor_total: selecTodosId.valor_total ,
                
-              }));
-
-
-            
+              }));  
               setabrir1(true);
               seteditar(true);
             }}
@@ -709,7 +705,7 @@ export const FuentesScreen: React.FC = () => {
           }}
         >
           <RenderDataGrid
-            title="Resultados de la Búsqueda Fuentes de Financiacion "
+            title="Resultados de la Búsqueda Fuentes de Financiación "
             columns={columns ?? []}
             rows={Historico ?? []}
           />
