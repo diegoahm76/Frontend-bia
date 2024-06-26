@@ -226,7 +226,7 @@ export const Amortizacion: React.FC = () => {
               <Grid container marginTop={2} spacing={2}>
 
 
-                <Grid item xs={12} sm={3}>
+                {/* <Grid item xs={12} sm={3}>
                   <FormControl fullWidth size="small" required>
                     <InputLabel id="interes-label">
                       Tasa de Usura a Aplicar
@@ -244,9 +244,9 @@ export const Amortizacion: React.FC = () => {
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
 
-
+{/* 
                 <Grid item xs={12} sm={3}>
                   <TextField
                     disabled
@@ -255,8 +255,8 @@ export const Amortizacion: React.FC = () => {
                     fullWidth
                     value={`${tasa_diaria.toFixed(2)}`}
                   />
-                </Grid>
-                <Grid item xs={12} sm={3}>
+                </Grid> */}
+                {/* <Grid item xs={12} sm={3}>
                   <TextField
                     disabled
                     label="Valor del Abono"
@@ -273,7 +273,7 @@ export const Amortizacion: React.FC = () => {
                     fullWidth
                     value={''.concat(deudores.porcentaje_abonado.toString())}
                   />
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} sm={3}>
                   <TextField
                     label="Fecha Pago Abono"
@@ -400,6 +400,7 @@ export const Amortizacion: React.FC = () => {
                         num_periodicidad !== 0
                           ? num_periodicidad
                           : deudores.periodicidad,
+                          abono:0
                     })
                   );
                   void dispatch(

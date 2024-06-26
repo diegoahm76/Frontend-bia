@@ -15,6 +15,7 @@ import { ReposicionUsuario } from '../screens/ReposicionUsuario';
 import { ReposicionFuncionario } from '../screens/ReposicionFuncionario';
 import { NotificacionesRoutes } from '../notificaciones/routes/NotificacionesRoutes';
 import { ConceptoPago } from '../screens/ConceptoPago';
+import { AmortizacionModalPlanPagos } from '../screens/AmortizacionModalPlanPagos/AmortizacionModalPlanPagos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const FacilidadPagoRoutes: React.FC = () => {
@@ -27,6 +28,7 @@ export const FacilidadPagoRoutes: React.FC = () => {
       <Route path='asignadas' element={<FacilidadesPagoFuncionario />} />
       <Route path='solicitud' element={<ConsultaFacilidadFuncionario />} />
       <Route path='amortizacion' element={<Amortizacion />} />
+      <Route path='pruebaxxx' element={<AmortizacionModalPlanPagos/>} />
       <Route path='resolucion' element={<ResolucionRespuesta />} />
       <Route path='autorizadas' element={<FacilidadesPagoUsuario />} />
       <Route path='seguimiento' element={<ConsultaFacilidadUsuario />} />
