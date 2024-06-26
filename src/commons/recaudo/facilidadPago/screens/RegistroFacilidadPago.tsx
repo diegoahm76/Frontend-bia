@@ -21,6 +21,7 @@ import dayjs from 'dayjs';
 import { control_error } from '../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
+import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 
 interface RootStateDeudor {
   deudores: {
@@ -85,6 +86,11 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [identificacion_bien, set_identificacion_bien] = useState('');
   const [identificaciones_bienes, set_identificaciones_bienes] = useState(Array<string>);
   const [direccion_bien, set_direccion_bien] = useState('');
+
+  const set_value_direction = (direccion_notificacion: any): void => {
+    set_direccion_bien(direccion_notificacion);
+
+  };
   const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
   const [valor_bien, set_valor_bien] = useState(0);
   const [valores_bienes, set_valores_bienes] = useState(Array<number>);
@@ -95,11 +101,15 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [respuesta_registro, set_respuesta_registro] = useState<RespuestaRegistroFacilidad>();
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
-  
+
   const { form_files, name_files, handle_change_file, handle_delete_file } = useFormFiles({});
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
   const { solicitud_facilidad } = useSelector((state: RootStateSolicitud) => state.solicitud_facilidad);
+
+  const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
+  const [type_directionn, set_type_direction] = useState('');
+
 
   const handle_change_date_abono = (date: Date | null): void => {
     set_date_abono(date);
@@ -1161,7 +1171,43 @@ export const RegistroFacilidadPago: React.FC = () => {
                   }}
                 />
               </Grid>
+             
+              <DialogGeneradorDeDirecciones
+                open={opengeneradordireccioness}
+                openDialog={setopengeneradordireccioness}
+                onChange={set_value_direction}
+                type={type_directionn}
+              />
               <Grid item xs={12} sm={5}>
+
+                <TextField
+                  required
+                  label="Dirección"
+                  helperText='Escribe la Dirección'
+                  size="small"
+                  fullWidth
+                  disabled
+                  value={direccion_bien}
+                  name='direccion'
+                // onChange={(event: event) => {
+                //   const { value } = event.target
+                //   set_direccion_bien(value)
+                // }}
+                />
+              </Grid>
+              
+              <Grid item xs={12} sm={5}>
+                  <Button
+                    variant="contained"
+                    onClick={() => {
+                      setopengeneradordireccioness(true);
+                    }}
+                  >
+                    Generar dirección
+                  </Button>
+                </Grid>
+
+                 <Grid item xs={12} sm={5}>
                 <TextField
                   required
                   label="Avalúo"
@@ -1176,20 +1222,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={5}>
-                <TextField
-                  required
-                  label="Dirección"
-                  helperText='Escribe la Dirección'
-                  size="small"
-                  fullWidth
-                  name='direccion'
-                  onChange={(event: event) => {
-                    const { value } = event.target
-                    set_direccion_bien(value)
-                  }}
-                />
-              </Grid>
+
               <Grid item xs={12} sm={5}>
                 <Tooltip title={`Carga el Documento Impuesto`}>
                   <Button
@@ -1331,54 +1364,54 @@ export const RegistroFacilidadPago: React.FC = () => {
               spacing={2}
               sx={{ mb: '20px', mt: '20px' }}
             >
-            <Button
-  color='primary'
-  variant='contained'
-  startIcon={<Save />}
-  onClick={async () => {
-    const valorAbonado = form_state.valor_abonado;
+              <Button
+                color='primary'
+                variant='contained'
+                startIcon={<Save />}
+                onClick={async () => {
+                  const valorAbonado = form_state.valor_abonado;
 
-    if (valorAbonado > totalSum) {
-      Swal.fire({
-        icon: 'error',
-        title: "Valor abonado es mayor que la suma total",
-      });
-    } else {
-      try {
-        const { data: { data: res_registro } } = await post_registro_fac_pago({
-          ...form_state,
-          id_deudor: deudores.id,
-          id_tipo_actuacion: persona,
-          fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
-          periodicidad: num_periodicidad,
-          cuotas: plazo,
-          fecha_abono: dayjs(date_abono).format('YYYY-MM-DD'),
-          documento_no_enajenacion: form_files.documento_no_enajenacion,
-          consignacion_soporte: form_files.consignacion_soporte,
-          documento_soporte: form_files.documento_soporte,
-          id_funcionario: 1,
-          notificaciones: autorizacion_notificacion,
-          documento_garantia: form_files.documento_garantia,
-          ids_obligaciones: obligaciones_ids,
-          documento_deudor1: form_files.documento_identidad,
-          documento_deudor2: form_files.documento_respaldo,
-          documento_deudor3: form_files.certificado_legal,
-          id_tipo_bienes: tipos_bienes,
-          identificaciones: identificaciones_bienes,
-          direcciones: direcciones_bienes,
-          valores: valores_bienes,
-          documentos_soporte_bien: archivos_bienes,
-          id_ubicaciones: ubicaciones_bienes,
-        });
-        set_respuesta_registro(res_registro ?? {});
-      } catch (error: any) {
-        control_error(error.response.data.detail);
-      }
-    }
-  }}
->
-  Enviar Solicitud
-</Button>
+                  if (valorAbonado > totalSum) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: "Valor abonado es mayor que la suma total",
+                    });
+                  } else {
+                    try {
+                      const { data: { data: res_registro } } = await post_registro_fac_pago({
+                        ...form_state,
+                        id_deudor: deudores.id,
+                        id_tipo_actuacion: persona,
+                        fecha_generacion: dayjs(Date()).format('YYYY-MM-DD'),
+                        periodicidad: num_periodicidad,
+                        cuotas: plazo,
+                        fecha_abono: dayjs(date_abono).format('YYYY-MM-DD'),
+                        documento_no_enajenacion: form_files.documento_no_enajenacion,
+                        consignacion_soporte: form_files.consignacion_soporte,
+                        documento_soporte: form_files.documento_soporte,
+                        id_funcionario: 1,
+                        notificaciones: autorizacion_notificacion,
+                        documento_garantia: form_files.documento_garantia,
+                        ids_obligaciones: obligaciones_ids,
+                        documento_deudor1: form_files.documento_identidad,
+                        documento_deudor2: form_files.documento_respaldo,
+                        documento_deudor3: form_files.certificado_legal,
+                        id_tipo_bienes: tipos_bienes,
+                        identificaciones: identificaciones_bienes,
+                        direcciones: direcciones_bienes,
+                        valores: valores_bienes,
+                        documentos_soporte_bien: archivos_bienes,
+                        id_ubicaciones: ubicaciones_bienes,
+                      });
+                      set_respuesta_registro(res_registro ?? {});
+                    } catch (error: any) {
+                      control_error(error.response.data.detail);
+                    }
+                  }
+                }}
+              >
+                Enviar Solicitud
+              </Button>
 
             </Stack>
           </Box>
