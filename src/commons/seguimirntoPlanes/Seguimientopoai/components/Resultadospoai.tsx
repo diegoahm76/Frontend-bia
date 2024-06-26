@@ -240,9 +240,12 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, Consult
     { field: 'adicion1', headerName: 'Adicción 1', minWidth: 300, renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
+    
     { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
+
+
     { field: 'valor_fte2', headerName: 'Valor 2', minWidth: 300,renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
       const valorFormateado = new Intl.NumberFormat('es-CO', {

@@ -143,20 +143,31 @@ export const FuentesScreen: React.FC = () => {
     vano_2: '',
     vano_3: '',
     vano_4: '',
-    vadicion1: '',
-    vadicion2: '',
-    vadicion3: '',
-    vadicion4: '',
+    vadicion1: false,
+    vadicion2: false,
+    vadicion3: false,
+    vadicion4: false,
     valor_total: '',
     id_plan: '',
   };
   const [conceptoPoai, setConceptoPoai] =
     useState<ConceptoPoai>(initialConceptoPoai);
-    const handleInputChange = (event: any ) => {
+
+
+    const formatCurrency = (value: string) => {
+      if (!value) return '';
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        minimumFractionDigits: 0,
+      }).format(Number(value));
+    };
+    const handleInputChange = (event: any) => {
       const { name, value } = event.target;
     
       const numberFields = ['vano_1', 'vano_2', 'vano_3', 'id_plan', 'vano_4', 'valor_total'];
-      const booleanFields = ['vadicion1', 'vadicion2','vadicion3','vadicion4'];
+      const booleanFields = ['vadicion1', 'vadicion2', 'vadicion3', 'vadicion4'];
+      const currencyFields = ['vano_1', 'vano_2', 'vano_3', 'vano_4',"valor_total"]; // Lista de campos que deben formatearse como moneda
     
       const convertValue = (name: string, value: unknown): any => {
         if (numberFields.includes(name)) {
@@ -168,74 +179,63 @@ export const FuentesScreen: React.FC = () => {
         }
       };
     
-      setConceptoPoai({ ...conceptoPoai, [name as string]: convertValue(name as string, value) });
+      let formattedValue = value;
+      if (currencyFields.includes(name)) {
+        formattedValue = value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+      }
+    
+      setConceptoPoai({ ...conceptoPoai, [name as string]: convertValue(name as string, formattedValue) });
     };
-  // const handleInputChange = (event: any) => {
-  //   const { name, value } = event.target;
 
-  //   const numberFields = ['vano_1', 'vano_2', 'vano_3', 'id_plan', 'vano_4'];
+    
+    // const handleInputChange = (event: any ) => {
+    //   const { name, value } = event.target;
+    
+    //   const numberFields = ['vano_1', 'vano_2', 'vano_3', 'id_plan', 'vano_4', 'valor_total'];
+    //   const booleanFields = ['vadicion1', 'vadicion2','vadicion3','vadicion4'];
+    
+    //   const convertValue = (name: string, value: unknown): any => {
+    //     if (numberFields.includes(name)) {
+    //       return value === '' ? null : Number(value);
+    //     } else if (booleanFields.includes(name)) {
+    //       return value === 'true' || value === '1' ? true : false;
+    //     } else {
+    //       return value;
+    //     }
+    //   };
+    
+    //   setConceptoPoai({ ...conceptoPoai, [name as string]: convertValue(name as string, value) });
+    // };
 
-  //   if (numberFields.includes(name)) {
-  //     if (!/^\d*$/.test(value)) {
-  //       return;
-  //     }
-  //   }
-
-  //   const convertValue = (name: string, value: string): any => {
-  //     if (numberFields.includes(name)) {
-  //       return value === '' ? '' : Number(value);
-  //     } else {
-  //       return value;
-  //     }
-  //   };
-
-  //   setConceptoPoai({ ...conceptoPoai, [name]: convertValue(name, value) });
-  // };
   const [selecTodosId, setSelecTodosId] = useState<any>('');
+  
   useEffect(() => {
     if (selecTodosId) {
-      setConceptoPoai((prevData: any) => ({
-        ...prevData,
+      setConceptoPoai({
         id_plan: formData.plan,
         nombre_fuente: selecTodosId.nombre_fuente,
-        vano_1: selecTodosId.vano_1 ,
-        vano_2: selecTodosId.vano_2 ,
-        vano_3: selecTodosId.vano_3 ,
-        vano_4: selecTodosId.vano_4 ,
-        vadicion1: selecTodosId.vadicion1 ,
-        vadicion2: selecTodosId.vadicion2 ,
-        vadicion3: selecTodosId.vadicion3 ,
-        vadicion4: selecTodosId.vadicion4 ,
-        valor_total: selecTodosId.valor_total ,
-       
-      }));
+        vano_1: selecTodosId.vano_1,
+        vano_2: selecTodosId.vano_2,
+        vano_3: selecTodosId.vano_3,
+        vano_4: selecTodosId.vano_4,
+        vadicion1: selecTodosId.vadicion1,
+        vadicion2: selecTodosId.vadicion2,
+        vadicion3: selecTodosId.vadicion3,
+        vadicion4: selecTodosId.vadicion4,
+        valor_total: selecTodosId.valor_total,
+      });
     }
   }, [selecTodosId]);
-  useEffect(() => {
-    setConceptoPoai((prevData: any) => ({
-      ...prevData,
-      id_plan: formData.plan,
-      nombre_fuente: selecTodosId.nombre_fuente,
-      vano_1: selecTodosId.vano_1 ,
-      vano_2: selecTodosId.vano_2 ,
-      vano_3: selecTodosId.vano_3 ,
-      vano_4: selecTodosId.vano_4 ,
-      vadicion1: selecTodosId.vadicion1 ,
-      vadicion2: selecTodosId.vadicion2 ,
-      vadicion3: selecTodosId.vadicion3 ,
-      vadicion4: selecTodosId.vadicion4 ,
-      valor_total: selecTodosId.valor_total ,
-     
-    }));
-  }, [selecTodosId?.id_fuente]);
+  
+
 
   const [abrir0, setabrir0] = useState(false);
   const [abrir1, setabrir1] = useState(false);
-
+ 
   const [Historico, setHistorico] = useState<Concepto[]>([]);
   const fetchHistorico = async (): Promise<void> => {
     try {
-      const url = `seguimiento-planes/consultar-fuentes-financiacion-indicadores-lista/`;
+      const url = `seguimiento-planes/consultar-fuentes-financiacion-indicadores-id-plan/${formData.plan}/`;
 
       // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
       const res = await api.get(url);
@@ -245,6 +245,7 @@ export const FuentesScreen: React.FC = () => {
       control_success('Datos encontrados con exito');
     } catch (error: any) {
       // console.error(error);
+      setabrir0(true)
       control_error(error.response.data.detail);
     }
   };
@@ -254,6 +255,7 @@ export const FuentesScreen: React.FC = () => {
     setabrir1(false);
     setabrir0(false);
   };
+ 
   const columns = [
     {
       field: 'nombre_fuente',
@@ -375,90 +377,51 @@ export const FuentesScreen: React.FC = () => {
             color="primary"
             aria-label="Ver"
             onClick={() => {
-              setSelecTodosId(params.row); 
-              setConceptoPoai((prevData: any) => ({
-                ...prevData,
-                id_plan: formData.plan,
-                nombre_fuente: selecTodosId.nombre_fuente,
-                vano_1: selecTodosId.vano_1 ,
-                vano_2: selecTodosId.vano_2 ,
-                vano_3: selecTodosId.vano_3 ,
-                vano_4: selecTodosId.vano_4 ,
-                vadicion1: selecTodosId.vadicion1 ,
-                vadicion2: selecTodosId.vadicion2 ,
-                vadicion3: selecTodosId.vadicion3 ,
-                vadicion4: selecTodosId.vadicion4 ,
-                valor_total: selecTodosId.valor_total ,
-               
-              }));  
-              setabrir1(true);
+              setSelecTodosId(params.row);
               seteditar(true);
+              setabrir1(true); // Mover esta línea aquí
             }}
           >
             <EditIcon />
           </IconButton>
         </>
       ),
-    },
+    }
+    
+   
   ];
 
-  const [metas, setmetas] = useState<metas[]>([]);
+  
   const [planes, setPlanes] = useState<Planes[]>([]);
-  const [programa, setPrograma] = useState<Programa[]>([]);
-  const [proyecto, setProyecto] = useState<Proyecto[]>([]);
-  const [producto, setProducto] = useState<Producto[]>([]);
-  const [actividad, setactividad] = useState<Actividad[]>([]);
-  const [indicador, setindicador] = useState<Indicador[]>([]);
-  const [ejeplan, setejeplan] = useState<EjeEstrategico[]>([]);
+ 
 
   useEffect(() => {
     fetplames({ setPlanes });
   }, []);
 
-  useEffect(() => {
-    setFormData((prevData: any) => ({
-      ...prevData,
-      eje: '',
-    }));
-    fetejeplan({ setejeplan, formData });
-  }, [formData.plan]);
-
-  useEffect(() => {
-    fetprogramas({ setPrograma, formData });
-  }, [formData.eje]);
-
-  useEffect(() => {
-    fetproyecto({ setProyecto, formData });
-  }, [formData.programa]);
-
-  useEffect(() => {
-    fetproducto({ setProducto, formData });
-  }, [formData.proyecto]);
-
-  useEffect(() => {
-    fetactividad({ setactividad, formData });
-  }, [formData.producto]);
-
-  useEffect(() => {
-    fetindicador({ setindicador, formData });
-  }, [formData.actividad]);
-
-  useEffect(() => {
-    setFormData((prevData: any) => ({
-      ...prevData,
-      meta: '',
-    }));
-    fetmetas({ setmetas, formData });
-  }, [formData.indicador]);
+  const transformEmptyFieldsToNull = (obj: any) => {
+    const result: any = {};
+    for (const key in obj) {
+      if (obj[key] === '') {
+        result[key] = null;
+      } else {
+        result[key] = obj[key];
+      }
+    }
+    return result;
+  };
 
   //actualizar
   const editartabla = async () => {
     try {
+      
+      const conceptoPoaiToSend = transformEmptyFieldsToNull(conceptoPoai);
       const url = `seguimiento-planes/actualizar-fuentes-financiacion-indicadores/${selecTodosId.id_fuente}/`;
-      const res = await api.put(url, conceptoPoai);
+      const res = await api.put(url, conceptoPoaiToSend);
       console.log('Configuración actualizada con éxito', res.data);
       control_success('Editado correctamente');
       fetchHistorico();
+      setabrir1(false)
     } catch (error: any) {
       console.error('Error al actualizar la configuración', error);
       control_error(error.response.data.detail);
@@ -468,12 +431,15 @@ export const FuentesScreen: React.FC = () => {
   //crear
   const crearConfiguracion = async () => {
     try {
+      const conceptoPoaiToSend = transformEmptyFieldsToNull(conceptoPoai);
+
       const url = 'seguimiento-planes/crear-fuentes-financiacion-indicadores/';
-      const res = await api.post(url, conceptoPoai);
+      const res = await api.post(url, conceptoPoaiToSend);
       console.log('Formulario creado con éxito', res.data);
       control_success('Formulario creado con éxito');
       setConceptoPoai(initialConceptoPoai);
       fetchHistorico();
+      setabrir1(false)
     } catch (error: any) {
       console.error('Error al crear el formulario', error);
       control_error(error.response.data.detail);
@@ -484,20 +450,19 @@ export const FuentesScreen: React.FC = () => {
     setabrir1(true);
     seteditar(false);
 
-    // setConceptoPoai((prevData: any) => ({
-    //   ...prevData,
-    //   id_plan: formData.plan,
-    //   id_proyecto: formData.proyecto,
-    //   id_indicador: formData.indicador,
-    //   id_meta: formData.meta,
-
-    //   nombre_concepto: '',
-    //   valor_inicial: '',
-    //   id_unidad_organizacional: '',
-    //   id_modalidad: '',
-
-    //   id_rubro: 1,
-    // }));
+    setConceptoPoai({
+      id_plan: formData.plan,
+      nombre_fuente: "",
+      vano_1: "",
+      vano_2: "",
+      vano_3: "",
+      vano_4: "",
+      vadicion1: false,
+      vadicion2: false,
+      vadicion3: false,
+      vadicion4: false,
+      valor_total: "",
+    });
   };
 
   const handlecerrar = () => {
@@ -513,10 +478,10 @@ export const FuentesScreen: React.FC = () => {
       vano_2: "" ,
       vano_3: "" ,
       vano_4: "",
-      vadicion1: "" ,
-      vadicion2: "" ,
-      vadicion3: "" ,
-      vadicion4: "" ,
+      vadicion1: false,
+      vadicion2: false,
+      vadicion3: false,
+      vadicion4: false,
       valor_total: "" ,
      
     }));
@@ -586,7 +551,7 @@ export const FuentesScreen: React.FC = () => {
   };
   return (
     <>
-    <Button
+    {/* <Button
                 color="primary"
                 variant="outlined"
                 fullWidth
@@ -594,7 +559,7 @@ export const FuentesScreen: React.FC = () => {
                 // startIcon={<SaveIcon />}
               >
               
-              </Button>
+              </Button> */}
       <Grid
         container
         item
@@ -652,7 +617,8 @@ export const FuentesScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
+        {/* validar el buscar en disable  */}
+{/* filtro ,en valor se agregan dos .00 al crear  */}
         <Grid
           container
           spacing={2}
@@ -661,22 +627,13 @@ export const FuentesScreen: React.FC = () => {
           justifyContent="flex-end"
           alignItems="center"
         >
-          <Grid item>
-            <Button
-              color="error"
-              variant="outlined"
-              fullWidth
-              onClick={handlcerrar}
-              startIcon={<ClearIcon />}
-            >
-              cerrar
-            </Button>
-          </Grid>
+          
           <Grid item>
             <Button
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
+              disabled={!formData.plan}
               onClick={fetchHistorico}
             >
               Buscar
@@ -725,7 +682,7 @@ export const FuentesScreen: React.FC = () => {
                 onClick={handlecrear}
                 // startIcon={<SaveIcon />}
               >
-                Agregar segrimiento POAI
+                Agregar fuente 
               </Button>
             </Grid>
           </Grid>
@@ -816,7 +773,7 @@ export const FuentesScreen: React.FC = () => {
                 variant="outlined"
                 label="Valor total"
                 name="valor_total"
-                value={conceptoPoai.valor_total}
+                value={formatCurrency(conceptoPoai.valor_total)}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -831,7 +788,7 @@ export const FuentesScreen: React.FC = () => {
                 variant="outlined"
                 label="Valor añor 1"
                 name="vano_1"
-                value={conceptoPoai.vano_1}
+                value={formatCurrency(conceptoPoai.vano_1)}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -846,7 +803,7 @@ export const FuentesScreen: React.FC = () => {
                 variant="outlined"
                 label="Valor añor 2"
                 name="vano_2"
-                value={conceptoPoai.vano_2}
+                value={formatCurrency(conceptoPoai.vano_2)}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -861,7 +818,7 @@ export const FuentesScreen: React.FC = () => {
                 variant="outlined"
                 label="Valor añor 3"
                 name="vano_3"
-                value={conceptoPoai.vano_3}
+                value={formatCurrency(conceptoPoai.vano_3)}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -875,7 +832,7 @@ export const FuentesScreen: React.FC = () => {
                 variant="outlined"
                 label="Valor añor 4"
                 name="vano_4"
-                value={conceptoPoai.vano_4}
+                value={formatCurrency(conceptoPoai.vano_4)}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -990,7 +947,7 @@ export const FuentesScreen: React.FC = () => {
                   onClick={editar ? editartabla : crearConfiguracion}
                   startIcon={<SaveIcon />}
                 >
-                  {editar ? 'Editar' : 'Guardar'}
+                  {editar ? 'Actualizar' : 'Guardar'}
                 </Button>
               </Grid>
             </Grid>
