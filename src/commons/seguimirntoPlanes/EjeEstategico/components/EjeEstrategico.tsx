@@ -50,29 +50,35 @@ import {
   fetindicador,
 } from '../../Seguimientopoai/services/select.service';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { GridRenderCellParams } from '@mui/x-data-grid';
 
-export interface Concepto {
-  id_concepto: 0;
-  id_indicador: 0;
-  id_meta: 0;
-  id_modalidad: 0;
-  id_plan: 0;
-  id_proyecto: 0;
-  id_rubro: 0;
-  id_unidad_organizacional: 0;
-  nombre_concepto: '';
-  nombre_modalidad: '';
-  nombre_responsable: '';
-  valor_inicial: any;
+export interface Rubrog {
+  cod_pre: any;
+  cuenta:any 
+  id_plan:any; 
+  id_rubro :any; 
 }
-
+export interface Fuente {
+  id_fuente: number;
+  nombre_fuente: string;
+  vano_1: number | null;
+  vano_2: number | null;
+  vano_3: number | null;
+  vano_4: number | null;
+  vadicion1: number | null;
+  vadicion2: number | null;
+  vadicion3: number | null;
+  vadicion4: boolean | null;
+  valor_total: number;
+  id_plan: number;
+}
 export interface UnidadOrganizaciona {
   nombre: string;
   id_unidad_organizacional: number;
 }
 export interface FormData {
   meta: any;
-  plan: any;
+  plans: any;
   programa: any;
   proyecto: any;
   producto: any;
@@ -90,15 +96,9 @@ interface Modalidad {
 }
 
 interface ConceptoPoai {
+  cod_pre: any;
+  cuenta: any;
   id_plan: any;
-  id_proyecto: any;
-  id_rubro: any;
-  id_indicador: any;
-  id_meta: any;
-  id_modalidad: any;
-  id_unidad_organizacional: any;
-  nombre_concepto: string;
-  valor_inicial: any;
 }
 
 // export const Resultados: React.FC = () => {
@@ -106,7 +106,7 @@ export const ConseptoPoai: React.FC = () => {
   const initialFormData: FormData = {
     eje: '',
     meta: '',
-    plan: '',
+    plans: '',
     programa: '',
     proyecto: '',
     producto: '',
@@ -122,97 +122,63 @@ export const ConseptoPoai: React.FC = () => {
   };
 
   const initialConceptoPoai: ConceptoPoai = {
+    cod_pre: '',
+    cuenta: '',
     id_plan: '',
-    id_proyecto: '',
-    id_rubro: '',
-    id_indicador: '',
-    id_meta: '',
-    id_modalidad: '',
-    id_unidad_organizacional: '',
-    nombre_concepto: '',
-    valor_inicial: '',
   };
   const [conceptoPoai, setConceptoPoai] =
     useState<ConceptoPoai>(initialConceptoPoai);
-
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
 
-    const numberFields = [
-      'id_plan',
-      'id_proyecto',
-      'id_rubro',
-      'id_indicador',
-      'id_meta',
-      'id_modalidad',
-      'id_unidad_organizacional',
-      'valor_inicial',
-    ];
+    const numberFields = ["" ];
+    const booleanFields = ['vadicion1'];
 
-    if (numberFields.includes(name)) {
-      if (!/^\d*$/.test(value)) {
-        return;
-      }
-    }
-
-    const convertValue = (name: string, value: string): any => {
+    const convertValue = (name: string, value: unknown): any => {
       if (numberFields.includes(name)) {
-        return value === '' ? '' : Number(value);
+        return value === '' ? null : Number(value);
+      } else if (booleanFields.includes(name)) {
+        return value === 'true' || value === '1' ? true : false;
       } else {
         return value;
       }
     };
 
-    setConceptoPoai({ ...conceptoPoai, [name]: convertValue(name, value) });
+    setConceptoPoai({
+      ...conceptoPoai,
+      [name as string]: convertValue(name as string, value),
+    });
   };
+
   const [selecTodosId, setSelecTodosId] = useState<any>('');
+
   useEffect(() => {
     if (selecTodosId) {
-      setConceptoPoai((prevData: any) => ({
-        ...prevData,
+      setConceptoPoai({
+        cod_pre: selecTodosId.cod_pre,
+        cuenta: selecTodosId.cuenta,
         id_plan: selecTodosId.id_plan,
-        id_proyecto: selecTodosId.id_proyecto,
-        id_rubro: selecTodosId.id_rubro,
-        id_indicador: selecTodosId.id_indicador,
-        id_meta: selecTodosId.id_meta,
-        id_modalidad: selecTodosId.id_modalidad,
-        id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-        nombre_concepto: selecTodosId.nombre_concepto,
-        valor_inicial: selecTodosId.valor_inicial,
-      }));
+      });
     }
   }, [selecTodosId]);
-  useEffect(() => {
-    setConceptoPoai((prevData: any) => ({
-      ...prevData,
-      id_plan: selecTodosId.id_plan,
-      id_proyecto: selecTodosId.id_proyecto,
-      id_rubro: selecTodosId.id_rubro,
-      id_indicador: selecTodosId.id_indicador,
-      id_meta: selecTodosId.id_meta,
-      id_modalidad: selecTodosId.id_modalidad,
-      id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-      nombre_concepto: selecTodosId.nombre_concepto,
-      valor_inicial: selecTodosId.valor_inicial,
-    }));
-  }, [selecTodosId?.id_concepto]);
 
   const [abrir0, setabrir0] = useState(false);
   const [abrir1, setabrir1] = useState(false);
 
-  const [Historico, setHistorico] = useState<Concepto[]>([]);
+  const [Rubro, setRubro] = useState<Rubrog[]>([]);
   const fetchHistorico = async (): Promise<void> => {
     try {
-      const url = `seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`;
+      const url = `seguimiento/planes/consultar-parametrica-rubros-id-plan/${formData.plans}/`;
 
       // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
       const res = await api.get(url);
-      const HistoricoData: Concepto[] = res.data?.data || [];
-      setHistorico(HistoricoData);
+      const HistoricoData: Rubrog[] = res.data?.data || [];
+      setRubro(HistoricoData);
       setabrir0(true);
       control_success('Datos encontrados con exito');
     } catch (error: any) {
       // console.error(error);
+      setabrir0(true)
       control_error(error.response.data.detail);
     }
   };
@@ -222,32 +188,19 @@ export const ConseptoPoai: React.FC = () => {
     setabrir1(false);
     setabrir0(false);
   };
+
   const columns = [
     {
-      field: 'nombre_concepto',
-      headerName: 'Nombre de concepto ',
-      minWidth: 400,
+      field: 'cod_pre',
+      headerName: 'Codigo presupuestal',
+      minWidth: 500,
     },
     {
-      field: 'valor_inicial',
-      headerName: 'Valor inicial',
-      minWidth: 300,
-      renderCell: (params: any) => {
-        // Formatear el valor a pesos colombianos
-        const valorFormateado = new Intl.NumberFormat('es-CO', {
-          style: 'currency',
-          currency: 'COP',
-          minimumFractionDigits: 0, // Ajusta según la precisión deseada
-        }).format(params.value);
-        return <>{valorFormateado}</>;
-      },
+      field: 'cuenta',
+      headerName: 'Cuenta',
+      minWidth: 1400,
     },
-    { field: 'nombre_responsable', headerName: 'Responsable', minWidth: 400 },
-    {
-      field: 'nombre_modalidad',
-      headerName: 'Movilidad de contratación',
-      minWidth: 400,
-    },
+
     {
       field: 'Acciones',
       headerName: 'Acciones',
@@ -259,19 +212,8 @@ export const ConseptoPoai: React.FC = () => {
             aria-label="Ver"
             onClick={() => {
               setSelecTodosId(params.row);
-              setConceptoPoai({
-                id_plan: params.row.id_plan,
-                id_proyecto: params.row.id_proyecto,
-                id_rubro: params.row.id_rubro,
-                id_indicador: params.row.id_indicador,
-                id_meta: params.row.id_meta,
-                id_modalidad: params.row.id_modalidad,
-                id_unidad_organizacional: params.row.id_unidad_organizacional,
-                nombre_concepto: params.row.nombre_concepto,
-                valor_inicial: params.row.valor_inicial,
-              });
-              setabrir1(true);
               seteditar(true);
+              setabrir1(true); // Mover esta línea aquí
             }}
           >
             <EditIcon />
@@ -281,102 +223,76 @@ export const ConseptoPoai: React.FC = () => {
     },
   ];
 
-  const [metas, setmetas] = useState<metas[]>([]);
   const [planes, setPlanes] = useState<Planes[]>([]);
-  const [programa, setPrograma] = useState<Programa[]>([]);
-  const [proyecto, setProyecto] = useState<Proyecto[]>([]);
-  const [producto, setProducto] = useState<Producto[]>([]);
-  const [actividad, setactividad] = useState<Actividad[]>([]);
-  const [indicador, setindicador] = useState<Indicador[]>([]);
-  const [ejeplan, setejeplan] = useState<EjeEstrategico[]>([]);
 
   useEffect(() => {
     fetplames({ setPlanes });
   }, []);
 
-  useEffect(() => {
-    setFormData((prevData: any) => ({
-      ...prevData,
-      eje: '',
-    }));
-    fetejeplan({ setejeplan, formData });
-  }, [formData.plan]);
-
-  useEffect(() => {
-    fetprogramas({ setPrograma, formData });
-  }, [formData.eje]);
-
-  useEffect(() => {
-    fetproyecto({ setProyecto, formData });
-  }, [formData.programa]);
-
-  useEffect(() => {
-    fetproducto({ setProducto, formData });
-  }, [formData.proyecto]);
-
-  useEffect(() => {
-    fetactividad({ setactividad, formData });
-  }, [formData.producto]);
-
-  useEffect(() => {
-    fetindicador({ setindicador, formData });
-  }, [formData.actividad]);
-
-  useEffect(() => {
-    setFormData((prevData: any) => ({
-      ...prevData,
-      meta: '',
-    }));
-    fetmetas({ setmetas, formData });
-  }, [formData.indicador]);
-
   //actualizar
+  // const editartabla = async () => {
+  //   try {
+  //     const url = `seguimiento/planes/actualizar-parametrica-rubros/${selecTodosId.id_rubro}/`;
+  //     const res = await api.put(url, conceptoPoai);
+  //     console.log('Configuración actualizada con éxito', res.data);
+  //     control_success('Editado correctamente');
+  //     fetchHistorico();
+  //     useState(false)
+  //   } catch (error: any) {
+  //     console.error('Error al actualizar la configuración', error);
+  //     control_error(error.response.data.detail);
+  //   }
+  // };
   const editartabla = async () => {
     try {
-      const url = `seguimiento-planes/actualizar-conceptos-poai/${selecTodosId.id_concepto}/`;
+      const url = `seguimiento/planes/actualizar-parametrica-rubros/${selecTodosId.id_rubro}/`;
       const res = await api.put(url, conceptoPoai);
-      console.log('Configuración actualizada con éxito', res.data);
-      control_success('Editado correctamente');
-      fetchHistorico();
+      if (res.data) {
+        console.log('Configuración actualizada con éxito', res.data);
+        control_success('Editado correctamente');
+        fetchHistorico();
+        setabrir1(false)
+      }
     } catch (error: any) {
       console.error('Error al actualizar la configuración', error);
-      control_error(error.response.data.detail);
+      control_error(error.response?.data?.detail || 'Error al actualizar la configuración');
     }
   };
-
   //crear
+  // const crearConfiguracion = async () => {
+  //   try {
+  //     const url = 'seguimiento/planes/crear-parametrica-rubros/';
+  //     const res = await api.post(url, conceptoPoai);
+  //     console.log('Formulario creado con éxito', res.data);
+  //     control_success('Formulario creado con éxito');
+  //     // setConceptoPoai(initialConceptoPoai);
+  //     fetchHistorico();
+  //     useState(false)
+  //   } catch (error: any) {
+  //     console.error('Error al crear el formulario', error);
+  //     control_error(error.response.data.detail);
+  //   }
+  // };
   const crearConfiguracion = async () => {
     try {
-      const url = 'seguimiento-planes/crear-conceptos-poai/';
+      const url = 'seguimiento/planes/crear-parametrica-rubros/';
       const res = await api.post(url, conceptoPoai);
-      console.log('Formulario creado con éxito', res.data);
-      control_success('Formulario creado con éxito');
-      setConceptoPoai(initialConceptoPoai);
-      fetchHistorico();
+      if (res.data) {
+        console.log('Formulario creado con éxito', res.data);
+        control_success('Formulario creado con éxito');
+        fetchHistorico();
+        setabrir1(false)
+      }
     } catch (error: any) {
       console.error('Error al crear el formulario', error);
-      control_error(error.response.data.detail);
+      control_error(error.response?.data?.detail || 'Error al crear el formulario');
     }
   };
-
   const handlecrear = () => {
     setabrir1(true);
     seteditar(false);
 
-    setConceptoPoai((prevData: any) => ({
-      ...prevData,
-      id_plan: formData.plan,
-      id_proyecto: formData.proyecto,
-      id_indicador: formData.indicador,
-      id_meta: formData.meta,
-
-      nombre_concepto: '',
-      valor_inicial: '',
-      id_unidad_organizacional: '',
-      id_modalidad: '',
-
-      id_rubro: 1,
-    }));
+ 
   };
 
   const handlecerrar = () => {
@@ -384,13 +300,12 @@ export const ConseptoPoai: React.FC = () => {
   };
 
   const handleLimpiarClick = () => {
-    // setConceptoPoai((prevData: any) => ({
-    //   ...prevData,
-    //   nombre_concepto: '',
-    //   valor_inicial: '',
-    //   id_unidad_organizacional: '',
-    //   id_modalidad: '',
-    // }));
+    setConceptoPoai((prevData: any) => ({
+      ...prevData,
+      cod_pre: '',
+      cuenta: '',
+      id_plan: '',
+    }));
   };
 
   const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
@@ -427,12 +342,37 @@ export const ConseptoPoai: React.FC = () => {
   useEffect(() => {
     fetchmodalidad();
   }, []);
+
+  const [fuente, fetfuente] = useState<Fuente[]>([]);
+
+  const fetfuented = async () => {
+    try {
+      const url =
+        'seguimiento-planes/consultar-fuentes-financiacion-indicadores-lista/';
+      const res = await api.get(url);
+      const unidadesData = res.data.data;
+      fetfuente(unidadesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    fetfuented();
+  }, []);
+
+  useEffect(() => {
+    setConceptoPoai((prevData: any) => ({
+      ...prevData,
+      id_plan: formData.plans,
+    }));
+  }, [formData.plans]);
+
   const limpiartodo = (): void => {
-    setFormData(initialFormData)
-   };
+    setFormData(initialFormData);
+  };
   return (
     <>
-    <Button
+      {/* <Button
                 color="primary"
                 variant="outlined"
                 fullWidth
@@ -440,7 +380,7 @@ export const ConseptoPoai: React.FC = () => {
                 // startIcon={<SaveIcon />}
               >
               
-              </Button>
+              </Button> */}
       <Grid
         container
         item
@@ -457,7 +397,7 @@ export const ConseptoPoai: React.FC = () => {
         }}
       >
         <Grid item xs={12} sm={12}>
-          <Title title="Registro de consepto POAI" />
+          <Title title=" Parámetro de rubros" />
         </Grid>
       </Grid>
 
@@ -477,17 +417,17 @@ export const ConseptoPoai: React.FC = () => {
         }}
       >
         <Grid item xs={12} sm={12}>
-          <Title title="Busquea por  Meta/Rubro" />
+          <Title title="Seleccione el plan de acción institucional " />
         </Grid>
         {/* {selectedConceptoId} */}
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label"> Nombre de plan</InputLabel>
             <Select
-              name="plan"
+              name="plans"
               // disabled
               label="Nombre de plan"
-              value={formData.plan}
+              value={formData.plans}
               onChange={handleInputSelect}
             >
               {planes.map((unidad: any) => (
@@ -498,184 +438,8 @@ export const ConseptoPoai: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label"> Nombre de eje</InputLabel>
-            <Select
-              name="eje"
-              // disabled
-              label="Nombre de plan"
-              value={formData.eje}
-              onChange={handleInputSelect}
-            >
-              {ejeplan.map((unidad: any) => (
-                <MenuItem
-                  key={unidad.id_eje_estrategico}
-                  value={unidad.id_eje_estrategico}
-                >
-                  {unidad.nombre}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label"> Nombre de programa</InputLabel>
-            <Select
-              name="programa"
-              // disabled
-              value={formData.programa}
-              onChange={handleInputSelect}
-              label="Nombre de programa"
-            >
-              {programa.map((programa: any) => (
-                <MenuItem
-                  key={programa.id_programa}
-                  value={programa.id_programa}
-                >
-                  {programa.nombre_programa}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth size="small">
-            <InputLabel>Nombre del proyecto </InputLabel>
-            <Select
-              value={formData.proyecto}
-              onChange={handleInputSelect}
-              name="proyecto"
-              //  disabled
-              label="Nombre del proyecto"
-            >
-              {proyecto.map((Proyecto: any) => (
-                <MenuItem
-                  key={Proyecto.id_proyecto}
-                  value={Proyecto.id_proyecto}
-                >
-                  {Proyecto.nombre_proyecto}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label">Nombre del producto</InputLabel>
-            <Select
-              name="producto"
-              label="Nombre del producto"
-              value={formData.producto}
-              onChange={handleInputSelect}
-            >
-              {producto.map((Proyecto: any) => (
-                <MenuItem
-                  key={Proyecto.id_producto}
-                  value={Proyecto.id_producto}
-                >
-                  {Proyecto.nombre_producto}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label">
-              {' '}
-              Nombre del la actividad
-            </InputLabel>
-            <Select
-              value={formData.actividad}
-              onChange={handleInputSelect}
-              name="actividad"
-              label="Nombre del la actividad "
-            >
-              {actividad.map((Proyecto: any) => (
-                <MenuItem
-                  key={Proyecto.id_actividad}
-                  value={Proyecto.id_actividad}
-                >
-                  {Proyecto.nombre_actividad}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label">
-              {' '}
-              Nombre del indicador
-            </InputLabel>
-            <Select
-              value={formData.indicador}
-              onChange={handleInputSelect}
-              name="indicador"
-              label="Nombre del la indicador "
-            >
-              {indicador.map((Proyecto: any) => (
-                <MenuItem
-                  key={Proyecto.id_indicador}
-                  value={Proyecto.id_indicador}
-                >
-                  {Proyecto.nombre_indicador}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
- 
-        <Grid item xs={12} sm={6}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label">
-              {' '}
-              Nombre del la Meta{' '}
-            </InputLabel>
-            <Select
-              name="meta"
-              value={formData.meta}
-              onChange={handleInputSelect}
-              label="Nombre del la Meta"
-            >
-              {metas.map((Proyecto: any) => (
-                <MenuItem key={Proyecto.id_meta} value={Proyecto.id_meta}>
-                  {Proyecto.nombre_indicador}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item xs={12} sm={12}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label"> Nombre de la cuenta</InputLabel>
-            <Select
-              name="Nombre de la cuenta"
-              // disabled
-              label="Nombre de la cuenta"
-              // value={formData.plan}
-              // onChange={handleInputSelect}
-            >
-              {planes.map((unidad: any) => (
-                <MenuItem key={unidad.id_plan} value={unidad.id_plan}>
-                  {unidad.nombre_plan}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-
+{/* EDITAR Y FILTRO  */}
+        
 
         <Grid
           container
@@ -685,7 +449,7 @@ export const ConseptoPoai: React.FC = () => {
           justifyContent="flex-end"
           alignItems="center"
         >
-          <Grid item>
+          {/* <Grid item>
             <Button
               color="error"
               variant="outlined"
@@ -695,12 +459,13 @@ export const ConseptoPoai: React.FC = () => {
             >
               cerrar
             </Button>
-          </Grid>
+          </Grid> */}
           <Grid item>
             <Button
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
+              disabled={!formData.plans}
               onClick={fetchHistorico}
             >
               Buscar
@@ -712,72 +477,6 @@ export const ConseptoPoai: React.FC = () => {
         </Grid>
       </Grid>
 
-      <Grid
-        container
-        item
-        xs={12}
-        spacing={2}
-        sx={{
-          position: 'relative',
-          background: '#FAFAFA',
-          borderRadius: '15px',
-          p: '20px',
-          m: '10px 0 20px 0',
-          mb: '20px',
-          boxShadow: '0px 3px 6px #042F4A26',
-        }}
-      >
-        <Grid item xs={12} sm={12}>
-          <Title title="Busqueda por Rubro / Codigo presupuestal" />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            size="small"
-            variant="outlined"
-            label="Codigo presupuestal"
-            // name="id_unidad_organizacional"
-            // value={conceptoPoai.id_unidad_organizacional}
-            // onChange={handleInputChange}
-          />
-        </Grid>
-
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            size="small"
-            variant="outlined"
-            label="Cuenta"
-            // name="id_unidad_organizacional"
-            // value={conceptoPoai.id_unidad_organizacional}
-            // onChange={handleInputChange}
-          />
-        </Grid>
-
-        <Grid
-          container
-          spacing={2}
-          marginTop={2}
-          direction="row"
-          justifyContent="flex-end"
-          alignItems="center"
-        >
-          <Grid item>
-            <Button
-              startIcon={<SearchOutlined />}
-              variant="contained"
-              fullWidth
-              onClick={fetchHistorico}
-            >
-              Buscar
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={1}>
-            <ButtonSalir />
-          </Grid>
-        </Grid>
-      </Grid>
       {abrir0 && (
         <Grid
           container
@@ -795,9 +494,9 @@ export const ConseptoPoai: React.FC = () => {
           }}
         >
           <RenderDataGrid
-            title="Resultados de la Búsqueda Conceptos POAI"
+            title="Resultados de la búsqueda parámetro de rubros "
             columns={columns ?? []}
-            rows={Historico ?? []}
+            rows={Rubro ?? []}
           />
           <Grid
             container
@@ -815,7 +514,7 @@ export const ConseptoPoai: React.FC = () => {
                 onClick={handlecrear}
                 // startIcon={<SaveIcon />}
               >
-                Agregar segrimiento POAI
+                Agregar Parámetro de rubro
               </Button>
             </Grid>
           </Grid>
@@ -873,97 +572,55 @@ export const ConseptoPoai: React.FC = () => {
             }}
           >
             <Grid item xs={12} sm={12}>
-              <Title title="Agregar concepto POAI" />
+              <Title title="Agregar parámetro de rubros" />
             </Grid>
-
             <Grid item xs={12} sm={12}>
-              <TextField
-                fullWidth
-                size="small"
-                variant="outlined"
-                label="Nombre del Concepto"
-                name="nombre_concepto"
-                value={conceptoPoai.nombre_concepto}
-                onChange={handleInputChange}
-              />
-            </Grid>
-
-          
-            <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                size="small"
-                variant="outlined"
-                label="Valor Inicial"
-                name="valor_inicial"
-                value={conceptoPoai.valor_inicial}
-                onChange={handleInputChange}
-              />
-            </Grid>
-            {/* <Grid item xs={12} sm={4}>
-              <TextField
-                fullWidth
-                size="small"
-                variant="outlined"
-                label="ID Modalidad"
-                name="id_modalidad"
-                value={conceptoPoai.id_modalidad}
-                onChange={handleInputChange}
-              />
-            </Grid> */}
-
-            <Grid item xs={12} sm={4}>
               <FormControl fullWidth size="small">
-                <InputLabel id="unidad-organizacional-select-label">
-                  Unidad Organizacional
-                </InputLabel>
+                <InputLabel id="si-no-select-label"> Nombre de plan</InputLabel>
                 <Select
-                  fullWidth
-                  size="small"
-                  variant="outlined"
-                  label="ID Unidad Organizacional"
-                  name="id_unidad_organizacional"
-                  value={conceptoPoai.id_unidad_organizacional}
+                  name="id_plan"
+                  value={conceptoPoai.id_plan}
+                  disabled 
                   onChange={handleInputChange}
+                  label="Nombre de plan"
                 >
-                  {unidades.map((unidad) => (
-                    <MenuItem
-                      key={unidad.id_unidad_organizacional}
-                      value={unidad.id_unidad_organizacional}
-                    >
-                      {unidad.nombre}
+                  {planes.map((unidad: any) => (
+                    <MenuItem key={unidad.id_plan} value={unidad.id_plan}>
+                      {unidad.nombre_plan}
                     </MenuItem>
                   ))}
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={4}>
-              <FormControl fullWidth size="small">
-                <InputLabel id="unidad-organizacional-select-label">
-                  Modalidad
-                </InputLabel>
-                <Select
-                  fullWidth
-                  size="small"
-                  variant="outlined"
-                  label="Modalidad"
-                  name="id_modalidad"
-                  value={conceptoPoai.id_modalidad}
-                  onChange={handleInputChange}
-                >
-                  {modalidad.map((unidad) => (
-                    <MenuItem
-                      key={unidad.id_modalidad}
-                      value={unidad.id_modalidad}
-                    >
-                      {unidad.nombre_modalidad}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+            {/* cod_pre cuenta id_plan */}
+            <Grid item xs={12} sm={6}>
+              <TextField
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                fullWidth
+                size="small"
+                variant="outlined"
+                label="Codigo presupuestal"
+                name="cod_pre"
+                value={conceptoPoai.cod_pre}
+                onChange={handleInputChange}
+              />
             </Grid>
-           
-
+            <Grid item xs={12} sm={6}>
+              <TextField
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                size="small"
+                variant="outlined"
+                label="Cuenta"
+                name="cuenta"
+                value={conceptoPoai.cuenta}
+                onChange={(event) => { handleInputChange(event); }}
+              />
+            </Grid>
             <Grid
               container
               spacing={2}
@@ -1002,7 +659,7 @@ export const ConseptoPoai: React.FC = () => {
                   onClick={editar ? editartabla : crearConfiguracion}
                   startIcon={<SaveIcon />}
                 >
-                  {editar ? 'Editar' : 'Guardar'}
+                  {editar ? 'Actualizar' : 'Guardar'}
                 </Button>
               </Grid>
             </Grid>

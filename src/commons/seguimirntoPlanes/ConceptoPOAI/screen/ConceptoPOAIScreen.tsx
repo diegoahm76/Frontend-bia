@@ -98,7 +98,7 @@ interface ConceptoPoai {
   id_modalidad: number | null;
   id_unidad_organizacional: number | null;
   nombre_concepto: string | null;
-  valor_inicial: number | null;
+  valor_inicial: any;
 }
 interface Rubro {
   id_rubro: number;
@@ -145,40 +145,50 @@ export const ConceptoPOAIScreen: React.FC = () => {
     id_modalidad: null,
     id_unidad_organizacional: null,
     nombre_concepto: null,
-    valor_inicial: null,
+    valor_inicial: '',
   };
   const [conceptoPoai, setConceptoPoai] =
     useState<ConceptoPoai>(initialConceptoPoai);
 
-    const handleInputChange = (event: any) => {
-      const { name, value } = event.target;
-    
-      const numberFields = [
-        'id_plan',
-        'id_proyecto',
-        'id_rubro',
-        'id_indicador',
-        'id_meta',
-        'id_modalidad',
-        'id_unidad_organizacional',
-        'valor_inicial',
-      ];
-    
-      const convertValue = (name: string, value: string): any => {
-        if (value === '') {
-          return null;
-        }
-    
-        if (numberFields.includes(name)) {
-          return Number(value);
-        } else {
-          return value;
-        }
-      };
-    
-      setConceptoPoai({ ...conceptoPoai, [name]: convertValue(name, value) });
+  const handleInputChange = (event: any) => {
+    const { name, value } = event.target;
+
+    const numberFields = [
+      'id_plan',
+      'id_proyecto',
+      'id_rubro',
+      'id_indicador',
+      'id_meta',
+      'id_modalidad',
+      'id_unidad_organizacional',
+      'valor_inicial',
+    ];
+
+    const currencyFields = ['valor_inicial']; // Lista de campos que deben formatearse como moneda
+
+    const convertValue = (name: string, value: string): any => {
+      if (value === '') {
+        return null;
+      }
+
+      if (numberFields.includes(name)) {
+        return Number(value);
+      } else {
+        return value;
+      }
     };
-    
+
+    let formattedValue = value;
+    if (currencyFields.includes(name)) {
+      formattedValue = value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+    }
+
+    setConceptoPoai({
+      ...conceptoPoai,
+      [name]: convertValue(name, formattedValue),
+    });
+  };
+
   const [selecTodosId, setSelecTodosId] = useState<any>('');
   useEffect(() => {
     if (selecTodosId) {
@@ -197,37 +207,37 @@ export const ConceptoPOAIScreen: React.FC = () => {
     }
   }, [selecTodosId]);
 
-  useEffect(() => {
-    if (selecTodosId) {
-      setConceptoPoai((prevData: any) => ({
-        ...prevData,
-        id_plan: selecTodosId.id_plan,
-        id_proyecto: selecTodosId.id_proyecto,
-        id_rubro: selecTodosId.id_rubro,
-        id_indicador: selecTodosId.id_indicador,
-        id_meta: selecTodosId.id_meta,
-        id_modalidad: selecTodosId.id_modalidad,
-        id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-        nombre_concepto: selecTodosId.nombre_concepto,
-        valor_inicial: selecTodosId.valor_inicial,
-      }));
-    }
-  }, [selecTodosId]);
+  // useEffect(() => {
+  //   if (selecTodosId) {
+  //     setConceptoPoai((prevData: any) => ({
+  //       ...prevData,
+  //       id_plan: selecTodosId.id_plan,
+  //       id_proyecto: selecTodosId.id_proyecto,
+  //       id_rubro: selecTodosId.id_rubro,
+  //       id_indicador: selecTodosId.id_indicador,
+  //       id_meta: selecTodosId.id_meta,
+  //       id_modalidad: selecTodosId.id_modalidad,
+  //       id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
+  //       nombre_concepto: selecTodosId.nombre_concepto,
+  //       valor_inicial: selecTodosId.valor_inicial,
+  //     }));
+  //   }
+  // }, [selecTodosId]);
 
-  useEffect(() => {
-    setConceptoPoai((prevData: any) => ({
-      ...prevData,
-      id_plan: selecTodosId.id_plan,
-      id_proyecto: selecTodosId.id_proyecto,
-      id_rubro: selecTodosId.id_rubro,
-      id_indicador: selecTodosId.id_indicador,
-      id_meta: selecTodosId.id_meta,
-      id_modalidad: selecTodosId.id_modalidad,
-      id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-      nombre_concepto: selecTodosId.nombre_concepto,
-      valor_inicial: selecTodosId.valor_inicial,
-    }));
-  }, [selecTodosId?.id_concepto]);
+  // useEffect(() => {
+  //   setConceptoPoai((prevData: any) => ({
+  //     ...prevData,
+  //     id_plan: selecTodosId.id_plan,
+  //     id_proyecto: selecTodosId.id_proyecto,
+  //     id_rubro: selecTodosId.id_rubro,
+  //     id_indicador: selecTodosId.id_indicador,
+  //     id_meta: selecTodosId.id_meta,
+  //     id_modalidad: selecTodosId.id_modalidad,
+  //     id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
+  //     nombre_concepto: selecTodosId.nombre_concepto,
+  //     valor_inicial: selecTodosId.valor_inicial,
+  //   }));
+  // }, [selecTodosId?.id_concepto]);
 
   const [abrir0, setabrir0] = useState(false);
   const [abrir1, setabrir1] = useState(false);
@@ -237,23 +247,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
   const fetchHistorico = async (): Promise<void> => {
     try {
       const url = `seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`;
-      setuno1(true)
-      // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
-      const res = await api.get(url);
-      const HistoricoData: Concepto[] = res.data?.data || [];
-      setHistorico(HistoricoData); 
-      setabrir0(true);
-      control_success('Datos encontrados con exito');
-    } catch (error: any) {
-      // console.error(error);
-      control_error(error.response.data.detail);
-    }
-  };
-
-  const fetchbusquedaDos = async (): Promise<void> => {
-    try {
-      const url = `seguimiento-planes/consultar-conceptos-poai-avanzado/?cod_pre=${formData.cod_presupuestal}&cuenta=${formData.cuenta}`;
-      setuno1(false)
+      setuno1(true);
       // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
       const res = await api.get(url);
       const HistoricoData: Concepto[] = res.data?.data || [];
@@ -262,6 +256,24 @@ export const ConceptoPOAIScreen: React.FC = () => {
       control_success('Datos encontrados con exito');
     } catch (error: any) {
       // console.error(error);
+      setabrir0(true)
+      control_error(error.response.data.detail);
+    }
+  };
+
+  const fetchbusquedaDos = async (): Promise<void> => {
+    try {
+      const url = `seguimiento-planes/consultar-conceptos-poai-avanzado/?cod_pre=${formData.cod_presupuestal}&cuenta=${formData.cuenta}`;
+      setuno1(false);
+      // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
+      const res = await api.get(url);
+      const HistoricoData: Concepto[] = res.data?.data || [];
+      setHistorico(HistoricoData);
+      setabrir0(true);
+      control_success('Datos encontrados con exito');
+    } catch (error: any) {
+      // console.error(error);
+      setabrir0(true)
       control_error(error.response.data.detail);
     }
   };
@@ -276,7 +288,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
     {
       field: 'nombre_concepto',
       headerName: 'Nombre de concepto ',
-      minWidth: 400,
+      minWidth: 500,
     },
     {
       field: 'valor_inicial',
@@ -380,7 +392,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
     fetmetas({ setmetas, formData });
   }, [formData.indicador]);
 
-  
   const transformEmptyFieldsToNull = (obj: any) => {
     const result: any = {};
     for (const key in obj) {
@@ -413,11 +424,10 @@ export const ConceptoPOAIScreen: React.FC = () => {
 
   //crear
 
-  
   const crearConfiguracion = async () => {
     try {
       const conceptoPoaiToSend = transformEmptyFieldsToNull(conceptoPoai);
-  
+
       const url = 'seguimiento-planes/crear-conceptos-poai/';
       const res = await api.post(url, conceptoPoaiToSend);
       console.log('Formulario creado con éxito', res.data);
@@ -433,7 +443,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
       control_error(error.response.data.detail);
     }
   };
-  
+
   const handlecrear = () => {
     setabrir1(true);
     seteditar(false);
@@ -521,6 +531,29 @@ export const ConceptoPOAIScreen: React.FC = () => {
   useEffect(() => {
     fetchcuenca();
   }, [formData.meta]);
+
+  // const handleValorInicialChange = (event: any) => {
+  //   const value = event.target.value.replace(/\D/g, '');
+  //   setConceptoPoai({ ...conceptoPoai, valor_inicial: value });
+  // };
+
+  const formatCurrency = (value: string) => {
+    if (!value) return '';
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+    }).format(Number(value));
+  };
+  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
+  useEffect(() => {
+    // Verificar si alguno de los campos tiene valor
+    if (formData.cod_presupuestal || formData.cuenta) {
+      setIsButtonDisabled(false);
+    } else {
+      setIsButtonDisabled(true);
+    }
+  }, [formData.cod_presupuestal, formData.cuenta]);
 
   return (
     <>
@@ -760,16 +793,16 @@ export const ConceptoPOAIScreen: React.FC = () => {
               value={formData.rubro}
               onChange={handleInputSelect}
             >
-              {/* {cuenca.map((unidad: any) => (
-                <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
-                  {unidad.cuenta}
-                </MenuItem>
-              ))} */}
-              {cuenca.slice(0, 4).map((unidad: any) => (
+              {cuenca.map((unidad: any) => (
                 <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
                   {unidad.cuenta}
                 </MenuItem>
               ))}
+              {/* {cuenca.slice(0, 4).map((unidad: any) => (
+                <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
+                  {unidad.cuenta}
+                </MenuItem>
+              ))} */}
             </Select>
           </FormControl>
         </Grid>
@@ -798,6 +831,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
+              disabled={!formData.meta}
               onClick={fetchHistorico}
             >
               Buscar
@@ -827,7 +861,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
         <Grid item xs={12} sm={12}>
           <Title title="Busqueda por Rubro / Codigo presupuestal" />
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -839,7 +872,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
             onChange={handleInputSelect}
           />
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <TextField
             fullWidth
@@ -851,7 +883,8 @@ export const ConceptoPOAIScreen: React.FC = () => {
             onChange={handleInputSelect}
           />
         </Grid>
-
+        {/* el filtro ya no funciona el de dos , ultimo selce mal filtro , crear
+        dejo de funcionar */}
         <Grid
           container
           spacing={2}
@@ -865,6 +898,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
+              disabled={isButtonDisabled}  
               onClick={fetchbusquedaDos}
             >
               Buscar
@@ -912,7 +946,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
                 onClick={handlecrear}
                 // startIcon={<SaveIcon />}
               >
-                Agregar segrimiento POAI
+                Agregar concepto POAI
               </Button>
             </Grid>
           </Grid>
@@ -985,7 +1019,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
               />
             </Grid>
 
-            <Grid item xs={12} sm={4}>
+            {/* <Grid item xs={12} sm={4}>
               <TextField
                 fullWidth
                 size="small"
@@ -993,6 +1027,18 @@ export const ConceptoPOAIScreen: React.FC = () => {
                 label="Valor Inicial"
                 name="valor_inicial"
                 value={conceptoPoai.valor_inicial}
+                onChange={handleInputChange}
+              />
+            </Grid> */}
+
+            <Grid item xs={12} sm={4}>
+              <TextField
+                fullWidth
+                size="small"
+                variant="outlined"
+                label="Valor Inicial"
+                name="valor_inicial"
+                value={formatCurrency(conceptoPoai.valor_inicial)}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -1097,7 +1143,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
                   onClick={editar ? editartabla : crearConfiguracion}
                   startIcon={<SaveIcon />}
                 >
-                  {editar ? 'Editar' : 'Guardar'}
+                  {editar ? 'Actualizar' : 'Guardar'}
                 </Button>
               </Grid>
             </Grid>
