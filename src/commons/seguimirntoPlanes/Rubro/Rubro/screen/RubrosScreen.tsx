@@ -83,6 +83,20 @@ export interface UnidadOrganizaciona {
   nombre: string;
   id_unidad_organizacional: number;
 }
+export interface Fuente {
+  id_fuente: number;
+  nombre_fuente: string;
+  vano_1: number | null;
+  vano_2: number | null;
+  vano_3: number | null;
+  vano_4: number | null;
+  vadicion1: number | null;
+  vadicion2: number | null;
+  vadicion3: number | null;
+  vadicion4: boolean | null;
+  valor_total: number;
+  id_plan: number;
+}
 export interface FormData {
   meta: any;
   plan: any;
@@ -101,17 +115,20 @@ interface Modalidad {
   item_ya_usado: boolean;
   registro_precargado: boolean;
 }
-
-interface ConceptoPoai {
+export interface Rubrog {
+  cod_pre: any;
+  cuenta: any;
   id_plan: any;
-  id_proyecto: any;
   id_rubro: any;
-  id_indicador: any;
+}
+interface ConceptoPoai {
+  id_rubro_parametrica: any;
+  id_plan: any;
   id_meta: any;
-  id_modalidad: any;
-  id_unidad_organizacional: any;
-  nombre_concepto: string;
-  valor_inicial: any;
+  id_fuente: any;
+  valor_fuentes: any;
+  agno: any;
+  adicion: any;
 }
 
 // export const Resultados: React.FC = () => {
@@ -135,79 +152,125 @@ export const RubrosScreen: React.FC = () => {
   };
 
   const initialConceptoPoai: ConceptoPoai = {
+    id_rubro_parametrica: '',
     id_plan: '',
-    id_proyecto: '',
-    id_rubro: '',
-    id_indicador: '',
     id_meta: '',
-    id_modalidad: '',
-    id_unidad_organizacional: '',
-    nombre_concepto: '',
-    valor_inicial: '',
+    id_fuente: '',
+    valor_fuentes: '',
+    agno: '',
+    adicion: '',
   };
-  const [conceptoPoai, setConceptoPoai] = useState<ConceptoPoai>(initialConceptoPoai);
+  const [conceptoPoai, setConceptoPoai] =
+    useState<ConceptoPoai>(initialConceptoPoai);
+
+  const formatCurrency = (value: string) => {
+    if (!value) return '';
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+    }).format(Number(value));
+  };
 
   const handleInputChange = (event: any) => {
     const { name, value } = event.target;
 
     const numberFields = [
+      'id_rubro_parametrica',
       'id_plan',
-      'id_proyecto',
-      'id_rubro',
-      'id_indicador',
       'id_meta',
-      'id_modalidad',
-      'id_unidad_organizacional',
-      'valor_inicial',
+      'id_fuente',
+      'valor_fuentes',
+      'agno',
     ];
 
-    if (numberFields.includes(name)) {
-      if (!/^\d*$/.test(value)) {
-        return;
-      }
-    }
+    const booleanFields = ['adicion'];
+    const currencyFields = ['valor_fuentes']; // Lista de campos que deben formatearse como moneda
 
     const convertValue = (name: string, value: string): any => {
       if (numberFields.includes(name)) {
-        return value === '' ? '' : Number(value);
+        return value === '' ? null : Number(value);
+      } else if (booleanFields.includes(name)) {
+        return value === 'true' || value === '1';
       } else {
         return value;
       }
     };
 
-    setConceptoPoai({ ...conceptoPoai, [name]: convertValue(name, value) });
+    let formattedValue = value;
+    if (currencyFields.includes(name)) {
+      formattedValue = value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+    }
+
+    setConceptoPoai({
+      ...conceptoPoai,
+      [name]: convertValue(name, formattedValue),
+    });
   };
+
   const [selecTodosId, setSelecTodosId] = useState<any>('');
+
   useEffect(() => {
     if (selecTodosId) {
+      fetchrubro();
       setConceptoPoai((prevData: any) => ({
         ...prevData,
+        id_rubro_parametrica: selecTodosId.id_rubro_parametrica,
         id_plan: selecTodosId.id_plan,
-        id_proyecto: selecTodosId.id_proyecto,
-        id_rubro: selecTodosId.id_rubro,
-        id_indicador: selecTodosId.id_indicador,
         id_meta: selecTodosId.id_meta,
-        id_modalidad: selecTodosId.id_modalidad,
-        id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-        nombre_concepto: selecTodosId.nombre_concepto,
-        valor_inicial: selecTodosId.valor_inicial,
+        id_fuente: selecTodosId.id_fuente,
+        valor_fuentes: selecTodosId.valor_fuentes,
+        agno: selecTodosId.agno,
+        adicion: selecTodosId.adicion,
       }));
     }
   }, [selecTodosId]);
+
+  const [Rubro, setRubro] = useState<Rubrog[]>([]);
+  const fetchrubro = async (): Promise<void> => {
+    try {
+      const url = `seguimiento/planes/consultar-parametrica-rubros-id-plan/${formData.plan}/`;
+
+      // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
+      const res = await api.get(url);
+      const HistoricoData: Rubrog[] = res.data?.data || [];
+      setRubro(HistoricoData);
+      setabrir0(true);
+      control_success('Datos encontrados con exito');
+    } catch (error: any) {
+      // console.error(error);
+      // control_error(error.response.data.detail);
+    }
+  };
+
   useEffect(() => {
-    setConceptoPoai((prevData: any) => ({
-      ...prevData,
-      id_plan: selecTodosId.id_plan,
-      id_proyecto: selecTodosId.id_proyecto,
-      id_rubro: selecTodosId.id_rubro,
-      id_indicador: selecTodosId.id_indicador,
-      id_meta: selecTodosId.id_meta,
-      id_modalidad: selecTodosId.id_modalidad,
-      id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-      nombre_concepto: selecTodosId.nombre_concepto,
-      valor_inicial: selecTodosId.valor_inicial,
-    }));
-  }, [selecTodosId?.id_concepto]);
+    fetchrubro;
+  }, [formData.plan]);
+
+  useEffect(() => {
+    fetchrubro;
+  }, []);
+  const [fuentes, setFuentes] = useState<Fuente[]>([]);
+
+  const fetchFuentes = async () => {
+    try {
+      const url =
+        'seguimiento-planes/consultar-fuentes-financiacion-indicadores-lista/';
+      const res = await api.get(url);
+      const fuentesData = res.data.data;
+      setFuentes(fuentesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFuentes();
+  }, []);
+  const fuenteMap = (fuentes ?? []).reduce((acc, fuente) => {
+    acc[fuente.id_fuente] = fuente.nombre_fuente;
+    return acc;
+  }, {} as Record<number, string>);
 
   const [abrir0, setabrir0] = useState(false);
   const [abrir1, setabrir1] = useState(false);
@@ -215,7 +278,7 @@ export const RubrosScreen: React.FC = () => {
   const [Historico, setHistorico] = useState<Concepto[]>([]);
   const fetchHistorico = async (): Promise<void> => {
     try {
-      const url = `seguimiento/planes/consultar-rubros/`;
+      const url = `seguimiento/planes/consultar-rubros-id-meta/${formData.meta}/`;
 
       // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
       const res = await api.get(url);
@@ -225,6 +288,7 @@ export const RubrosScreen: React.FC = () => {
       control_success('Datos encontrados con exito');
     } catch (error: any) {
       // console.error(error);
+      setabrir0(true);
       control_error(error.response.data.detail);
     }
   };
@@ -236,15 +300,28 @@ export const RubrosScreen: React.FC = () => {
   };
   const columns = [
     {
-      field: 'cod_pre',
+      field: 'cod_presupuestal',
       headerName: 'Codigo presupuestal ',
       minWidth: 300,
     },
     { field: 'cuenta', headerName: 'cuenta', minWidth: 650 },
-    { field: 'valor_fuentes', headerName: 'Fuente de finaciación', minWidth: 400 },
+    // {
+    //   field: 'id_fuente',
+    //   headerName: 'Fuente de finaciación',
+    //   minWidth: 400,
+    // },
 
     {
-      field: 'valcuenta',
+      field: 'id_fuente',
+      headerName: 'FTE financiación ',
+      minWidth: 400,
+      valueGetter: (params: any) => {
+        return fuenteMap[params.value] || params.value;
+      },
+    },
+
+    {
+      field: 'valor_fuentes',
       headerName: 'Valor FTE financiación',
       minWidth: 200,
       renderCell: (params: any) => {
@@ -256,13 +333,17 @@ export const RubrosScreen: React.FC = () => {
         }).format(params.value);
         return <>{valorFormateado}</>;
       },
-    }, 
+    },
     { field: 'agno', headerName: 'Año  ', minWidth: 200 },
-    // { field: 'adicion', headerName: 'Adicción ', minWidth: 200 }, 
-    { field: 'adicion', headerName: 'Adicción', minWidth: 200, renderCell: (params: GridRenderCellParams<boolean>) => {
-      return <>{params.value ? 'Sí' : 'No'}</>;
-    }, },
-
+    // { field: 'adicion', headerName: 'Adicción ', minWidth: 200 },
+    {
+      field: 'adicion',
+      headerName: 'Adicción',
+      minWidth: 200,
+      renderCell: (params: GridRenderCellParams<boolean>) => {
+        return <>{params.value ? 'Sí' : 'No'}</>;
+      },
+    },
 
     {
       field: 'Acciones',
@@ -275,18 +356,18 @@ export const RubrosScreen: React.FC = () => {
             aria-label="Ver"
             onClick={() => {
               setSelecTodosId(params.row);
-              setConceptoPoai({
-                id_plan: params.row.id_plan,
-                id_proyecto: params.row.id_proyecto,
-                id_rubro: params.row.id_rubro,
-                id_indicador: params.row.id_indicador,
-                id_meta: params.row.id_meta,
-                id_modalidad: params.row.id_modalidad,
-                id_unidad_organizacional: params.row.id_unidad_organizacional,
-                nombre_concepto: params.row.nombre_concepto,
-                valor_inicial: params.row.cod_pre
-                ,
-              });
+              // setConceptoPoai({
+              //   id_plan: params.row.id_plan,
+              //   id_proyecto: params.row.id_proyecto,
+              //   id_rubro: params.row.id_rubro,
+              //   id_indicador: params.row.id_indicador,
+              //   id_meta: params.row.id_meta,
+              //   id_modalidad: params.row.id_modalidad,
+              //   id_unidad_organizacional: params.row.id_unidad_organizacional,
+              //   nombre_concepto: params.row.nombre_concepto,
+              //   valor_inicial: params.row.cod_pre
+              //   ,
+              // });
               setabrir1(true);
               seteditar(true);
             }}
@@ -350,7 +431,7 @@ export const RubrosScreen: React.FC = () => {
   //actualizar
   const editartabla = async () => {
     try {
-      const url = `seguimiento-planes/actualizar-conceptos-poai/${selecTodosId.id_concepto}/`;
+      const url = `seguimiento/planes/actualizar-rubros/${selecTodosId.id_rubro}/`;
       const res = await api.put(url, conceptoPoai);
       console.log('Configuración actualizada con éxito', res.data);
       control_success('Editado correctamente');
@@ -364,7 +445,7 @@ export const RubrosScreen: React.FC = () => {
   //crear
   const crearConfiguracion = async () => {
     try {
-      const url = 'seguimiento-planes/crear-conceptos-poai/';
+      const url = 'seguimiento/planes/crear-rubros/';
       const res = await api.post(url, conceptoPoai);
       console.log('Formulario creado con éxito', res.data);
       control_success('Formulario creado con éxito');
@@ -379,20 +460,18 @@ export const RubrosScreen: React.FC = () => {
   const handlecrear = () => {
     setabrir1(true);
     seteditar(false);
+    fetchrubro();
 
+    fetchrubro();
     setConceptoPoai((prevData: any) => ({
       ...prevData,
       id_plan: formData.plan,
-      id_proyecto: formData.proyecto,
-      id_indicador: formData.indicador,
       id_meta: formData.meta,
-
-      nombre_concepto: '',
-      valor_inicial: '',
-      id_unidad_organizacional: '',
-      id_modalidad: '',
-
-      id_rubro: 1,
+      id_rubro_parametrica: '',
+      id_fuente: '',
+      valor_fuentes: '',
+      agno: '',
+      adicion: '',
     }));
   };
 
@@ -403,10 +482,13 @@ export const RubrosScreen: React.FC = () => {
   const handleLimpiarClick = () => {
     setConceptoPoai((prevData: any) => ({
       ...prevData,
-      nombre_concepto: '',
-      valor_inicial: '',
-      id_unidad_organizacional: '',
-      id_modalidad: '',
+      id_plan: formData.plan,
+      id_meta: formData.meta,
+      id_rubro_parametrica: '',
+      id_fuente: '',
+      valor_fuentes: '',
+      agno: '',
+      adicion: '',
     }));
   };
 
@@ -461,6 +543,7 @@ export const RubrosScreen: React.FC = () => {
   useEffect(() => {
     fetfuented();
   }, []);
+
   return (
     <>
       <Grid
@@ -520,7 +603,6 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label"> Nombre de eje</InputLabel>
@@ -542,7 +624,6 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label"> Nombre de programa</InputLabel>
@@ -564,7 +645,6 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel>Nombre del proyecto </InputLabel>
@@ -586,7 +666,6 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label">Nombre del producto</InputLabel>
@@ -607,7 +686,6 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label">
@@ -631,7 +709,6 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label">
@@ -655,7 +732,6 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label">
@@ -676,9 +752,7 @@ export const RubrosScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
-       
-
+        {/* filtro , meta al crear , editar pide datos incorrectos */}
         <Grid
           container
           spacing={2}
@@ -701,6 +775,7 @@ export const RubrosScreen: React.FC = () => {
           <Grid item>
             <Button
               startIcon={<SearchOutlined />}
+              disabled={!formData.meta}
               variant="contained"
               fullWidth
               onClick={fetchHistorico}
@@ -714,7 +789,6 @@ export const RubrosScreen: React.FC = () => {
         </Grid>
       </Grid>
 
-      
       {abrir0 && (
         <Grid
           container
@@ -752,7 +826,7 @@ export const RubrosScreen: React.FC = () => {
                 onClick={handlecrear}
                 // startIcon={<SaveIcon />}
               >
-                Agregar segrimiento POAI
+                Agregar rubro
               </Button>
             </Grid>
           </Grid>
@@ -812,8 +886,31 @@ export const RubrosScreen: React.FC = () => {
             <Grid item xs={12} sm={12}>
               <Title title="Agregar Cuenta Presupuestal  / Rubro" />
             </Grid>
-
             <Grid item xs={12} sm={6}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  {' '}
+                  Nombre del indicador
+                </InputLabel>
+                <Select
+                  value={formData.indicador}
+                  onChange={handleInputSelect}
+                  disabled
+                  name="indicador"
+                  label="Nombre del la indicador "
+                >
+                  {indicador.map((Proyecto: any) => (
+                    <MenuItem
+                      key={Proyecto.id_indicador}
+                      value={Proyecto.id_indicador}
+                    >
+                      {Proyecto.nombre_indicador}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
                 size="small"
@@ -822,11 +919,37 @@ export const RubrosScreen: React.FC = () => {
                 label="Nombre del indicador"
                 name="nombre_concepto"
                 value={conceptoPoai.nombre_concepto}
+                
                 onChange={handleInputChange}
               />
-            </Grid>
- 
+            </Grid> */}
+
             <Grid item xs={12} sm={6}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  {' '}
+                  Nombre del la Meta{' '}
+                </InputLabel>
+                <Select
+                  name="id_meta"
+                  disabled
+                  value={formData.meta}
+                  // value={conceptoPoai.id_meta}
+
+                  onChange={handleInputSelect}
+                  label="Nombre del la Meta"
+                >
+                  {metas.map((Proyecto: any) => (
+                    <MenuItem key={Proyecto.id_meta} value={Proyecto.id_meta}>
+                      {Proyecto.nombre_indicador}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+
+            {/* <Grid item xs={12} sm={6}>
+
               <TextField
                 fullWidth
                 size="small"
@@ -834,12 +957,30 @@ export const RubrosScreen: React.FC = () => {
                 variant="outlined"
                 label="Nombre de la meta"
                 name="id_modalidad"
-                value={conceptoPoai.id_modalidad}
+                // value={conceptoPoai.id_modalidad}
                 onChange={handleInputChange}
               />
-            </Grid>
+            </Grid> */}
 
-           
+            <Grid item xs={12} sm={3}>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label"> Rublos </InputLabel>
+                <Select
+                  name="id_rubro_parametrica"
+                  value={conceptoPoai.id_rubro_parametrica}
+                  onChange={handleInputChange}
+                  label="Rublos"
+                >
+                  {Rubro.map((unidad: any) => (
+                    <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
+                      {unidad.cuenta}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            {/* falta el nombre del rubro  */}
+            {/* 
             <Grid item xs={12} sm={6}>
               <TextField
                 fullWidth
@@ -847,11 +988,10 @@ export const RubrosScreen: React.FC = () => {
                 variant="outlined"
                 label="Codigo presupuestal"
                 name="valor_inicial"
-                value={conceptoPoai.valor_inicial}
+                value={conceptoPoai.cod_pre}
                 onChange={handleInputChange}
               />
             </Grid>
-
 
             <Grid item xs={12} sm={6}>
               <TextField
@@ -860,73 +1000,86 @@ export const RubrosScreen: React.FC = () => {
                 variant="outlined"
                 label="Nombre de la cuenta"
                 name="valor_inicial"
-                value={conceptoPoai.valor_inicial}
+                value={conceptoPoai.cuenta}
                 onChange={handleInputChange}
               />
-            </Grid>
-
+            </Grid> */}
 
             <Grid item xs={12} sm={3}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label">
-              {' '}
-              Fuente de financiación {' '}
-            </InputLabel>
-            <Select
-              name="id_fuente2"
-              // value={formDatagregar.id_fuente2}
-              // onChange={handleInputChange}
-              label="Fuente de financiación N.1"
-            >
-              {fuente.map((unidad: any) => (
-                <MenuItem key={unidad.id_fuente} value={unidad.id_fuente}>
-                  {unidad.nombre_fuente}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label">
+                  {' '}
+                  Fuente de financiación{' '}
+                </InputLabel>
+                <Select
+                  name="id_fuente"
+                  value={conceptoPoai.id_fuente}
+                  onChange={handleInputChange}
+                  label="Fuente de financiación N.1"
+                >
+                  {fuente.map((unidad: any) => (
+                    <MenuItem key={unidad.id_fuente} value={unidad.id_fuente}>
+                      {unidad.nombre_fuente}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
 
-
-
-        <Grid item xs={12} sm={3}>
+            <Grid item xs={12} sm={3}>
               <TextField
                 fullWidth
                 size="small"
                 variant="outlined"
                 label="Valor fuente "
-                name="valor_inicial"
-                // value={conceptoPoai.valor_inicial}
-                // onChange={handleInputChange}
+                name="valor_fuentes"
+                value={formatCurrency(conceptoPoai.valor_fuentes)}
+                onChange={handleInputChange}
               />
             </Grid>
 
             <Grid item xs={12} sm={3}>
-              <TextField
+              {/* <TextField
                 fullWidth
                 size="small"
                 variant="outlined"
                 label="Año   "
-                name="valor_inicial"
-                // value={conceptoPoai.valor_inicial}
-                // onChange={handleInputChange}
+                name="agno"
+                value={conceptoPoai.agno}
+                onChange={handleInputChange}
+              /> */}
+
+              <TextField
+                fullWidth
+                type="number"
+                size="small"
+                variant="outlined"
+                label="Año"
+                name="agno"
+                value={conceptoPoai.agno}
+                onChange={handleInputChange}
+                inputProps={{
+                  min: 1900, // Ajusta el año mínimo según tu necesidad
+                  max: 3100, // Ajusta el año máximo según tu necesidad
+                  step: 1,
+                }}
               />
             </Grid>
 
             <Grid item xs={12} sm={3}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label"> Adición </InputLabel>
-            <Select
-              name="adicion3"
-              // value={formDatagregar.adicion3}
-              // onChange={handleInputChange}
-              label="Adición"
-            >
-              <MenuItem value="true"> Si </MenuItem>
-              <MenuItem value="false"> No </MenuItem>
-            </Select>
-          </FormControl>
-        </Grid>
+              <FormControl fullWidth size="small">
+                <InputLabel id="si-no-select-label"> Adición </InputLabel>
+                <Select
+                  name="adicion"
+                  value={conceptoPoai.adicion}
+                  onChange={handleInputChange}
+                  label="Adición"
+                >
+                  <MenuItem value="true"> Si </MenuItem>
+                  <MenuItem value="false"> No </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
 
             <Grid
               container
@@ -966,7 +1119,7 @@ export const RubrosScreen: React.FC = () => {
                   onClick={editar ? editartabla : crearConfiguracion}
                   startIcon={<SaveIcon />}
                 >
-                  {editar ? 'Editar' : 'Guardar'}
+                  {editar ? 'Actualizar' : 'Guardar'}
                 </Button>
               </Grid>
             </Grid>
