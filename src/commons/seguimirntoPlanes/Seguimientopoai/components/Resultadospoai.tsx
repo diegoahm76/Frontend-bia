@@ -53,6 +53,10 @@ export interface SucursalEmpresa {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 
+export interface UnidadOrganizaciona {
+  nombre: string;
+  id_unidad_organizacional: number;
+}
 
 export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, ConsultarSeguimiento ,consultarSeguimiento, seteditarr,editartabla, seteditar, setselectid, handle ,selectedConceptoId }) => {
   // const [ConsultarSeguimiento, setconsultarSeguimiento] = useState<Seguimiento[]>([]);
@@ -141,6 +145,33 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, Consult
   //   fetfuented();
   // }, []);
 
+
+
+
+  const [unidades, setUnidades] = useState<UnidadOrganizaciona[]>([]);
+   
+
+  const fetchUnidades = async () => {
+    try {
+      const url = '/gestor/consecutivos-unidades/unidades_organigrama_actual/get/';
+      const res = await api.get(url);
+      const unidadesData = res.data.data;
+      setUnidades(unidadesData);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUnidades();
+  }, []);
+
+  const unidadesMap = (unidades ?? []).reduce((acc, unidad) => {
+    acc[unidad.id_unidad_organizacional] = unidad.nombre;
+    return acc;
+  }, {} as Record<number, string>);
+
+
   const columns = [
     { field: 'descripcion', headerName: 'Descripción', minWidth: 400 },
     // { field: 'id_prioridad', headerName: 'Prioridad', minWidth: 150 },
@@ -163,7 +194,14 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, Consult
     },
     { field: 'codigo_pre', headerName: 'Código PPTAL', minWidth: 400 },
     { field: 'cuenta', headerName: 'Cuenta', minWidth: 500 },
-    { field: 'lugar_ejecucion', headerName: 'Responsable ', minWidth: 300 },
+    {
+      field: 'id_unidad_organizacional',
+      headerName: 'Responsable',
+      minWidth: 300,
+      valueGetter: (params:any) => {
+        return unidadesMap[params.value] || params.value;
+      },
+    },
     
     // { field: 'id_modalidad', headerName: 'Modalidad de contratación', minWidth: 300 },
     {
@@ -202,9 +240,12 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, Consult
     { field: 'adicion1', headerName: 'Adicción 1', minWidth: 300, renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
+    
     { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
+
+
     { field: 'valor_fte2', headerName: 'Valor 2', minWidth: 300,renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
       const valorFormateado = new Intl.NumberFormat('es-CO', {

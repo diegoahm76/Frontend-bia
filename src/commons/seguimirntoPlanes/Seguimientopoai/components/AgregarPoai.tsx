@@ -65,83 +65,173 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
   selectid,
 }) => {
   
+  const formatCurrency = (value: string) => {
+    if (!value) return '';
+    return new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0,
+    }).format(Number(value));
+  };
+const handleInputChange = (event: any) => {
+  const { name, value } = event.target;
+
+  // Validar que solo se ingresen números en campos numéricos
+  const numberFields = [
+    'id_concepto',
+    'id_plan',
+    'id_producto',
+    'id_actividad',
+    'id_indicador',
+    'id_meta',
+    'id_rubro',
+    'id_prioridad',
+    'cuenta',
+    'id_unidad_organizacional',
+    'id_modalidad',
+    'id_fuente1',
+    'valor_fte1',
+    'id_fuente2',
+    'valor_fte2',
+    'id_fuente3',
+    'valor_fte3',
+    'id_fuente4',
+    'valor_fte4',
+    'valor_banco',
+    'valor_cdp',
+    'valor_rp',
+    'valor_obligado',
+    'duracion',
+    'valor_mensual',
+    'numero_contrato',
+    'numero_banco',
+    'numero_rp',
+    'numero_cdp',
+    'valor_pagado',
+    'vseguimiento_paabanco',
+    'vseguimiento_paacdp',
+    'vseguimiento_paarp',
+    'svseguimiento_paaobligado', 
+    'vseguimiento_paapagado',
+  ];
+
+  const currencyFields = [
+    'valor_fte1',
+    'valor_fte2',
+    'valor_fte3',
+    'valor_fte4',
+    'valor_banco',
+    'valor_cdp',
+    "valor_mensual",
+    "duracion",
+    'valor_rp',
+    'valor_obligado',
+    'valor_pagado',
+    'vseguimiento_paabanco',
+    'vseguimiento_paacdp',
+    'vseguimiento_paarp',
+    'svseguimiento_paaobligado',
+    'vseguimiento_paapagado',
+  ];
+
+  if (numberFields.includes(name) && !currencyFields.includes(name)) {
+    if (!/^\d*$/.test(value)) {
+      // Si el valor no es un número, no actualiza el estado
+      return;
+    }
+  }
+
+  const booleanFields = ['adicion1', 'adicion2', 'adicion3', 'adicion4'];
+
+  const convertValue = (name: string, value: string): any => {
+    if (numberFields.includes(name)) {
+      return value === '' ? '' : Number(value);
+    } else if (booleanFields.includes(name)) {
+      return value === 'true' || value === '1';
+    } else {
+      return value;
+    }
+  };
+
+  let formattedValue = value;
+  if (currencyFields.includes(name)) {
+    formattedValue = value.replace(/\D/g, ''); // Elimina caracteres no numéricos
+  }
+
+  setFormDataCrear({ ...formDatagregar, [name]: convertValue(name, formattedValue) });
+};
 
   
-  const handleInputChange = (event: any) => {
-    const { name, value } = event.target;
+  // const handleInputChange = (event: any) => {
+  //   const { name, value } = event.target;
   
-    // Validar que solo se ingresen números en campos numéricos
-    const numberFields = [
-      'id_concepto',
-      'id_plan',
-      'id_producto',
-      'id_actividad',
-      'id_indicador',
-      'id_meta',
-      'id_rubro',
-      'id_prioridad',
-      'cuenta',
-      'id_unidad_organizacional',
-      'id_modalidad',
-      'id_fuente1',
-      'valor_fte1',
-      'id_fuente2',
-      'valor_fte2',
-      'id_fuente3',
-      'valor_fte3',
-      'id_fuente4',
-      'valor_fte4',
-      'valor_banco',
-      'valor_cdp',
-      'valor_rp',
-      'valor_obligado',
-      'duracion',
-      'valor_mensual',
-      'numero_contrato',
-      'numero_banco',
-      'numero_rp',
-      'numero_cdp',
-      'valor_pagado',
-      'vseguimiento_paabanco',
-      'vseguimiento_paacdp',
-      'vseguimiento_paarp',
-      'svseguimiento_paaobligado',
-      
-      'vseguimiento_paapagado',
-    ];
+  //   // Validar que solo se ingresen números en campos numéricos
+  //   const numberFields = [
+  //     'id_concepto',
+  //     'id_plan',
+  //     'id_producto',
+  //     'id_actividad',
+  //     'id_indicador',
+  //     'id_meta',
+  //     'id_rubro',
+  //     'id_prioridad',
+  //     'cuenta',
+  //     'id_unidad_organizacional',
+  //     'id_modalidad',
+  //     'id_fuente1',
+  //     'valor_fte1',
+  //     'id_fuente2',
+  //     'valor_fte2',
+  //     'id_fuente3',
+  //     'valor_fte3',
+  //     'id_fuente4',
+  //     'valor_fte4',
+  //     'valor_banco',
+  //     'valor_cdp',
+  //     'valor_rp',
+  //     'valor_obligado',
+  //     'duracion',
+  //     'valor_mensual',
+  //     'numero_contrato',
+  //     'numero_banco',
+  //     'numero_rp',
+  //     'numero_cdp',
+  //     'valor_pagado',
+  //     'vseguimiento_paabanco',
+  //     'vseguimiento_paacdp',
+  //     'vseguimiento_paarp',
+  //     'svseguimiento_paaobligado', 
+  //     'vseguimiento_paapagado',
+  //   ];
   
-    if (numberFields.includes(name)) {
-      if (!/^\d*$/.test(value)) {
-        // Si el valor no es un número, no actualiza el estado
-        return;
-      }
-    }
+  //   if (numberFields.includes(name)) {
+  //     if (!/^\d*$/.test(value)) {
+  //       // Si el valor no es un número, no actualiza el estado
+  //       return;
+  //     }
+  //   }
   
-    const booleanFields = ['adicion1', 'adicion2', 'adicion3', 'adicion4'];
+  //   const booleanFields = ['adicion1', 'adicion2', 'adicion3', 'adicion4'];
   
-    const convertValue = (name: string, value: string): any => {
-      if (numberFields.includes(name)) {
-        return value === '' ? '' : Number(value);
-      } else if (booleanFields.includes(name)) {
-        return value === 'true' || value === '1';
-      } else {
-        return value;
-      }
-    };
+  //   const convertValue = (name: string, value: string): any => {
+  //     if (numberFields.includes(name)) {
+  //       return value === '' ? '' : Number(value);
+  //     } else if (booleanFields.includes(name)) {
+  //       return value === 'true' || value === '1';
+  //     } else {
+  //       return value;
+  //     }
+  //   };
   
-    setFormDataCrear({ ...formDatagregar, [name]: convertValue(name, value) });
-  };
+  //   setFormDataCrear({ ...formDatagregar, [name]: convertValue(name, value) });
+  // };
   
   
   const handleLimpiarClick = () => {
     setFormDataCrear((prevData: any) => ({
-      ...prevData,
-    
-
+      ...prevData, 
     descripcion: '',
-    id_prioridad: '',
-     
-  
+    id_prioridad: '', 
     id_fuente1: '',
     valor_fte1: '',
     adicion1: false,
@@ -193,14 +283,27 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
     // console.log(formDatagregar.fechaTerminacion);
     console.log('2222222');
   };
-
+  const transformEmptyFieldsToNull = (obj: any) => {
+    const result: any = {};
+    for (const key in obj) {
+      if (obj[key] === '') {
+        result[key] = null;
+      } else {
+        result[key] = obj[key];
+      }
+    }
+    return result;
+  };
   // selecTodosId.id_seguimiento
   const editartabla = async () => {
     try {
+      const formDatagregarToSend = transformEmptyFieldsToNull(formDatagregar);
+
       const url = `seguimiento-planes/actualizar-seguimiento-poai/${selectid.id_seguimiento}/`;
-      const res = await api.put(url, formDatagregar);
+      const res = await api.put(url, formDatagregarToSend);
       console.log('Configuración actualizada con éxito', res.data);
       consultarSeguimiento();
+      setShowdos(false)
       control_success('Editado correctamente');
     } catch (error: any) {
       console.error('Error al actualizar la configuración', error);
@@ -210,11 +313,13 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
 
   const crearConfiguracion = async () => {
     try {
+      const formDatagregarToSend = transformEmptyFieldsToNull(formDatagregar);
       const url = '/seguimiento-planes/crear-seguimiento-poai/';
-      const res = await api.post(url, formDatagregar);
+      const res = await api.post(url, formDatagregarToSend);
       console.log('Formulario creado con éxito', res.data);
       control_success('Formulario creado con éxito');
       setFormDataCrear(initialFormDataCrear);
+      setShowdos(false)
       consultarSeguimiento();
     } catch (error: any) {
       console.error('Error al crear el formulario', error);
@@ -362,7 +467,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             size="small"
             variant="outlined"
             label="Responsable "
-            // name="id_unidad_organizacional"
+            name="id_unidad_organizacional"
             disabled
             // value={formDatagregar.id_unidad_organizacional}
             value={selecTodosId.nombre_responsable}
@@ -411,7 +516,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor N.1  "
             name="valor_fte1"
-            value={formDatagregar.valor_fte1}
+            value={formatCurrency(formDatagregar.valor_fte1)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -459,7 +564,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor N.2  "
             name="valor_fte2"
-            value={formDatagregar.valor_fte2}
+            value={formatCurrency(formDatagregar.valor_fte2)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -507,7 +612,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor N.3  "
             name="valor_fte3"
-            value={formDatagregar.valor_fte3}
+            value={formatCurrency(formDatagregar.valor_fte3)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -535,7 +640,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             </InputLabel>
             <Select
               name="id_fuente4"
-              value={formDatagregar.id_fuente4}
+              value={formatCurrency(formDatagregar.id_fuente4)}
               onChange={handleInputChange}
               label="Fuente de financiación N.1"
             >
@@ -555,7 +660,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor N.4  "
             name="valor_fte4"
-            value={formDatagregar.valor_fte4}
+            value={formatCurrency(formDatagregar.valor_fte4)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -592,7 +697,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor de banco "
             name="valor_banco"
-            value={formDatagregar.valor_banco}
+            value={formatCurrency(formDatagregar.valor_banco)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -604,7 +709,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor CDP "
             name="valor_cdp"
-            value={formDatagregar.valor_cdp}
+            value={formatCurrency(formDatagregar.valor_cdp)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -616,7 +721,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor RP  "
             name="valor_rp"
-            value={formDatagregar.valor_rp}
+            value={formatCurrency(formDatagregar.valor_rp)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -628,7 +733,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor obligado "
             name="valor_obligado"
-            value={formDatagregar.valor_obligado}
+            value={formatCurrency(formDatagregar.valor_obligado)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -668,7 +773,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor de duración  "
             name="duracion"
-            value={formDatagregar.duracion}
+            value={formatCurrency(formDatagregar.duracion)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -680,7 +785,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor mensual "
             name="valor_mensual"
-            value={formDatagregar.valor_mensual}
+            value={formatCurrency(formDatagregar.valor_mensual)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -692,9 +797,11 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Fecha estimada "
             name="fecha_estimada"
+            InputLabelProps={{ shrink: true }}
+
             value={formDatagregar.fecha_estimada}
             onChange={handleInputChange}
-            InputLabelProps={{ shrink: true }}
+         
           />
         </Grid>
         <Grid item xs={12} sm={3}>
@@ -903,7 +1010,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor pagado "
             name="valor_pagado"
-            value={formDatagregar.valor_pagado}
+            value={formatCurrency(formDatagregar.valor_pagado)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -915,7 +1022,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor Seguimiento PAA Banco"
             name="vseguimiento_paabanco"
-            value={formDatagregar.vseguimiento_paabanco}
+            value={formatCurrency(formDatagregar.vseguimiento_paabanco)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -927,7 +1034,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor Seguimiento PAA CDP "
             name="vseguimiento_paacdp"
-            value={formDatagregar.vseguimiento_paacdp}
+            value={formatCurrency(formDatagregar.vseguimiento_paacdp)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -939,7 +1046,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor Seguimiento PAA RP "
             name="vseguimiento_paarp"
-            value={formDatagregar.vseguimiento_paarp}
+            value={formatCurrency(formDatagregar.vseguimiento_paarp)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -951,7 +1058,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor Seguimiento PAA obligado "
             name="svseguimiento_paaobligado"
-            value={formDatagregar.svseguimiento_paaobligado}
+            value={formatCurrency(formDatagregar.svseguimiento_paaobligado)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -963,7 +1070,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
             variant="outlined"
             label="Valor Seguimiento PAA pagado "
             name="vseguimiento_paapagado"
-            value={formDatagregar.vseguimiento_paapagado}
+            value={formatCurrency(formDatagregar.vseguimiento_paapagado)}
             onChange={handleInputChange}
           />
         </Grid>
@@ -1024,7 +1131,7 @@ export const AgregarPoai: React.FC<AgregarProps> = ({
               onClick={editar ? editartabla : crearConfiguracion}
               startIcon={<SaveIcon />}
             >
-              {editar ? 'Editar' : 'Guardar'}
+              {editar ? 'Actualizar' : 'Guardar'}
             </Button>
           </Grid>
         </Grid>
