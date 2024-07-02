@@ -227,7 +227,8 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, Consult
       },
     },
 
-    { field: 'valor_fte1', headerName: 'Valor 1', minWidth: 300 ,renderCell: (params: any) => {
+    { field: 'valor_fte1', headerName: 'Valor 1', minWidth: 300 ,
+      renderCell: (params: any) => {
       // Formatear el valor a pesos colombianos
       const valorFormateado = new Intl.NumberFormat('es-CO', {
         style: 'currency',
@@ -236,10 +237,13 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, Consult
       }).format(params.value);
 
       return <>{valorFormateado}</>;
-    },},
-    { field: 'adicion1', headerName: 'Adicción 1', minWidth: 300, renderCell: (params: GridRenderCellParams<boolean>) => {
+    },
+  },
+    { field: 'adicion1', headerName: 'Adicción 1', minWidth: 300,
+       renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
-    }, },
+    },
+   },
     
     { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;

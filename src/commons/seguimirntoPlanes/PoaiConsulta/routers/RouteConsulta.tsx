@@ -4,15 +4,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-unused-vars */
 import { Route, Routes, Navigate } from 'react-router-dom';
-import { ConseptoPoai } from '../components/EjeEstrategico';
-// import { ConseptoPoai } from '../components/ConseptoPoai';
+import { ConsultaPoai } from '../components/ConsultaPoai';
  
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const RouteEjeEstrategico: React.FC = () => {
+export const RouteConsulta: React.FC = () => {
     return (
         <Routes>
-            <Route path="/parametro_rubros" element={< ConseptoPoai />} />
+            <Route path="/consulta_poai" element={< ConsultaPoai />} />
 
             <Route path="/*" element={<Navigate to={'/'} />} />
         </Routes>
