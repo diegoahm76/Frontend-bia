@@ -360,6 +360,7 @@ export const ConsultaFacilidadFuncionario: React.FC = () => {
                                     periodicidad:
                                       solicitud_facilidad.facilidad_pago
                                         .periodicidad,
+                                        abono:0
                                   })
                                 );
                                 navigate('../amortizacion');
