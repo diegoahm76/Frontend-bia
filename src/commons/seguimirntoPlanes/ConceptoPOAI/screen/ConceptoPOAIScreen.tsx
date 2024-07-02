@@ -3,8 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
-import { useEffect, useState } from 'react';
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import { useEffect, useState } from 'react'; 
 import { Title } from '../../../../components';
 import {
   Dialog,
@@ -47,6 +46,7 @@ import {
   fetindicador,
 } from '../../Seguimientopoai/services/select.service';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
+import { control_warning } from '../../../almacen/configuracion/store/thunks/BodegaThunks';
 
 export interface Concepto {
   id_concepto: 0;
@@ -144,7 +144,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
     id_meta: null,
     id_modalidad: null,
     id_unidad_organizacional: null,
-    nombre_concepto: null,
+    nombre_concepto: "",
     valor_inicial: '',
   };
   const [conceptoPoai, setConceptoPoai] =
@@ -206,39 +206,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
       }));
     }
   }, [selecTodosId]);
-
-  // useEffect(() => {
-  //   if (selecTodosId) {
-  //     setConceptoPoai((prevData: any) => ({
-  //       ...prevData,
-  //       id_plan: selecTodosId.id_plan,
-  //       id_proyecto: selecTodosId.id_proyecto,
-  //       id_rubro: selecTodosId.id_rubro,
-  //       id_indicador: selecTodosId.id_indicador,
-  //       id_meta: selecTodosId.id_meta,
-  //       id_modalidad: selecTodosId.id_modalidad,
-  //       id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-  //       nombre_concepto: selecTodosId.nombre_concepto,
-  //       valor_inicial: selecTodosId.valor_inicial,
-  //     }));
-  //   }
-  // }, [selecTodosId]);
-
-  // useEffect(() => {
-  //   setConceptoPoai((prevData: any) => ({
-  //     ...prevData,
-  //     id_plan: selecTodosId.id_plan,
-  //     id_proyecto: selecTodosId.id_proyecto,
-  //     id_rubro: selecTodosId.id_rubro,
-  //     id_indicador: selecTodosId.id_indicador,
-  //     id_meta: selecTodosId.id_meta,
-  //     id_modalidad: selecTodosId.id_modalidad,
-  //     id_unidad_organizacional: selecTodosId.id_unidad_organizacional,
-  //     nombre_concepto: selecTodosId.nombre_concepto,
-  //     valor_inicial: selecTodosId.valor_inicial,
-  //   }));
-  // }, [selecTodosId?.id_concepto]);
-
+ 
   const [abrir0, setabrir0] = useState(false);
   const [abrir1, setabrir1] = useState(false);
   const [uno1, setuno1] = useState(false);
@@ -256,7 +224,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
       control_success('Datos encontrados con exito');
     } catch (error: any) {
       // console.error(error);
-      setabrir0(true)
+      setabrir0(true);
       control_error(error.response.data.detail);
     }
   };
@@ -273,7 +241,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
       control_success('Datos encontrados con exito');
     } catch (error: any) {
       // console.error(error);
-      setabrir0(true)
+      setabrir0(true);
       control_error(error.response.data.detail);
     }
   };
@@ -359,7 +327,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
   useEffect(() => {
     setFormData((prevData: any) => ({
       ...prevData,
-      eje: '',
+      // eje: '',
     }));
     fetejeplan({ setejeplan, formData });
   }, [formData.plan]);
@@ -387,7 +355,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
   useEffect(() => {
     setFormData((prevData: any) => ({
       ...prevData,
-      meta: '',
+      // meta: '',
     }));
     fetmetas({ setmetas, formData });
   }, [formData.indicador]);
@@ -445,23 +413,54 @@ export const ConceptoPOAIScreen: React.FC = () => {
   };
 
   const handlecrear = () => {
-    setabrir1(true);
-    seteditar(false);
+    if (!formData.indicador) {
+      handleBuscarClick();
+      control_error('Datos necesarios para crear el concepto  ');
+    } else {
+      setabrir1(true);
+      seteditar(false);
 
-    setConceptoPoai((prevData: any) => ({
-      ...prevData,
-      id_plan: formData.plan,
-      id_proyecto: formData.proyecto,
-      id_indicador: formData.indicador,
-      id_meta: formData.meta,
-      id_rubro: formData.rubro,
+      setConceptoPoai((prevData: any) => ({
+        ...prevData,
+        id_plan: formData.plan,
+        id_proyecto: formData.proyecto,
+        id_indicador: formData.indicador,
+        id_meta: formData.meta,
+        id_rubro: formData.rubro,
 
-      nombre_concepto: '',
-      valor_inicial: '',
-      id_unidad_organizacional: '',
-      id_modalidad: '',
-    }));
+        nombre_concepto: '',
+        valor_inicial: '',
+        id_unidad_organizacional: '',
+        id_modalidad: '',
+      }));
+    }
   };
+
+  const handlecrearmodal = () => {
+    if (!formData.indicador) {
+ 
+      control_warning('Datos necesarios para crear el concepto');
+    } else {
+      setabrir1(true);
+      seteditar(false);
+
+      setConceptoPoai((prevData: any) => ({
+        ...prevData,
+        id_plan: formData.plan,
+        id_proyecto: formData.proyecto,
+        id_indicador: formData.indicador,
+        id_meta: formData.meta,
+        id_rubro: formData.rubro, 
+        nombre_concepto: '',
+        valor_inicial: '',
+        id_unidad_organizacional: '',
+        id_modalidad: '',
+      }));
+      handle_close()
+    }
+  };
+
+
 
   const handlecerrar = () => {
     setabrir1(false);
@@ -532,10 +531,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
     fetchcuenca();
   }, [formData.meta]);
 
-  // const handleValorInicialChange = (event: any) => {
-  //   const value = event.target.value.replace(/\D/g, '');
-  //   setConceptoPoai({ ...conceptoPoai, valor_inicial: value });
-  // };
+ 
 
   const formatCurrency = (value: string) => {
     if (!value) return '';
@@ -555,17 +551,284 @@ export const ConceptoPOAIScreen: React.FC = () => {
     }
   }, [formData.cod_presupuestal, formData.cuenta]);
 
+  const [is_modal_active, set_is_buscar] = useState<boolean>(false);
+
+  const handleBuscarClick = () => {
+    set_is_buscar(true);
+  };
+  const handle_close = (): void => {
+    set_is_buscar(false);
+    // setShowHeader(true);
+  };
   return (
     <>
-      {/* <Button
+      <Dialog
+        open={is_modal_active}
+        onClose={handle_close}
+        fullWidth={true}
+        maxWidth="lg"
+      >
+        <Grid
+          container
+          item
+          xs={12}
+          spacing={2}
+          sx={{
+            position: 'relative',
+            background: '#FAFAFA',
+            borderRadius: '15px',
+            p: '20px',
+            m: '10px 0 20px 0',
+            mb: '20px',
+            boxShadow: '0px 3px 6px #042F4A26',
+          }}
+        >
+          <Grid item xs={12} sm={12}>
+            <Title title="Registro de Conceptos POAI" />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label"> Nombre de plan</InputLabel>
+              <Select
+                name="plan"
+                // disabled
+                label="Nombre de plan"
+                value={formData.plan}
+                onChange={handleInputSelect}
+              >
+                {planes.map((unidad: any) => (
+                  <MenuItem key={unidad.id_plan} value={unidad.id_plan}>
+                    {unidad.nombre_plan}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label"> Nombre de eje</InputLabel>
+              <Select
+                name="eje"
+                // disabled
+                label="Nombre de plan"
+                value={formData.eje}
+                onChange={handleInputSelect}
+              >
+                {ejeplan.map((unidad: any) => (
+                  <MenuItem
+                    key={unidad.id_eje_estrategico}
+                    value={unidad.id_eje_estrategico}
+                  >
+                    {unidad.nombre}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label">
+                {' '}
+                Nombre de programa
+              </InputLabel>
+              <Select
+                name="programa"
+                // disabled
+                value={formData.programa}
+                onChange={handleInputSelect}
+                label="Nombre de programa"
+              >
+                {programa.map((programa: any) => (
+                  <MenuItem
+                    key={programa.id_programa}
+                    value={programa.id_programa}
+                  >
+                    {programa.nombre_programa}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel>Nombre del proyecto </InputLabel>
+              <Select
+                value={formData.proyecto}
+                onChange={handleInputSelect}
+                name="proyecto"
+                //  disabled
+                label="Nombre del proyecto"
+              >
+                {proyecto.map((Proyecto: any) => (
+                  <MenuItem
+                    key={Proyecto.id_proyecto}
+                    value={Proyecto.id_proyecto}
+                  >
+                    {Proyecto.nombre_proyecto}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label">
+                Nombre del producto
+              </InputLabel>
+              <Select
+                name="producto"
+                label="Nombre del producto"
+                value={formData.producto}
+                onChange={handleInputSelect}
+              >
+                {producto.map((Proyecto: any) => (
+                  <MenuItem
+                    key={Proyecto.id_producto}
+                    value={Proyecto.id_producto}
+                  >
+                    {Proyecto.nombre_producto}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label">
+                {' '}
+                Nombre del la actividad
+              </InputLabel>
+              <Select
+                value={formData.actividad}
+                onChange={handleInputSelect}
+                name="actividad"
+                label="Nombre del la actividad "
+              >
+                {actividad.map((Proyecto: any) => (
+                  <MenuItem
+                    key={Proyecto.id_actividad}
+                    value={Proyecto.id_actividad}
+                  >
+                    {Proyecto.nombre_actividad}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label">
+                {' '}
+                Nombre del indicador
+              </InputLabel>
+              <Select
+                value={formData.indicador}
+                onChange={handleInputSelect}
+                name="indicador"
+                label="Nombre del la indicador "
+              >
+                {indicador.map((Proyecto: any) => (
+                  <MenuItem
+                    key={Proyecto.id_indicador}
+                    value={Proyecto.id_indicador}
+                  >
+                    {Proyecto.nombre_indicador}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label">
+                {' '}
+                Nombre del la Meta{' '}
+              </InputLabel>
+              <Select
+                name="meta"
+                value={formData.meta}
+                onChange={handleInputSelect}
+                label="Nombre del la Meta"
+              >
+                {metas.map((Proyecto: any) => (
+                  <MenuItem key={Proyecto.id_meta} value={Proyecto.id_meta}>
+                    {Proyecto.nombre_indicador}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={12}>
+            <FormControl fullWidth size="small">
+              <InputLabel id="si-no-select-label">
+                {' '}
+                Nombre de la cuenta
+              </InputLabel>
+              <Select
+                name="rubro"
+                // disabled
+                label="Nombre de la cuenta"
+                value={formData.rubro}
+                onChange={handleInputSelect}
+              >
+                {cuenca.map((unidad: any) => (
+                  <MenuItem key={unidad.id_rubro} value={unidad.id_rubro_parametrica}>
+                    {unidad.cuenta}
+                  </MenuItem>
+                ))}
+                {/* {cuenca.slice(0, 4).map((unidad: any) => (
+                <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
+                  {unidad.cuenta}
+                </MenuItem>
+              ))} */}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid
+            container
+            spacing={2}
+            marginTop={2}
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+          >
+
+<Grid item>
+              <Button
+                color="error"
+                variant="outlined"
+                fullWidth
+                onClick={ handle_close}
+                startIcon={<ClearIcon />}
+              >
+                cerrar
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
                 color="primary"
                 variant="outlined"
                 fullWidth
-                onClick={limpiartodo}
-                // startIcon={<SaveIcon />}
+                onClick={handlecrearmodal}
               >
-              
-              </Button> */}
+                Agregar concepto POAI
+              </Button>
+            </Grid>
+          </Grid>
+
+
+        </Grid>
+      </Dialog>
+
       <Grid
         container
         item
@@ -794,7 +1057,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
               onChange={handleInputSelect}
             >
               {cuenca.map((unidad: any) => (
-                <MenuItem key={unidad.id_rubro} value={unidad.id_rubro}>
+                <MenuItem key={unidad.id_rubro} value={unidad.id_rubro_parametrica}>
                   {unidad.cuenta}
                 </MenuItem>
               ))}
@@ -806,7 +1069,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
             </Select>
           </FormControl>
         </Grid>
-
+        {/* {formData.rubro} */}
         <Grid
           container
           spacing={2}
@@ -831,7 +1094,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
-              disabled={!formData.meta}
+              disabled={!formData.rubro}
               onClick={fetchHistorico}
             >
               Buscar
@@ -898,7 +1161,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
-              disabled={isButtonDisabled}  
+              disabled={isButtonDisabled}
               onClick={fetchbusquedaDos}
             >
               Buscar
@@ -944,7 +1207,6 @@ export const ConceptoPOAIScreen: React.FC = () => {
                 variant="outlined"
                 fullWidth
                 onClick={handlecrear}
-                // startIcon={<SaveIcon />}
               >
                 Agregar concepto POAI
               </Button>
