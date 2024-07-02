@@ -304,7 +304,7 @@ export const ConsultaPoai: React.FC = () => {
 
     {
        // field: 'id_unidad_organizacional',
-       field: 'nombre_unidad',
+       field: 'nombre_responsable',
       headerName: 'Responsable',
       minWidth: 400,
       valueGetter: (params:any) => {
@@ -318,13 +318,23 @@ export const ConsultaPoai: React.FC = () => {
       minWidth: 400,
     },
 
-    // {
-    //   field: 'cod37d_pre',
-    //   headerName: 'Valor inicial',
-    //   minWidth: 400,
-    // },
     {
-      field: 'id_fuente1',
+      field: 'valor_inicial',
+      headerName: 'Valor inicial',
+      minWidth: 400,
+      renderCell: (params: any) => {
+        // Formatear el valor a pesos colombianos
+        const valorFormateado = new Intl.NumberFormat('es-CO', {
+          style: 'currency',
+          currency: 'COP',
+          minimumFractionDigits: 0, // Ajusta según la precisión deseada
+        }).format(params.value);
+  
+        return <>{valorFormateado}</>;
+      },
+    },
+    {
+      field: 'nombre_fuente1',
       headerName: 'FTE financiación 1',
       minWidth: 400,
       valueGetter: (params:any) => {
@@ -350,7 +360,7 @@ export const ConsultaPoai: React.FC = () => {
     },
    },
     
-    { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
+    { field: 'nombre_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
 
@@ -368,7 +378,7 @@ export const ConsultaPoai: React.FC = () => {
     { field: 'adicion2', headerName: 'Adicción 2', minWidth: 300 ,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     },},
-    { field: 'id_fuente3', headerName: 'FTE financiación 3', minWidth: 400,   valueGetter: (params:any) => {
+    { field: 'nombre_fuente3', headerName: 'FTE financiación 3', minWidth: 400,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     }, },
     { field: 'valor_fte3', headerName: 'Valor 3', minWidth: 300,renderCell: (params: any) => {
@@ -384,7 +394,7 @@ export const ConsultaPoai: React.FC = () => {
     { field: 'adicion3', headerName: 'Adicción 3', minWidth: 300,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
-    { field: 'id_fuente4', headerName: 'FTE financiación 4 ', minWidth: 400 ,   valueGetter: (params:any) => {
+    { field: 'nombre_fuente4', headerName: 'FTE financiación 4 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
     { field: 'valor_fte4', headerName: 'Valor 4', minWidth: 300 ,renderCell: (params: any) => {
@@ -665,32 +675,32 @@ export const ConsultaPoai: React.FC = () => {
     {
       field: 'nombre_proyecto',
       headerName: 'Proyecto',
-      minWidth: 500,
+      minWidth: 650,
     },
     {
       field: 'nombre_producto',
       headerName: 'Producto',
-      minWidth: 500,
+      minWidth: 550,
     },
     {
       field: 'nombre_actividad',
       headerName: 'Actividad',
-      minWidth: 500,
+      minWidth: 550,
     },
     {
       field: 'nombre_indicador',
       headerName: 'Indicador',
-      minWidth: 500,
+      minWidth: 550,
     },
     {
       field: 'nombre_meta',
       headerName: 'Meta',
-      minWidth: 500,
+      minWidth: 550,
     },
     {
       field: 'descripcion',
       headerName: 'Descripción',
-      minWidth: 500,
+      minWidth: 550,
     },
     {
       field: 'nombre_prioridad',
@@ -710,7 +720,7 @@ export const ConsultaPoai: React.FC = () => {
     },
     {
       // field: 'id_unidad_organizacional',
-      field: 'nombre_unidad',
+      field: 'nombre_responsable',
 
       
       headerName: 'Responsable',
@@ -725,7 +735,7 @@ export const ConsultaPoai: React.FC = () => {
       minWidth: 400,
     },
     {
-      field: 'id_fuente1',
+      field: 'nombre_fuente1',
       headerName: 'FTE financiación 1',
       minWidth: 400,
       valueGetter: (params:any) => {
@@ -751,7 +761,7 @@ export const ConsultaPoai: React.FC = () => {
     },
    },
     
-    { field: 'id_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
+    { field: 'nombre_fuente2', headerName: 'FTE financiación 2 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
 
@@ -769,7 +779,7 @@ export const ConsultaPoai: React.FC = () => {
     { field: 'adicion2', headerName: 'Adicción 2', minWidth: 300 ,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     },},
-    { field: 'id_fuente3', headerName: 'FTE financiación 3', minWidth: 400,   valueGetter: (params:any) => {
+    { field: 'nombre_fuente3', headerName: 'FTE financiación 3', minWidth: 400,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     }, },
     { field: 'valor_fte3', headerName: 'Valor 3', minWidth: 300,renderCell: (params: any) => {
@@ -785,7 +795,7 @@ export const ConsultaPoai: React.FC = () => {
     { field: 'adicion3', headerName: 'Adicción 3', minWidth: 300,renderCell: (params: GridRenderCellParams<boolean>) => {
       return <>{params.value ? 'Sí' : 'No'}</>;
     }, },
-    { field: 'id_fuente4', headerName: 'FTE financiación 4 ', minWidth: 400 ,   valueGetter: (params:any) => {
+    { field: 'nombre_fuente4', headerName: 'FTE financiación 4 ', minWidth: 400 ,   valueGetter: (params:any) => {
       return fuenteMap[params.value] || params.value;
     },},
     { field: 'valor_fte4', headerName: 'Valor 4', minWidth: 300 ,renderCell: (params: any) => {
@@ -876,7 +886,7 @@ export const ConsultaPoai: React.FC = () => {
             type="date"
             size="small"
             variant="outlined"
-            label="Fecha inicio  "
+            label="Fecha de registro  "
             name="inicio"
             InputLabelProps={{ shrink: true }}
 

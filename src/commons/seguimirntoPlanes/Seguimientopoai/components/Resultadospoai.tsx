@@ -207,7 +207,7 @@ export const Resultadospoai: React.FC<ResultadosProps> = ({selecTodosId, Consult
     {
       field: 'id_modalidad',
       headerName: 'Modalidad de contratación',
-      minWidth: 300,
+      minWidth: 400,
       valueGetter: (params:any) => {
         // return modalidadMap[params.value] || params.value;
         return modalidadMap[params.value] || selecTodosId.nombre_modalidad;

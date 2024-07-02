@@ -755,7 +755,7 @@ export const FuentesScreen: React.FC = () => {
                   label="Fuente de financiación"
                 >
                   {fuente.map((unidad: any) => (
-                    <MenuItem key={unidad.id_fuente} value={unidad.nombre_fuente}>
+                    <MenuItem key={unidad.id_fuente} value={unidad.id_fuente}>
                       {unidad.nombre_fuente}
                     </MenuItem>
                   ))}

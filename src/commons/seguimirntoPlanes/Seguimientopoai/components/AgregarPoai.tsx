@@ -253,7 +253,7 @@ const handleInputChange = (event: any) => {
     valor_mensual: '',
     fecha_estimada: '',
     mes_proyectado: '',
-    codigo_unsp: '',
+    // codigo_unsp: '',
     lugar_ejecucion: '',
     numero_contrato: '',
     numero_banco: '',
@@ -391,6 +391,18 @@ const handleInputChange = (event: any) => {
     'Diciembre',
   ];
 
+
+//  useEffect(() => {
+     
+//       setFormDataCrear((prevData: any) => ({
+//         ...prevData,
+//         id_codigo_unsp: formDatagregar.codigo_unsp,
+      
+//       }));
+    
+//   }, [ formDatagregar.codigo_unsp]);
+
+
   return (
     <>
       <Grid
@@ -403,6 +415,7 @@ const handleInputChange = (event: any) => {
         spacing={2}
         sx={miEstilo}
       >
+        
         <Grid item xs={12} sm={12}>
           <Title title="Registro de Seguimiento del POAI " />
         </Grid>
@@ -640,7 +653,7 @@ const handleInputChange = (event: any) => {
             </InputLabel>
             <Select
               name="id_fuente4"
-              value={formatCurrency(formDatagregar.id_fuente4)}
+              value={formDatagregar.id_fuente4}
               onChange={handleInputChange}
               label="Fuente de financiación N.1"
             >
@@ -828,8 +841,8 @@ const handleInputChange = (event: any) => {
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label">Codigo UNSP</InputLabel>
             <Select
-              name="codigo_unsp"
-              value={formDatagregar.codigo_unsp}
+              name="id_codigo_unsp"
+              value={formDatagregar.id_codigo_unsp}
               onChange={handleInputChange}
               label="Codigo UNSP "
             >
