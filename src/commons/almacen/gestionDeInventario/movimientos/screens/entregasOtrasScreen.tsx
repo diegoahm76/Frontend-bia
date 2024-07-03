@@ -115,7 +115,7 @@ const EntregaScreen = () => {
         );
     }, [nro_entrega]);
 
-    // entrada 
+    // entrada
     useEffect(() => {
         if (current_entrada.id_entrada_almacen !== null && current_entrada.id_entrada_almacen !== undefined) {
             void dispatch(get_bienes_entrada(current_entrada.id_entrada_almacen));
@@ -230,6 +230,7 @@ const EntregaScreen = () => {
             </Grid>
             <Grid item xs={12} marginY={2}>
                 <SeleccionarEntrada
+                    reset_values={reset_entrada_entrega}
                     control_entrada_entrega={control_entrada_entrega}
                     get_values={get_values_entrada}
 
@@ -250,7 +251,7 @@ const EntregaScreen = () => {
 
             <Grid
                 container
-              
+
                 padding={2}
                 spacing={2}
                 direction="row" justifyContent="flex-end"

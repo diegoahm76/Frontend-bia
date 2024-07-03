@@ -620,54 +620,55 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                       </Avatar>
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Gestionar tarea">
-                    <IconButton
-                      onClick={() => {
-                        // set_tarea_is_active(true);
-                        setSelectedPqr(rowData);
-                        set_tipo_tarea('');
-                      }}
-                      href={
-                        rowData.tipo_notificacion_correspondencia
-                          .publicar_pagina_gaceta
-                          ? `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
-                          : rowData.tipo_notificacion_correspondencia
-                              .publicar_pagina_edictos
-                          ? `/#/app/transversal/notificaciones/publicar/edictos`
-                          : rowData.tipo_notificacion_correspondencia
-                              .notificacion_correo_electronico
-                          ? `/#/app/transversal/notificaciones/publicar/correo_electronico`
-                          : rowData.tipo_notificacion_correspondencia
-                              .notificacion_medio_fisico
-                          ? `/#/app/transversal/notificaciones/publicar/correspondencia_fisica`
-                          : rowData.tipo_notificacion_correspondencia
-                              .notificacion_personal
-                          ? `/#/app/transversal/notificaciones/publicar/notificacion_personal`
-                          : rowData.tipo_notificacion_correspondencia
-                              .publicacion_por_aviso
-                          ? `/#/app/transversal/notificaciones/publicar/publicacion_aviso`
-                          : `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
-                      }
-                    >
-                      <Avatar
-                        sx={{
-                          width: 24,
-                          height: 24,
-                          background: '#fff',
-                          border: '2px solid',
+                  {notification_request?.cod_estado !== 'NT' && (
+                    <Tooltip title="Gestionar tarea">
+                      <IconButton
+                        onClick={() => {
+                          // set_tarea_is_active(true);
+                          setSelectedPqr(rowData);
+                          set_tipo_tarea('');
                         }}
-                        variant="rounded"
+                        href={
+                          rowData.tipo_notificacion_correspondencia
+                            .publicar_pagina_gaceta
+                            ? `/#/app/transversal/notificaciones/publicar/gaceta_ambiental`
+                            : rowData.tipo_notificacion_correspondencia
+                                .publicar_pagina_edictos
+                            ? `/#/app/transversal/notificaciones/publicar/edictos`
+                            : rowData.tipo_notificacion_correspondencia
+                                .notificacion_correo_electronico
+                            ? `/#/app/transversal/notificaciones/publicar/correo_electronico`
+                            : rowData.tipo_notificacion_correspondencia
+                                .notificacion_medio_fisico
+                            ? `/#/app/transversal/notificaciones/publicar/correspondencia_fisica`
+                            : rowData.tipo_notificacion_correspondencia
+                                .notificacion_personal
+                            ? `/#/app/transversal/notificaciones/publicar/notificacion_personal`
+                            : rowData.tipo_notificacion_correspondencia
+                                .publicacion_por_aviso &&
+                              `/#/app/transversal/notificaciones/publicar/publicacion_aviso`
+                        }
                       >
-                        <AssignmentIcon
+                        <Avatar
                           sx={{
-                            color: 'primary.main',
-                            width: '18px',
-                            height: '18px',
+                            width: 24,
+                            height: 24,
+                            background: '#fff',
+                            border: '2px solid',
                           }}
-                        />
-                      </Avatar>
-                    </IconButton>
-                  </Tooltip>
+                          variant="rounded"
+                        >
+                          <AssignmentIcon
+                            sx={{
+                              color: 'primary.main',
+                              width: '18px',
+                              height: '18px',
+                            }}
+                          />
+                        </Avatar>
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </>
               )}
             {rowData?.cod_estado_asignacion === 'Re' &&
@@ -777,6 +778,7 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
     getValues: get_values,
   } = useForm<any>();
   useEffect(() => {
+    void dispatch(get_tipos_documento_notification());
     dispatch(set_notification_request({}));
     dispatch(set_notification_requests([]));
     dispatch(set_notification_per_request({}));
@@ -787,7 +789,6 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
     dispatch(get_status_asignation_list_service());
     void dispatch(get_estados_notificacion());
     void dispatch(get_persons_service('', '', '', '', '', ''));
-    void dispatch(get_tipos_documento_notification());
   }, []);
   useEffect(() => {
     if (selectedPqr !== null) {
@@ -983,8 +984,9 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
             <Grid item xs={12} md={6}>
               <FormButton
                 disabled={
-                  (notification_request?.id_notificacion_correspondencia ===
-                    null ||
+                  (notification_request?.cod_estado === 'NT' ||
+                    notification_request?.id_notificacion_correspondencia ===
+                      null ||
                     notification_request?.id_persona_asignada !==
                       userinfo.id_persona) &&
                   (notification_request?.cod_estado_asignacion ?? 'Pe') !== 'Ac'

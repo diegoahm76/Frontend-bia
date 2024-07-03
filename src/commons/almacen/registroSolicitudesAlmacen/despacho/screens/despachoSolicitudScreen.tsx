@@ -46,11 +46,12 @@ import SaveIcon from '@mui/icons-material/Save';
 import SearchIcon from '@mui/icons-material/Search';
 import { ButtonSalir } from '../../../../../components/Salir/ButtonSalir';
 import Limpiar from '../../../../conservacion/componentes/Limpiar';
+import { control_warning } from '../../../configuracion/store/thunks/BodegaThunks';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const DespachoBienesConsumoScreen = () => {
   const { userinfo } = useSelector((state: AuthSlice) => state.auth);
-  const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, getValues: get_values_solicitud_despacho, } = useForm<IObjSolicitud>();
+  const { control: control_solicitud_despacho, handleSubmit: handle_submit_solicitud, reset: reset_solicitud_aprobacion, getValues: get_values_solicitud_despacho, watch: watch_solicitud } = useForm<IObjSolicitud>();
   const { control: control_despacho, handleSubmit: handle_submit, reset: reset_despacho, getValues: get_values, } = useForm<IObjDespacho>();
   const [action, set_action] = useState<string>('Guardar');
   const { current_solicitud, persona_solicita, current_funcionario } = useAppSelector((state: { solic_consumo: any }) => state.solic_consumo);
@@ -66,6 +67,8 @@ const DespachoBienesConsumoScreen = () => {
       set_persona_despacha({
         nombre_completo: userinfo.nombre,
         id_persona: userinfo.id_persona,
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
+        id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
       }))
     set_action('crear');
   };
@@ -77,29 +80,39 @@ const DespachoBienesConsumoScreen = () => {
       set_persona_despacha({
         nombre_completo: userinfo.nombre,
         id_persona: userinfo.id_persona,
+        unidad_organizacional: userinfo.nombre_unidad_organizacional,
+        id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
       })
     );
   }, []);
-  useEffect(() => {
-    dispatch(
-      set_current_despacho({
-        ...current_despacho,
-        id_persona_despacha: persona_despacha.id_persona,
-        persona_crea: persona_despacha.nombre_completo ?? '',
-      })
-    );
-  }, [persona_despacha]);
+  // useEffect(() => {
+  //   if(persona_despacha?.id_persona){
+  //     setTimeout(() => {
+  //       dispatch(
+  //         set_current_despacho({
+  //           ...current_despacho,
+  //           id_persona_despacha: persona_despacha.id_persona,
+  //           persona_crea: persona_despacha.nombre_completo ?? '',
+  //         })
+  //       );
+  //     }, 2000)
+  //   }
+  // }, [persona_despacha]);
 
   useEffect(() => {
-    dispatch(
-      set_current_despacho({
-        ...current_despacho,
-        numero_despacho_consumo: nro_despacho,
-        id_persona_despacha: persona_despacha.id_persona,
-        persona_crea: persona_despacha.nombre_completo ?? '',
-      })
-    );
-  }, [nro_despacho]);
+    if(persona_despacha?.id_persona){
+      setTimeout(() => {
+        dispatch(
+          set_current_despacho({
+            ...current_despacho,
+            numero_despacho_consumo: nro_despacho,
+            id_persona_despacha: persona_despacha.id_persona,
+            persona_crea: persona_despacha.nombre_completo ?? '',
+          })
+        );
+      }, 2000)
+    }
+  }, [nro_despacho, persona_despacha]);
 
   useEffect(() => {
     reset_solicitud_aprobacion(current_solicitud);
@@ -140,6 +153,7 @@ const DespachoBienesConsumoScreen = () => {
   }, [current_solicitud]);
 
   useEffect(() => {
+    console.log(current_despacho)
     // //  console.log('')(current_solicitud)
     //  console.log('')(current_despacho);
     reset_despacho(current_despacho);
@@ -166,9 +180,13 @@ const DespachoBienesConsumoScreen = () => {
         void dispatch(
           get_bienes_despacho(current_despacho.numero_despacho_consumo)
         ); // get bienes despacho
-        void dispatch(
-          get_solicitud_by_id(current_despacho.id_solicitud_consumo ?? 0)
-        );
+        if(current_despacho?.id_solicitud_consumo){
+          void dispatch(
+            get_solicitud_by_id(current_despacho.id_solicitud_consumo)
+          );
+        }else{
+          control_warning('No se encontró solicitud asociada al despacho')
+        }
       }
     }
   }, [current_despacho]);
@@ -221,9 +239,9 @@ const DespachoBienesConsumoScreen = () => {
       const data_edit: IObjDespacho = {
         ...data,
         id_bodega_general: bodega_seleccionada.id_bodega,
-        es_despacho_conservacion:
-          current_solicitud.es_solicitud_de_conservacion,
+        es_despacho_conservacion: current_solicitud.es_solicitud_de_conservacion,
         fecha_despacho: formatted_date_time,
+        // fecha_despacho: current_solicitud.fecha_despacho,
         id_solicitud_consumo: current_solicitud.id_solicitud_consumibles,
         fecha_solicitud: current_solicitud.fecha_solicitud,
         numero_solicitud_por_tipo: current_solicitud.nro_solicitud_por_tipo,
@@ -298,6 +316,16 @@ const DespachoBienesConsumoScreen = () => {
     }
   };
 
+  const clear_fields = (): void => {
+    reset_solicitud_aprobacion((prev: any) => {
+      return {
+        ...prev,
+        fecha_despacho_desde: null,
+        fecha_despacho_hasta: null,
+      }
+    });
+  }
+
   return (
     <Grid
       container
@@ -316,10 +344,13 @@ const DespachoBienesConsumoScreen = () => {
         <SeleccionarDespacho
           control_despacho={control_despacho}
           get_values={get_values}
+          reset_values={reset_despacho}
           open_modal={open_search_modal}
           set_open_modal={set_open_search_modal}
         />
         <SeleccionarSolicitudDespacho
+          watch_solicitud={watch_solicitud}
+          clear_fields={clear_fields}
           title={'Información de la solicitud'}
           control_solicitud_despacho={control_solicitud_despacho}
           get_values={get_values_solicitud_despacho} />

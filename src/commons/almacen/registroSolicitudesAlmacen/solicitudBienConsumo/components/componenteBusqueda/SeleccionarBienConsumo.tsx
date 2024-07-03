@@ -65,6 +65,16 @@ const SeleccionarBienConsumo = () => {
                 </div>
             ),
         },
+        {
+            field: 'tipo_bien',
+            headerName: 'Tipo bien',
+            width: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
 
 
     ];
@@ -90,16 +100,16 @@ const SeleccionarBienConsumo = () => {
                 </div>
             ),
         },
-        // {
-        //     field: 'tipo_bien',
-        //     headerName: 'Tipo',
-        //     width: 200,
-        //     renderCell: (params) => (
-        //         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-        //             {params.value}
-        //         </div>
-        //     ),
-        // },
+        {
+            field: 'tipo_bien',
+            headerName: 'Tipo',
+            width: 200,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value}
+                </div>
+            ),
+        },
         {
             field: 'cantidad',
             headerName: 'Cantidad',
@@ -270,6 +280,16 @@ const SeleccionarBienConsumo = () => {
 
     };
 
+    const clear_fields = () => {
+        reset_bien_solicitud(prev => {
+            return {
+                ...prev,
+                codigo_bien: "",
+                nombre: "",
+            }
+        })
+    }
+
 
 
     return (
@@ -281,6 +301,7 @@ const SeleccionarBienConsumo = () => {
                 borderRadius={2}
             >
                 <BuscarModelo
+                    clear_fields={clear_fields}
                     set_current_model={set_current_bien}
                     row_id={"id_bien"}
                     columns_model={columns_bienes}
@@ -303,9 +324,8 @@ const SeleccionarBienConsumo = () => {
                             rules: { required_rule: { rule: true, message: "Código bien requerido" } },
                             label: "Código bien",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
-                            on_blur_function: search_bien
                         },
                         {
                             datum_type: "input_controller",
@@ -317,7 +337,7 @@ const SeleccionarBienConsumo = () => {
                             rules: { required_rule: { rule: true, message: "Debe seleccionar un bien" } },
                             label: "Nombre",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                     ]}

@@ -24,7 +24,7 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
         programacion,
         detalle_seleccionado,
         set_programacion,
-        set_detalle_seleccionado
+        set_detalle_seleccionado,
     } = use_previsualizacion();
     const {
         title_programacion,
@@ -71,7 +71,7 @@ export const BusquedaProgramacionComponent: React.FC<IProps> = ({ tipo_articulo,
         else
             set_mensaje_error_fecha("El campo Fecha mantenimiento es obligatorio.");
     };
-    
+
     useEffect(()=>{
         valida_formulario();
     },[fecha_registro])

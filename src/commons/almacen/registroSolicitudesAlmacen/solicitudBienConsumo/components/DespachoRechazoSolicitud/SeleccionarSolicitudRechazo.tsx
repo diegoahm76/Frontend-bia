@@ -16,6 +16,7 @@ interface IProps {
     get_values: any;
     open_modal: boolean;
     set_open_modal: any;
+    reset_solicitud_aprobacion: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarSolicitudRechazo = ({
@@ -23,7 +24,18 @@ const SeleccionarSolicitudRechazo = ({
     control_solicitud_despacho,
     get_values, open_modal,
     set_open_modal,
+    reset_solicitud_aprobacion,
 }: IProps) => {
+
+    const clear_fields = () => {
+        reset_solicitud_aprobacion((prev: any) => {
+            return {
+                ...prev,
+                nro_solicitud_por_tipo: ''
+            }
+        });
+    }
+
     // const { userinfo } = useSelector((state: AuthSlice) => state.auth);
 
     const { solicitudes } = useAppSelector((state) => state.solic_consumo);
@@ -35,17 +47,32 @@ const SeleccionarSolicitudRechazo = ({
         {
             field: 'fecha_solicitud',
             headerName: 'Fecha de solicitud',
-            width: 200, flex: 1.5,
+            minWidth: 200, flex: 1.5,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.fecha_solicitud?.split('T')[0]}
                 </div>
             ),
         },
         {
             field: 'fecha_aprobacion_responsable',
             headerName: 'Fecha de aprobación',
-            width: 200, flex: 1.5,
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.fecha_aprobacion_responsable?.split('T')[0]}
+                </div>
+            ),
+        },
+        {
+            field: 'persona_solicita',
+            headerName: 'Solicitud elaborada por:',
+            minWidth: 300, flex: 2,
+        },
+        {
+            field: 'persona_responsable',
+            headerName: 'Responsable',
+            minWidth: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -53,14 +80,9 @@ const SeleccionarSolicitudRechazo = ({
             ),
         },
         {
-            field: 'persona_solicita',
-            headerName: 'Solicitud elaborada por:',
-            width: 300, flex: 2,
-        },
-        {
             field: 'observacion',
             headerName: 'Observación',
-            width: 400, flex: 2,
+            minWidth: 400, flex: 2,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -70,7 +92,7 @@ const SeleccionarSolicitudRechazo = ({
         {
             field: 'es_solicitud_de_conservacion',
             headerName: 'Solicitud de conservación',
-            width: 400, flex: 1,
+            minWidth: 400, flex: 1,
             renderCell: (params) => {
                 return params.row.es_solicitud_de_conservacion === true ? (
                     <Chip size="small" label="SI" color="success" variant="outlined" />
@@ -82,7 +104,8 @@ const SeleccionarSolicitudRechazo = ({
     ];
 
     const get_solicitudes_filtro: any = async () => {
-        void dispatch(get_solicitudes_pendientes_despacho());
+        const param = get_values("nro_solicitud_por_tipo");
+        void dispatch(get_solicitudes_pendientes_despacho(param));
     };
 
     return (
@@ -98,6 +121,7 @@ const SeleccionarSolicitudRechazo = ({
                     show_search_button={false}
                     open_search_modal={open_modal}
                     set_open_search_modal={set_open_modal}
+                    clear_fields={clear_fields}
                     form_inputs={[
                         {
                             datum_type: 'title',
@@ -125,7 +149,7 @@ const SeleccionarSolicitudRechazo = ({
                             md: 6,
                             control_form: control_solicitud_despacho,
                             control_name: 'fecha_aprobacion_responsable',
-                            default_value: '',
+                            default_value: null,
                             rules: {
 
                             },
@@ -167,7 +191,6 @@ const SeleccionarSolicitudRechazo = ({
                         {
                             datum_type: 'input_controller',
                             xs: 12,
-                            md: 9,
                             control_form: control_solicitud_despacho,
                             control_name: 'persona_solicita',
                             default_value: '',

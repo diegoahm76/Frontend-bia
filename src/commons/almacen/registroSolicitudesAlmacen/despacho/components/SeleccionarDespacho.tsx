@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { useEffect, useState } from 'react';
 import { api } from '../../../../../api/axios';
 import { get_despachos_service } from '../store/thunks/despachoThunks';
+import dayjs from 'dayjs';
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import EditIcon from '@mui/icons-material/Edit';
 
@@ -19,6 +20,7 @@ interface IProps {
   get_values: any;
   open_modal: boolean;
   set_open_modal: any;
+  reset_values: any;
 }
 interface IList {
   value: string | number;
@@ -33,7 +35,7 @@ const initial_options: IList[] = [
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
-const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_open_modal, }: IProps) => {
+const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_open_modal, reset_values }: IProps) => {
   // const [action, set_action] = useState<string>("agregar");
   const { despachos, current_despacho, persona_despacha } = useAppSelector(
     (state) => state.despacho
@@ -79,29 +81,38 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
   const columns_despacho: GridColDef[] = [
 
     {
+      field: 'numero_solicitud_por_tipo',
+      headerName: 'Número solicitud',
+      minWidth: 180,
+      flex: 1,
+    },
+    {
       field: 'fecha_solicitud',
       headerName: 'Fecha de solicitud',
-      width: 200,
+      minWidth: 200,
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {params.value.split("T")[0]}
         </div>
       ),
     },
     {
       field: 'fecha_despacho',
       headerName: 'Fecha del despacho',
-      width: 200,
+      minWidth: 200,
+      flex: 1,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {new Date(params.value).toDateString()}
+          {params.value.split("T")[0]}
         </div>
       ),
     },
     {
       field: 'motivo',
       headerName: 'Motivo',
-      width: 350,
+      minWidth: 350,
+      flex: 2,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -111,7 +122,8 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
     {
       field: 'es_despacho_conservacion',
       headerName: 'Es despacho de conservación',
-      width: 350,
+      minWidth: 350,
+      flex: 1,
       renderCell: (params) => {
         return params.row.es_despacho_conservacion === true ? (
           <Chip size="small" label="SI" color="success" variant="outlined" />
@@ -154,18 +166,33 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
     //  console.log('')("buscar...");
     const nro = get_values('numero_solicitud_por_tipo') ?? '';
     const id_unidad = get_values('id_unidad_para_la_que_solicita') ?? '';
-    const fecha_despacho = get_values('fecha_despacho') ?? '';
+    const fecha = get_values('fecha_despacho') ?? '';
+    const fecha_despacho = fecha ? dayjs(fecha).format('YYYY-MM-DD') : '';
     const es_conservacion = get_values('es_despacho_conservacion') ?? '';
-    void dispatch(get_despachos_service(nro, id_unidad, fecha_despacho, es_conservacion)
-    );
-
+    void dispatch(get_despachos_service(nro, id_unidad, fecha_despacho, es_conservacion));
   };
+
+  const clear_filters = () => {
+    reset_values({
+      numero_solicitud_por_tipo: '',
+      id_unidad_para_la_que_solicita: '',
+      fecha_despacho: null,
+      es_despacho_conservacion: '',
+    });
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      clear_filters();
+    }, 1500);
+  }, [])
 
   return (
     <>
       <Grid container direction="row" padding={2} borderRadius={2}>
         <BuscarModelo
           set_current_model={set_current_despacho}
+          clear_fields={clear_filters}
           row_id={'id_despacho_consumo'}
           columns_model={columns_despacho}
           models={despachos}
@@ -216,7 +243,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
               control_name: 'fecha_despacho',
               default_value: '',
               rules: {
-
+                required_rule: { rule: false, message: 'Archivo requerido' },
               },
               label: 'Fecha de despacho',
               disabled: true,
@@ -274,6 +301,25 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
               type: 'text',
               disabled: false,
               helper_text: '',
+              format: 'YYYY-MM-DD',
+            },
+            {
+              datum_type: 'select_controller',
+              xs: 12,
+              md: 2,
+              control_form: control_despacho,
+              control_name: 'es_despacho_conservacion',
+              default_value: '',
+              rules: { required_rule: { rule: true, message: 'requerido' } },
+              label: '¿Es despacho para conservación?',
+              disabled: false,
+              helper_text: 'debe seleccionar campo',
+              select_options: [
+                { label: 'SI', key: true },
+                { label: 'NO', key: false },
+              ],
+              option_label: 'label',
+              option_key: 'key',
             },
             {
               datum_type: 'input_controller',
@@ -283,7 +329,7 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
               control_name: 'numero_solicitud_por_tipo',
               default_value: '',
               rules: {},
-              label: 'Número despacho',
+              label: 'Número solicitud',
               type: 'number',
               disabled: false,
               helper_text: '',
@@ -302,24 +348,6 @@ const SeleccionarDespacho = ({ control_despacho, get_values, open_modal, set_ope
               select_options: unidad_organizacional,
               option_label: 'nombre',
               option_key: 'id_unidad_organizacional',
-            },
-            {
-              datum_type: 'select_controller',
-              xs: 12,
-              md: 3,
-              control_form: control_despacho,
-              control_name: 'es_despacho_conservacion',
-              default_value: '',
-              rules: { required_rule: { rule: true, message: 'requerido' } },
-              label: '¿Es despacho para conservación?',
-              disabled: false,
-              helper_text: 'debe seleccionar campo',
-              select_options: [
-                { label: 'SI', key: true },
-                { label: 'NO', key: false },
-              ],
-              option_label: 'label',
-              option_key: 'key',
             },
           ]}
         />

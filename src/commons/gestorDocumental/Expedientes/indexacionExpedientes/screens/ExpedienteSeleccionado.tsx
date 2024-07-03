@@ -52,7 +52,8 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
 
     return (
         <>
-            {props.expediente !== null && <Grid item md={12} xs={12}>
+            {/*{props.expediente !== null &&*/} 
+            <Grid item md={12} xs={12}>
                 <Title title="Expediente seleccionado" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
@@ -172,7 +173,9 @@ export const ExpedienteSeleccionado: React.FC<IProps> = (props: IProps) => {
                             </Grid>))}
                     </Grid>
                 </Box>
-            </Grid>}
+            </Grid>
+            
+         {/*  } */}
         </>
     )
 }

@@ -161,6 +161,8 @@ export interface Persona {
   razon_social?: string | null;
   nombre_comercial?: string | null;
   tiene_usuario?: boolean | null;
+  unidad_organizacional?: string | null;
+  id_unidad_organizacional_actual?: number | null;
 }
 
 export type keys_direccion =
@@ -200,6 +202,7 @@ export interface InfoPersona {
   digito_verificacion: string;
   tipo_usuario: string;
   cod_naturaleza_empresa: string;
+  persona_tipo_documento?: string;
 }
 
 export type KeysInfoPersona =

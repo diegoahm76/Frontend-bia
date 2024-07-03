@@ -37,6 +37,7 @@ import {
 import { DownloadButton } from '../../../../../utils/DownloadButton/DownLoadButton';
 import { Title } from '../../../../../components/Title';
 import React from 'react';
+import FormButton from '../../../../../components/partials/form/FormButton';
 interface IProps {
   control_form?: any | null;
   type?: string | null;
@@ -73,7 +74,7 @@ const ListadoAnexos = ({ type }: IProps) => {
     useState<boolean>(false);
 
   useEffect(() => {
-    if (type === 'soporte') {
+    if ((type ?? '') === 'soporte') {
       if (notification_per_request !== null) {
         if (
           notification_per_request.id_registro_notificacion_correspondencia !==
@@ -103,7 +104,7 @@ const ListadoAnexos = ({ type }: IProps) => {
         }
       }
     }
-  }, [notification_request, notification_per_request]);
+  }, []);
 
   useEffect(() => {
     //  console.log('')(exhibit);
@@ -344,6 +345,23 @@ const ListadoAnexos = ({ type }: IProps) => {
                 }
               />
             </Grid>
+            {type !== 'soporte' &&
+              notification_request?.id_persona_asignada ===
+                userinfo.id_persona &&
+              notification_request?.estado_solicitud !== 'NT' && (
+                <Grid item xs={12} md={3}>
+                  <FormButton
+                    disabled={notification_request?.estado_solicitud === 'NT'}
+                    href={`/#/app/transversal/notificaciones/generador_documentos/generar/`}
+                    variant_button="outlined"
+                    on_click_function={null}
+                    icon_class={null}
+                    label={'Generar documento'}
+                    type_button="button"
+                    color_button="primary"
+                  />
+                </Grid>
+              )}
           </Box>
         </Grid>
         {exhibit.id_anexo !== null && (

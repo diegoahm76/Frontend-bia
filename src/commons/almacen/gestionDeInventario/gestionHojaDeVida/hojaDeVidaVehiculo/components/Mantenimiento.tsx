@@ -29,13 +29,73 @@ const Mantenimiento_vehicle = () => {
       cellClassName: 'truncate-cell',
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
+          {params.row.fecha ? params.row.fecha : 'N/A'}
+        </div>
+      ),
+    },
+    {
+      field: 'kilometraje_programado',
+      headerName: 'Kilometraje Programado',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.kilometraje_programado ? params.row.kilometraje_programado : 'N/A'}
+        </div>
+      ),
+    },
+    {
+      field: 'fecha_ejecutado',
+      headerName: 'Fecha de ejecucion',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.fecha_ejecutado ? params.row.fecha_ejecutado.split('T')[0] : 'N/A'}
+        </div>
+      ),
+    },
+    {
+      field: 'persona_realiza',
+      headerName: 'Persona Realiza',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.persona_realiza ? params.row.persona_realiza : 'N/A'}
+        </div>
+      ),
+    },
+    {
+      field: 'persona_diligencia',
+      headerName: 'Persona Diligencia',
+      width: 250,
+
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.row.persona_diligencia ? params.row.persona_diligencia : 'N/A'}
         </div>
       ),
     },
     {
       field: 'estado',
       headerName: 'Estado',
+
+      width: 250,
+      cellClassName: 'truncate-cell',
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+    },
+    {
+      field: 'placa',
+      headerName: 'Placa',
 
       width: 250,
       cellClassName: 'truncate-cell',

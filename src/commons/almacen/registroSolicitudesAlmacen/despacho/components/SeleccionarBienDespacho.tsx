@@ -146,8 +146,8 @@ const SeleccionarBienDespacho = () => {
   const columns_bienes_despacho: GridColDef[] = [
 
     {
-      field: 'codigo_bien',
-      headerName: 'Codigo',
+      field: 'codigo_bien_despacho',
+      headerName: 'Codigo bien',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -265,7 +265,6 @@ const SeleccionarBienDespacho = () => {
           bien_selected.id_bien ?? '',
           fecha.slice(0, 10) + ' ' + fecha.slice(11, 19),
 
-
         ));
       //  console.log('')(data);
       set_bienes_aux(data);
@@ -303,6 +302,7 @@ const SeleccionarBienDespacho = () => {
     if (bien_selected.id_bien !== null) {
       //  console.log('')(bien_selected);
       dispatch(set_current_bien(initial_state_current_bien));
+      console.log('hola')
       search_bien();
     }
   }, [bien_selected]);
@@ -445,10 +445,10 @@ const SeleccionarBienDespacho = () => {
           set_current_model={set_current_bien}
           row_id={'id_inventario'}
           columns_model={columns_bienes}
+          get_filters_models={search_bienes_otros}
           models={bienes}
-          get_filters_models={null}
           set_models={set_bienes}
-          show_search_button={false}
+          // show_search_button={false}
           button_submit_label="Buscar bien"
           form_inputs={[
             {
@@ -458,7 +458,7 @@ const SeleccionarBienDespacho = () => {
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 5,
+              md: 4,
               control_form: control_bien,
               control_name: 'codigo_bien',
               default_value: '',
@@ -470,15 +470,14 @@ const SeleccionarBienDespacho = () => {
               },
               label: 'Código bien',
               type: 'number',
-              disabled: current_despacho.id_despacho_consumo !== null,
+              disabled: true,
               helper_text: '',
-              on_blur_function: search_bien,
             },
 
             {
               datum_type: 'input_controller',
               xs: 12,
-              md: 7,
+              md: 4,
               control_form: control_bien,
               control_name: 'nombre',
               default_value: '',

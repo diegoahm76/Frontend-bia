@@ -246,7 +246,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                 tramites(true, false, false);
               }}
             >
-              Iniciar trámite de permiso menor
+              Iniciar permiso menor
             </Button>
           </Grid>
             <Grid
@@ -265,7 +265,7 @@ export const SeccionGeneral: React.FC<IProps> = (props: IProps) => {
                   );
                 }}
               >
-                Responder requerimientos Permiso menor
+                Responder requerimientos permiso menor
               </Button>
             </Grid>
           <Grid

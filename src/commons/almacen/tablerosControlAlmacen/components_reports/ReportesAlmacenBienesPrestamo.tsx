@@ -22,18 +22,32 @@ import { useDispatch } from 'react-redux';
 import { control_error } from '../../../../helpers';
 import { interface_inputs_rabp } from '../interfaces/types';
 import { get_tipos_categorias } from '../thunks/tablerosControlAlmacen';
+import { BuscadorPersonasReports } from './BuscadorPersonasReports';
+import { InfoPersona } from '../../../../interfaces/globalModels';
 
 interface props {
   inputs_rabp: interface_inputs_rabp;
   set_inputs_rabp: Dispatch<SetStateAction<interface_inputs_rabp>>;
+  onResult: (data_persona: InfoPersona, param: string) => void;
+  set_clear_persons: (bool: boolean) => void;
+  seleccion_tablero_control: string;
+  is_clear_filtros?: boolean;
+  set_is_clear_filtros?: (bool: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ReportesAlmacenBienesPrestamo: FC<props> = ({
   inputs_rabp,
   set_inputs_rabp,
+  onResult,
+  set_clear_persons,
+  seleccion_tablero_control,
+  is_clear_filtros,
+  set_is_clear_filtros,
 }) => {
   const dispatch = useDispatch();
+
+  useEffect(() => console.log(seleccion_tablero_control), [seleccion_tablero_control])
 
   const [tipos_categoria, set_tipos_categoria] = useState<any[]>([]);
 
@@ -56,6 +70,22 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
     }
   }, [servicios_obtenidos]);
 
+  const clear_inputs = () => {
+    set_inputs_rabp({
+      tipo_categoria: '',
+      fecha_desde: null,
+      fecha_hasta: null,
+    });
+  };
+
+  useEffect(() => {
+    if (is_clear_filtros) {
+      clear_inputs();
+      set_is_clear_filtros && set_is_clear_filtros(false);
+    }
+  }, [is_clear_filtros]);
+
+
   return (
     <>
       <Grid container item xs={12} spacing={2}>
@@ -64,7 +94,7 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
             <InputLabel>Categoria: </InputLabel>
             <Select
               label="Categoria :"
-              value={inputs_rabp.tipo_categoria}
+              value={inputs_rabp.tipo_categoria || ''}
               fullWidth
               onChange={(e: SelectChangeEvent) => {
                 set_inputs_rabp({
@@ -73,6 +103,7 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
                 });
               }}
             >
+              <MenuItem value={'Todos'}>Todos</MenuItem>
               {tipos_categoria?.length !== 0 ? (
                 tipos_categoria?.map((tipo_movimiento) => (
                   <MenuItem key={tipo_movimiento[0]} value={tipo_movimiento[0]}>
@@ -100,7 +131,7 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
               renderInput={(params) => (
                 <TextField required fullWidth size="small" {...params} />
               )}
-              
+
             />
           </LocalizationProvider>
         </Grid>
@@ -122,6 +153,13 @@ const ReportesAlmacenBienesPrestamo: FC<props> = ({
             />
           </LocalizationProvider>
         </Grid>
+        {seleccion_tablero_control == 'RABP' && <BuscadorPersonasReports
+          set_clear_persons={set_clear_persons}
+          onResult={onResult}
+          seleccion_tablero_control={seleccion_tablero_control}
+          is_clear_filtros={is_clear_filtros}
+          set_is_clear_filtros={set_is_clear_filtros}
+        />}
       </Grid>
     </>
   );

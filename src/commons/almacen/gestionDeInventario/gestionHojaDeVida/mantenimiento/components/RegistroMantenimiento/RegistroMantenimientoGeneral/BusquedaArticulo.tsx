@@ -33,28 +33,49 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
         detalle_seleccionado,
         set_detalle_seleccionado,
     } = use_previsualizacion();
-
-    const [id_bien, set_id_bien] = useState<string | null>("");
-    const [nombre, set_nombre] = useState<string | null>("");
+    const [label_serial, set_label_serial] = useState<string>('Serial o Placa');
+    const [form_bien, set_form_bien] = useState<any>({
+        codigo_bien: "",
+        nombre: "",
+        serial: "",
+        marca: "",
+        modelo: "",
+        estado: ""
+    });
     // Errors
     const [mensaje_error_codigo, set_mensaje_error_codigo] = useState<string>("");
 
+    const key_exists = (obj: any, clave: string) => clave in obj;
     useEffect(() => {
         parent_details(detalle_seleccionado);
     }, [parent_details, detalle_seleccionado]);
 
     useEffect(() => {
         if (limpiar_formulario) {
-            set_id_bien('');
-            set_nombre('');
+            set_form_bien({
+                codigo_bien: "",
+                nombre: "",
+                serial: "",
+                marca: "",
+                modelo: "",
+                estado: ""
+            });
             set_mensaje_error_codigo("");
         }
     }, [limpiar_formulario]);
 
     useEffect(() => {
         if (detalle_seleccionado !== undefined && detalle_seleccionado !== null) {
-            set_id_bien(detalle_seleccionado.codigo_bien);
-            set_nombre(detalle_seleccionado.nombre);
+            console.log(detalle_seleccionado);
+            set_label_serial(key_exists(detalle_seleccionado, 'cod_tipo_vehiculo') ? "Placa" : "Serial")
+            set_form_bien({
+                codigo_bien: detalle_seleccionado.codigo_bien || '',
+                nombre: detalle_seleccionado.nombre || '',
+                serial: detalle_seleccionado.doc_identificador_nro || '',
+                marca: detalle_seleccionado.marca || '',
+                modelo: detalle_seleccionado.observaciones_adicionales || '',
+                estado: detalle_seleccionado.estado || ''
+            });
             if(detalle_seleccionado.codigo_bien !== null && detalle_seleccionado.codigo_bien !== "")
                 set_mensaje_error_codigo("");
         }
@@ -66,7 +87,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
 
     useEffect(() => {
         if (accion_guardar) {
-            if (id_bien === "")
+            if (form_bien.codigo_bien === "")
                 set_mensaje_error_codigo("El campo Código es obligatorio.");
         }
     }, [accion_guardar]);
@@ -86,7 +107,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                             size="small"
                             required
                             disabled
-                            value={id_bien}
+                            value={form_bien.codigo_bien}
                             fullWidth
                             error={mensaje_error_codigo !== ""}
                         />
@@ -96,7 +117,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                         <TextField
                             label="Nombre"
                             size="small"
-                            value={nombre}
+                            value={form_bien.nombre}
                             fullWidth
                             disabled
                             InputProps={{
@@ -105,6 +126,54 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                         />
                     </Grid>
                     <Grid item xs={12} sm={4}>
+                        <TextField
+                            label={label_serial}
+                            size="small"
+                            disabled
+                            fullWidth
+                            value={form_bien.serial}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label="Marca"
+                            size="small"
+                            disabled
+                            fullWidth
+                            value={form_bien.marca}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label="Descripción"
+                            size="small"
+                            disabled
+                            fullWidth
+                            value={form_bien.modelo || ''}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={4}>
+                        <TextField
+                            label="Estado"
+                            size="small"
+                            disabled
+                            fullWidth
+                            value={form_bien.estado || ''}
+                            InputProps={{
+                                readOnly: true,
+                            }}
+                        />
+                    </Grid>
+                    {/* <Grid item xs={12} sm={4}>
                         <Stack
                             direction="row"
                             justifyContent="flex-end"
@@ -129,7 +198,7 @@ export const BusquedaArticuloComponent: React.FC<IProps> = ({ tipo_articulo, par
                                     title={title} parent_details={set_detalle_seleccionado} />
                             )}
                         </Stack>
-                    </Grid>
+                    </Grid> */}
                 </Grid>
             </Box>
 

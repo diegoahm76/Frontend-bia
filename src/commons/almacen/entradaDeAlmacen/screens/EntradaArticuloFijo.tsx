@@ -266,7 +266,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                         />
                                         {(msj_error_valor_residual !== "") && (<FormHelperText error >{msj_error_valor_residual}</FormHelperText>)}
                                     </Grid>
-                                    <Grid item xs={12} sm={2}>
+                                    {/* <Grid item xs={12} sm={2}>
                                         <ToggleButton
                                             value="check"
                                             selected={abrir_hdv}
@@ -277,7 +277,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                         >
                                             <CheckIcon />Abrir Hoja de vida
                                         </ToggleButton>
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid item xs={12} sm={3}>
                                         <Button
                                             color='primary'
@@ -351,6 +351,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                     field="abrir_hdv"
                                                     header="Hoja de vida"
                                                     style={{ width: '15%' }}
+                                                    body={(rowData) => rowData.abrir_hdv ? 'Sí' : 'No'}
                                                 ></Column>
                                                 <Column header="Acciones" style={{ width: '10%' }} align={'center'} body={(rowData) => {
                                                     return <Button color="error" size="small" variant='contained' onClick={() => {

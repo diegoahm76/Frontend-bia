@@ -53,11 +53,18 @@ export const get_marca_service = (): any => {
 // Obtener Artculo por nombre o codigo
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const get_computers_all_service: any = () => {
+export const get_computers_all_service: any = (nombre?: string, doc_identificador_nro?: string) => {
     return async (dispatch: Dispatch<any>) => {
         try {
+            let url = `almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Com`;
+            if (nombre) {
+                url += `&nombre=${nombre}`;
+            }
+            if (doc_identificador_nro) {
+                url += `&doc_identificador_nro=${doc_identificador_nro}`;
+            }
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-            const { data } = await api.get(`almacen/bienes/catalogo-bienes/get-by-nombre-nroidentificador/?cod_tipo_activo=Com`);
+            const { data } = await api.get(url);
             //  console.log('')(data)
             dispatch(set_computers(data.Elementos));
             return data;
@@ -82,13 +89,14 @@ export const get_cv_computer_id = (id: number): any => {
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-
+            //TODO: Agregado para prueba
+            dispatch(set_current_cv_computer({}));
             return error as AxiosError;
         }
     };
 };
 
-// Obtener programados 
+// Obtener programados
 
 export const get_maintenance = (id: number | null): any => {
     return async (dispatch: Dispatch<any>) => {
@@ -102,7 +110,8 @@ export const get_maintenance = (id: number | null): any => {
             return data;
         } catch (error: any) {
             control_error(error.response.data.detail);
-
+             //TODO: Agregado para prueba
+             dispatch(set_maintenance([]));
             return error as AxiosError;
         }
     };

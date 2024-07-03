@@ -381,6 +381,9 @@ export const MainScreenTiposTramites = (): JSX.Element => {
               item
               xs={12}
               sm={12}
+              /*sx={{
+                marginBottom: listaTramites?.length === 0 ? '8rem' : '0'
+              }}*/
               container
               justifyContent="center"
               alignItems="center"
@@ -425,7 +428,8 @@ export const MainScreenTiposTramites = (): JSX.Element => {
             spacing={2}
             sx={{
               justifyContent: 'center',
-              mr: '15px',
+              //mr: '15px',
+              mt: listaTramites?.length === 0 ? '4rem' : '0',
               mb: '10px',
             }}
           >
@@ -450,7 +454,7 @@ export const MainScreenTiposTramites = (): JSX.Element => {
                   controlAdministrarTiposTramites._formValues.nombre,
                   controlAdministrarTiposTramites._formValues.tiene_pago,
                   controlAdministrarTiposTramites._formValues
-                    .cod_tipo_permiso_ambiental,
+                    .cod_tipo_permiso_ambiental.value,
                   handleGeneralLoading
                 ).then((data) => {
                   console.log(data);

@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, useAppSelector } from '../../../../../hooks';
 import { get_num_solicitud, get_uni_organizacional, get_medida_service, get_person_id_service, crear_solicitud_bien_consumo, editar_solicitud, get_funcionario_id_service, anular_solicitud_service, get_bienes_solicitud, } from '../store/solicitudBienConsumoThunks';
-import { set_current_solicitud, set_persona_solicita, reset_state } from '../store/slices/indexSolicitudBienesConsumo';
+import { set_current_solicitud, set_persona_solicita, reset_state, clear_current_solicitud } from '../store/slices/indexSolicitudBienesConsumo';
 import PersonaResponsable from '../components/componenteBusqueda/PersonaResponsable';
 import AnularSolicitudModal from '../components/DespachoRechazoSolicitud/AnularSolicitud';
 import SearchIcon from '@mui/icons-material/Search';
@@ -31,12 +31,11 @@ const SolicitudConsumoScreen = () => {
     const [open_search_modal, set_open_search_modal] = useState<boolean>(false);
     const handle_open_select_model = (): void => { set_open_search_modal(true); };
 
-
     const initial_values = (): void => {
         void dispatch(get_uni_organizacional());
         void dispatch(get_num_solicitud());
         void dispatch(get_medida_service());
-        dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
+        dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional, id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual }))
         set_action('crear');
 
     }
@@ -45,43 +44,47 @@ const SolicitudConsumoScreen = () => {
         void dispatch(get_uni_organizacional());
         void dispatch(get_num_solicitud());
         void dispatch(get_medida_service());
-        dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional }))
-
+        dispatch(set_persona_solicita({ nombre: userinfo.nombre, id_persona: userinfo.id_persona, unidad_organizacional: userinfo.nombre_unidad_organizacional, id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual }))
+        // return () => {
+        //     setTimeout(() => {
+        //         dispatch(clear_current_solicitud())
+        //     }, 2000)
+        // }
     }, [])
 
     useEffect(() => {
-        dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud_por_tipo: nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, }))
+        dispatch(set_current_solicitud({ ...current_solicitud, nro_solicitud_por_tipo: nro_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, id_unidad_para_la_que_solicita: persona_solicita.id_unidad_organizacional_actual, nombre_unidad_organizacional_solicita: persona_solicita.unidad_organizacional}))
     }, [nro_solicitud]);
 
     useEffect(() => {
         // //  console.log('')(current_solicitud)
-        reset_solicitud(current_solicitud)
-        if ('persona_solicita' in current_solicitud) {
             reset_solicitud(current_solicitud)
-        } else {
-            if (current_solicitud.id_persona_solicita !== null && current_solicitud.id_persona_solicita !== undefined)
-                void dispatch(get_person_id_service(current_solicitud.id_persona_solicita))
+            if ('persona_solicita' in current_solicitud) {
+                reset_solicitud(current_solicitud)
+            } else {
+                if (current_solicitud.id_persona_solicita !== null && current_solicitud.id_persona_solicita !== undefined)
+                    void dispatch(get_person_id_service(current_solicitud.id_persona_solicita))
 
-        }
-        if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
-            set_action("editar")
-            void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
-            if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
-                void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
-                //  console.log('')("ok")
             }
-        }
+            if (current_solicitud.id_solicitud_consumibles !== null && current_solicitud.id_solicitud_consumibles !== undefined) {
+                set_action("editar")
+                void dispatch(get_bienes_solicitud(current_solicitud.id_solicitud_consumibles))
+                if (current_solicitud.id_funcionario_responsable_unidad !== current_funcionario.id_persona) {
+                    void dispatch(get_funcionario_id_service(current_solicitud.id_funcionario_responsable_unidad))
+                    //  console.log('')("ok")
+                }
+            }
 
     }, [current_solicitud]);
 
     useEffect(() => {
-        dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, nombre_unidad_organizacional: persona_solicita.unidad_organizacional }))
+        dispatch(set_current_solicitud({ ...current_solicitud, id_persona_solicita: persona_solicita.id_persona, persona_solicita: persona_solicita.nombre, id_unidad_para_la_que_solicita: persona_solicita.id_unidad_organizacional_actual, nombre_unidad_organizacional: persona_solicita.unidad_organizacional, nombre_unidad_organizacional_solicita: persona_solicita.unidad_organizacional }))
     }, [persona_solicita]);
 
     useEffect(() => {
         const observacion = get_values("observacion")
         const motivo = get_values("motivo")
-        const id_unidad_para_la_que_solicita = get_values("id_unidad_para_la_que_solicita")
+        const id_unidad_para_la_que_solicita = get_values("id_unidad_para_la_que_solicita") || userinfo.id_unidad_organizacional_actual
         if (current_funcionario.id_persona !== current_solicitud.id_funcionario_responsable_unidad) {
             dispatch(set_current_solicitud({ ...current_solicitud, id_funcionario_responsable_unidad: current_funcionario.id_persona, observacion, motivo, id_unidad_para_la_que_solicita }))
         }
@@ -150,6 +153,7 @@ const SolicitudConsumoScreen = () => {
 
             <Grid item xs={12} marginY={2}>
                 <SeleccionarSolicitud
+                    reset_values={reset_solicitud}
                     control_solicitud={control_solicitud}
                     get_values={get_values}
                     title={"Solicitudes de consumo"}

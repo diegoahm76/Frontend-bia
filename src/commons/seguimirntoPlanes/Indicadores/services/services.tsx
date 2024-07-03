@@ -98,6 +98,8 @@ export const search_actividades = async ({
 export const search_indicadores = async ({
   nombre_programa,
   nombre_plan,
+  nombre_eje,
+  nombre_meta,
   nombre_proyecto,
   nombre_producto,
   nombre_actividad,

@@ -33,10 +33,17 @@ const TablaModalBusquedaVehiculos: React.FC<Props> = ({
   }
 
   const columns: CustomColumn[] = [
-    { field: 'placa', headerName: 'Placa del vehículo', minWidth: 120, flex: 1,},
+    { field: 'consecutivo', headerName: 'Consecutivo', minWidth: 120, flex: 1,},
+    { field: 'codigo_bien', headerName: 'Código bien', minWidth: 120, flex: 1,},
     { field: 'nombre', headerName: 'Nombre del vehículo', minWidth: 120, flex: 1,},
-    { field: 'nombre_contratista', headerName: 'Nombre del contratista', minWidth: 120, flex: 1,},
+    { field: 'placa', headerName: 'Placa del vehículo', minWidth: 120, flex: 1,},
     { field: 'marca', headerName: 'Marca', minWidth: 120, flex: 1,},
+    { field: 'tipo_vehiculo', headerName: 'Tipo Vehículo', minWidth: 120, flex: 1,},
+    { field: 'nombre_contratista', headerName: 'Nombre del contratista', minWidth: 130, flex: 1,},
+    { field: 'color', headerName: 'Color', minWidth: 120, flex: 1,},
+    { field: 'fecha_circulacion', headerName: 'Fecha circulación', minWidth: 120, flex: 1,},
+    { field: 'indicaciones_destino', headerName: 'Indicaciones Destino', minWidth: 200, flex: 1,},
+    { field: 'nombre_estado', headerName: 'Estado', minWidth: 120, flex: 1,},
   ];
 
   return (
