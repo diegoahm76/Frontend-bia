@@ -726,6 +726,7 @@ export const GestionCarteraScreen: React.FC = () => {
     setLoading(true);
     unifiedSearchSubmit();
     fetchHistorico();
+
   }
 
 
@@ -736,6 +737,7 @@ export const GestionCarteraScreen: React.FC = () => {
         'info'
       );
   };
+
 
 
   const fetchHistorico = async (): Promise<void> => {
@@ -751,8 +753,45 @@ export const GestionCarteraScreen: React.FC = () => {
       setLoading(false)
 
       control_error(error.response.data.detail);
+    }finally{
+      actualizar_tablas_bia()
     }
   };
+
+  
+  const filter_by_name_tablas_verificadas = async () => {
+    
+    if (filtered_nombres === '' && filtered_apellidos === '' && filtered_identificacion === '') {
+      toast.info('Escriba por lo menos los nombres o apellidos o la identificación del deudor', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else {
+      try {
+        const response = await api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}&identificacion=${filtered_identificacion}`);
+        if ((response.data.data as Cartera[]).length > 0) {
+          set_carteras(response.data.data);
+        } else {
+          toast.warning(`No existe el deudor ${filtered_nombres} ${filtered_apellidos}`, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const actualizar_tablas_bia = async (): Promise<void> => {
+    try {
+      const url = "/recaudo/cobros/carteras-tua/";
+      const res = await api.get(url);
+      control_success("Datos actualizados ");
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+    filter_by_name_tablas_verificadas()
+  };
+
 
   return (
     <>

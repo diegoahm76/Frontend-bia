@@ -78,19 +78,12 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [garantias_options, set_garantias_options] = useState<GarantiaInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<RelacionBien>);
-
-  console.log("rows_bienes", rows_bienes);
-
   const [tipo_bien, set_tipo_bien] = useState(0);
   const [tipos_bienes, set_tipos_bienes] = useState(Array<number>);
   const [identificacion_bien, set_identificacion_bien] = useState('');
   const [identificaciones_bienes, set_identificaciones_bienes] = useState(Array<string>);
   const [direccion_bien, set_direccion_bien] = useState('');
 
-  const set_value_direction = (direccion_notificacion: any): void => {
-    set_direccion_bien(direccion_notificacion);
-
-  };
   const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
   const [valor_bien, set_valor_bien] = useState(0);
   const [valores_bienes, set_valores_bienes] = useState(Array<number>);
@@ -110,6 +103,12 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
   const [type_directionn, set_type_direction] = useState('');
 
+  
+  const set_value_direction = (direccion_notificacion: any): void => {
+    set_direccion_bien(direccion_notificacion);
+
+  };
+  
 
   const handle_change_date_abono = (date: Date | null): void => {
     set_date_abono(date);
