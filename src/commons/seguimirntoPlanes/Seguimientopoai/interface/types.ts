@@ -101,6 +101,7 @@ export const miEstilo = {
   export interface FormDataRegistro {
     id_concepto: any;
     id_plan: any;
+    id_codigo_unsp:any;
     id_producto: any;
     id_actividad: any;
     id_indicador: any;
@@ -133,7 +134,7 @@ export const miEstilo = {
     valor_mensual: any;
     fecha_estimada: string;
     mes_proyectado: string;
-    codigo_unsp: string;
+    // codigo_unsp: string;
     lugar_ejecucion: string;
     numero_contrato: any;
     numero_banco: any;

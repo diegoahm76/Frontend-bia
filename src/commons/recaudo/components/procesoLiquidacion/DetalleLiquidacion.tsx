@@ -1,8 +1,4 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable object-shorthand */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint no-new-func: 0 */
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Box, Button, FormControl, Grid, InputLabel, List, ListItemText, MenuItem, Select, type SelectChangeEvent, TextField, Typography, Stack } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
@@ -12,7 +8,6 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
-import { jsPDF } from 'jspdf';
 import { htmlContent } from "./cons";
 import { DocumentoPagoTUA } from "./DocumentoPagoTUA";
 interface LiquidacionResponse {
@@ -58,13 +53,13 @@ interface IProps {
 
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-redeclare, no-import-assign, @typescript-eslint/no-unused-vars
 export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
   const [concepto, set_concepto] = useState('');
   const [variables_datos, set_variables_datos] = useState<Record<string, string>>({});
   const [ver_factura, set_ver_factura] = useState(false);
+  const [tasa, settasa] = useState('Copia Factor Regional TUA');
 
   const opcion_liquidacion: OpcionLiquidacion = useMemo(() => opciones_liquidacion.filter(opcion_liquidacion => opcion_liquidacion.id === Number(id_opcion_liquidacion))[0], [id_opcion_liquidacion]);
 
@@ -96,10 +91,6 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
   const handle_variables_change = (event: React.ChangeEvent<HTMLInputElement>, key: string): void => {
     let { value } = event.target;
-    // Si la clave es 'T', establece el valor en 8 en lugar del valor ingresado
-    // if (key === 'T') {
-    //   value = '8';
-    // }
     set_variables_datos((prevInputs) => ({
       ...prevInputs,
       [key]: value,
@@ -114,16 +105,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
     set_variables_datos({});
   };
 
-  // const handle_variable_input_change = (event: React.ChangeEvent<HTMLInputElement>, id: number, key: string): void => {
-  //   const { value } = event.target;
-  //   const row_detalle = rows_detalles.find((detalle) => detalle.id === id);
-  //   if (row_detalle) {
-  //     const new_variables = { ...row_detalle.variables, [key]: value === '' ? '0' : value };
-  //     const new_detalle: RowDetalles = { ...row_detalle, variables: new_variables, valor_liquidado: get_calculated_variables(row_detalle.formula_aplicada, new_variables) };
-  //     const new_detalles = rows_detalles.map((detalle) => detalle.id === id ? new_detalle : detalle);
-  //     set_rows_detalles(new_detalles);
-  //   }
-  // };
+
   const handle_variable_input_change = (event: React.ChangeEvent<HTMLInputElement>, id: number, key: string): void => {
     const { value } = event.target;
     const row_detalle = rows_detalles.find((detalle) => detalle.id === id);
@@ -204,11 +186,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
 
   const column_detalle: GridColDef[] = [
-    // {
-    //   field: 'id',
-    //   headerName: 'ID',
-    //   width: 20
-    // },
+
     {
       field: 'mes',
       headerName: 'Mes',
@@ -231,18 +209,6 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
       headerName: 'Formula Aplicada',
       flex: 1,
     },
-
-
-    // {
-    //   field: 'dias',
-    //   headerName: 'Días del Mes',
-    //   width: 110,
-    //   valueGetter: (params) => {
-    //     const monthName = months[(params.row.id - 0) % months.length];
-    //     const year = parseInt(año);
-    //     return getDaysInMonth(monthName, year);
-    //   }
-    // },
     {
       field: 'variables',
       headerName: 'Variables',
@@ -292,39 +258,6 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
         return currency_formatter(Number(params.value), 4);
       }
     },
-
-    // {
-    //   field: 'variables',
-    //   headerName: 'Variables',
-    //   width: 300,
-    //   renderCell: (params) => {
-    //     return (
-    //       <List dense>
-    //         {Object.entries(params.value).map((entry) => {
-    //           const [key, value] = entry;
-    //           return (
-    //             <ListItemText key={`${params.row.id}-${key}`}>
-    //               <Stack direction={'row'} spacing={2} alignItems={'center'}>
-    //                 <Typography variant="body1">{key}</Typography>:
-    //                 {estado_expediente?.toLowerCase() === 'liquidado' ?
-    //                   <Typography variant="body1">{value as string}</Typography> :
-    //                   <TextField
-    //                     name={key}
-    //                     value={rows_detalles.find((detalle) => detalle.id === params.row.id)?.variables[key]}
-    //                     type="number"
-    //                     size="small"
-    //                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => handle_variable_input_change(event, params.row.id, key)}
-    //                   />
-    //                 }
-    //               </Stack>
-    //             </ListItemText>
-    //           )
-    //         })}
-    //       </List>
-    //     );
-    //   }
-    // },
-
   ]
   console.log("rows_detalles", rows_detalles, estado_expediente);
   //codigo miguel para visor de factura
@@ -334,16 +267,26 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
 
 
   const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
-    try {
-      const response = await api.get<LiquidacionResponse>('/recaudo/liquidaciones/liquidacion-pdf_miguel/16/');
+    // try {
+    //   const response = await api.get<LiquidacionResponse>('/recaudo/liquidaciones/liquidacion-pdf_miguel/16/');
 
-      setLiquidacion(response.data);
-      console.log("Datos de liquidación cargados con éxito");
-    } catch (error: any) {
-      console.error('Error al cargar los datos de liquidación', error);
-      // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
-    }
+    //   setLiquidacion(response.data);
+    //   console.log("Datos de liquidación cargados con éxito");
+    // } catch (error: any) {
+    //   console.error('Error al cargar los datos de liquidación', error);
+    //   // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
+    // }
   };
+
+
+
+  useEffect(() => {
+    const opcionPreseleccionada = opciones_liquidacion.find(opc => opc.nombre === tasa);
+    if (opcionPreseleccionada) {
+      set_id_opcion_liquidacion(opcionPreseleccionada.id.toString());
+    }
+  }, [opciones_liquidacion, tasa]);
+
   useEffect(() => {
     cargarLiquidacion(setLiquidacion);
   }, []);
@@ -353,17 +296,6 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
       set_variables_datos(opcion_liquidacion.variables);
     }
   }, [opcion_liquidacion]);
-
-
-  const [tasa, settasa] = useState('Copia Factor Regional TUA');
-
-
-  useEffect(() => {
-    const opcionPreseleccionada = opciones_liquidacion.find(opc => opc.nombre === tasa);
-    if (opcionPreseleccionada) {
-      set_id_opcion_liquidacion(opcionPreseleccionada.id.toString());
-    }
-  }, [opciones_liquidacion, tasa]);
 
 
   return (
@@ -534,7 +466,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
           <div dangerouslySetInnerHTML={{ __html: htmlContent }} style={{ width: '50%', height: '50%' }} />
         </Grid>
 
-        <Grid item xs={12} sm={12}>
+        <Grid item xs={12} sm={12}> 
           <embed src={dataUri} type="text/html" width="100%" height="100%" />
         </Grid>
 

@@ -33,9 +33,9 @@ export const IndexacionScreen: React.FC = () => {
     const [configuracion, set_configuracion] = useState<any>(null);
     const [usuario, set_usuario] = useState<any>(null);
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
-    const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [archivos, set_archivos] = useState<any>([]);
+    console.log("archivos",archivos)
     const [actualizar, set_actualizar] = useState<boolean>(false);
     const [anulado, set_anulado] = useState<boolean>(false);
 
