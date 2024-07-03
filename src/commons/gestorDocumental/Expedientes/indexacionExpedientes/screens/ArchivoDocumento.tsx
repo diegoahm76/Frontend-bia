@@ -13,6 +13,7 @@ import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SaveIcon from '@mui/icons-material/Save';
+import { ModalMetadatos } from "../Components/ModalDatosNuevos/ModalMetadatos";
 
 interface IProps {
     expediente: any,
@@ -393,7 +394,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     }
     const seleccionar_archivos: any = (archivo: any) => {
         props.set_id_documento_seleccionado(archivo.id_documento_de_archivo_exped);
-        dispatch(obtener_documento_id(archivo.id_documento_de_archivo_exped)).then((response: any) => {
+        dispatch(
+            (archivo.id_documento_de_archivo_exped)).then((response: any) => {
             if(response.succes){
                 set_fecha_incorporacion_exp(dayjs(response.data.fecha_incorporacion_doc_a_Exp));
                 set_fecha_creacion_doc(dayjs(response.data.fecha_creacion_doc));
@@ -863,6 +865,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     </Button>
                                 </Grid>
                             </Stack>
+                        <ModalMetadatos/>
                         </Grid>
                         
                          { /* } */}
