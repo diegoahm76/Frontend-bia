@@ -5761,28 +5761,19 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
 
 
     const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
-        try {
-            const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
+        // try {
+        //     const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
 
-            setLiquidacion(response.data);
-            console.log("Datos de liquidación cargados con éxito");
-        } catch (error: any) {
-            console.error('Error al cargar los datos de liquidación', error);
-            // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
-        }
+        //     setLiquidacion(response.data);
+        //     console.log("Datos de liquidación cargados con éxito");
+        // } catch (error: any) {
+        //     console.error('Error al cargar los datos de liquidación', error);
+        //     // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
+        // }
     };
     useEffect(() => {
         cargarLiquidacion(setLiquidacion);
     }, [id_liquidacion_pdf]);
-
-
-   
-        const handleClick = () => {
-            console.log("1111111111111111111");
-
-            console.log(rows_detalles);
-        };
-
 
 
     return (
@@ -5801,17 +5792,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
                 }}
             >
 
-                {/* {liquidacion?.data.anio} */}
 
-                {/* <h1>{liquidacion?.data.montopagarMeses[0]}</h1> */}
-                  {/* <h1>{rows_detalles[0]?.valor_liquidado}</h1>
-
-                 <button onClick={handleClick}>Click me</button>
-                 {rows_detalles.map((detalle:any, index:any) => (
-        <Grid item xs={12} key={index}>
-          <h1>{detalle.valor_liquidado}</h1>
-        </Grid>
-      ))} */}
                 <Grid container
                     item xs={12} marginLeft={2} marginRight={2} marginTop={3}
                     sx={{
@@ -5827,11 +5808,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
                 >
                     <Grid container item xs={12} spacing={2} marginTop={2}>
 
-               
-{/* {sumaResultados} */}
-
-                        {/* {id_liquidacion_pdf}
-                        {liquidacion?.data.cedula} */}
+        
                         <Grid item xs={12} sm={4}>
                             <FormControl size="small" fullWidth>
                                 <InputLabel>Expediente</InputLabel>
@@ -5874,30 +5851,6 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
                         </Grid>
 
 
-
-                        {/* <Grid item xs={12} sm={4}>
-                    <FormControl size="small" fullWidth>
-                        <InputLabel>Expediente</InputLabel>
-                        <Select
-                            label='Expediente'
-                            name="id_expediente"
-                            value={form_liquidacion.id_expediente}
-                            MenuProps={{
-                                style: {
-                                    maxHeight: 224,
-                                }
-                            }}
-                            onChange={handle_select_form_liquidacion_change}
-                        >
-                            {expedientes_deudor.map((expediente: any) => (
-                                <MenuItem key={expediente.id} value={expediente.id}>
-                                    {expediente.cod_expediente}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                        <FormHelperText>Seleccione el expediente</FormHelperText>
-                    </FormControl>
-                </Grid> */}
 
 
                         {/* {form_liquidacion.id_expediente && ( */}
