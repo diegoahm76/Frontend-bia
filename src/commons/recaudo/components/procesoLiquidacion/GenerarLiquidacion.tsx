@@ -1,10 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable object-shorthand */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint no-new-func: 0 */
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
 import type { EstadoExpediente, Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
@@ -108,9 +102,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         }
     };
 
-
-
     const [visor, setVisor] = useState('');
+
+
 
     const generarHistoricoBajas = () => {
         const doc = new jsPDF();
@@ -139,15 +133,15 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
 
     const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
-        try {
-            const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
+        // try {
+        //     const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
 
-            setLiquidacion(response.data);
-            console.log("Datos de liquidación cargados con éxito");
-        } catch (error: any) {
-            console.error('Error al cargar los datos de liquidación', error);
-            // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
-        }
+        //     setLiquidacion(response.data);
+        //     console.log("Datos de liquidación cargados con éxito");
+        // } catch (error: any) {
+        //     console.error('Error al cargar los datos de liquidación', error);
+        //     // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
+        // }
     };
     useEffect(() => {
         cargarLiquidacion(setLiquidacion);
@@ -197,18 +191,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
     }, [selectedIds]);
 
-    const handleClick = () => {
-        console.log(selectedIds);
-        console.log("2222222");
-    };
+
     return (
         <>
-
-
-
-            {/* <Button color='success'
-                variant='contained'
-                onClick={handleClick}>CONSOLE </Button> */}
 
 
             <Grid container spacing={2}>
@@ -518,40 +503,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                                 Imprimir recibo
                             </Button>
                         </Grid>
-                        {/* {id_liquidacion_pdf} */}
-                        {/* {id_liquidacion_pdf} */}
-
-                        {/* <div>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={3}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    fullWidth
-                    startIcon={<PrintIcon />}
-                    onClick={handleOpenPdf}
-                  >
-                    Imprimir recibo
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  {/* Aquí es donde se mostrará el PDF */}
-                        {/* pdfUrl && (
-                    <iframe
-                      src={pdfUrl}
-                      width="100%"
-                      height="600px"
-                    />
-                  )
-                </Grid>
-              </Grid> */}
-                        {/* </div> */}
-
-
-
-
-
-
+    
 
 
                         <Grid item xs={12} sm={3}>
