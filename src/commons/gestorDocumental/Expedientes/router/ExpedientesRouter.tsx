@@ -13,6 +13,7 @@ import { IndicesElectronicos } from '../../../seguridad/screens/IndicesElectroni
 import { ConsultaIndiceElectronicoScreen } from '../ConsultaIndiceElectronico/screens/ConsultaIndiceElectronicoScreen';
 import { TransferDocMainScreen } from '../transferenciasDocumentales/screen/TransferDocMainScreen';
 import { TransferDocProvider } from '../transferenciasDocumentales/context/TransferDocContext';
+import { MetadatosIndexacionProvider } from '../indexacionExpedientes/Components/Context/MetadatosContexIndexacionDocumentos';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const routesConfig = [
@@ -44,11 +45,13 @@ const routesConfig = [
 export const ExpedientesRoutes = (): ReactElement => {
   return (
     <UserProvider>
-      <Routes>
-        {routesConfig.map((route, index) => (
-          <Route key={index} path={route.path} element={route.element} />
-        ))}
-      </Routes>
+      <MetadatosIndexacionProvider>
+        <Routes>
+          {routesConfig.map((route, index) => (
+            <Route key={index} path={route.path} element={route.element} />
+          ))}
+        </Routes>
+      </MetadatosIndexacionProvider>
     </UserProvider>
   );
 };
