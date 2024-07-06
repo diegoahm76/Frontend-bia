@@ -76,6 +76,7 @@ export const GestionCarteraScreen: React.FC = () => {
   const [datos, set_datos] = useState<string>('');
 
   const columns_carteras: GridColDef[] = [
+   
     {
       field: 'id',
       headerName: 'ID Cartera',
@@ -128,35 +129,53 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'id_deudor',
-      headerName: 'Nit Deudor',
+      field: 'nombre_deudor',
+      headerName: 'Nombre Deudor',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        if (!params.value) {
-          return params.value;
-        }
-        return params.value.identificacion;
-      }
     },
     {
-      field: 'nombres_deudor',
-      headerName: 'Nombres Deudor',
+      field: 'identificacion',
+      headerName: 'identificacion',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        return params.row.id_deudor.nombres;
-      }
     },
     {
-      field: 'apellidos_deudor',
-      headerName: 'Apellidos Deudor',
+      field: 'tipo_cobro',
+      headerName: 'Tipo Cobro',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        return params.row.id_deudor.apellidos;
-      }
     },
+    // {
+    //   field: 'id_deudor',
+    //   headerName: 'Nit Deudor',
+    //   minWidth: 200,
+    //   flex: 1,
+    //   valueGetter: (params) => {
+    //     if (!params.value) {
+    //       return params.value;
+    //     }
+    //     return params.value.identificacion;
+    //   }
+    // },
+    // {
+    //   field: 'nombres_deudor',
+    //   headerName: 'Nombres Deudor',
+    //   minWidth: 200,
+    //   flex: 1,
+    //   valueGetter: (params) => {
+    //     return params.row.id_deudor.nombres;
+    //   }
+    // },
+    // {
+    //   field: 'apellidos_deudor',
+    //   headerName: 'Apellidos Deudor',
+    //   minWidth: 200,
+    //   flex: 1,
+    //   valueGetter: (params) => {
+    //     return params.row.id_deudor.apellidos;
+    //   }
+    // },
     {
       field: 'fecha_facturacion',
       headerName: 'Fecha factura',
@@ -726,6 +745,7 @@ export const GestionCarteraScreen: React.FC = () => {
     setLoading(true);
     unifiedSearchSubmit();
     fetchHistorico();
+
   }
 
 
@@ -736,6 +756,7 @@ export const GestionCarteraScreen: React.FC = () => {
         'info'
       );
   };
+
 
 
   const fetchHistorico = async (): Promise<void> => {
@@ -751,8 +772,45 @@ export const GestionCarteraScreen: React.FC = () => {
       setLoading(false)
 
       control_error(error.response.data.detail);
+    }finally{
+      actualizar_tablas_bia()
     }
   };
+
+  
+  const filter_by_name_tablas_verificadas = async () => {
+    
+    if (filtered_nombres === '' && filtered_apellidos === '' && filtered_identificacion === '') {
+      toast.info('Escriba por lo menos los nombres o apellidos o la identificación del deudor', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else {
+      try {
+        const response = await api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}&identificacion=${filtered_identificacion}`);
+        if ((response.data.data as Cartera[]).length > 0) {
+          set_carteras(response.data.data);
+        } else {
+          toast.warning(`No existe el deudor ${filtered_nombres} ${filtered_apellidos}`, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const actualizar_tablas_bia = async (): Promise<void> => {
+    try {
+      const url = "/recaudo/cobros/carteras-tua/";
+      const res = await api.get(url);
+      control_success("Datos actualizados ");
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+    filter_by_name_tablas_verificadas()
+  };
+
 
   return (
     <>

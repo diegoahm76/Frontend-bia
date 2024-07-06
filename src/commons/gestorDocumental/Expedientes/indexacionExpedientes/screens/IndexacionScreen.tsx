@@ -33,9 +33,9 @@ export const IndexacionScreen: React.FC = () => {
     const [configuracion, set_configuracion] = useState<any>(null);
     const [usuario, set_usuario] = useState<any>(null);
     const [abrir_modal_anular, set_abrir_modal_anular] = useState<boolean>(false);
-    const [abrir_modal_buscar, set_abrir_modal_buscar] = useState<boolean>(false);
     const [limpiar, set_limpiar] = useState<boolean>(false);
     const [archivos, set_archivos] = useState<any>([]);
+    console.log("archivos",archivos)
     const [actualizar, set_actualizar] = useState<boolean>(false);
     const [anulado, set_anulado] = useState<boolean>(false);
 
@@ -89,6 +89,7 @@ export const IndexacionScreen: React.FC = () => {
         /*}
     };*/
 
+    
     const crear_obj_indexacion = (): void => {
         const data_documentos: any[] = [];
         const data_archivos: File[] = [];
@@ -101,6 +102,11 @@ export const IndexacionScreen: React.FC = () => {
         const form_data = new FormData();
         form_data.append('data_documentos', JSON.stringify(data_documentos));
         data_archivos.forEach((archivo: File) => { form_data.append("archivos", archivo); });
+        console.log("form_data",form_data);
+        console.log("archivos",archivos);
+        console.log("data_documentos",data_documentos);
+
+
         dispatch(crear_indexacion_documentos(form_data, expediente?.id_expediente_documental)).then((response: any) => {
             if(response.success)
                 set_limpiar(true);
