@@ -499,6 +499,7 @@ export const CaptacionPJ: React.FC = () => {
                     </Box>
                   </TableCell>
 
+
                   <TableCell align="center" colSpan={3}>
                     <Box
                       component="section"
