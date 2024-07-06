@@ -104,9 +104,10 @@ export const BusquedaBasicaGeneradoraReporte = ({
       4: {
         //gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/5381/?fecha_inicio=2021-09-01&fecha_fin=2021-09-30&serie_subserie=1
         setChartData: setChartDataViewFour,
-        url: `gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/${watchBusquedaGeneradoraReporteExe?.grupo?.value ?? 0}/?fecha_inicio=${
-          formattedFechaInicio ?? ''
-        }&fecha_fin=${formattedFechaFin ?? ''}&serie_subserie=${watchBusquedaGeneradoraReporteExe?.serie_subserie?.value ?? ''}`,
+        url: 
+        `gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/${watchBusquedaGeneradoraReporteExe?.seccion_subseccion?.value ?? 0}/?fecha_inicio=${  formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}&serie_subserie=${watchBusquedaGeneradoraReporteExe?.serie_subserie?.value ?? ''}&grupo=${watchBusquedaGeneradoraReporteExe?.grupo?.value ?? ""}`,
+        
+        // `gestor/reporte_indices_archivos_carpetas/reporte_unidad_oficina/get/${watchBusquedaGeneradoraReporteExe?.grupo?.value ?? 0}/?fecha_inicio=${  formattedFechaInicio ?? ''}&fecha_fin=${formattedFechaFin ?? ''}&serie_subserie=${watchBusquedaGeneradoraReporteExe?.serie_subserie?.value ?? ''}`,
         handleLoading: handleFourthLoading,
       },
     };
@@ -128,7 +129,7 @@ export const BusquedaBasicaGeneradoraReporte = ({
   if (!currentBusquedaReporte) {
     return <></>;
   }
-
+ 
   return (
     <Grid
       container
@@ -155,6 +156,12 @@ export const BusquedaBasicaGeneradoraReporte = ({
             marginTop: '2.2rem',
           }}
         >
+{/* seccion_subseccion */}
+{/* 
+          grupo
+          {watchBusquedaGeneradoraReporteExe?.grupo?.value ?? 0}
+          seccion_subseccion
+          {watchBusquedaGeneradoraReporteExe?.seccion_subseccion?.value ?? 0} */}
           <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <Controller
@@ -163,7 +170,7 @@ export const BusquedaBasicaGeneradoraReporte = ({
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                   <TextField
-                    // required
+                    required
                     fullWidth
                     label="Fecha inicio"
                     type="date"
@@ -188,7 +195,7 @@ export const BusquedaBasicaGeneradoraReporte = ({
                 defaultValue=""
                 render={({ field: { onChange, value } }) => (
                   <TextField
-                    // required
+                    required
                     fullWidth
                     label="Fecha final"
                     type="date"
