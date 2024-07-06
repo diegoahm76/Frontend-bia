@@ -325,7 +325,7 @@ export const DetalleLiquidacion = () => {
                 startIcon={<CalculateIcon />}
 
               >
-                Calcualar Total
+                Calcular Total
               </Button>
             </Grid>
 
