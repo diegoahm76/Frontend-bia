@@ -33,6 +33,8 @@ export const BusquedaReporteTipoCuatro = ({
       });
   }, []);
 
+  const [selectedValue, setSelectedValue] = useState('');
+
   return (
     <>
       <Grid
@@ -43,11 +45,13 @@ export const BusquedaReporteTipoCuatro = ({
           zIndex: 20,
         }}
       >
+        {/* ddddr */}
+        {/* <h1>{selectedValue}</h1> */}
         <Controller
           //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
           name="seccion_subseccion"
           control={controlBusquedaGeneradoraReporte}
-          rules={{ required: true }}
+          // rules={{ required: true }}
           render={({ field: { onChange, value } }) => (
             <div>
               <Select
@@ -56,9 +60,10 @@ export const BusquedaReporteTipoCuatro = ({
                 onChange={(selectedOption) => {
                   // console.log('')(selectedOption);
                   onChange(selectedOption);
+                  setSelectedValue(selectedOption.value);
                   Promise.all([
                     getSeriesByIdUnidad(selectedOption.value),
-                    getOficinasByIdUnidad(selectedOption.value)
+                    getOficinasByIdUnidad(selectedOption.value),
                   ])
                     .then(([seriesData, gruposData]) => {
                       setUnidades((prevUnidades: any) => ({
@@ -68,17 +73,25 @@ export const BusquedaReporteTipoCuatro = ({
                       }));
                     })
                     .catch((error) => {
-                      console.error("Error fetching data:", error);
+                      console.error('Error fetching data:', error);
                       // Handle the error appropriately here
                     });
 
-                  resetBusquedaGeneradoraReporte({
-                    fecha_inicio: '',
-                    fecha_fin: '',
+                  resetBusquedaGeneradoraReporte((prevData: any) => ({
+                    ...prevData,
+                    // fecha_inicio: '',
+                    // fecha_fin: '',
                     seccion_subseccion: selectedOption,
                     serie_subserie: '',
                     grupo: '',
-                  });
+                  }));
+                  // resetBusquedaGeneradoraReporte({
+                  //   // fecha_inicio: '',
+                  //   // fecha_fin: '',
+                  //   seccion_subseccion: selectedOption,
+                  //   // serie_subserie: '',
+                  //   // grupo: '',
+                  // });
                 }}
                 options={unidades?.unidades ?? []}
                 placeholder="Seleccionar"
@@ -127,7 +140,6 @@ export const BusquedaReporteTipoCuatro = ({
                     onChange={(selectedOption) => {
                       //  console.log('')(selectedOption);
                       onChange(selectedOption);
-                     
                     }}
                     options={unidades?.series ?? []}
                     placeholder="Seleccionar"
@@ -149,7 +161,7 @@ export const BusquedaReporteTipoCuatro = ({
               )}
             />
           </Grid>
-          {!unidades?.grupos  ? (
+          {!unidades?.grupos ? (
             <></>
           ) : (
             <Grid
@@ -164,11 +176,11 @@ export const BusquedaReporteTipoCuatro = ({
                 //* estos names de los controllers deben ser modificiado para que sirvan a la busqueda del panel de ventanilla
                 name="grupo"
                 control={controlBusquedaGeneradoraReporte}
-                rules={{ required: true }}
+                // rules={{ required: true }}
                 render={({ field: { onChange, value } }) => (
                   <div>
                     <Select
-                      required
+                      // required
                       value={value}
                       onChange={(selectedOption) => {
                         //  console.log('')(selectedOption);
