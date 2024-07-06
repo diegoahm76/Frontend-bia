@@ -652,14 +652,21 @@ export const GestionCarteraScreen: React.FC = () => {
   };
 
   const get_rango_color = (id_cartera: number, dias_mora: number): JSX.Element => {
-    const color = carteras.filter(cartera => cartera.id === id_cartera)[0]?.id_rango.color;
-
+    // Encuentra la cartera con el id especificado
+    const cartera = carteras.find(cartera => cartera.id === id_cartera);
+  
+    // Verifica si la cartera y el rango de la cartera son válidos
+    const color = cartera?.id_rango?.color;
+  
+    // Si se encuentra un color válido, devuelve el Chip con el color especificado
     if (color) {
-      return <Chip size="small" label={dias_mora} color={color} variant="outlined" />;
+      return <Chip size="small" label={dias_mora} style={{ backgroundColor: color }} variant="outlined" />;
     }
-
-    return <></>;
+  
+    // Si no hay un color válido, devuelve un espacio vacío
+    return <span>&nbsp;</span>;
   };
+  
 
   const filter_by_name = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
