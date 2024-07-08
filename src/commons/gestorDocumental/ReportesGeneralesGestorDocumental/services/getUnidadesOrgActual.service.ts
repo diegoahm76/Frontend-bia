@@ -29,7 +29,9 @@ export const getUnidadesOrgActual = async (): Promise<any> => {
 
 export const getOficinasByIdUnidad = async (idUnidad: number): Promise<any> => {
   try{
-    const url = `gestor/bandeja-tareas/unidad-organizacional/hijas/get/${idUnidad}`
+// `gestor/bandeja-tareas/unidad-organizacional/hijas/get/${idUnidad}`
+    
+    const url = `gestor/reporte_indices_archivos_carpetas/grupos/get/${idUnidad}`
     const {data} = await api.get(url);
 
     if(!Array.isArray(data?.data) || !data?.success) {
