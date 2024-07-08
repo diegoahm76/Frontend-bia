@@ -652,22 +652,25 @@ export const GestionCarteraScreen: React.FC = () => {
   };
   
   const get_rango_color = (id_cartera: number, dias_mora: number): JSX.Element => {
-    // Encuentra la cartera con el id especificado
-    const cartera = carteras.find(cartera => cartera.id === id_cartera);
+    
+    // Asigna un color predeterminado si los datos son nulos
+    const colorPredeterminado = 'grey';
+    
+    // Determina el color basado en el valor de dias_mora
+    let color = colorPredeterminado;
   
-    // Verifica si la cartera y el rango de la cartera son válidos
-    const color = cartera?.id_rango?.color;
+    if (dias_mora < 0) {
+      color = 'orange'; // negativa
+    } else if (dias_mora >= 0 && dias_mora <= 180) {
+      color = 'green'; // 0 - 180
+    } else if (dias_mora >= 181 && dias_mora <= 360) {
+      color = 'yellow'; // 181 - 360
+    } else if (dias_mora > 360) {
+      color = 'red'; // 361 en adelante
+    }
   
-    // Convierte dias_mora a un valor absoluto
-    const diasMoraPositivo = Math.abs(dias_mora);
-  
-    // Si se encuentra un color válido, devuelve el Chip con el color especificado
-    // if (color) {
-      return <Chip size="small" label={diasMoraPositivo} style={{ backgroundColor: color }} variant="outlined" />;
-    // }
-  
-    // Si no hay un color válido, devuelve un espacio vacío
-    return <span>&nbsp;</span>;
+    // Devuelve el Chip con el color especificado
+    return <Chip size="small" label={dias_mora} style={{ backgroundColor: color }} variant="outlined" />;
   };
   
   
