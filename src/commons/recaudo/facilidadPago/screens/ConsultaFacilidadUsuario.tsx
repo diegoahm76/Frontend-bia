@@ -87,7 +87,7 @@ export const ConsultaFacilidadUsuario: React.FC = () => {
                       label="Nombres"
                       size="small"
                       fullWidth
-                      value={''.concat(solicitud_facilidad.deudor.nombres, ' ', solicitud_facilidad.deudor.apellidos)}
+                      value={''.concat(solicitud_facilidad.deudor.nombre_completo)}
                       disabled
                     />
                   </Grid>
