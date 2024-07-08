@@ -91,7 +91,7 @@ export const ReciboPagoModulo: React.FC = () => {
               <p className='descripcionRecibo'><strong>Nombre Titular</strong></p>
             </div>
             <div className='datosRecibo__info'>
-              <p className='descripcionRecibo'><strong>{''.concat(solicitud_facilidad.deudor.nombres, ' ', solicitud_facilidad.deudor.apellidos)}</strong></p>
+              <p className='descripcionRecibo'><strong>{''.concat(solicitud_facilidad.deudor.nombre_completo)}</strong></p>
             </div>
           </section>
           <section className='datosRecibo'>

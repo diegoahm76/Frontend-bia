@@ -22,6 +22,10 @@ import { control_error } from '../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Swal from 'sweetalert2';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
+import { showAlert } from '../../../../utils/showAlert/ShowAlert';
+import AddIcon from '@mui/icons-material/Add';
+import { api } from '../../../../api/axios';
+
 
 interface RootStateDeudor {
   deudores: {
@@ -64,6 +68,11 @@ interface RespuestaRegistroFacilidad {
   numero_radicacion: string;
 }
 
+interface Icalidad_actuacion {
+  id: number;
+  descripcion: string
+}
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const RegistroFacilidadPago: React.FC = () => {
   const [persona, set_persona] = useState(0);
@@ -78,12 +87,12 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [garantias_options, set_garantias_options] = useState<GarantiaInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<RelacionBien>);
-  const [tipo_bien, set_tipo_bien] = useState(0);
+  const [tipo_bien, set_tipo_bien] = useState<number | null>(0);
   const [tipos_bienes, set_tipos_bienes] = useState(Array<number>);
   const [identificacion_bien, set_identificacion_bien] = useState('');
   const [identificaciones_bienes, set_identificaciones_bienes] = useState(Array<string>);
   const [direccion_bien, set_direccion_bien] = useState('');
-
+  const [calidad_actuacion, set_calidad_actuacion] = useState<Icalidad_actuacion[]>([]);
   const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
   const [valor_bien, set_valor_bien] = useState(0);
   const [valores_bienes, set_valores_bienes] = useState(Array<number>);
@@ -103,12 +112,12 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
   const [type_directionn, set_type_direction] = useState('');
 
-  
+
   const set_value_direction = (direccion_notificacion: any): void => {
     set_direccion_bien(direccion_notificacion);
 
   };
-  
+
 
   const handle_change_date_abono = (date: Date | null): void => {
     set_date_abono(date);
@@ -225,13 +234,68 @@ export const RegistroFacilidadPago: React.FC = () => {
           {params.value}
         </div>
       ),
-    },
+    }
   ];
+
+
+
+
   const [totalSum, setTotalSum] = useState<number>(0);
   console.log("totalSum", totalSum)
   const updateTotalSum = (sum: number) => {
     setTotalSum(sum);
   };
+
+
+  const handleAgregarClick = () => {
+    if (!tipo_bien || !identificacion_bien || !direccion_bien || !valor_bien || !archivo_bien) {
+      const mensajesFaltantes = [];
+      if (!tipo_bien) mensajesFaltantes.push('tipo de bien');
+      if (!identificacion_bien) mensajesFaltantes.push('identificación del bien');
+      if (!direccion_bien) mensajesFaltantes.push('dirección del bien');
+      if (!valor_bien) mensajesFaltantes.push('valor del bien');
+      if (!archivo_bien) mensajesFaltantes.push('archivo del bien');
+
+      showAlert(
+        'Opps...',
+        `No hay datos suficientes para agregar. Faltan: ${mensajesFaltantes.join(', ')}.`,
+        'warning'
+      );
+      return;
+    }
+
+
+    set_rows_bienes(rows_bienes.concat({
+      id: faker.database.mongodbObjectId(),
+      id_tipo_bien: tipo_bien,
+      descripcion: identificacion_bien,
+      direccion: direccion_bien,
+      valor: valor_bien,
+    }));
+    set_tipos_bienes(tipos_bienes.concat(tipo_bien));
+    set_identificaciones_bienes(identificaciones_bienes.concat(identificacion_bien));
+    set_direcciones_bienes(direcciones_bienes.concat(direccion_bien))
+    set_valores_bienes(valores_bienes.concat(valor_bien));
+    set_archivos_bienes(archivos_bienes.concat(archivo_bien as any));
+    set_ubicaciones_bienes(ubicaciones_bienes.concat(1));
+  };
+
+  
+  const fetch_data_desplegable = async () => {
+    try {
+      const url = `/recaudo/facilidades-pagos/tipos-calidad-actuacion/`;
+      const res = await api.get(url);
+      const numero_consulta: Icalidad_actuacion[] = res.data.data;
+      set_calidad_actuacion(numero_consulta);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetch_data_desplegable();
+  }, []);
+
   return (
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
@@ -338,10 +402,11 @@ export const RegistroFacilidadPago: React.FC = () => {
                       set_persona(parseInt(value))
                     }}
                   >
-                    <MenuItem value='1'>Persona Natural</MenuItem>
-                    <MenuItem value='2'>Persona Juridica / Apoderado</MenuItem>
-                    <MenuItem value='3'>Deudor Solidario Natural</MenuItem>
-                    <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
+                    {calidad_actuacion.map((item) => (
+                      <MenuItem key={item.id} value={item.id}>
+                        {item.descripcion}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -1170,7 +1235,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                   }}
                 />
               </Grid>
-             
+
               <DialogGeneradorDeDirecciones
                 open={opengeneradordireccioness}
                 openDialog={setopengeneradordireccioness}
@@ -1194,19 +1259,19 @@ export const RegistroFacilidadPago: React.FC = () => {
                 // }}
                 />
               </Grid>
-              
-              <Grid item xs={12} sm={5}>
-                  <Button
-                    variant="contained"
-                    onClick={() => {
-                      setopengeneradordireccioness(true);
-                    }}
-                  >
-                    Generar dirección
-                  </Button>
-                </Grid>
 
-                 <Grid item xs={12} sm={5}>
+              <Grid item xs={12} sm={5}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setopengeneradordireccioness(true);
+                  }}
+                >
+                  Generar dirección
+                </Button>
+              </Grid>
+
+              <Grid item xs={12} sm={5}>
                 <TextField
                   required
                   label="Avalúo"
@@ -1257,27 +1322,15 @@ export const RegistroFacilidadPago: React.FC = () => {
               )}
               <Grid item xs={12} sm={3.1}>
                 <Button
-                  color='primary'
+                  color='success'
                   variant='outlined'
-                  onClick={() => {
-                    set_rows_bienes(rows_bienes.concat({
-                      id: faker.database.mongodbObjectId(),
-                      id_tipo_bien: tipo_bien,
-                      descripcion: identificacion_bien,
-                      direccion: direccion_bien,
-                      valor: valor_bien,
-                    }))
-                    set_tipos_bienes(tipos_bienes.concat(tipo_bien))
-                    set_identificaciones_bienes(identificaciones_bienes.concat(identificacion_bien))
-                    set_direcciones_bienes(direcciones_bienes.concat(direccion_bien))
-                    set_valores_bienes(valores_bienes.concat(valor_bien))
-                    set_archivos_bienes(archivos_bienes.concat(archivo_bien as any))
-                    set_ubicaciones_bienes(ubicaciones_bienes.concat(1))
-                  }}
+                  startIcon={<AddIcon />}
+                  onClick={handleAgregarClick}
                 >
                   Agregar
                 </Button>
               </Grid>
+
             </Grid>
             {
               rows_bienes.length !== 0 ? (
@@ -1307,6 +1360,21 @@ export const RegistroFacilidadPago: React.FC = () => {
                         />
                       </Box>
                     </Grid>
+
+
+                    <Grid item xs={12} sm={3.1}>
+                      <Button
+                        color='primary'
+                        style={{ marginTop: 15 }}
+                        variant='outlined'
+                        startIcon={<DeleteIcon />}
+                        onClick={() => { set_rows_bienes([]) }}
+                      >
+                        Limpiar
+                      </Button>
+                    </Grid>
+
+
                   </Grid>
                 </Grid>
               ) : null

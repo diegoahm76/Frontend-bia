@@ -159,11 +159,11 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
         >
           <Loader altura={270} />
         </Grid>
-      ) : /*listaOpas?.opasSinResponder.length*/ !listaOpas?.opasSinResponder.length ? (
+      ) : listaOpas?.opasSinResponder.length /* !listaOpas?.opasSinResponder.length */ ? (
         <RenderDataGrid
           title="Solicitudes de opas presentadas por persona - Existentes"
-          rows={/*listaOpas?.opasSinResponder ||*/ [
-            {
+          rows={listaOpas?.opasSinResponder || [
+            /*{
               "tipo_solicitud": "OPA",
               "nombre_proyecto": "Proyecto de Reforestación",
               "nombre_opa": "Reforestación de áreas degradadas",
@@ -198,7 +198,7 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
               "estado_asignacion_grupo": "Grupo de Evaluación 2",
               "persona_asignada": "Carlos Sánchez",
               "unidad_asignada": "Unidad de Proyectos Especiales"
-            }
+            }*/
           ]}
           columns={columnsMain ?? []}
         />
@@ -234,11 +234,11 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
         >
           <Loader altura={270} />
         </Grid>
-      ) : /*listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa.length*/ !listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa.length ? (
+      ) : listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa.length /*!listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa.length*/ ? (
         <RenderDataGrid
           title="Solicitudes de requerimiento por persona - Existentes sin responder"
-          rows={/*listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa ??*/ [
-            {
+          rows={listaOpas?.reqOSolSinResponderRelacionadasAUnaOpa ?? [
+           /* {
               "tipo_tramite": "Permiso de construcción",
               "fecha_radicado": "2023-04-15",
               "numero_radicado": "RAD-20230415-123",
@@ -255,7 +255,7 @@ export const ListaPorPersonaSolPendientes = (): JSX.Element => {
               "fecha_radicado": "2023-05-05",
               "numero_radicado": "RAD-20230505-789",
               "estado": "Pendiente de pago"
-            }
+            }*/
           ]}
           columns={columnsReq ?? []}
         />

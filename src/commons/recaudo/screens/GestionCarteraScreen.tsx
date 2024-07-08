@@ -93,7 +93,7 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'Resolucion ',
+      field: 'num_resolucion',
       headerName: 'Resolucion   ',
       minWidth: 200,
       flex: 1,
@@ -102,7 +102,7 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'Periodo ',
+      field: 'Periodo',
       headerName: 'Periodo   ',
       minWidth: 200,
       flex: 1,
@@ -111,7 +111,7 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'Expediente ',
+      field: 'expediente',
       headerName: 'Expediente   ',
       minWidth: 200,
       flex: 1,
@@ -121,11 +121,11 @@ export const GestionCarteraScreen: React.FC = () => {
     },
     {
       field: 'Descuento ',
-      headerName: 'Descuento   ',
+      headerName: 'Descuento',
       minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
-        return params.value ?? 'Sin tipo renta';
+        return params.value ?? 'Sin Descuento';
       }
     },
     {
@@ -650,7 +650,7 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
   };
-
+  
   const get_rango_color = (id_cartera: number, dias_mora: number): JSX.Element => {
     // Encuentra la cartera con el id especificado
     const cartera = carteras.find(cartera => cartera.id === id_cartera);
@@ -658,14 +658,19 @@ export const GestionCarteraScreen: React.FC = () => {
     // Verifica si la cartera y el rango de la cartera son válidos
     const color = cartera?.id_rango?.color;
   
+    // Convierte dias_mora a un valor absoluto
+    const diasMoraPositivo = Math.abs(dias_mora);
+  
     // Si se encuentra un color válido, devuelve el Chip con el color especificado
-    if (color) {
-      return <Chip size="small" label={dias_mora} style={{ backgroundColor: color }} variant="outlined" />;
-    }
+    // if (color) {
+      return <Chip size="small" label={diasMoraPositivo} style={{ backgroundColor: color }} variant="outlined" />;
+    // }
   
     // Si no hay un color válido, devuelve un espacio vacío
     return <span>&nbsp;</span>;
   };
+  
+  
   
 
   const filter_by_name = (event: React.FormEvent<HTMLFormElement>): void => {
