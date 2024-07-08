@@ -43,7 +43,7 @@ export const EncabezadoRegistro: React.FC = () => {
                   label="Nombre o Razón Social"
                   size="small"
                   fullWidth
-                  value={''.concat(deudores.nombres, ' ', deudores.apellidos)}
+                  value={''.concat(deudores.nombre_completo)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>
@@ -70,7 +70,7 @@ export const EncabezadoRegistro: React.FC = () => {
                   label="Dirección Notificación"
                   size="small"
                   fullWidth
-                  value={''.concat(deudores.ubicacion)}
+                  value={''.concat(deudores.direccion_notificaciones)}
                 />
               </Grid>
               <Grid item xs={12} sm={3}>

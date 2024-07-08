@@ -66,10 +66,10 @@ export interface Bien {
 export interface Deudor {
   id: number;
   identificacion: string;
-  nombres: string;
+  nombre_completo: string;
   apellidos: string;
   email: string;
-  ubicacion: string;
+  direccion_notificaciones: string;
 }
 
 export interface Contacto {
