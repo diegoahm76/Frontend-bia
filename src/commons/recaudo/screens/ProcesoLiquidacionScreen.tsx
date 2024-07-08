@@ -129,6 +129,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 
+  const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>);
+
   const [nombre_deudor, set_nombre_deudor] = useState('');
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
     id_deudor: '',
@@ -473,6 +475,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     event: SelectChangeEvent
   ) => void = (event: SelectChangeEvent) => {
     const { name, value } = event.target;
+    console.log(name, value);
     set_form_liquidacion((prevDetalles) => ({
       ...prevDetalles,
       [name]: value,
@@ -571,9 +574,11 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
   const [obligaciones_module, set_obligaciones_module] = useState(false);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+  
   const { obligaciones } = useSelector(
     (state: RootStateObligaciones) => state.obligaciones
   );
+
 
   const columns_deudores: GridColDef[] = [
     {
@@ -581,18 +586,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       headerName: 'Identificación',
       minWidth: 150,
       flex: 0.3,
-    },
-    {
-      field: 'nombres',
-      headerName: 'Nombres',
-      minWidth: 110,
-      flex: 0.1,
-    },
-    {
-      field: 'apellidos',
-      headerName: 'Apellidos',
-      minWidth: 110,
-      flex: 0.1,
     },
     {
       field: 'deudor',
@@ -606,42 +599,32 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       },
     },
     {
-      field: 'Estado',
-      headerName: 'Estado',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin tipo estaddo';
-      },
+      field: 'fecha_nacimiento',
+      headerName: 'Fecha nacimiento',
+      minWidth: 150,
+      flex: 0.3,
+      valueFormatter: (params) => (
+        dayjs(params.value ?? null).isValid() ? dayjs(params.value as string).format('DD/MM/YYYY') : ''
+      )
     },
     {
-      field: 'Periodo',
-      headerName: 'Periodo',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Periodo  ';
-      },
+      field: 'telefono',
+      headerName: 'Telefono',
+      minWidth: 150,
+      flex: 0.3,
     },
     {
-      field: 'Tipo de cobro',
-      headerName: 'Tipo de cobro',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Tipo de cobro  ';
-      },
+      field: 'direccion',
+      headerName: 'Dirección',
+      minWidth: 320,
+      flex: 0.3,
     },
     {
-      field: 'Tipo de renta',
-      headerName: 'Tipo de renta',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Tipo de renta  ';
-      },
+      field: 'email',
+      headerName: 'Email',
+      minWidth: 250,
+      flex: 0.3,
     },
-
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -926,6 +909,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                         {obligaciones.length !== 0 ? (
                           <>
                             <TablaObligacionesUsuarioConsulta
+                              lista_obligaciones={lista_obligaciones}
+                              set_lista_obligaciones={set_lista_obligaciones}
                               set_position_tab={set_position_tab}
                               set_cobro_persuasivo_active={set_cobro_persuasivo_active}
                               is_modal_active={is_modal_activee}
@@ -946,6 +931,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 {/* INPUTS EDITAR LIQUIDACION */}
                 <GenerarLiquidacion
+                  obligaciones={obligaciones}
+                  lista_obligaciones={lista_obligaciones}
                   set_form_liquidacion={set_form_liquidacion}
                   form_liquidacion={form_liquidacion}
                   nombre_deudor={nombre_deudor}
