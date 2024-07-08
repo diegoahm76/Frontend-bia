@@ -76,7 +76,7 @@ export const AccionesFinales = ({
         //asunto: anexosCreados[0]?.asunto  || 'Sin asunto',
         descripcion: anexosCreados[0]?.descripcion_de_la_solicitud,
         id_solicitud_tramite: currentPersonaRespuestaUsuario?.id_solicitud_tramite,
-        id_requerimiento: currentPersonaRespuestaUsuario?.id_requerimiento,
+        id_requerimiento: currentPersonaRespuestaUsuario?.id_requerimiento || 2,
         //id_requerimiento:
         //  +currentPersonaRespuestaUsuario?.id_requerimiento,
       })
