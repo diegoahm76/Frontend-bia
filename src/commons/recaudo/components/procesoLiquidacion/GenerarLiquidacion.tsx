@@ -64,6 +64,8 @@ interface IProps {
     selectedIds: any;
     set_selectedIds: any;
     set_form_liquidacion: any;
+    lista_obligaciones: any;
+    obligaciones: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -88,6 +90,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     handle_submit_liquidacionma,
     handle_input_form_liquidacion_change,
     handle_select_form_liquidacion_change,
+    lista_obligaciones,
+    obligaciones
 }: IProps) => {
 
     const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
@@ -191,6 +195,123 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
     }, [selectedIds]);
 
+    useEffect(() => {
+        if (lista_obligaciones.length > 0) {
+            set_form_liquidacion((prevData: any) => ({
+                ...prevData,
+                id_expediente: lista_obligaciones[0].expediente,
+            }));
+
+            if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'MULTAS') {
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'diario',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if(lista_obligaciones[0].tipo_renta.toUpperCase() === 'SOBRETASA AMBIENTAL'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'anual',
+                    periodo_liquidacion: 'enero a diciembre'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TRAMITES (VISITAS; TASA APROVECHAMIENTO FORESTAL; SALVOCONDUCTOS; ETC)'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'diario',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TR)'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'semestral',
+                    periodo_liquidacion: 'enero a junio'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'anual',
+                    periodo_liquidacion: 'enero a diciembre'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA DE USO DE AGUA (TUA)'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'anual',
+                    periodo_liquidacion: 'enero a diciembre'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA DE APROVECHAMIENTO FORESTAL'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'anual',
+                    periodo_liquidacion: 'enero a diciembre'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'DETERMINANTES AMBIENTALES'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'diario',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'SOBRETASA AMBIENTAL O PORCENTAJE'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TRAMITES (SALVOCONDUCTOS; ETC)'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'VISITAS DE CONTROL Y SEGUIMIENTO'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'VISITAS INICIALES DE EVALUACION'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'VEHICULO 2024'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'INICIO DE COBRO 2024'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'SALARIO MINIMO LEGAL VIGENTE 2024'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+
+            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'SUBSIDIO DE TRANSPORTE'){
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+
+            }
+
+        }
+    }, [lista_obligaciones])
+
 
     return (
         <>
@@ -236,7 +357,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 <Grid item xs={12} sm={4}>
                     <TextField
                         label='Cedula'
-                        value={liquidacion?.data.cedula}
+                        value={obligaciones?.numero_identificacion ?? ''}
                         size="small"
                         InputLabelProps={{
                             shrink: true,
@@ -503,7 +624,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                                 Imprimir recibo
                             </Button>
                         </Grid>
-    
+
 
 
                         <Grid item xs={12} sm={3}>

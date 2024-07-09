@@ -32,10 +32,21 @@ interface BuscarProps {
   set_cobro_persuasivo_active: any;
   selectedIds: any;
   set_selectedIds: any;
+  set_lista_obligaciones: any;
+  lista_obligaciones: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
-export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_selectedIds, selectedIds, set_position_tab, set_cobro_persuasivo_active, is_modal_active, set_is_modal_active }) => {
+export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
+  set_selectedIds,
+  selectedIds,
+  set_position_tab,
+  set_cobro_persuasivo_active,
+  is_modal_active,
+  set_is_modal_active,
+  set_lista_obligaciones,
+  lista_obligaciones
+}) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
   const [seledexpediente, set_seledexpediente] = useState<readonly string[]>([]);
 
@@ -45,7 +56,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
   const [modal, set_modal] = useState(false);
   const [modal_opcion, set_modal_opcion] = useState(0);
   const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
-  const [lista_obligaciones, set_lista_obligaciones] = useState(Array<Obligacion>)
+
   const [obligaciones_gestor, set_obligaciones_gestor] = useState(Array<Obligacion>)
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
@@ -202,17 +213,17 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
       set_selected([]);
       set_selectedIds([]);
     } else {
-      const newSelected = lista_obligaciones.map((obligacion) => obligacion.nombre);
+      const newSelected = lista_obligaciones.map((obligacion: any) => obligacion.nombre);
       set_selected(newSelected);
 
-      const newSelectedd = lista_obligaciones.map((obligacion) => obligacion.id);
+      const newSelectedd = lista_obligaciones.map((obligacion: any) => obligacion.id);
       set_selectedIds(newSelectedd);
     }
 
     if (obligaciones_gestor.length === lista_obligaciones.length) {
       set_obligaciones_gestor([]);
     } else {
-      const newObligaciones = lista_obligaciones.map(obligacion => ({
+      const newObligaciones = lista_obligaciones.map((obligacion: any) => ({
         ...obligacion,
         id_deudor: obligaciones.id_deudor,
         nombre_completo: obligaciones.nombre_completo,
@@ -236,7 +247,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
             // checked={selected.indexOf(params.row.nombre) !== -1 }
             checked={selected.indexOf(params.row.nombre) !== -1 && selectedIds.indexOf(params.row.id) !== -1}
 
-            onClick={(event) =>{
+            onClick={(event) => {
               handle_click(event, params.row.nombre, params.row.id)
               handle_gestor_cartera(params.row)
             }}
@@ -252,44 +263,43 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({ set_se
 
     },
     {
-      field: 'nombre',
+      field: 'tipo_renta',
       headerName: 'Tipo de renta',
+      width: 220,
+    },
+    {
+      field: 'tipo_cobro',
+      headerName: 'Tipo de cobro',
+      width: 220,
+    },
+    {
+      field: 'periodo',
+      headerName: 'Periodo',
       width: 150,
       renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
+        dayjs(params.row.fecha_facturacion).month() + 1 <= 6 ? '1er Semestre' : '2do Semestre'
+      )
+    },
+    {
+      field: 'fecha_facturacion',
+      headerName: 'Fecha Facturacion',
+      width: 150,
+      valueFormatter: (params) => dayjs(params.value).isValid() ? dayjs(params.value).format('DD/MM/YYYY') : '',
     },
     {
       field: 'inicio',
       headerName: 'Fecha Inicio',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {dayjs(params.value).format('DD/MM/YYYY')}
-        </div>
-      ),
     },
     {
-      field: 'nro_expediente',
+      field: 'expediente',
       headerName: 'Expediente',
       width: 150,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
     },
     {
-      field: 'nro_resolucion',
+      field: 'num_resolucion',
       headerName: 'Nro Resolución',
       width: 200,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
     },
     {
       field: 'monto_inicial',

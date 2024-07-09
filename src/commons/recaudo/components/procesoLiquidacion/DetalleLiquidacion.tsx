@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
-import { Box, Button, FormControl, Grid, InputLabel, List, ListItemText, MenuItem, Select, type SelectChangeEvent, TextField, Typography, Stack } from "@mui/material";
+import { Dispatch, SetStateAction, SyntheticEvent, useEffect, useMemo, useState } from "react";
+import { Box, Button, FormControl, Grid, InputLabel, List, ListItemText, MenuItem, Select, type SelectChangeEvent, TextField, Typography, Stack, Tab } from "@mui/material";
 import { DataGrid, type GridColDef } from "@mui/x-data-grid";
 import { Title } from "../../../../components";
 import type { EstadoExpediente, OpcionLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
@@ -10,6 +10,8 @@ import { api } from "../../../../api/axios";
 import { currency_formatter } from "../../../../utils/functions/getFormattedCurrency";
 import { htmlContent } from "./cons";
 import { DocumentoPagoTUA } from "./DocumentoPagoTUA";
+import { TabContext, TabList, TabPanel } from "@mui/lab";
+import ChevronLeftSharpIcon from '@mui/icons-material/ChevronLeftSharp';
 interface LiquidacionResponse {
   success: boolean;
   detail: string;
@@ -54,6 +56,8 @@ interface IProps {
 }
 
 export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
+  const [position_tab, set_position_tab] = useState('1');
+
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
   const [id_opcion_liquidacion, set_id_opcion_liquidacion] = useState("");
   const [concepto, set_concepto] = useState('');
@@ -72,6 +76,13 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
         //  console.log('')(error);
       });
   }, []);
+
+  const handle_position_tab_change = (
+    event: SyntheticEvent,
+    newValue: string
+  ): void => {
+    set_position_tab(newValue);
+  };
 
   useEffect(() => console.log(estado_expediente), [estado_expediente])
 
@@ -315,136 +326,169 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
         }}
       >
         <Grid item xs={12}>
-          <Title title="Detalle de liquidación"></Title>
+          <TabContext value={position_tab}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <TabList onChange={handle_position_tab_change}>
+                <Tab label="Detalle de liquidación" value="1" />
+                <Tab disabled={!ver_factura} label="Factura" value="2" />
+              </TabList>
+            </Box>
+
+            <TabPanel value="1" sx={{ p: '20px 0' }}>
+              <Title title="Detalle de liquidación"></Title>
+
+              <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
 
 
-          <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
-
-
-            <Grid item xs={12}>
-              <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
-                <InputLabel>Selecciona opción liquidación</InputLabel>
-                <Select
-                  label='Selecciona opción liquidación'
-                  value={id_opcion_liquidacion}
-                  MenuProps={{
-                    style: {
-                      maxHeight: 224,
-                    }
-                  }}
-                  onChange={handle_select_change}
-                >
-                  {opciones_liquidacion.map((opc_liquidacion) => (
-                    <MenuItem key={opc_liquidacion.id} value={opc_liquidacion.id}>
-                      {opc_liquidacion.nombre}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-
-
-
-            <Grid item xs={12}>
-              <TextField
-                label='Concepto'
-                size="small"
-                fullWidth
-                value={concepto}
-                onChange={handle_input_change}
-                required
-              />
-            </Grid>
-          </Grid>
-          {/* <div>
-          </div> */}
-          <Box component={'form'} sx={{ width: '100%' }} onSubmit={handle_form_submit}>
-            {opcion_liquidacion && (
-              <Grid container justifyContent={'center'} spacing={2}>
-                <Grid item>
-                  <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Parametros</InputLabel>
-                  {Object.keys(opcion_liquidacion?.variables).map((key, index) => (
-                    <div key={index}>
-                      <InputLabel sx={{ p: '18.5px' }}>{key}</InputLabel>
-                    </div>
-                  ))}
+                <Grid item xs={12}>
+                  <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
+                    <InputLabel>Selecciona opción liquidación</InputLabel>
+                    <Select
+                      label='Selecciona opción liquidación'
+                      value={id_opcion_liquidacion}
+                      MenuProps={{
+                        style: {
+                          maxHeight: 224,
+                        }
+                      }}
+                      onChange={handle_select_change}
+                    >
+                      {opciones_liquidacion.map((opc_liquidacion) => (
+                        <MenuItem key={opc_liquidacion.id} value={opc_liquidacion.id}>
+                          {opc_liquidacion.nombre}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
 
-                <Grid item>
-                  <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
-                  {Object.keys(opcion_liquidacion?.variables).map((key, index) => (
-                    <div key={index}>
-                      <TextField
-                        type="number"
-                        sx={{ p: '10px' }}
-                        size="small"
-                        value={variables_datos[key] || ''}
-                        required
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handle_variables_change(event, key) }}
-                      />
-                    </div>
-                  ))}
+
+
+
+                <Grid item xs={12}>
+                  <TextField
+                    label='Concepto'
+                    size="small"
+                    fullWidth
+                    value={concepto}
+                    onChange={handle_input_change}
+                    required
+                  />
                 </Grid>
               </Grid>
-            )}
+              {/* <div>
+</div> */}
+              <Box component={'form'} sx={{ width: '100%' }} onSubmit={handle_form_submit}>
+                {opcion_liquidacion && (
+                  <Grid container justifyContent={'center'} spacing={2}>
+                    <Grid item>
+                      <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Parametros</InputLabel>
+                      {Object.keys(opcion_liquidacion?.variables).map((key, index) => (
+                        <div key={index}>
+                          <InputLabel sx={{ p: '18.5px' }}>{key}</InputLabel>
+                        </div>
+                      ))}
+                    </Grid>
 
-            <Grid container justifyContent='center' sx={{ my: '20px' }}>
-              <Grid item xs={3}>
-                {/* {estado_expediente?.toLowerCase() === 'activo' && ( */}
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    startIcon={<AddIcon />}
-                    onClick={handleAddDetail}
-
-                    disabled={id_opcion_liquidacion === '' || concepto === ''}
-                  >
-                    Agregar detalle de liquidación
-                  </Button>
-                {/* )} */}
-              </Grid>
-            </Grid>
-          </Box>
-
-          <Box sx={{ width: '100%', mt: '20px' }}>
-            <Grid sx={{display: 'flex', justifyContent: 'end', mb: '1rem'}}>
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={ver_factura || rows_detalles.length === 0}
-                onClick={() => set_ver_factura(true)}
-              >
-                Ver factura
-              </Button>
-            </Grid>
-            <DataGrid
-              density="compact"
-              autoHeight
-              rows={rows_detalles}
-              columns={column_detalle}
-              getRowHeight={() => 'auto'}
-            />
-            <Grid container justifyContent='center' sx={{ my: '20px' }}>
-              <Grid item xs={3}>
-                {estado_expediente?.toLowerCase() === 'guardado' && (
-                  <Button
-                    type="submit"
-                    variant="contained"
-                    color="primary"
-                    fullWidth
-                    startIcon={<EditIcon />}
-                    onClick={edit_detalles_liquidacion}
-                  >
-                    Editar detalles de liquidación
-                  </Button>
+                    <Grid item>
+                      <InputLabel sx={{ fontWeight: 'bold', p: '20px' }}>Valor</InputLabel>
+                      {Object.keys(opcion_liquidacion?.variables).map((key, index) => (
+                        <div key={index}>
+                          <TextField
+                            type="number"
+                            sx={{ p: '10px' }}
+                            size="small"
+                            value={variables_datos[key] || ''}
+                            required
+                            onChange={(event: React.ChangeEvent<HTMLInputElement>) => { handle_variables_change(event, key) }}
+                          />
+                        </div>
+                      ))}
+                    </Grid>
+                  </Grid>
                 )}
+
+                <Grid container justifyContent='center' sx={{ my: '20px' }}>
+                  <Grid item xs={3}>
+                    {/* {estado_expediente?.toLowerCase() === 'activo' && ( */}
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      fullWidth
+                      startIcon={<AddIcon />}
+                      onClick={handleAddDetail}
+
+                      disabled={id_opcion_liquidacion === '' || concepto === ''}
+                    >
+                      Agregar detalle de liquidación
+                    </Button>
+                    {/* )} */}
+                  </Grid>
+                </Grid>
+              </Box>
+
+              <Box sx={{ width: '100%', mt: '20px' }}>
+                <Grid sx={{ display: 'flex', justifyContent: 'end', mb: '1rem' }}>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={ver_factura || rows_detalles.length === 0}
+                    onClick={() => {
+                      set_position_tab('2');
+                      set_ver_factura(true)
+                    }}
+                  >
+                    Ver factura
+                  </Button>
+                </Grid>
+                <DataGrid
+                  density="compact"
+                  autoHeight
+                  rows={rows_detalles}
+                  columns={column_detalle}
+                  getRowHeight={() => 'auto'}
+                />
+                <Grid container justifyContent='center' sx={{ my: '20px' }}>
+                  <Grid item xs={3}>
+                    {estado_expediente?.toLowerCase() === 'guardado' && (
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        fullWidth
+                        startIcon={<EditIcon />}
+                        onClick={edit_detalles_liquidacion}
+                      >
+                        Editar detalles de liquidación
+                      </Button>
+                    )}
+                  </Grid>
+                </Grid>
+              </Box>
+            </TabPanel>
+
+            <TabPanel value="2" sx={{ p: '20px 0' }}>
+              <Grid container sx={{display: 'flex'}} justifyContent='end'>
+                <Grid item xs={12} lg={3}>
+                  <Button
+                    variant="contained"
+                    color="error"
+                    startIcon={<ChevronLeftSharpIcon />}
+                    onClick={() => {
+                      set_position_tab('1');
+                      set_ver_factura(false);
+                    }}
+                  >
+                    Volver atras
+                  </Button>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-          {ver_factura && <DocumentoPagoTUA datos={rows_detalles}/>}
+              {ver_factura && <DocumentoPagoTUA datos={rows_detalles} />}
+            </TabPanel>
+          </TabContext>
+
+
         </Grid>
       </Grid>
 
