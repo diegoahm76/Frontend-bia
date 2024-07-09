@@ -43,7 +43,7 @@ export const EncabezadoSolicitud: React.FC = () => {
                   label="Nombre o Razón Social"
                   size="small"
                   fullWidth
-                  value={''.concat(solicitud_facilidad.deudor.nombres, ' ', solicitud_facilidad.deudor.apellidos)}
+                  value={''.concat(solicitud_facilidad.deudor.nombre_completo)}
                   disabled
                 />
               </Grid>
@@ -70,7 +70,7 @@ export const EncabezadoSolicitud: React.FC = () => {
                   label="Dirección Notificación"
                   size="small"
                   fullWidth
-                  value={`${solicitud_facilidad.deudor.ubicacion}`}
+                  value={`${solicitud_facilidad.deudor.direccion_notificaciones}`}
                   disabled
                 />
               </Grid>
