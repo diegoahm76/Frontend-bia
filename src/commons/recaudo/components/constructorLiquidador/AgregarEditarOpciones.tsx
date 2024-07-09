@@ -115,25 +115,77 @@ export const AgregarEditarOpciones = ({
     }
   }
 
-  const handle_input_change = (event: any) => {
-    const { name, value } = event.target;
-    if (name === 'variable') {
+  // const handle_input_change = (event: any) => {
+  //   const { name, value } = event.target;
+  //   if (name === 'variable') {
+  //     const parsedValue = JSON.parse(value);
+  //     set_form_data((prevState: any) => ({
+  //       ...prevState,
+  //       variable: parsedValue.valor,
+  //       nombre_variable: parsedValue.nombre,
+  //     }));
+  //   } else {
+  //     set_form_data((prevState: any) => ({
+  //       ...prevState,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
+
+// const handle_input_change = (event: any) => {
+//   const { name, value } = event.target;
+  
+//   if (name === 'variable') {
+//     try {
+//       const parsedValue = JSON.parse(value);
+//       set_form_data((prevState: any) => ({
+//         ...prevState,
+//         variable: parsedValue.valor,
+//         nombre_variable: parsedValue.nombre,
+//       }));
+//     } catch (error) {
+//       console.error('Invalid JSON:', error);
+//       set_form_data((prevState: any) => ({
+//         ...prevState,
+//         variable: value,
+//       }));
+//     }
+//   } else {
+//     set_form_data((prevState: any) => ({
+//       ...prevState,
+//       [name]: value,
+//     }));
+//   }
+// };
+
+const handle_input_change = (event: any) => {
+  const { name, value } = event.target;
+  
+  if (name === 'variable') {
+    try {
+      // Intentamos parsear el valor solo si proviene del select
       const parsedValue = JSON.parse(value);
       set_form_data((prevState: any) => ({
         ...prevState,
         variable: parsedValue.valor,
         nombre_variable: parsedValue.nombre,
       }));
-    } else {
+    } catch (error) {
+      console.error('Invalid JSON:', error);
+      // Si el valor no es un JSON válido (escribiendo en el TextField)
       set_form_data((prevState: any) => ({
         ...prevState,
-        [name]: value,
+        variable: value, // Permitimos que el usuario vea el valor en el TextField
+        nombre_variable: null,
       }));
     }
-  };
-
-
-
+  } else {
+    set_form_data((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  }
+};
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = event.target;
@@ -502,6 +554,7 @@ export const AgregarEditarOpciones = ({
 
 
 
+ 
 
           <Grid item xs={12} sm={4}>
             <TextField
@@ -549,47 +602,48 @@ export const AgregarEditarOpciones = ({
 
 
 
-          <Grid item xs={12} sm={4}>
-            <TextField
-              select
-              required
-              fullWidth
-              size="small"
-              variant="outlined"
-              label="Variables"
-              name="variable"
-              onChange={handle_input_change}
-              value={form_data.variable}
-            // value={formValues.variable}
-            >
-              {valores
-                .filter(variable =>
-                  variable.id_tipo_renta === formValues.tipo_renta &&
-                  variable.id_tipo_cobro === formValues.tipo_cobro
-                )
-                .map((variable) => (
-                  <MenuItem key={variable.id_valores_variables} value={JSON.stringify({ nombre: variable.valor, valor: variable.nombre_variable })}>
-                    {variable.nombre_variable}
-                  </MenuItem>
-                ))}
-            </TextField>
-          </Grid>
+        
+<Grid item xs={12} sm={4}>
+  <TextField
+    select
+    required
+    fullWidth
+    size="small"
+    variant="outlined"
+    label="Variables"
+    name="variable"
+    onChange={handle_input_change}
+    value={JSON.stringify({ nombre: form_data.nombre_variable, valor: form_data.variable }) || ''}
+  >
+    {valores
+      .filter(variable =>
+        variable.id_tipo_renta === formValues.tipo_renta &&
+        variable.id_tipo_cobro === formValues.tipo_cobro
+      )
+      .map((variable) => (
+        <MenuItem key={variable.id_valores_variables} value={JSON.stringify({ nombre: variable.valor, valor: variable.nombre_variable })}>
+          {variable.nombre_variable}
+        </MenuItem>
+      ))}
+  </TextField>
+</Grid>
 
 
-          <Grid item xs={12} sm={4}>
-            <TextField
-              label="Ingresa una variable"
-              name="variable"
-              required
-              disabled
-              autoComplete="off"
-              value={form_data.variable}
-              onChange={handle_input_change}
-              variant="outlined"
-              size="small"
-              fullWidth
-            />
-          </Grid>
+<Grid item xs={12} sm={4}>
+  <TextField
+    label="Ingresa una variable"
+    name="variable"
+    required
+    autoComplete="off"
+    value={form_data.variable || ''}
+    onChange={handle_input_change}
+    variant="outlined"
+    size="small"
+    fullWidth
+  />
+</Grid>
+
+
           <Grid item xs={12} sm={3}>
             <Button
 
