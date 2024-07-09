@@ -115,15 +115,41 @@ export const AgregarEditarOpciones = ({
     }
   }
 
+  // const handle_input_change = (event: any) => {
+  //   const { name, value } = event.target;
+  //   if (name === 'variable') {
+  //     const parsedValue = JSON.parse(value);
+  //     set_form_data((prevState: any) => ({
+  //       ...prevState,
+  //       variable: parsedValue.valor,
+  //       nombre_variable: parsedValue.nombre,
+  //     }));
+  //   } else {
+  //     set_form_data((prevState: any) => ({
+  //       ...prevState,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
+
   const handle_input_change = (event: any) => {
     const { name, value } = event.target;
+    
     if (name === 'variable') {
-      const parsedValue = JSON.parse(value);
-      set_form_data((prevState: any) => ({
-        ...prevState,
-        variable: parsedValue.valor,
-        nombre_variable: parsedValue.nombre,
-      }));
+      try {
+        const parsedValue = JSON.parse(value);
+        set_form_data((prevState: any) => ({
+          ...prevState,
+          variable: parsedValue.valor,
+          nombre_variable: parsedValue.nombre,
+        }));
+      } catch (error) {
+        console.error('Invalid JSON:', error);
+        set_form_data((prevState: any) => ({
+          ...prevState,
+          variable: value,
+        }));
+      }
     } else {
       set_form_data((prevState: any) => ({
         ...prevState,
@@ -131,8 +157,7 @@ export const AgregarEditarOpciones = ({
       }));
     }
   };
-
-
+  
 
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -581,7 +606,7 @@ export const AgregarEditarOpciones = ({
               label="Ingresa una variable"
               name="variable"
               required
-              disabled
+              // disabled
               autoComplete="off"
               value={form_data.variable}
               onChange={handle_input_change}
