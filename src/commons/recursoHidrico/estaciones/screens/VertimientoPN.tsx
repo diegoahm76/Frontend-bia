@@ -45,68 +45,41 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 
 interface Concepto {
-  tipoUsuario: string;
-  nombre: string;
-  apellido: string;
-  tipoIdentificacion: string;
-  numeroIdentificacion: string;
-  deptoCorrespondencia: string;
-  municipioCorrespondencia: string;
-  direccionCorrespondencia: string;
-  email: string;
-  tel: string;
-  nombrePredio: string;
-  tipoTenencia: string;
-  deptoPredio: string;
-  municipioPredio: string;
-  tipoCentroPoblado: string;
-  nombreCentroPoblado: string;
-  cedulaCatastral: string;
-  matriculaInmobiliaria: string;
-  areaPredio: string;
-  direccionPredio: string;
-  clasificacionSuelo: string;
-  sistemaRef: string;
-  gradLat: string;
-  minLat: string;
-  segLat: string;
-  gradLon: string;
-  minLon: string;
-  segLon: string;
-  altitud: string;
-  descripcionPuntoAcceso: string;
-  numeroExpediente: string;
-  noResolucion: string;
-  fechaExpedicion: string;
-  caudalAutorizadoVerter: string;
-  vigenciaDesde: string;
-  vigenciaHasta: string;
-  tipoVertimiento: string;
-  departamento: string;
-  municipio: string;
-  tipoCentroPobladoVertimiento: string;
-  nombreCentroPobladoVertimiento: string;
-  codigoFuente: string;
-  tramo: string;
-  empresaServicioAlcantarillado: string;
-  tipoFlujo: string;
-  tiempoDescarga: string;
-  frecuencia: string;
-  caudalDisenoST: string;
-  pretratamiento: string;
-  primario: string;
-  secundario: string;
-  terciario: string;
-  otros: string;
-  sistemaRefVertimiento: string;
-  gradLatVertimiento: string;
-  minLatVertimiento: string;
-  segLatVertimiento: string;
-  gradLonVertimiento: string;
-  minLonVertimiento: string;
-  segLonVertimiento: string;
-  altitudVertimiento: string;
-  descripcionAccesoVertimiento: string;
+  tipoUsuario:any;
+  nombre: any;
+  apellido: any;
+  tipoIdentificacion:any;
+  numeroIdentificacion:any;
+  deptoCorrespondencia:any;
+  municipioCorrespondencia:any;
+  direccionCorrespondencia:any;
+  email: any;
+  tel:any;
+  nombrePredio: any;
+  deptoPredio:any;
+  municipioPredio: any;
+  cedulaCatastral: any;
+  matriculaInmobiliaria:any;
+  direccionPredio: any;
+  sistemaRefPredio:any;
+  numeroExpediente:any;
+  tipoFlujo: any;
+  tiempoDescarga: any;
+  frecuencia: any;
+  caudalDisenoST:any;
+  sistemaRefVertimiento:any;
+
+
+  numeroResolucion: any;
+  tipoVertimiento:any;
+  fechaExpedicion: any;
+  caudalConcesionado: any;
+  caudalAutorizadoVerter:any;
+  fuenteAbastecedora:any;
+  departamentoCaptacion:any;
+  municipioCaptacion:any;
+    departamento: any;
+  sistemaRefCaptacion:any;
 }
 
 
@@ -116,7 +89,7 @@ export const VertimientoPN: React.FC = () => {
 
   const fetchHistorico = async (): Promise<void> => {
     try {
-      const url = `hidrico/zonas-hidricas/SIRH/captacionPN/`;
+      const url = `hidrico/zonas-hidricas/SIRH/vertimientoPN/`;
       const res = await api.get(url);
       const data = res.data?.data || [];
 
@@ -145,16 +118,20 @@ export const VertimientoPN: React.FC = () => {
         direccionPredio: item['INFORMACION DEL PREDIO']['DIRECCION DEL PREDIO'],
         sistemaRefPredio: item['GEOREFERENCIACION DEL PREDIO']['SISTEMA REF'],
         numeroExpediente: item['INFORMACION PERMISO']['NÚMERO DEL EXPEDIENTE'],
+        tipoFlujo: item['CARACTERISTICAS DEL VERTIMIENTO']['Tipo de flujo'],
+        tiempoDescarga: item['CARACTERISTICAS DEL VERTIMIENTO']['Tiempo de descarga'],
+        frecuencia: item['CARACTERISTICAS DEL VERTIMIENTO']['Frecuencia'],
+        caudalDisenoST: item['CARACTERISTICAS DEL VERTIMIENTO']['Caudal diseño STD'],
+        sistemaRefVertimiento: item['GEOREFERENCIACION DEL VERTIMIENTO']['SISTEMA REF'],
+
+
         numeroResolucion: item['INFORMACION PERMISO']['No. RESOLUCION'],
+        tipoVertimiento: item['INFORMACION PERMISO']['TIPO VERTIMIENTO'],
+        fechaExpedicion: item['INFORMACION PERMISO']['FECHA EXPEDICION'],
         caudalConcesionado: item['INFORMACION PERMISO']['CAUDAL CONCESIONADO'],
-        fuenteAbastecedora:
-          item['INFORMACION CAPTACION']['FUENTE ABASTECEDORA'],
-        departamentoCaptacion:
-          item['INFORMACION CAPTACION']['DEPARTAMENTO CAPTACION'],
-        municipioCaptacion:
-          item['INFORMACION CAPTACION']['MUNICIPIO CAPTACION'],
-        sistemaRefCaptacion:
-          item['GEOREFERENCIACION DE LA CAPTACION']['SISTEMA REF'],
+        caudalAutorizadoVerter: item['INFORMACION PERMISO']['CAUDAL AUTORIZADO VERTER'],
+         
+       
       }));
 
       setHistorico(HistoricoData);
@@ -169,31 +146,86 @@ export const VertimientoPN: React.FC = () => {
   }, []);
 
   const columnstabla = [
-    { field: 'tipoUsuario', headerName: 'Tipo de Usuario', minWidth: 200 },
-    { field: 'nombre', headerName: 'Nombre', minWidth: 250 },
-    { field: 'apellido', headerName: 'Apellido', minWidth: 250 },
+    { field: 'tipoUsuario', headerName: 'Tipo de Usuario', minWidth: 250 },
+    { field: 'nombre', headerName: 'Nombre', minWidth: 200 },
+    { field: 'apellido', headerName: 'Apellido', minWidth: 200 },
     { field: 'tipoIdentificacion', headerName: 'Tipo de Identificación', minWidth: 200 },
     { field: 'numeroIdentificacion', headerName: 'Número de Identificación', minWidth: 200 },
-    { field: 'deptoCorrespondencia', headerName: 'Departamento de Correspondencia', minWidth: 250 },
-    { field: 'municipioCorrespondencia', headerName: 'Municipio de Correspondencia', minWidth: 250 },
-    { field: 'direccionCorrespondencia', headerName: 'Dirección de Correspondencia', minWidth: 300 },
-    { field: 'email', headerName: 'Email', minWidth: 250 },
-    { field: 'tel', headerName: 'Teléfono', minWidth: 200 },
-    { field: 'nombrePredio', headerName: 'Nombre del Predio', minWidth: 200 },
-    { field: 'deptoPredio', headerName: 'Departamento del Predio', minWidth: 200 },
-    { field: 'municipioPredio', headerName: 'Municipio del Predio', minWidth: 200 },
-    { field: 'cedulaCatastral', headerName: 'Cédula Catastral', minWidth: 200 },
-    { field: 'matriculaInmobiliaria', headerName: 'Matrícula Inmobiliaria', minWidth: 250 },
-    { field: 'direccionPredio', headerName: 'Dirección del Predio', minWidth: 300 },
-    { field: 'sistemaRefPredio', headerName: 'Sistema de Referencia del Predio', minWidth: 250 },
-    { field: 'numeroExpediente', headerName: 'Número del Expediente', minWidth: 200 },
-    { field: 'numeroResolucion', headerName: 'Número de Resolución', minWidth: 200 },
-    { field: 'caudalConcesionado', headerName: 'Caudal Concesionado', minWidth: 200 },
-    { field: 'fuenteAbastecedora', headerName: 'Fuente Abastecedora', minWidth: 200 },
-    { field: 'departamentoCaptacion', headerName: 'Departamento de Captación', minWidth: 250 },
-    { field: 'municipioCaptacion', headerName: 'Municipio de Captación', minWidth: 250 },
-    { field: 'sistemaRefCaptacion', headerName: 'Sistema de Referencia de Captación', minWidth: 250 },
-  ];
+    { field: 'deptoCorrespondencia', headerName: 'Depto de Correspondencia', minWidth: 200 },
+    { field: 'municipioCorrespondencia', headerName: 'Municipio de Correspondencia', minWidth: 200 },
+    { field: 'direccionCorrespondencia', headerName: 'Dirección Correspondencia', minWidth: 200 },
+    { field: 'email', headerName: 'E-mail', minWidth: 200 },
+    { field: 'tel', headerName: 'Tel', minWidth: 200 },
+    { field: 'nombrePredio', headerName: 'Nombre Predio', minWidth: 250 },
+
+    // { field: 'tipoTenencia', headerName: 'Tipo Tenencia', minWidth: 200 },
+
+    { field: 'deptoPredio', headerName: 'Depto Predio', minWidth: 200 },
+    { field: 'municipioPredio', headerName: 'Municipio Predio', minWidth: 200 },
+
+    // { field: 'tipoCentroPoblado', headerName: 'Tipo Centro Poblado', minWidth: 200 },
+    // { field: 'nombreCentroPoblado', headerName: 'Nombre Centro Poblado', minWidth: 190 },
+
+    { field: 'cedulaCatastral', headerName: 'Cédula Catastral', minWidth: 140 },
+    { field: 'matriculaInmobiliaria', headerName: 'Matrícula Inmobiliaria', minWidth: 140 },
+
+    // { field: 'areaPredio', headerName: 'Área Predio (Ha)', minWidth: 450 },
+
+    { field: 'direccionPredio', headerName: 'Dirección del Predio', minWidth: 250 },
+
+    // { field: 'clasificacionSuelo', headerName: 'Clasificación Suelo', minWidth: 200 },
+    // { field: 'sistemaRef', headerName: 'Sistema Ref', minWidth: 200 },
+    // { field: 'gradLat', headerName: 'Grad Lat', minWidth: 250 },
+  // { field: 'minLat', headerName: 'Min Lat', minWidth: 250 },
+    // { field: 'segLat', headerName: 'Seg Lat', minWidth: 250 },
+    // { field: 'gradLon', headerName: 'Grad Lon', minWidth: 250 },
+    // { field: 'minLon', headerName: 'Min Lon', minWidth: 250 },
+    // { field: 'segLon', headerName: 'Seg Lon', minWidth: 250 },
+    // { field: 'altitud', headerName: 'Altitud', minWidth: 250 },
+    // { field: 'descripcionPuntoAcceso', headerName: 'Descripción Punto Acceso', minWidth: 250 },
+  
+    { field: 'numeroExpediente', headerName: 'Número del Expediente', minWidth: 250 },
+    { field: 'numeroResolucion', headerName: 'No. Resolución', minWidth: 250 },
+    { field: 'fechaExpedicion', headerName: 'Fecha Expedición', minWidth: 250 },
+    { field: 'caudalAutorizadoVerter', headerName: 'Caudal Autorizado Verter (lts/seg)', minWidth: 250 },
+
+
+    // { field: 'vigenciaDesde', headerName: 'Vigencia Desde', minWidth: 250 },
+    // { field: 'vigenciaHasta', headerName: 'Vigencia Hasta', minWidth: 250 },
+
+    { field: 'tipoVertimiento', headerName: 'Tipo Vertimiento', minWidth: 200 },
+    { field: 'departamento', headerName: 'Departamento', minWidth: 200 },
+    { field: 'municipioCaptacion', headerName: 'Municipio', minWidth: 200 },
+
+    // { field: 'tipoCentroPobladoVertimiento', headerName: 'Tipo Centro Poblado', minWidth: 200 },
+    // { field: 'nombreCentroPobladoVertimiento', headerName: 'Nombre Centro Poblado', minWidth: 190 },
+    // { field: 'codigoFuente', headerName: 'Código Fuente', minWidth: 250 },
+    // { field: 'tramo', headerName: 'Tramo', minWidth: 200 },
+    // { field: 'empresaServicioAlcantarillado', headerName: 'Empresa Servicio Alcantarillado', minWidth: 250 },
+
+    { field: 'tipoFlujo', headerName: 'Tipo de Flujo', minWidth: 200 },
+    { field: 'tiempoDescarga', headerName: 'Tiempo de Descarga (h/d)', minWidth: 250 },
+    { field: 'frecuencia', headerName: 'Frecuencia (d/mes)', minWidth: 250 },
+    { field: 'caudalDisenoST', headerName: 'Caudal Diseño ST (L/s)', minWidth: 250 },
+
+    // { field: 'pretratamiento', headerName: 'Pretratamiento', minWidth: 200 },
+    // { field: 'primario', headerName: 'Primario', minWidth: 200 },
+    // { field: 'secundario', headerName: 'Secundario', minWidth: 200 },
+    // { field: 'terciario', headerName: 'Terciario', minWidth: 200 },
+    // { field: 'otros', headerName: 'Otros', minWidth: 200 },
+
+    // { field: 'sistemaRefVertimiento', headerName: 'Sistema Ref', minWidth: 200 },
+
+    // { field: 'gradLatVertimiento', headerName: 'Grad Lat', minWidth: 250 },
+    // { field: 'minLatVertimiento', headerName: 'Min Lat', minWidth: 250 },
+    // { field: 'segLatVertimiento', headerName: 'Seg Lat', minWidth: 250 },
+    // { field: 'gradLonVertimiento', headerName: 'Grad Lon', minWidth: 250 },
+    // { field: 'minLonVertimiento', headerName: 'Min Lon', minWidth: 250 },
+    // { field: 'segLonVertimiento', headerName: 'Seg Lon', minWidth: 250 },
+    // { field: 'altitudVertimiento', headerName: 'Altitud', minWidth: 250 },
+    // { field: 'descripcionAccesoVertimiento', headerName: 'Descripción Acceso', minWidth: 250 }
+];
+
   
   interface Column {
     id: keyof Concepto; // Cambia a 'keyof Concepto' para que los IDs sean las claves del tipo 'Concepto'
@@ -204,7 +236,7 @@ export const VertimientoPN: React.FC = () => {
   }
 
   const columns: Column[] = [
-    { id: 'tipoUsuario', label: 'Tipo de Usuario', minWidth: 250 },
+    { id: 'tipoUsuario', label: 'Tipo de Usuario', minWidth: 250},
     { id: 'nombre', label: 'Nombre', minWidth: 200 },
     { id: 'apellido', label: 'Apellido', minWidth: 200 },
     { id: 'tipoIdentificacion', label: 'Tipo de Identificación', minWidth: 200 },
@@ -213,59 +245,67 @@ export const VertimientoPN: React.FC = () => {
     { id: 'municipioCorrespondencia', label: 'Municipio de Correspondencia', minWidth: 200 },
     { id: 'direccionCorrespondencia', label: 'Dirección Correspondencia', minWidth: 200 },
     { id: 'email', label: 'E-mail', minWidth: 200 },
-    { id: 'tel', label: 'Tel', minWidth: 40 },
-    { id: 'nombrePredio', label: 'Nombre Predio', minWidth: 300 },
-    { id: 'tipoTenencia', label: 'Tipo Tenencia', minWidth: 200 },
+    { id: 'tel', label: 'Tel', minWidth: 200 },
+    { id: 'nombrePredio', label: 'Nombre Predio', minWidth: 250 },
+
+
+    // { id: 'tipoTenencia', label: 'Tipo Tenencia', minWidth: 200 },
+
     { id: 'deptoPredio', label: 'Depto Predio', minWidth: 200 },
     { id: 'municipioPredio', label: 'Municipio Predio', minWidth: 200 },
-    { id: 'tipoCentroPoblado', label: 'Tipo Centro Poblado', minWidth: 200 },
-    { id: 'nombreCentroPoblado', label: 'Nombre Centro Poblado', minWidth: 190 },
+
+    // { id: 'tipoCentroPoblado', label: 'Tipo Centro Poblado', minWidth: 200 },
+    // { id: 'nombreCentroPoblado', label: 'Nombre Centro Poblado', minWidth: 190 },
+
     { id: 'cedulaCatastral', label: 'Cédula Catastral', minWidth: 140 },
     { id: 'matriculaInmobiliaria', label: 'Matrícula Inmobiliaria', minWidth: 140 },
-    { id: 'areaPredio', label: 'Área Predio (Ha)', minWidth: 100 },
-    { id: 'direccionPredio', label: 'Dirección del Predio', minWidth: 300 },
-    { id: 'clasificacionSuelo', label: 'Clasificación Suelo', minWidth: 200 },
-    { id: 'sistemaRef', label: 'Sistema Ref', minWidth: 200 },
-    { id: 'gradLat', label: 'Grad Lat', minWidth: 100 },
-    { id: 'minLat', label: 'Min Lat', minWidth: 100 },
-    { id: 'segLat', label: 'Seg Lat', minWidth: 100 },
-    { id: 'gradLon', label: 'Grad Lon', minWidth: 100 },
-    { id: 'minLon', label: 'Min Lon', minWidth: 100 },
-    { id: 'segLon', label: 'Seg Lon', minWidth: 100 },
-    { id: 'altitud', label: 'Altitud', minWidth: 100 },
-    { id: 'descripcionPuntoAcceso', label: 'Descripción Punto Acceso', minWidth: 300 },
-    { id: 'numeroExpediente', label: 'Número del Expediente', minWidth: 100 },
-    { id: 'noResolucion', label: 'No. Resolución', minWidth: 100 },
-    { id: 'fechaExpedicion', label: 'Fecha Expedición', minWidth: 100 },
-    { id: 'caudalAutorizadoVerter', label: 'Caudal Autorizado Verter (lts/seg)', minWidth: 100 },
-    { id: 'vigenciaDesde', label: 'Vigencia Desde', minWidth: 100 },
-    { id: 'vigenciaHasta', label: 'Vigencia Hasta', minWidth: 100 },
+
+    // { id: 'areaPredio', label: 'Área Predio (Ha)', minWidth: 450},
+
+    { id: 'direccionPredio', label: 'Dirección del Predio', minWidth: 250 },
+    
+    // { id: 'clasificacionSuelo', label: 'Clasificación Suelo', minWidth: 200 },
+    // { id: 'sistemaRef', label: 'Sistema Ref', minWidth: 200 },
+    // { id: 'gradLat', label: 'Grad Lat', minWidth: 250},
+    // { id: 'minLat', label: 'Min Lat', minWidth: 250},
+    // { id: 'segLat', label: 'Seg Lat', minWidth: 250},
+    // { id: 'gradLon', label: 'Grad Lon', minWidth: 250},
+    // { id: 'minLon', label: 'Min Lon', minWidth: 250},
+    // { id: 'segLon', label: 'Seg Lon', minWidth: 250},
+    // { id: 'altitud', label: 'Altitud', minWidth: 250},
+    // { id: 'descripcionPuntoAcceso', label: 'Descripción Punto Acceso', minWidth: 250 },
+    { id: 'numeroExpediente', label: 'Número del Expediente', minWidth: 250},
+    // { id: 'noResolucion', label: 'No. Resolución', minWidth: 250},
+    { id: 'fechaExpedicion', label: 'Fecha Expedición', minWidth: 250},
+    { id: 'caudalAutorizadoVerter', label: 'Caudal Autorizado Verter (lts/seg)', minWidth: 250},
+    // { id: 'vigenciaDesde', label: 'Vigencia Desde', minWidth: 250},
+    // { id: 'vigenciaHasta', label: 'Vigencia Hasta', minWidth: 250},
     { id: 'tipoVertimiento', label: 'Tipo Vertimiento', minWidth: 200 },
     { id: 'departamento', label: 'Departamento', minWidth: 200 },
-    { id: 'municipio', label: 'Municipio', minWidth: 200 },
-    { id: 'tipoCentroPobladoVertimiento', label: 'Tipo Centro Poblado', minWidth: 200 },
-    { id: 'nombreCentroPobladoVertimiento', label: 'Nombre Centro Poblado', minWidth: 190 },
-    { id: 'codigoFuente', label: 'Código Fuente', minWidth: 100 },
-    { id: 'tramo', label: 'Tramo', minWidth: 200 },
-    { id: 'empresaServicioAlcantarillado', label: 'Empresa Servicio Alcantarillado', minWidth: 100 },
+    // { id: 'municipio', label: 'Municipio', minWidth: 200 },
+    // { id: 'tipoCentroPobladoVertimiento', label: 'Tipo Centro Poblado', minWidth: 200 },
+    // { id: 'nombreCentroPobladoVertimiento', label: 'Nombre Centro Poblado', minWidth: 190 },
+    // { id: 'codigoFuente', label: 'Código Fuente', minWidth: 250},
+    // { id: 'tramo', label: 'Tramo', minWidth: 200 },
+    // { id: 'empresaServicioAlcantarillado', label: 'Empresa Servicio Alcantarillado', minWidth: 250},
     { id: 'tipoFlujo', label: 'Tipo de Flujo', minWidth: 200 },
-    { id: 'tiempoDescarga', label: 'Tiempo de Descarga (h/d)', minWidth: 100 },
-    { id: 'frecuencia', label: 'Frecuencia (d/mes)', minWidth: 100 },
-    { id: 'caudalDisenoST', label: 'Caudal Diseño ST (L/s)', minWidth: 100 },
-    { id: 'pretratamiento', label: 'Pretratamiento', minWidth: 200 },
-    { id: 'primario', label: 'Primario', minWidth: 200 },
-    { id: 'secundario', label: 'Secundario', minWidth: 200 },
-    { id: 'terciario', label: 'Terciario', minWidth: 200 },
-    { id: 'otros', label: 'Otros', minWidth: 200 },
+    { id: 'tiempoDescarga', label: 'Tiempo de Descarga (h/d)', minWidth: 250},
+    { id: 'frecuencia', label: 'Frecuencia (d/mes)', minWidth: 250},
+    { id: 'caudalDisenoST', label: 'Caudal Diseño ST (L/s)', minWidth: 250},
+    // { id: 'pretratamiento', label: 'Pretratamiento', minWidth: 200 },
+    // { id: 'primario', label: 'Primario', minWidth: 200 },
+    // { id: 'secundario', label: 'Secundario', minWidth: 200 },
+    // { id: 'terciario', label: 'Terciario', minWidth: 200 },
+    // { id: 'otros', label: 'Otros', minWidth: 200 },
     { id: 'sistemaRefVertimiento', label: 'Sistema Ref', minWidth: 200 },
-    { id: 'gradLatVertimiento', label: 'Grad Lat', minWidth: 100 },
-    { id: 'minLatVertimiento', label: 'Min Lat', minWidth: 100 },
-    { id: 'segLatVertimiento', label: 'Seg Lat', minWidth: 100 },
-    { id: 'gradLonVertimiento', label: 'Grad Lon', minWidth: 100 },
-    { id: 'minLonVertimiento', label: 'Min Lon', minWidth: 100 },
-    { id: 'segLonVertimiento', label: 'Seg Lon', minWidth: 100 },
-    { id: 'altitudVertimiento', label: 'Altitud', minWidth: 100 },
-    { id: 'descripcionAccesoVertimiento', label: 'Descripción Acceso', minWidth: 300 }
+    // { id: 'gradLatVertimiento', label: 'Grad Lat', minWidth: 250},
+    // { id: 'minLatVertimiento', label: 'Min Lat', minWidth: 250},
+    // { id: 'segLatVertimiento', label: 'Seg Lat', minWidth: 250},
+    // { id: 'gradLonVertimiento', label: 'Grad Lon', minWidth: 250},
+    // { id: 'minLonVertimiento', label: 'Min Lon', minWidth: 250},
+    // { id: 'segLonVertimiento', label: 'Seg Lon', minWidth: 250},
+    // { id: 'altitudVertimiento', label: 'Altitud', minWidth: 250},
+    // { id: 'descripcionAccesoVertimiento', label: 'Descripción Acceso', minWidth: 250}
 ];
 
   const [page, setPage] = useState(0);
