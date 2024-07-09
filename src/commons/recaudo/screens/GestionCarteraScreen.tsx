@@ -25,6 +25,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 import { showAlert } from '../../../utils/showAlert/ShowAlert';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -75,6 +76,10 @@ export const GestionCarteraScreen: React.FC = () => {
   const [filtered_identificacion, set_filtered_identificacion] = useState<string>('');
   const [datos, set_datos] = useState<string>('');
 
+  useEffect(() => {
+    console.log(carteras)
+  },[carteras])
+
   const columns_carteras: GridColDef[] = [
    
     {
@@ -106,9 +111,9 @@ export const GestionCarteraScreen: React.FC = () => {
       headerName: 'Periodo   ',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Periodo';
-      }
+      renderCell: (params) => (
+        dayjs(params.row.fecha_facturacion ?? null).month() + 1 <= 6 ? 'Primer periodo' : 'Segundo Periodo'
+      )
     },
     {
       field: 'expediente',
