@@ -628,6 +628,7 @@ const handle_input_change = (event: any) => {
   </TextField>
 </Grid>
 
+
 <Grid item xs={12} sm={4}>
   <TextField
     label="Ingresa una variable"
