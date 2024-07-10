@@ -38,6 +38,7 @@ export const AmortizacionModalPlanPagos: React.FC = () => {
             nro_resolucion: "RES-123",
             valor_intereses: "12411158",
             valor_capital_intereses: 30860158,
+            num_resolucion:"aaa"
         },
         {
             id: 2,
@@ -51,6 +52,8 @@ export const AmortizacionModalPlanPagos: React.FC = () => {
             nro_resolucion: "RES-123",
             valor_intereses: "12411158",
             valor_capital_intereses: 30860158,
+            num_resolucion:"aaa"
+
         },
     ];
 
