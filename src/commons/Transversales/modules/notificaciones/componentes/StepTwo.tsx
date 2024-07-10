@@ -307,7 +307,7 @@ const StepTwo = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          {params.row.id_anexo === null && (
+          {/* {params.row.id_anexo === null && ( */}
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
@@ -333,8 +333,8 @@ const StepTwo = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-          )}
-          {params.row.id_anexo === null && (
+          {/* )} */}
+          {/* {params.row.id_anexo === null && ( */}
             <Tooltip title="Borrar">
               <IconButton
                 onClick={() => {
@@ -360,7 +360,7 @@ const StepTwo = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-          )}
+          {/* )} */}
         </>
       ),
     },
