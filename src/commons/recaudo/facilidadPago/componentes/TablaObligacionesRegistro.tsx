@@ -48,7 +48,7 @@ export const TablaObligacionesRegistro: React.FC<Props> = ({ updateTotalSum }) =
       ),
     },
     {
-      field: 'nro_expediente',
+      field: 'expediente',
       headerName: 'Expediente',
       width: 150,
       renderCell: (params) => (
@@ -58,7 +58,7 @@ export const TablaObligacionesRegistro: React.FC<Props> = ({ updateTotalSum }) =
       ),
     },
     {
-      field: 'nro_resolucion',
+      field: 'num_resolucion',
       headerName: 'Nro Resolución',
       width: 150,
       renderCell: (params) => (

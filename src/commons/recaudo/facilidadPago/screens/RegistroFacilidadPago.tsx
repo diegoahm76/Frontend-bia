@@ -25,7 +25,7 @@ import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGener
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
 import AddIcon from '@mui/icons-material/Add';
 import { api } from '../../../../api/axios';
-import { DirecionVienesReguion } from './AmortizacionModalPlanPagos/Components/DirecionVienesReguion';
+import { DireccionVienesRegion } from './AmortizacionModalPlanPagos/Components/DirecionVienesReguion';
 
 
 interface RootStateDeudor {
@@ -63,7 +63,7 @@ interface RelacionBien {
   valor: number;
   direccion: string;
   descripcion: string;
-  municipio_id:number;
+  municipio_id: number;
 }
 
 interface RespuestaRegistroFacilidad {
@@ -97,7 +97,7 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [calidad_actuacion, set_calidad_actuacion] = useState<Icalidad_actuacion[]>([]);
   const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
   const [valor_bien, set_valor_bien] = useState(0);
-  const [numero_departamento, set_numero_departamento] = useState(10);
+  const [numero_departamento, set_numero_departamento] = useState(0);
 
   const [valores_bienes, set_valores_bienes] = useState(Array<number>);
   const [archivos_bienes, set_archivos_bienes] = useState(Array<File>);
@@ -122,6 +122,9 @@ export const RegistroFacilidadPago: React.FC = () => {
 
   };
 
+  const handleMunicipioChange = (municipio: any) => {
+    set_numero_departamento(municipio);
+  };
 
   const handle_change_date_abono = (date: Date | null): void => {
     set_date_abono(date);
@@ -242,7 +245,7 @@ export const RegistroFacilidadPago: React.FC = () => {
     },
     {
       field: 'municipio_id',
-      headerName: 'municipio_id',
+      headerName: 'Cod municipio',
       width: 150,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -251,7 +254,7 @@ export const RegistroFacilidadPago: React.FC = () => {
       ),
 
     }
-    
+
   ];
 
 
@@ -288,7 +291,7 @@ export const RegistroFacilidadPago: React.FC = () => {
       descripcion: identificacion_bien,
       direccion: direccion_bien,
       valor: valor_bien,
-      municipio_id:numero_departamento
+      municipio_id: numero_departamento
     }));
     set_tipos_bienes(tipos_bienes.concat(tipo_bien));
     set_identificaciones_bienes(identificaciones_bienes.concat(identificacion_bien));
@@ -1340,7 +1343,7 @@ export const RegistroFacilidadPago: React.FC = () => {
               )}
 
 
-              <DirecionVienesReguion />
+              <DireccionVienesRegion onMunicipioChange={handleMunicipioChange} />
 
 
               <Grid item xs={12} sm={3.1}>

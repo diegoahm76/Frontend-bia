@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+// @ts-ignore
 import { Grid, Select, FormControl, InputLabel, MenuItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
@@ -38,19 +39,21 @@ interface MunicipiosResponse {
     detail?: string;
 }
 
-export const DirecionVienesReguion: React.FC = () => {
+interface DireccionVienesRegionProps {
+    onMunicipioChange: (municipio: string) => void;
+}
+
+export const DireccionVienesRegion: React.FC<DireccionVienesRegionProps> = ({ onMunicipioChange }:DireccionVienesRegionProps) => {
     const [link, setLink] = useState('');
-    const [selectedMunicipio, setSelectedMunicipio] = useState('');
-    console.log("xxx",selectedMunicipio)
+    const [selectedMunicipio, setSelectedMunicipio] = useState<string>('');
     const [municipios, setMunicipios] = useState<Municipios[]>([]);
-    const [selectedDepartamento, setSelectedDepartamento] = useState('');
+    const [selectedDepartamento, setSelectedDepartamento] = useState<string>('');
     const [departamentos, setDepartamentos] = useState<Departamento[]>([]);
     const [departamentosRetur, setDepartamentosRetur] = useState<Departamento[]>([]);
     const formValues = {
         pais_sucursal_exterior: '',
         municipio: ''
     };
-
 
     useEffect(() => {
         setLink(`${baseURL}listas/departamentos/?pais=CO`);
@@ -94,16 +97,20 @@ export const DirecionVienesReguion: React.FC = () => {
         }
     }, [selectedDepartamento]);
 
-    const handleInputChange = (event: React.ChangeEvent<{ name?: string; value: unknown }>) => {
+    const handleInputChange = (event: any) => {
         const { name, value } = event.target;
         formValues[name as keyof typeof formValues] = value as string;
     };
 
+    const handleMunicipioChange = (event:any) => {
+        const newValue = event.target.value !== null ? event.target.value as string : '';
+        setSelectedMunicipio(newValue);
+        handleInputChange(event); // Si necesitas manejar cambios en otros inputs
+        onMunicipioChange(newValue); // Llama a la función del padre
+    };
+
     return (
         <>
-
-
-          
             <Grid item xs={12} sm={5}>
                 <FormControl required size="small" fullWidth>
                     <InputLabel shrink={true}>Departamento</InputLabel>
@@ -111,7 +118,7 @@ export const DirecionVienesReguion: React.FC = () => {
                         label="Departamento"
                         value={
                             formValues.pais_sucursal_exterior === null
-                                ? 'departametoo'
+                                ? 'departamento'
                                 : selectedDepartamento
                         }
                         onChange={(event) => {
@@ -123,7 +130,7 @@ export const DirecionVienesReguion: React.FC = () => {
                         }
                     >
                         {departamentosRetur.length === 1 && (
-                            <MenuItem value="departametoo">
+                            <MenuItem value="departamento">
                                 {departamentosRetur.map((departamento) => (
                                     <span key={departamento.value}>{departamento.label}</span>
                                 ))}
@@ -143,12 +150,8 @@ export const DirecionVienesReguion: React.FC = () => {
                     <Select
                         label="Municipio"
                         name="municipio"
-                        value={formValues.municipio}
-                        onChange={(event: any) => {
-                            const newValor = event.target.value !== null ? event.target.value as string : '';
-                            setSelectedMunicipio(newValor);
-                            handleInputChange(event);
-                        }}
+                        value={selectedMunicipio}
+                        onChange={handleMunicipioChange}
                         inputProps={{ shrink: true }}
                     >
                         {municipios.map((municipio) => (
