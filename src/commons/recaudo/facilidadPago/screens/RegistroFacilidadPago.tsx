@@ -25,6 +25,7 @@ import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGener
 import { showAlert } from '../../../../utils/showAlert/ShowAlert';
 import AddIcon from '@mui/icons-material/Add';
 import { api } from '../../../../api/axios';
+import { DirecionVienesReguion } from './AmortizacionModalPlanPagos/Components/DirecionVienesReguion';
 
 
 interface RootStateDeudor {
@@ -62,6 +63,7 @@ interface RelacionBien {
   valor: number;
   direccion: string;
   descripcion: string;
+  municipio_id:number;
 }
 
 interface RespuestaRegistroFacilidad {
@@ -95,6 +97,8 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [calidad_actuacion, set_calidad_actuacion] = useState<Icalidad_actuacion[]>([]);
   const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
   const [valor_bien, set_valor_bien] = useState(0);
+  const [numero_departamento, set_numero_departamento] = useState(10);
+
   const [valores_bienes, set_valores_bienes] = useState(Array<number>);
   const [archivos_bienes, set_archivos_bienes] = useState(Array<File>);
   const [archivo_bien, set_archivo_bien] = useState<File | null>(null);
@@ -234,7 +238,20 @@ export const RegistroFacilidadPago: React.FC = () => {
           {params.value}
         </div>
       ),
+
+    },
+    {
+      field: 'municipio_id',
+      headerName: 'municipio_id',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+
     }
+    
   ];
 
 
@@ -271,6 +288,7 @@ export const RegistroFacilidadPago: React.FC = () => {
       descripcion: identificacion_bien,
       direccion: direccion_bien,
       valor: valor_bien,
+      municipio_id:numero_departamento
     }));
     set_tipos_bienes(tipos_bienes.concat(tipo_bien));
     set_identificaciones_bienes(identificaciones_bienes.concat(identificacion_bien));
@@ -280,7 +298,7 @@ export const RegistroFacilidadPago: React.FC = () => {
     set_ubicaciones_bienes(ubicaciones_bienes.concat(1));
   };
 
-  
+
   const fetch_data_desplegable = async () => {
     try {
       const url = `/recaudo/facilidades-pagos/tipos-calidad-actuacion/`;
@@ -1320,6 +1338,11 @@ export const RegistroFacilidadPago: React.FC = () => {
                   </IconButton>
                 </Grid>
               )}
+
+
+              <DirecionVienesReguion />
+
+
               <Grid item xs={12} sm={3.1}>
                 <Button
                   color='success'
@@ -1382,6 +1405,10 @@ export const RegistroFacilidadPago: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+
+
+
+
       <Grid
         container
         sx={{
@@ -1468,7 +1495,8 @@ export const RegistroFacilidadPago: React.FC = () => {
                         direcciones: direcciones_bienes,
                         valores: valores_bienes,
                         documentos_soporte_bien: archivos_bienes,
-                        id_ubicaciones: ubicaciones_bienes,
+                        id_ubicaciones: rows_bienes.map(bien => bien.municipio_id)
+                        //ubicaciones_bienes
                       });
                       set_respuesta_registro(res_registro ?? {});
                     } catch (error: any) {
