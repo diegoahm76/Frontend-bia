@@ -134,6 +134,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
 
     const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+    const [year, set_year] = useState<number>(0);
+    const [tipo_renta, set_tipo_renta] = useState<string>('');
 
 
     const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
@@ -199,108 +201,110 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         if (lista_obligaciones.length > 0) {
             set_form_liquidacion((prevData: any) => ({
                 ...prevData,
-                id_expediente: lista_obligaciones[0].expediente,
+                id_expediente: lista_obligaciones[0]?.expediente,
             }));
 
-            if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'MULTAS') {
+            set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
+
+            if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'MULTAS') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'diario',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if(lista_obligaciones[0].tipo_renta.toUpperCase() === 'SOBRETASA AMBIENTAL'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'anual',
                     periodo_liquidacion: 'enero a diciembre'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TRAMITES (VISITAS; TASA APROVECHAMIENTO FORESTAL; SALVOCONDUCTOS; ETC)'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (VISITAS; TASA APROVECHAMIENTO FORESTAL; SALVOCONDUCTOS; ETC)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'diario',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TR)'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TR)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'semestral',
                     periodo_liquidacion: 'enero a junio'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'anual',
                     periodo_liquidacion: 'enero a diciembre'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA DE USO DE AGUA (TUA)'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'anual',
                     periodo_liquidacion: 'enero a diciembre'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA DE APROVECHAMIENTO FORESTAL'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE APROVECHAMIENTO FORESTAL') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'anual',
                     periodo_liquidacion: 'enero a diciembre'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'DETERMINANTES AMBIENTALES'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'DETERMINANTES AMBIENTALES') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'diario',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'SOBRETASA AMBIENTAL O PORCENTAJE'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL O PORCENTAJE') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TRAMITES (SALVOCONDUCTOS; ETC)'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (SALVOCONDUCTOS; ETC)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'VISITAS DE CONTROL Y SEGUIMIENTO'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS DE CONTROL Y SEGUIMIENTO') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'VISITAS INICIALES DE EVALUACION'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS INICIALES DE EVALUACION') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'VEHICULO 2024'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VEHICULO 2024') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
                     periodo_liquidacion: 'pago unico'
                 }));
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'INICIO DE COBRO 2024'){
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'SALARIO MINIMO LEGAL VIGENTE 2024'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'INICIO DE COBRO 2024') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
                     periodo_liquidacion: 'pago unico'
                 }));
 
-            } else if (lista_obligaciones[0].tipo_renta.toUpperCase() === 'SUBSIDIO DE TRANSPORTE'){
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SALARIO MINIMO LEGAL VIGENTE 2024') {
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'mensual',
+                    periodo_liquidacion: 'pago unico'
+                }));
+
+            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SUBSIDIO DE TRANSPORTE') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'mensual',
@@ -369,8 +373,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
                 <Grid item xs={12} sm={4}>
                     <TextField
-                        label='telefono'
-                        value={liquidacion?.data.telefono}
+                        label='Tipo de renta: '
+                        value={tipo_renta}
                         size="small"
                         InputLabelProps={{
                             shrink: true,
@@ -476,16 +480,28 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 <>
 
                     <Grid item xs={12} sm={4}>
-                        <TextField
-                            label='Año'
-                            value={liquidacion?.data.anio}
-                            size="small"
-                            fullWidth
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            disabled
-                        />
+                        <FormControl fullWidth size="small">
+                            <InputLabel>Año: </InputLabel>
+                            <Select
+                                value={year}
+                                label="Año: "
+                                onChange={(e) => set_year(Number(e.target.value))}
+                            >
+                                <MenuItem value=''>Seleccione una opción</MenuItem>
+                                <MenuItem value={2024}>2024</MenuItem>
+                                <MenuItem value={2025}>2025</MenuItem>
+                                <MenuItem value={2026}>2026</MenuItem>
+                                <MenuItem value={2027}>2027</MenuItem>
+                                <MenuItem value={2028}>2028</MenuItem>
+                                <MenuItem value={2029}>2029</MenuItem>
+                                <MenuItem value={2030}>2030</MenuItem>
+                                <MenuItem value={2031}>2031</MenuItem>
+                                <MenuItem value={2032}>2032</MenuItem>
+                                <MenuItem value={2033}>2033</MenuItem>
+                                <MenuItem value={2034}>2034</MenuItem>
+                                <MenuItem value={2035}>2035</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
 
 
