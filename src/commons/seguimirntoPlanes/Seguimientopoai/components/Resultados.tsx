@@ -159,38 +159,128 @@ export const Resultados: React.FC<BuscarProps> = ({
   }, []);
 
   useEffect(() => {
+    setejeplan([]),
+    setPrograma([]),
+    setProyecto([]),
+    setProducto([]),
+    setactividad([]),
+    setindicador([]),
+    setmetas([]),
     setFormData((prevData: any) => ({
       ...prevData,
-      eje: '',
+      eje: '', 
+      programa: '', 
+      proyecto: '', 
+      producto: '', 
+      actividad: '', 
+      indicador: '', 
+      meta: '', 
     }));
     fetejeplan({ setejeplan, formData });
   }, [formData.plan]);
 
   useEffect(() => {
+    
+    setPrograma([]),
+    setProyecto([]),
+    setProducto([]),
+    setactividad([]),
+    setindicador([]),
+    setmetas([]),
+    setFormData((prevData: any) => ({
+      ...prevData,
+     
+      programa: '', 
+      proyecto: '', 
+      producto: '', 
+      actividad: '', 
+      indicador: '', 
+      meta: '', 
+    }));
     fetprogramas({ setPrograma, formData });
   }, [formData.eje]);
 
   useEffect(() => {
+    
+    setProyecto([]),
+    setProducto([]),
+    setactividad([]),
+    setindicador([]),
+    setmetas([]),
+    setFormData((prevData: any) => ({
+      ...prevData,
+     
+       
+      proyecto: '', 
+      producto: '', 
+      actividad: '', 
+      indicador: '', 
+      meta: '', 
+    }));
     fetproyecto({ setProyecto, formData });
   }, [formData.programa]);
 
   useEffect(() => {
+      
+    
+    setProducto([]),
+    setactividad([]),
+    setindicador([]),
+    setmetas([]),
+    setFormData((prevData: any) => ({
+      ...prevData,
+     
+       
+       
+      producto: '', 
+      actividad: '', 
+      indicador: '', 
+      meta: '', 
+    }));
     fetproducto({ setProducto, formData });
   }, [formData.proyecto]);
 
   useEffect(() => {
+     
+    
+    setactividad([]),
+    setindicador([]),
+    setmetas([]),
+    setFormData((prevData: any) => ({
+      ...prevData,
+     
+       
+   
+      actividad: '', 
+      indicador: '', 
+      meta: '', 
+    }));
     fetactividad({ setactividad, formData });
   }, [formData.producto]);
 
   useEffect(() => {
+       
+    setindicador([]),
+    setmetas([]),
+    setFormData((prevData: any) => ({
+      ...prevData,
+     
+        
+      indicador: '', 
+      meta: '', 
+    }));
     fetindicador({ setindicador, formData });
   }, [formData.actividad]);
 
   useEffect(() => {
+   
+    setmetas([]),
     setFormData((prevData: any) => ({
       ...prevData,
-      meta: '',
+      
+      meta: '', 
     }));
+    
     fetmetas({ setmetas, formData });
   }, [formData.indicador]);
 

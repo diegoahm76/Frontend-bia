@@ -144,12 +144,12 @@ export const Seguimiento: React.FC = () => {
   const [planes, setPlanes] = useState<Planes[]>([]);
   const [ejeplan, setejeplan] = useState<EjeEstrategico[]>([]);
   const [programa, setPrograma] = useState<Programa[]>([]);
-
   const [proyecto, setProyecto] = useState<Proyecto[]>([]);
   const [producto, setProducto] = useState<Producto[]>([]);
   const [actividad, setactividad] = useState<Actividad[]>([]);
   const [indicador, setindicador] = useState<Indicador[]>([]);
   const [metas, setmetas] = useState<metas[]>([]);
+
 
   const [selectedConceptoId, setSelectedConceptoId] = useState<number | null>(
     null
