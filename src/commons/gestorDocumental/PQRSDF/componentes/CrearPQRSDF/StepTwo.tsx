@@ -256,7 +256,7 @@ const StepTwo = ({ flag_metadata }: IProps) => {
     {
       field: 'nombre_anexo',
       headerName: 'Nombre',
-      width: 250,
+      width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -266,7 +266,7 @@ const StepTwo = ({ flag_metadata }: IProps) => {
     {
       field: 'numero_folios',
       headerName: 'Cantidad de folios',
-      width: 200,
+      width: 370,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}
@@ -276,7 +276,7 @@ const StepTwo = ({ flag_metadata }: IProps) => {
     {
       field: 'cod_medio_almacenamiento',
       headerName: 'Medio de almacenamiento',
-      width: 200,
+      width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {storage_mediums.find((p) => p.key === params.value)?.label ?? ''}
