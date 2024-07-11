@@ -269,7 +269,7 @@ const ListadoAnexos = ({ type }: IProps) => {
     {
       field: 'numero_folios',
       headerName: 'Cantidad de folios',
-      width: 200,
+      width: 300,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ?? params.row.nro_folios}
@@ -289,7 +289,7 @@ const ListadoAnexos = ({ type }: IProps) => {
     {
       field: 'ya_digitalizado',
       headerName: 'Digitalizado',
-      width: 200,
+      width: 350,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value ? 'SI' : 'NO'}
@@ -300,7 +300,7 @@ const ListadoAnexos = ({ type }: IProps) => {
     {
       field: 'observaciones',
       headerName: 'Observación',
-      width: 200,
+      width: 210,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {params.value}

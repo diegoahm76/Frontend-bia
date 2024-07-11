@@ -247,7 +247,7 @@ const StepTwo = () => {
     {
       field: 'id_tipo_anexo',
       headerName: 'Tipo de anexo',
-      width: 250,
+      width: 220,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {tipos_soporte?.find(
