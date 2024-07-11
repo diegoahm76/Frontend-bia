@@ -247,7 +247,7 @@ const StepTwo = () => {
     {
       field: 'id_tipo_anexo',
       headerName: 'Tipo de anexo',
-      width: 250,
+      width: 220,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {tipos_soporte?.find(
@@ -307,7 +307,7 @@ const StepTwo = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          {params.row.id_anexo === null && (
+          {/* {params.row.id_anexo === null && ( */}
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
@@ -333,8 +333,8 @@ const StepTwo = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-          )}
-          {params.row.id_anexo === null && (
+          {/* )} */}
+          {/* {params.row.id_anexo === null && ( */}
             <Tooltip title="Borrar">
               <IconButton
                 onClick={() => {
@@ -360,7 +360,7 @@ const StepTwo = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-          )}
+          {/* )} */}
         </>
       ),
     },

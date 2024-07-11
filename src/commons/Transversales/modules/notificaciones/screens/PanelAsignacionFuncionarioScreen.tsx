@@ -281,6 +281,34 @@ export function PanelAsignacionFuncionarioScreen(): JSX.Element {
                 </Avatar>
               </IconButton>
             </Tooltip>
+
+            <Tooltip title="Ver anexos">
+              <IconButton
+                onClick={() => {
+                  set_anexos_is_active(true);
+                  setSelectedPqr(rowData);
+                  set_tipo_anexo('anexo');
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <AttachFileIcon
+                    sx={{
+                      color: 'primary.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
           </Stack>
         ) : (
           <>
