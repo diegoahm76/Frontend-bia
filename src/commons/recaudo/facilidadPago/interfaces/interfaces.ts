@@ -28,6 +28,7 @@ export interface Obligacion {
   nro_resolucion: string;
   valor_intereses: string;
   valor_capital_intereses: number;
+  num_resolucion?:string;
 }
 
 export interface ObligacionesUsuario {
