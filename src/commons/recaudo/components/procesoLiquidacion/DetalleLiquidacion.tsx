@@ -45,6 +45,8 @@ interface LiquidacionResponse {
 
 
 interface IProps {
+  liquidacion:any;
+  setLiquidacion:any;
   obligaciones:any;
   rows_detalles: RowDetalles[];
   estado_expediente: EstadoExpediente;
@@ -56,7 +58,7 @@ interface IProps {
 
 }
 
-export const DetalleLiquidacion: React.FC<IProps> = ({obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({ liquidacion,setLiquidacion,  obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
   const [position_tab, set_position_tab] = useState('1');
 
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
@@ -275,7 +277,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({obligaciones, form_liquida
   //codigo miguel para visor de factura
   const encodedHtml = encodeURIComponent(htmlContent);
   const dataUri = 'data:text/html;charset=utf-8,' + encodedHtml;
-  const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+  // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
 
 
   const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
@@ -500,7 +502,14 @@ export const DetalleLiquidacion: React.FC<IProps> = ({obligaciones, form_liquida
                   </Button>
                 </Grid>
               </Grid>
-              {ver_factura && <DocumentoPagoTUA obligaciones={obligaciones} form_liquidacion={form_liquidacion} datos={rows_detalles} months={months} rows_detalles={rows_detalles} />}
+              {ver_factura && <DocumentoPagoTUA 
+              liquidacion={liquidacion} 
+              obligaciones={obligaciones} 
+              form_liquidacion={form_liquidacion} 
+              datos={rows_detalles}
+               months={months} 
+               rows_detalles={rows_detalles} 
+               />}
             </TabPanel>
           </TabContext>
 

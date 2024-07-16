@@ -44,6 +44,8 @@ interface LiquidacionResponse {
     };
 }
 interface IProps {
+    setLiquidacion:any;
+    liquidacion:any;
     form_liquidacion: FormLiquidacion;
     nombre_deudor: string;
     rows_detalles: RowDetalles[];
@@ -70,6 +72,8 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
+    liquidacion,
+    setLiquidacion,
     periodos,
     selectedIds,
     rows_detalles,
@@ -133,7 +137,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     };
 
 
-    const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+    // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
 
 
     const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {

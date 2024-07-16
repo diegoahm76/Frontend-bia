@@ -42,6 +42,7 @@ const StyledCell = styled(StyledTableCell)({
 });
 
 export const DocumentoPagoTUA: React.FC<any> = ({
+  liquidacion,
   obligaciones,
   months,
   form_liquidacion,
@@ -52,7 +53,7 @@ export const DocumentoPagoTUA: React.FC<any> = ({
   is_generate_cobro,
   cobro_url,
   id_subetapa
-}: {obligaciones:any , form_liquidacion:any, rows_detalles:any, months:any, datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
+}: {liquidacion:any ,obligaciones:any , form_liquidacion:any, rows_detalles:any, months:any, datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
   const receiptRef = useRef(null);
   const [form_values, set_form_values] = useState({
     sumaConcepto: "",
@@ -187,7 +188,10 @@ export const DocumentoPagoTUA: React.FC<any> = ({
               <StyledHeaderCell sx={{width: '15%'}}>FECHA DE ELABORACION</StyledHeaderCell>
               <StyledTableCell colSpan={4} align='center'>{dayjs().format('LL')}</StyledTableCell>
               <StyledHeaderCell sx={{width: '8%'}}>PERIODO</StyledHeaderCell>
-              <StyledTableCell colSpan={2} align='center'>Año {dayjs().year()}</StyledTableCell>
+              <StyledTableCell colSpan={2} align='center'>
+                {/* Año {dayjs().year()} */}
+                {liquidacion?.data.predio}
+              </StyledTableCell>
               <StyledHeaderCell sx={{width: '10%'}}>CEDULA/NIT</StyledHeaderCell>
               <StyledTableCell colSpan={3} align='center'>{obligaciones?.numero_identificacion}</StyledTableCell>
             </TableRow>
@@ -200,18 +204,20 @@ export const DocumentoPagoTUA: React.FC<any> = ({
               <StyledTableCell colSpan={11} sx={{fontWeight: 'bold'}}>{obligaciones?.nombre_completo}  </StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell colSpan={1}>REPRESENTANTE LEGAL</StyledHeaderCell>
+              <StyledHeaderCell colSpan={1}>{liquidacion?.data.representante_legal}</StyledHeaderCell>
               <StyledTableCell colSpan={11}>TENIENTE CORONEL LEONARDO JAIRO TORRES CASTILLO</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>DIRECCIÓN</StyledHeaderCell>
-              <StyledTableCell colSpan={5}>KM 7 VIA PUERTO LOPEZ, CANTON MILITAR DE APIAY, VILLAVICENCIO</StyledTableCell>
+              <StyledTableCell colSpan={5}>{liquidacion?.data.direccion}</StyledTableCell>
               <StyledHeaderCell colSpan={2}>TELÉFONOS</StyledHeaderCell>
-              <StyledTableCell colSpan={4}>{datos?.id_deudor?.telefono || ''}</StyledTableCell>
+              <StyledTableCell colSpan={4}>
+              {liquidacion?.data.telefono}
+              </StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>EXPEDIENTE</StyledHeaderCell>
-              <StyledTableCell colSpan={5}>{form_liquidacion.id_expediente}</StyledTableCell>
+              <StyledTableCell colSpan={5}>{form_liquidacion?.id_expediente}</StyledTableCell>
               <StyledHeaderCell colSpan={2}>N° RESOLUCION Y FECHA</StyledHeaderCell>
               <StyledTableCell colSpan={5}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
             </TableRow>
