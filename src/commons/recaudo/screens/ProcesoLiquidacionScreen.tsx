@@ -69,9 +69,9 @@ export interface Obligacion {
   valor_capital_intereses: number;
 }
 export interface ObligacionesUsuario {
-  id_deudor: number;
-  nombre_completo: string;
-  numero_identificacion: string;
+  id_deudor: number; 
+  nombre_completo: string; 
+  numero_identificacion: string; 
   email: string;
   obligaciones: Obligacion[];
   tiene_facilidad: boolean;
@@ -748,29 +748,25 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         deudor.nombres.toLowerCase().includes(filtroNombres.toLowerCase())
     );
     set_deudores(deudoresFiltrados);
-  };
+  }; 
 
-
-
-
-
-  const handleClear = () => {
-    setFiltroNombres('');
-    setFiltroIdentificacion('');
-
-    api
-      .get('recaudo/liquidaciones/deudores')
-      .then((response) => {
-        set_deudores(response.data.data);
-      })
-      .catch((error) => {
-        //  console.log('')(error);
-      })
-      .finally(() => {
-        set_loading(false);
-      });
-  };
-
+  const handleClear = () => { 
+    setFiltroNombres(''); 
+    setFiltroIdentificacion(''); 
+ 
+    api 
+      .get('recaudo/liquidaciones/deudores') 
+      .then((response) => { 
+        set_deudores(response.data.data); 
+      }) 
+      .catch((error) => { 
+        //  console.log('')(error); 
+      }) 
+      .finally(() => { 
+        set_loading(false); 
+      }); 
+  }; 
+ 
   return (
     <>
       <Grid
@@ -985,6 +981,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
+          obligaciones={obligaciones}
             form_liquidacion={form_liquidacion}
             rows_detalles={rows_detalles}
             estado_expediente={estado_expediente}

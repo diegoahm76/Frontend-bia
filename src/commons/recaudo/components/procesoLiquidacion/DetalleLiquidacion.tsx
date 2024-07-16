@@ -45,6 +45,7 @@ interface LiquidacionResponse {
 
 
 interface IProps {
+  obligaciones:any;
   rows_detalles: RowDetalles[];
   estado_expediente: EstadoExpediente;
   set_rows_detalles: Dispatch<SetStateAction<RowDetalles[]>>;
@@ -55,7 +56,7 @@ interface IProps {
 
 }
 
-export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
   const [position_tab, set_position_tab] = useState('1');
 
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
@@ -306,14 +307,29 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
     if (opcion_liquidacion && opcion_liquidacion.variables) {
       set_variables_datos(opcion_liquidacion.variables);
     }
-  }, [opcion_liquidacion]);
+  }, [opcion_liquidacion]); 
 
-
+  const consol = () => { 
+    console.log(rows_detalles); 
+    console.log("55555"); 
+    console.log(form_liquidacion); 
+  }; 
+  
   return (
     <>
-
+    {/* {currency_formatter(form_liquidacion.valor ?? 0, 0)}
+ <Button
+                    variant="contained"
+                    color="primary"
+                    
+                    onClick={() => {
+                      consol()
+                    }}
+                  >
+                    Ver factura
+                  </Button> */}
       {/* {liquidacion?.data.cedula} */}
-
+      {/* {rows_detalles[0].valor_liquidado} */}
       <Grid
         container
         sx={{
@@ -484,7 +500,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
                   </Button>
                 </Grid>
               </Grid>
-              {ver_factura && <DocumentoPagoTUA datos={rows_detalles} />}
+              {ver_factura && <DocumentoPagoTUA obligaciones={obligaciones} form_liquidacion={form_liquidacion} datos={rows_detalles} months={months} rows_detalles={rows_detalles} />}
             </TabPanel>
           </TabContext>
 

@@ -15,6 +15,7 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es'; // importar localización en español
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { NumerosLetras } from '../../../gestorDocumental/Liquidacion_dos/utils/NumerosLetras';
+import { currency_formatter } from '../../../../utils/functions/getFormattedCurrency';
 
 dayjs.extend(localizedFormat);
 dayjs.locale('es');
@@ -41,13 +42,17 @@ const StyledCell = styled(StyledTableCell)({
 });
 
 export const DocumentoPagoTUA: React.FC<any> = ({
+  obligaciones,
+  months,
+  form_liquidacion,
+  rows_detalles,
   datos,
   data_clean,
   current_deudor,
   is_generate_cobro,
   cobro_url,
   id_subetapa
-}: {datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
+}: {obligaciones:any , form_liquidacion:any, rows_detalles:any, months:any, datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
   const receiptRef = useRef(null);
   const [form_values, set_form_values] = useState({
     sumaConcepto: "",
@@ -99,7 +104,7 @@ export const DocumentoPagoTUA: React.FC<any> = ({
         const pdfWidth = pdf.internal.pageSize.getWidth();
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-        const margin = 20;
+        const margin = 10;
         pdf.addImage(imgData, 'PNG', margin, margin, pdfWidth - margin * 2, pdfHeight - margin * 2);
         pdf.save('myfile.pdf');
       });
@@ -108,17 +113,33 @@ export const DocumentoPagoTUA: React.FC<any> = ({
 
   return (
     <>
-      <Button
+     <Grid
+        container
+        item
+        xs={12}
+        marginLeft={-2}
+        marginRight={2}
+        spacing={4}
+        marginTop={3}
+        
+      > 
+
+{/* {rows_detalles[0].valor_liquidado} */}
+
+          <Grid item xs={12} sm={12}>
+             <Button
         color="primary"
         size='medium'
         startIcon={<CloudUpload />}
         variant="contained"
         onClick={exportPDF}
-        sx={{margin: '1.5rem auto', display: 'flex', justifyContent: 'center', width: '300px'}}
+        // sx={{margin: '1.5rem auto', display: 'flex', justifyContent: 'center', width: '300px'}}
       >
         Descargar PDF
       </Button>
-      <section ref={receiptRef} style={{transform: 'scale(0.6)', margin: '-24rem 0'}}>
+          </Grid>
+          <Grid item xs={12} sm={12}>
+<section ref={receiptRef} style={{transform: 'scale(0.6)', margin: '-24rem 0'}}>
         <TableContainer component={Paper} sx={{ border: '1px solid black', borderRadius: 0}}>
         <Table sx={{ minWidth: 650 }} aria-label="customized table">
           <TableBody>
@@ -126,7 +147,7 @@ export const DocumentoPagoTUA: React.FC<any> = ({
               <StyledHeaderCell colSpan={12} align="center" sx={{fontSize: '26px'}}>CORPORACIÓN PARA EL DESARROLLO SOSTENIBLE DEL AREA DE MANEJO ESPECIAL LA MACARENA</StyledHeaderCell>
             </TableRow>
             <TableRow>
-              <StyledTableCell rowSpan={4} colSpan={8}>
+              <StyledTableCell rowSpan={4} colSpan={9}>
                 <article style={{display: 'flex', alignItems: 'center', gap: '15rem'}}>
                   <img src={logoEmpresa} alt="Cormacarena" style={{ height: 200, width: 300 }} />
                   <div style={{display: 'flex', flexDirection: 'column', gap:'1.5rem'}}>
@@ -135,29 +156,31 @@ export const DocumentoPagoTUA: React.FC<any> = ({
                       <div style={{fontSize: '23px', fontWeight: 'bold', textAlign: 'center'}}>822000091-2</div>
                     </div>
                     <div>
-                      <div style={{fontSize: '28px', fontWeight: 'bold', textAlign: 'center'}}>RECIBO OFICIAL DE PAGO</div>
-                      <div style={{fontSize: '28px', fontWeight: 'bold'}}>TASA POR UTILIZACIÓN DEL AGUA</div>
+                      <div style={{fontSize: '27px', fontWeight: 'bold', textAlign: 'center'}}>DOCUMENTO DE COBRO</div>
+                      <div style={{fontSize: '27px', fontWeight: 'bold'}}> TASA POR UTILIZACIÓN DEL AGUA</div>
                       {/* <div style={{fontSize: '28px', fontWeight: 'bold'}}>TASA RETRIBUTIVA Y COMPENSATORIA</div>
                       <div style={{fontSize: '28px', fontWeight: 'bold'}}>RENTA ASOCIADA</div> */}
                     </div>
                   </div>
                 </article>
               </StyledTableCell>
-              <StyledHeaderCell align="center">Ref. de Pago</StyledHeaderCell>
+              <StyledHeaderCell align="center" colSpan={2}>Ref. de Pago</StyledHeaderCell>
               <StyledTableCell align="center" sx={{ color: 'red', fontWeight: 'bold', fontSize: '29px' }}>TUA</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell align="center" colSpan={2}>FECHA LÍMITE DE PAGO</StyledHeaderCell>
+              <StyledHeaderCell align="center" colSpan={5}>FECHA LÍMITE DE PAGO</StyledHeaderCell>
             </TableRow>
             <TableRow>
-              <StyledTableCell align="center" colSpan={2} sx={{fontSize: '26px', fontWeight: 'bold'}}>28 de Febrero de 2024</StyledTableCell>
+              <StyledTableCell align="center" colSpan={5} sx={{fontSize: '26px', fontWeight: 'bold'}}>28 de Febrero de 2024</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell align="center">Doc. de Cobro N°</StyledHeaderCell>
+              <StyledHeaderCell align="center" colSpan={2}>Doc. de Cobro N°</StyledHeaderCell>
               <StyledTableCell align="center" sx={{fontSize: '24px', fontWeight: 'bold'}}>GR- 2023 011883</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledCell colSpan={12}>Ley 99 de 1993 Artículo 42, Decreto 901 de 1997, Resoluciones 0273 de 1997 y 0372 de 1998 del Ministerio del Medio Ambiente, Acuerdo 011 del 2000 de CORMACARENA (Por medio del cual se creó El Fondo Regional de Descontaminación), Decreto 2667 de 2012, Decreto 1076 de 2015 y Resolución PS-GJ.1.2.6.23.1974 de 2023.
+              <StyledCell colSpan={12}>No contribuyente de renta, exenta de retención en la fuente (ET. Libro I Art. 22 y Libro II Art. 369). Documento Equivalente a Factura Decreto 1001 de 1997.  De conformidad a 
+                    lo establecido por ley 1066 de 2006.  Culminada la Fecha límite de pago de esta factura se causarán intereses moratorios, los cuales se cobrarán a la tasa efectiva de usura,
+                    expedida y certificada por la Superintendencia Financiera de Colombia para el respectivo mes de mora.
               </StyledCell>
             </TableRow>
             <TableRow>
@@ -166,15 +189,15 @@ export const DocumentoPagoTUA: React.FC<any> = ({
               <StyledHeaderCell sx={{width: '8%'}}>PERIODO</StyledHeaderCell>
               <StyledTableCell colSpan={2} align='center'>Año {dayjs().year()}</StyledTableCell>
               <StyledHeaderCell sx={{width: '10%'}}>CEDULA/NIT</StyledHeaderCell>
-              <StyledTableCell colSpan={3} align='center'>{datos?.id_deudor?.identificacion}</StyledTableCell>
+              <StyledTableCell colSpan={3} align='center'>{obligaciones?.numero_identificacion}</StyledTableCell>
             </TableRow>
-            <TableRow>
+            {/* <TableRow>
               <StyledHeaderCell colSpan={1}>Ubicación</StyledHeaderCell>
               <StyledTableCell colSpan={11}>Puerto Gaitán</StyledTableCell>
-            </TableRow>
+            </TableRow> */}
             <TableRow>
               <StyledHeaderCell colSpan={1}>NOMBRE DEL TITULAR</StyledHeaderCell>
-              <StyledTableCell colSpan={11} sx={{fontWeight: 'bold'}}>{datos?.id_deudor?.nombres || ''} {datos?.id_deudor?.apellidos || ''}</StyledTableCell>
+              <StyledTableCell colSpan={11} sx={{fontWeight: 'bold'}}>{obligaciones?.nombre_completo}  </StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>REPRESENTANTE LEGAL</StyledHeaderCell>
@@ -188,52 +211,55 @@ export const DocumentoPagoTUA: React.FC<any> = ({
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>EXPEDIENTE</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>3.37.2.09.197</StyledTableCell>
-              {/* <StyledHeaderCell colSpan={2}>N° RESOLUCION Y FECHA</StyledHeaderCell>
-              <StyledTableCell colSpan={5}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell> */}
+              <StyledTableCell colSpan={5}>{form_liquidacion.id_expediente}</StyledTableCell>
+              <StyledHeaderCell colSpan={2}>N° RESOLUCION Y FECHA</StyledHeaderCell>
+              <StyledTableCell colSpan={5}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>NOMBRE DE LA FUENTE</StyledHeaderCell>
               <StyledTableCell colSpan={11}>POZO PROFUNDO</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell colSpan={1}>NOMBRE DEL TRAMO</StyledHeaderCell>
+              <StyledHeaderCell colSpan={1}>PREDIO</StyledHeaderCell>
               <StyledTableCell colSpan={11}>POZO PROFUNDO</StyledTableCell>
             </TableRow>
-            <TableRow>
+            
+            {/* <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>¿PRESENTA AUTODECLARACION?</StyledHeaderCell>
               <StyledTableCell colSpan={1}>SI</StyledTableCell>
               <StyledHeaderCell colSpan={2}>RESOLUCIÓN PSMV</StyledHeaderCell>
               <StyledTableCell colSpan={8}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
-            </TableRow>
-            <TableRow>
+            </TableRow> */}
+            {/* <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>¿AUTODECLARACIÓN APROBADA?</StyledHeaderCell>
               <StyledTableCell colSpan={1}>SI</StyledTableCell>
               <StyledHeaderCell colSpan={2}>RES. PERMISO DE VERTIMENTO</StyledHeaderCell>
               <StyledTableCell colSpan={8}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
+            </TableRow> */}
+            <TableRow>
+              <StyledHeaderCell sx={{width: '20%'}}>Municipio   </StyledHeaderCell>
+              <StyledTableCell colSpan={8}>1.00f</StyledTableCell>
+              <StyledHeaderCell colSpan={2}>FACTOR REGIONAL (FR)</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>TARIFA DE LA TASA $/m3 :TUA2022</StyledHeaderCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell sx={{width: '20%'}}>Parámetros generales</StyledHeaderCell>
-              <StyledHeaderCell colSpan={4}>Factor Regional(Fr)</StyledHeaderCell>
-              <StyledHeaderCell colSpan={4}>Tarifa Mínima(TM)($)</StyledHeaderCell>
-              <StyledHeaderCell colSpan={4}>Tarifa de la tasa (TR=TM*Fr)($/Kg)</StyledHeaderCell>
+              <StyledHeaderCell sx={{width: '15%'}}>CAUDAL CONCESIONADO (Q) L/sg</StyledHeaderCell>
+              <StyledTableCell colSpan={8}>1.010</StyledTableCell>
+              <StyledTableCell colSpan={2}>1.020</StyledTableCell>
+              <StyledTableCell colSpan={2}>1.030</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell sx={{width: '15%'}}>DBO - Demanda Bioquímica de Oxigeno</StyledHeaderCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
+              <StyledHeaderCell sx={{width: '15%'}}>USO</StyledHeaderCell>
+              <StyledTableCell colSpan={8}>1.040</StyledTableCell>
+              <StyledTableCell colSpan={2}>1.050</StyledTableCell>
+              <StyledTableCell colSpan={2}>1.060</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell sx={{width: '15%'}}>SST - Sólidos Suspedidos Totales</StyledHeaderCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
+              <StyledHeaderCell colSpan={12} sx={{textAlign: 'center'}}>LIQUIDACION DEL CONSUMO </StyledHeaderCell>
             </TableRow>
-            <TableRow>
-              <StyledHeaderCell colSpan={12} sx={{textAlign: 'center'}}>LIQUIDACIÓN DE LA CARGA CONTAMINANTE</StyledHeaderCell>
-            </TableRow>
-            <TableRow>
+
+            
+            {/* <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>¿Se liquida con PSMV?</StyledHeaderCell>
               <StyledTableCell colSpan={1}>NO</StyledTableCell>
               <StyledHeaderCell colSpan={2}>Personas/Anim. DBO/SST:</StyledHeaderCell>
@@ -242,9 +268,9 @@ export const DocumentoPagoTUA: React.FC<any> = ({
               <StyledTableCell colSpan={1}>0.000</StyledTableCell>
               <StyledHeaderCell colSpan={2}>Concentración Pers/Dia (SST):</StyledHeaderCell>
               <StyledTableCell colSpan={1}>0.000</StyledTableCell>
-            </TableRow>
+            </TableRow> */}
             <TableRow>
-              <StyledHeaderCell sx={{width: '10%'}}>PARÁMETRO / MESES DEL AÑO</StyledHeaderCell>
+              <StyledHeaderCell sx={{width: '10%'}}> MESES DEL AÑO</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>Enero</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>Febrero</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>Marzo</StyledHeaderCell>
@@ -252,6 +278,92 @@ export const DocumentoPagoTUA: React.FC<any> = ({
               <StyledHeaderCell colSpan={2}>Mayo</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>Junio</StyledHeaderCell>
             </TableRow>
+            <TableRow>
+              <StyledHeaderCell colSpan={1}>VOLUMEN DE AGUA V (m3)</StyledHeaderCell>
+              <StyledTableCell colSpan={2}>POZO 1PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 2PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 3PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 4PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 5PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO6 PROFUNDO</StyledTableCell> 
+            </TableRow>
+            <TableRow>
+              <StyledHeaderCell colSpan={1}>FACTOR DE COSTO DE OPORTUNIDAD</StyledHeaderCell>
+              <StyledTableCell colSpan={2}>POZO 1PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 2PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 3PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 4PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 5PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO6 PROFUNDO</StyledTableCell> 
+            </TableRow>
+            <TableRow>
+              <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
+              <StyledTableCell colSpan={2}>{months.includes("Enero") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Abril") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Junio") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell> 
+            </TableRow>
+
+
+            {/* <TableRow> 
+              <StyledTableCell colSpan={12}>.</StyledTableCell> 
+            </TableRow> */}
+            <TableRow>
+              <StyledTableCell colSpan={7}>   </StyledTableCell> 
+              <StyledHeaderCell colSpan={2}>SUBTOTAL 1er Semestre</StyledHeaderCell>
+              <StyledTableCell colSpan={3}>TENIENTE CORONEL  </StyledTableCell>
+            </TableRow>
+
+
+            <TableRow>
+              <StyledHeaderCell sx={{width: '10%'}}>  MESES DEL AÑO</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Julio</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Agosto </StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Septiembre</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Octubre</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Noviembre</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Diciembre</StyledHeaderCell>
+            </TableRow>
+            <TableRow>
+              <StyledHeaderCell colSpan={1}>VOLUMEN DE AGUA V (m3)</StyledHeaderCell>
+              <StyledTableCell colSpan={2}> </StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 2</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 3</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 4</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 5</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO6 6</StyledTableCell> 
+            </TableRow>
+            <TableRow>
+              <StyledHeaderCell colSpan={1}>FACTOR DE COSTO DE OPORTUNIDAD</StyledHeaderCell>
+              <StyledTableCell colSpan={2}>POZO 11</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 22</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 33</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 44</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO 55</StyledTableCell>
+              <StyledTableCell colSpan={2}>POZO6 66</StyledTableCell> 
+            </TableRow>
+            <TableRow>
+              <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
+              <StyledTableCell colSpan={2}> {months.includes("Julio") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Agosto") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Septiembre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Octubre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Noviembre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Diciembre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell> 
+            </TableRow>
+
+            {/* <TableRow> 
+              <StyledTableCell colSpan={12}>.</StyledTableCell> 
+            </TableRow> */}
+
+            <TableRow>
+              <StyledTableCell colSpan={7}>   </StyledTableCell> 
+              <StyledHeaderCell colSpan={2}>SUBTOTAL 2do Semestre</StyledHeaderCell>
+              <StyledTableCell colSpan={3}>TENIENTE CORONEL  </StyledTableCell>
+            </TableRow>
+
             <TableRow>
               <StyledHeaderCell colSpan={5} align='center'>DESCRIPCIÓN</StyledHeaderCell>
               <StyledHeaderCell colSpan={3} align='center'>VALOR</StyledHeaderCell>
@@ -269,10 +381,11 @@ export const DocumentoPagoTUA: React.FC<any> = ({
                   </div>
                 </article>
               </StyledTableCell>
+              
             </TableRow>
             <TableRow>
               <StyledTableCell colSpan={5} align='right'>TOTAL LIQUIDADO</StyledTableCell>
-              <StyledTableCell colSpan={3} align='right'>{form_values.sumaConcepto}</StyledTableCell>
+              <StyledTableCell colSpan={3} align='right'>{currency_formatter(form_liquidacion.valor ?? 0, 0)}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledTableCell colSpan={5} align='right'>NOTA CREDITO</StyledTableCell>
@@ -282,41 +395,55 @@ export const DocumentoPagoTUA: React.FC<any> = ({
               <StyledTableCell colSpan={5} align='right'>CAPITAL</StyledTableCell>
               <StyledTableCell colSpan={3} align='right'>{form_values.sumaIntereses}</StyledTableCell>
             </TableRow>
-            <TableRow>
+            {/* <TableRow>
               <StyledTableCell height={35} colSpan={8}></StyledTableCell>
-            </TableRow>
+            </TableRow> */}
             <TableRow>
               <StyledTableCell colSpan={5} align='right'>TOTAL A PAGAR</StyledTableCell>
-              <StyledTableCell colSpan={3} align='right' sx={{color: 'red', fontWeight: 'bold'}}>{form_values.sumaTotal}</StyledTableCell>
+              <StyledTableCell colSpan={3} align='right' sx={{color: 'red', fontWeight: 'bold'}}>{currency_formatter(form_liquidacion.valor ?? 0, 0)}</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledTableCell colSpan={1} align='right'>TOTAL A PAGAR</StyledTableCell>
-              <StyledTableCell colSpan={10} align='left' sx={{color: 'red', fontWeight: 'bold'}}>{NumerosLetras(form_values.totalNumber)}</StyledTableCell>
+              <StyledHeaderCell colSpan={1}>TOTAL A PAGAR</StyledHeaderCell>
+              <StyledTableCell colSpan={11} sx={{fontWeight: 'bold'}}>{datos?.id_deudor?.nombres || ''} {datos?.id_deudor?.apellidos || ''}</StyledTableCell>
             </TableRow>
             {/* Más filas según sean necesarias */}
           </TableBody>
         </Table>
         </TableContainer>
         <article style={{marginTop: '1rem'}}>
-          <div style={{textAlign: 'justify', fontSize: '19px', fontWeight:'500'}}>De acuerdo con lo establecido en la Ley 1066 de 2006, el interés moratorio se cobrará a la tasa efectiva de usura certificada por la Superintendencia Financiera.
-            El no recibo del documento de cobro no lo exonera del pago, por lo tanto, deberá solicitarlo en las instalaciones de CORMACARENA para cumplir con su obligación.
-            Una vez realizado el pago, enviar copia del soporte respectivo al correo info@cormacarena.gov.co.
-            Contra este acto administrativo proceden los recursos y reclamaciones de ley.
-            No contribuyente de renta, no sujeto de retención (Art. 22 libro I E.T. y Art. 369 Libro II E.T.).
-            Para la Expedición de su Paz y Salvo, debe hacer llegar mediante oficio original y/o copia de Recibo de Consignación Bancaria, donde el sello del Banco sea legible, a la siguiente
-            dirección: Oficina Territorial del META, Carrera 44C No. 33B - 24 Urbanización Los Pinos, Barzal Alto, Sede Principal, Villavicencio – Meta
-            Dirección Electrónica: Info@cormacarena.gov.co PBX 673 0420 - 673 0417 - 673 0417 Ext. 105 Línea Gratuita: 01-8000-117177
+          <div style={{textAlign: 'justify', fontSize: '19px', fontWeight:'500'}}>De conformidad con lo dispuesto por el Decreto 1076 de 2015, la presentación de cualquier reclamo o aclaración de esta factura deberá efectuarse por escrito dentro de un 
+                término no superior a seis (6) meses siguientes a la fecha límite de pago del presente documento. <br />
+                <strong>UNA VEZ REALIZADO EL PAGO, ENVIAR COPIA DEL SOPORTE RESPECTIVO AL CORREO info@cormacarena.gov.co</strong> Para la Expedición de su Paz y Salvo, debe hacer llegar mediante oficio original y/o copia de Recibo de Consignación Bancaria, donde el sello del Banco sea legible, a la 
+                siguiente dirección: Oficina Territorial del META, Carrera 44C No. 33B - 24 Urbanización Los Pinos, Barzal Alto, Sede Principal, Villavicencio – Meta
+                Dirección Electrónica: Info@cormacarena.gov.co PBX 673 0420 - 673 0417 - 673 0417 Ext. 105 Línea Gratuita: 01-8000-117177
           </div>
         </article>
+        <TableRow>
+  {/* <StyledTableCell colSpan={12} align='right'> */}
+    <div style={{marginTop: '5rem', textAlign: 'center'}}>
+      <hr style={{width: '400px', border: '1px solid black'}} />
+      <span>DIRECTOR GENERAL</span>
+    </div>
+  {/* </StyledTableCell> */}
+</TableRow>
+
       </section>
-      <Grid item xs={12} sm={12}>
+
+
+          </Grid>
+ <Grid item xs={12} sm={12}>
         <embed
           src={cobro_url}
           type="application/pdf"
           width="100%"
-          height="1080px"
+          height="100px"
         />
       </Grid>
+      </Grid>
+    
+     
+      
+     
     </>
   );
 }

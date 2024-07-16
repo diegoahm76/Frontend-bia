@@ -74,10 +74,11 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
 
 
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
-        setFormValues({ ...formValues, [name]: value });
-    };
+        setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
+      };
+    
 
     const handleSubmitCrear = async () => {
         try {
@@ -173,6 +174,14 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     }, []);
 
 
+    const formatCurrency = (value: string) => {
+        if (!value) return '';
+        return new Intl.NumberFormat('es-CO', {
+          style: 'currency',
+          currency: 'COP',
+          minimumFractionDigits: 0,
+        }).format(Number(value));
+      };
     return (
 
         <>
@@ -261,7 +270,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 label="valor"
                                 variant="outlined"
                                 onChange={handleInputChange}
-                                value={formValues.valor}
+                                value={formatCurrency(formValues.valor)}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>

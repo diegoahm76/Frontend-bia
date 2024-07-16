@@ -284,10 +284,18 @@ export const ConceptoPago: React.FC = () => {
                 <Grid item xs={12} sm={12} marginTop={2}>
                     <div style={{ height: 400, width: '100%' }}>
                         <DataGrid
+                            density="compact"
+                            autoHeight
+                            pageSize={5}
+                            rowHeight={75}
+                            getRowHeight={() => 'auto'}
+                            rowsPerPageOptions={[11]}
+                            experimentalFeatures={{ newEditingApi: true }}
+
                             rows={configuraciones}
                             columns={columns}
-                            pageSize={5}
-                            autoHeight
+                             
+                            
                             getRowId={(row) => row.id_valores_variables}
                         />
                     </div>
