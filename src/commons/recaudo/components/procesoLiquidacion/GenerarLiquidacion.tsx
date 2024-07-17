@@ -44,6 +44,8 @@ interface LiquidacionResponse {
     };
 }
 interface IProps {
+    set_tipo_renta:any;
+    tipo_renta:any;
     setLiquidacion:any;
     liquidacion:any;
     form_liquidacion: FormLiquidacion;
@@ -72,6 +74,8 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
+    set_tipo_renta,
+    tipo_renta,
     liquidacion,
     setLiquidacion,
     periodos,
@@ -139,7 +143,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
     // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
     const [year, set_year] = useState<number>(0);
-    const [tipo_renta, set_tipo_renta] = useState<string>('');
+    // const [tipo_renta, set_tipo_renta] = useState<string>('');
 
 
     const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
@@ -208,7 +212,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 id_expediente: lista_obligaciones[0]?.expediente,
             }));
 
-            set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
+            // set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
 
             if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'MULTAS') {
                 set_form_liquidacion((prevData: any) => ({
@@ -326,6 +330,31 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
 
             <Grid container spacing={2}>
+            {/* <Grid item xs={12} sm={4}>
+  <FormControl size="small" fullWidth>
+    <InputLabel>Expediente</InputLabel>
+    <Select
+      label='Expediente'
+      name="id_expediente"
+      value={form_liquidacion.id_expediente}
+      MenuProps={{
+        style: {
+          maxHeight: 224,
+        }
+      }}
+      onChange={handle_select_form_liquidacion_change}
+    >
+      {expedientes_deudor.map((expediente) => (
+        <MenuItem key={expediente.id} value={expediente.id}>
+          {expediente.id_expediente_doc !== null ? expediente.id_expediente_doc : expediente.id_expediente_pimisys}
+        </MenuItem>
+      ))}
+    </Select>
+    <FormHelperText>Seleccione el expediente</FormHelperText>
+  </FormControl>
+</Grid> */}
+
+{/* 
                 <Grid item xs={12} sm={4}>
                     <FormControl size="small" fullWidth>
                         <InputLabel>Expediente</InputLabel>
@@ -348,7 +377,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                         </Select>
                         <FormHelperText>Seleccione el expediente</FormHelperText>
                     </FormControl>
-                </Grid>
+                </Grid> */}
                 {/* { selectedIds[0].toString()}
                ññ
                {form_liquidacion.id_expediente} */}

@@ -12,6 +12,7 @@ import { htmlContent } from "./cons";
 import { DocumentoPagoTUA } from "./DocumentoPagoTUA";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ChevronLeftSharpIcon from '@mui/icons-material/ChevronLeftSharp';
+import { DocumetoPagoTR } from './DocumetoPagoTR';
 interface LiquidacionResponse {
   success: boolean;
   detail: string;
@@ -43,8 +44,16 @@ interface LiquidacionResponse {
   };
 }
 
-
+export interface TipoRentai {
+  id_tipo_renta: number;
+  nombre_tipo_renta: string;
+  tipo_cobro_asociado: any;
+  tipo_renta_asociado: any;
+}
 interface IProps {
+  id_cc:any;
+  set_tipo_renta:any;
+  tipo_renta:any;
   liquidacion:any;
   setLiquidacion:any;
   obligaciones:any;
@@ -58,7 +67,7 @@ interface IProps {
 
 }
 
-export const DetalleLiquidacion: React.FC<IProps> = ({ liquidacion,setLiquidacion,  obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, tipo_renta,liquidacion,setLiquidacion,  obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
   const [position_tab, set_position_tab] = useState('1');
 
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
@@ -317,6 +326,20 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ liquidacion,setLiquidacio
     console.log(form_liquidacion); 
   }; 
   
+  const [tiposRenta, setTiposRenta] = useState<TipoRentai[]>([]);
+
+  const fetchTiposRenta = async () => {
+    try {
+      const res = await api.get('/recaudo/configuracion_baisca/tiporenta/get/');
+      setTiposRenta(res.data.data);
+    } catch (error) {
+      console.error('Error al obtener los tipos de renta', error);
+    }
+  };
+  useEffect(() => {
+    fetchTiposRenta();
+  }, []);
+  
   return (
     <>
     {/* {currency_formatter(form_liquidacion.valor ?? 0, 0)}
@@ -356,8 +379,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ liquidacion,setLiquidacio
               <Title title="Detalle de liquidación"></Title>
 
               <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
-
-
+           
+              {/* {tipo_renta} */}
                 <Grid item xs={12}>
                   <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
                     <InputLabel>Selecciona opción liquidación</InputLabel>
@@ -502,14 +525,32 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ liquidacion,setLiquidacio
                   </Button>
                 </Grid>
               </Grid>
-              {ver_factura && <DocumentoPagoTUA 
-              liquidacion={liquidacion} 
-              obligaciones={obligaciones} 
-              form_liquidacion={form_liquidacion} 
-              datos={rows_detalles}
-               months={months} 
-               rows_detalles={rows_detalles} 
-               />}
+              {ver_factura && (
+  <>
+    {tipo_renta === "TASA DE USO DE AGUA (TUA)" ? (
+      <DocumentoPagoTUA 
+      id_cc={id_cc}
+        liquidacion={liquidacion} 
+        obligaciones={obligaciones} 
+        form_liquidacion={form_liquidacion} 
+        datos={rows_detalles}
+        months={months} 
+        rows_detalles={rows_detalles} 
+      />
+    ) : (
+      <DocumetoPagoTR
+      id_cc={id_cc}
+        liquidacion={liquidacion} 
+        obligaciones={obligaciones} 
+        form_liquidacion={form_liquidacion} 
+        datos={rows_detalles}
+        months={months} 
+        rows_detalles={rows_detalles} 
+      />
+    )}
+  </>
+)}
+
             </TabPanel>
           </TabContext>
 
