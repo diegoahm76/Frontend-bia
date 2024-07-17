@@ -13,7 +13,7 @@ import { CarteraPorDeudaEdad } from './Graficas/Reportetop2';
 import { DeudoresXConceptoTop } from './Graficas/CarteraTop';
 
 export const IndicadoresRecaudo: React.FC = () => {
-  const [opcionSeleccionada, setOpcionSeleccionada] = useState('6');
+  const [opcionSeleccionada, setOpcionSeleccionada] = useState('0');
 
   const handleChange = (event: {
     target: { value: SetStateAction<string> };
@@ -92,7 +92,10 @@ export const IndicadoresRecaudo: React.FC = () => {
           </Grid>
         </Grid>
       </Grid>
-
+      {opcionSeleccionada === '0' ? (
+        <> 
+        </>
+      ) : null}
       {opcionSeleccionada === '1' ? (
         <>
           {/* R */}

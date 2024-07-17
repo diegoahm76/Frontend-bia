@@ -12,6 +12,7 @@ import { htmlContent } from "./cons";
 import { DocumentoPagoTUA } from "./DocumentoPagoTUA";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import ChevronLeftSharpIcon from '@mui/icons-material/ChevronLeftSharp';
+import { DocumetoPagoTR } from './DocumetoPagoTR';
 interface LiquidacionResponse {
   success: boolean;
   detail: string;
@@ -43,8 +44,19 @@ interface LiquidacionResponse {
   };
 }
 
-
+export interface TipoRentai {
+  id_tipo_renta: number;
+  nombre_tipo_renta: string;
+  tipo_cobro_asociado: any;
+  tipo_renta_asociado: any;
+}
 interface IProps {
+  id_cc:any;
+  set_tipo_renta:any;
+  tipo_renta:any;
+  liquidacion:any;
+  setLiquidacion:any;
+  obligaciones:any;
   rows_detalles: RowDetalles[];
   estado_expediente: EstadoExpediente;
   set_rows_detalles: Dispatch<SetStateAction<RowDetalles[]>>;
@@ -55,7 +67,7 @@ interface IProps {
 
 }
 
-export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, tipo_renta,liquidacion,setLiquidacion,  obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
   const [position_tab, set_position_tab] = useState('1');
 
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
@@ -274,7 +286,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
   //codigo miguel para visor de factura
   const encodedHtml = encodeURIComponent(htmlContent);
   const dataUri = 'data:text/html;charset=utf-8,' + encodedHtml;
-  const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+  // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
 
 
   const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
@@ -306,14 +318,43 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
     if (opcion_liquidacion && opcion_liquidacion.variables) {
       set_variables_datos(opcion_liquidacion.variables);
     }
-  }, [opcion_liquidacion]);
+  }, [opcion_liquidacion]); 
 
+  const consol = () => { 
+    console.log(rows_detalles); 
+    console.log("55555"); 
+    console.log(form_liquidacion); 
+  }; 
+  
+  const [tiposRenta, setTiposRenta] = useState<TipoRentai[]>([]);
 
+  const fetchTiposRenta = async () => {
+    try {
+      const res = await api.get('/recaudo/configuracion_baisca/tiporenta/get/');
+      setTiposRenta(res.data.data);
+    } catch (error) {
+      console.error('Error al obtener los tipos de renta', error);
+    }
+  };
+  useEffect(() => {
+    fetchTiposRenta();
+  }, []);
+  
   return (
     <>
-
+    {/* {currency_formatter(form_liquidacion.valor ?? 0, 0)}
+ <Button
+                    variant="contained"
+                    color="primary"
+                    
+                    onClick={() => {
+                      consol()
+                    }}
+                  >
+                    Ver factura
+                  </Button> */}
       {/* {liquidacion?.data.cedula} */}
-
+      {/* {rows_detalles[0].valor_liquidado} */}
       <Grid
         container
         sx={{
@@ -338,8 +379,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
               <Title title="Detalle de liquidación"></Title>
 
               <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
-
-
+           
+              {/* {tipo_renta} */}
                 <Grid item xs={12}>
                   <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
                     <InputLabel>Selecciona opción liquidación</InputLabel>
@@ -484,7 +525,32 @@ export const DetalleLiquidacion: React.FC<IProps> = ({ form_liquidacion, rows_de
                   </Button>
                 </Grid>
               </Grid>
-              {ver_factura && <DocumentoPagoTUA datos={rows_detalles} />}
+              {ver_factura && (
+  <>
+    {tipo_renta === "TASA DE USO DE AGUA (TUA)" ? (
+      <DocumentoPagoTUA 
+      id_cc={id_cc}
+        liquidacion={liquidacion} 
+        obligaciones={obligaciones} 
+        form_liquidacion={form_liquidacion} 
+        datos={rows_detalles}
+        months={months} 
+        rows_detalles={rows_detalles} 
+      />
+    ) : (
+      <DocumetoPagoTR
+      id_cc={id_cc}
+        liquidacion={liquidacion} 
+        obligaciones={obligaciones} 
+        form_liquidacion={form_liquidacion} 
+        datos={rows_detalles}
+        months={months} 
+        rows_detalles={rows_detalles} 
+      />
+    )}
+  </>
+)}
+
             </TabPanel>
           </TabContext>
 

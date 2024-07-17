@@ -34,12 +34,16 @@ interface BuscarProps {
   set_selectedIds: any;
   set_lista_obligaciones: any;
   lista_obligaciones: any;
+  set_tipo_renta:any;
+  set_id_cc:any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
-  // set_selectedIds,
-  // selectedIds,
+  set_id_cc,
+  set_tipo_renta,
+  set_selectedIds,
+  selectedIds,
   set_position_tab,
   set_cobro_persuasivo_active,
   is_modal_active,
@@ -71,29 +75,23 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
   };
   const handle_close = (): void => { set_modal(false) };
 
-
-  const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
-
-
-  console.log("selectedIds", selectedIds)
-
-
-
   const handle_submit = async (): Promise<void> => {
     const arr_registro = [];
     const idSet = new Set(); // Utilizamos un Set para almacenar IDs únicos
 
-    // Verificar si lista_obligaciones y selectedIds son arrays válidos
-    if (!lista_obligaciones || !Array.isArray(lista_obligaciones) || !selectedIds || !Array.isArray(selectedIds)) {
-      console.error('lista_obligaciones o selectedIds no son arrays válidos:', lista_obligaciones, selectedIds);
+    // Verificar si lista_obligaciones y selected son arrays válidos
+    if (!lista_obligaciones || !Array.isArray(lista_obligaciones) || !selected || !Array.isArray(selected)) {
+      console.error('lista_obligaciones o selected no son arrays válidos:', lista_obligaciones, selected);
       return; // O manejar el error de otra manera apropiada
     }
 
     for (let i = 0; i < lista_obligaciones.length; i++) {
-      // Verificar si lista_obligaciones[i] es un objeto válido y tiene propiedad id
-      if (selectedIds.includes(lista_obligaciones[i].id) && !idSet.has(lista_obligaciones[i].id)) {
-        arr_registro.push(lista_obligaciones[i]);
-        idSet.add(lista_obligaciones[i].id); // Agregamos el ID al Set para evitar duplicados
+      for (let j = 0; j < selected.length; j++) {
+        // Verificar si lista_obligaciones[i] es un objeto válido y tiene propiedades nombre e id
+        if (lista_obligaciones[i]?.nombre === selected[j] && !idSet.has(lista_obligaciones[i].id)) {
+          arr_registro.push(lista_obligaciones[i]);
+          idSet.add(lista_obligaciones[i].id); // Agregamos el ID al Set para evitar duplicados
+        }
       }
     }
 
@@ -118,87 +116,52 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
   };
 
 
-  // const handle_submit = async (): Promise<void> => {
-  //   const arr_registro = [];
-
-  //   for (let i = 0; i < lista_obligaciones.length; i++) {
-  //     for (let j = 0; j < selected.length; j++) {
-  //       if (lista_obligaciones[i].nombre === selected[j]) {
-  //         arr_registro.push(lista_obligaciones[i]);
-  //       }
-  //     }
-  //   }
-
-  //   console.log("lista_obligaciones", lista_obligaciones);
-  //   try {
-  //     dispatch(obligaciones_seleccionadas(arr_registro));
-  //     void dispatch(get_datos_deudor(obligaciones.id_deudor));
-  //     void dispatch(get_datos_contacto_solicitud(obligaciones.id_deudor));
-  //   } catch (error: any) {
-  //     console.error('Error en handle_submit:', error);
-  //     // throw new Error(error);
-  //   }
-  // };
-
-
-  const handle_click = (event: React.MouseEvent<unknown>, id: string): void => {
-    const selectedIndex = selectedIds.indexOf(id);
-    let newSelectedIds: string[] = [];
-
-    if (selectedIndex === -1) {
-      newSelectedIds = newSelectedIds.concat(selectedIds, id);
-    } else {
-      newSelectedIds = selectedIds.filter((sid) => sid !== id);
-    }
-
-    set_selectedIds(newSelectedIds);
-  };
-
+  // const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 
   // const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
-  // const handle_click = (event: React.MouseEvent<unknown>, name: string, id: string): void => {
+  const handle_click = (event: React.MouseEvent<unknown>, name: string, id: string): void => {
 
-  //   const selected_index = selected.indexOf(name);
-  //   const selectedIdIndex = selectedIds.indexOf(id);
+    const selected_index = selected.indexOf(name);
+    const selectedIdIndex = selectedIds.indexOf(id);
 
-  //   let new_selected: readonly string[] = [];
-  //   let newSelectedIds: readonly string[] = [];
+    let new_selected: readonly string[] = [];
+    let newSelectedIds: readonly string[] = [];
 
-  //   if (selected_index === -1) {
-  //     new_selected = new_selected.concat(selected, name);
-  //     newSelectedIds = newSelectedIds.concat(selectedIds, id);
+    if (selected_index === -1) {
+      new_selected = new_selected.concat(selected, name);
+      newSelectedIds = newSelectedIds.concat(selectedIds, id);
 
-  //   } else if (selected_index === 0) {
-  //     new_selected = new_selected.concat(selected.slice(1));
-  //     newSelectedIds = newSelectedIds.concat(selectedIds.slice(1));
+    } else if (selected_index === 0) {
+      new_selected = new_selected.concat(selected.slice(1));
+      newSelectedIds = newSelectedIds.concat(selectedIds.slice(1));
 
-  //   } else if (selected_index === selected.length - 1) {
-  //     new_selected = new_selected.concat(selected.slice(0, -1));
-  //     newSelectedIds = newSelectedIds.concat(selectedIds.slice(0, -1));
+    } else if (selected_index === selected.length - 1) {
+      new_selected = new_selected.concat(selected.slice(0, -1));
+      newSelectedIds = newSelectedIds.concat(selectedIds.slice(0, -1));
 
-  //   } else if (selected_index > 0) {
-  //     new_selected = new_selected.concat(
-  //       selected.slice(0, selected_index),
-  //       selected.slice(selected_index + 1),
-  //     );
-  //     newSelectedIds = newSelectedIds.concat(
-  //       selectedIds.slice(0, selected_index),
-  //       selectedIds.slice(selected_index + 1),
-  //     );
-  //   }
+    } else if (selected_index > 0) {
+      new_selected = new_selected.concat(
+        selected.slice(0, selected_index),
+        selected.slice(selected_index + 1),
+      );
+      newSelectedIds = newSelectedIds.concat(
+        selectedIds.slice(0, selected_index),
+        selectedIds.slice(selected_index + 1),
+      );
+    }
 
-  //   // if (selectedIdIndex === -1) {
-  //   //   newSelectedIds = newSelectedIds.concat(selectedIds, id);
-  //   // } else {
-  //   //   newSelectedIds = newSelectedIds.concat(
-  //   //     selectedIds.slice(0, selectedIdIndex),
-  //   //     selectedIds.slice(selectedIdIndex + 1)
-  //   //   );
-  //   // }
-  //   set_selectedIds(newSelectedIds);
+    // if (selectedIdIndex === -1) {
+    //   newSelectedIds = newSelectedIds.concat(selectedIds, id);
+    // } else {
+    //   newSelectedIds = newSelectedIds.concat(
+    //     selectedIds.slice(0, selectedIdIndex),
+    //     selectedIds.slice(selectedIdIndex + 1)
+    //   );
+    // }
+    set_selectedIds(newSelectedIds);
 
-  //   set_selected(new_selected);
-  // };
+    set_selected(new_selected);
+  };
 
   const handle_gestor_cartera = (obligacion: Obligacion): void => {
     const selected_index = obligaciones_gestor.findIndex(ob => ob.id === obligacion.id);
@@ -337,14 +300,14 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
         return (
           <Checkbox
             // checked={selected.indexOf(params.row.nombre) !== -1 }
-            // checked={selected.indexOf(params.row.nombre) !== -1 && selectedIds.indexOf(params.row.id) !== -1}
-            checked={selectedIds.indexOf(params.row.id) !== -1}
+            checked={selected.indexOf(params.row.nombre) !== -1 && selectedIds.indexOf(params.row.id) !== -1}
 
             onClick={(event) => {
-              handle_click(event, params.row.id);
-
-              // handle_click(event, params.row.nombre, params.row.id)
+              set_id_cc(params.row.id_expediente)
+              handle_click(event, params.row.nombre, params.row.id)
               handle_gestor_cartera(params.row)
+              set_tipo_renta(params.row.tipo_renta)
+              
             }}
 
           // onClick={(event) => {
@@ -488,130 +451,127 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
           onClick={handleClick}>CONSOLE </Button> */}
           {
             lista_obligaciones && lista_obligaciones.length !== 0 ? (
-              <Grid item xs={12}>
-                <Grid item>
-                  <Box sx={{ width: '100%' }}>
-                    <p>
-                      {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
-                    </p>
-                    <Grid item >
-                      <Button onClick={handleSelectAllClick} variant="contained" color="primary">
-                        Seleccionar  todo
-                      </Button>
-                    </Grid>
-
-                    <DataGrid
-                      autoHeight
-                      disableSelectionOnClick
-                      rows={lista_obligaciones}
-                      columns={columns}
-                      pageSize={10}
-                      rowsPerPageOptions={[10]}
-                      experimentalFeatures={{ newEditingApi: true }}
-                      getRowId={(row) => faker.database.mongodbObjectId()}
-                    />
-                  </Box>
-                </Grid>
-                <Stack
-                  direction="row"
-                  justifyContent="right"
-                  spacing={2}
-                  sx={{ mt: '30px' }}
-                >
-                  <Grid item xs={12} sm={2.5}>
-                    <TextField
-                      label="Total Capital"
-                      size="small"
-                      fullWidth
-                      value={capital_cop}
-                    />
+            <Grid item xs={12}>
+              <Grid item>
+                <Box sx={{ width: '100%' }}>
+                  <p>
+                    {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
+                  </p>
+                  <Grid item >
+                    <Button onClick={handleSelectAllClick} variant="contained" color="primary">
+                      Seleccionar  todo
+                    </Button>
                   </Grid>
-                  <Grid item xs={12} sm={2.5}>
-                    <TextField
-                      label="Total Intereses"
-                      size="small"
-                      fullWidth
-                      value={intereses_cop}
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={2.5}>
-                    <TextField
-                      label={<strong>Gran Total a Deber</strong>}
-                      size="small"
-                      fullWidth
-                      value={total_cop}
-                    />
-                  </Grid>
-                </Stack>
 
-
-
-
-
-                <Stack
-                  direction="row"
-                  justifyContent="right"
-                  spacing={2}
-                  marginTop={2}
-                  sx={{ mb: '20px' }}
-
-                >
-
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    sx={{ marginTop: '30px' }}
-                    startIcon={<PaidIcon />}
-                    disabled={selectedIds.length === 0}
-                    onClick={() => void handle_generate_proceso_persuasivo()}
-                  >
-                    Generar Proceso Persuasivo
-                  </Button>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    sx={{ marginTop: '30px' }}
-                    startIcon={<RequestQuoteIcon />}
-                    disabled={selectedIds.length === 0}
-                    onClick={() => {
-                      // navigate('../facilidades_pago/registro');
-                      // void handle_submit();
-                      set_position_tab('2');
-                    }}
-                  >
-                    Liquidar
-                  </Button>
-                  <Button
-                    color='primary'
-                    variant='contained'
-                    // disabled={selected.length === 0}
-                    disabled={selectedIds.length === 0}
-
-                    startIcon={<Add />}
-                    sx={{ marginTop: '30px' }}
-                    onClick={() => {
-                      if (obligaciones.tiene_facilidad) {
-                        handle_open(1);
-                        console.log("1")
-                        // } else if (selected.length === 0) {  selectedIds
-                        } else if (selectedIds.length === 0) {  
-
-                        handle_open(2);
-                        console.log("2")
-
-                      } else {
-                        // navigate('../registro');
-                        navigate('../facilidades_pago/registro');
-                        console.log("3")
-
-                        void handle_submit();
-                      }
-                    }}
-                  >
-                    Crear Facilidad de Pago
-                  </Button>
-                </Stack>
+                  <DataGrid
+                    autoHeight
+                    disableSelectionOnClick
+                    rows={lista_obligaciones}
+                    columns={columns}
+                    pageSize={10}
+                    rowsPerPageOptions={[10]}
+                    experimentalFeatures={{ newEditingApi: true }}
+                    getRowId={(row) => faker.database.mongodbObjectId()}
+                  />
+                </Box>
               </Grid>
+              <Stack
+                direction="row"
+                justifyContent="right"
+                spacing={2}
+                sx={{ mt: '30px' }}
+              >
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Capital"
+                    size="small"
+                    fullWidth
+                    value={capital_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label="Total Intereses"
+                    size="small"
+                    fullWidth
+                    value={intereses_cop}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={2.5}>
+                  <TextField
+                    label={<strong>Gran Total a Deber</strong>}
+                    size="small"
+                    fullWidth
+                    value={total_cop}
+                  />
+                </Grid>
+              </Stack>
+
+
+
+
+
+              <Stack
+                direction="row"
+                justifyContent="right"
+                spacing={2}
+                marginTop={2}
+                sx={{ mb: '20px' }}
+
+              >
+
+                <Button
+                  color='primary'
+                  variant='contained'
+                  sx={{ marginTop: '30px' }}
+                  startIcon={<PaidIcon />}
+                  disabled={selectedIds.length === 0}
+                  onClick={() => void handle_generate_proceso_persuasivo()}
+                >
+                  Generar Proceso Persuasivo
+                </Button>
+                <Button
+                  color='primary'
+                  variant='contained'
+                  sx={{ marginTop: '30px' }}
+                  startIcon={<RequestQuoteIcon />}
+                  disabled={selectedIds.length === 0}
+                  onClick={() => {
+                    // navigate('../facilidades_pago/registro');
+                    // void handle_submit();
+                    set_position_tab('2');
+                  }}
+                >
+                  Liquidar
+                </Button>
+                <Button
+                  color='primary'
+                  variant='contained'
+                  disabled={selected.length === 0}
+
+                  startIcon={<Add />}
+                  sx={{ marginTop: '30px' }}
+                  onClick={() => {
+                    if (obligaciones.tiene_facilidad) {
+                      handle_open(1);
+                      console.log("1")
+                    } else if (selected.length === 0) {
+                      handle_open(2);
+                      console.log("2")
+
+                    } else {
+                      // navigate('../registro');
+                      navigate('../facilidades_pago/registro');
+                      console.log("3")
+
+                      void handle_submit();
+                    }
+                  }}
+                >
+                  Crear Facilidad de Pago
+                </Button>
+              </Stack>
+            </Grid>
             ) : (
               <p>
                 {`El usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} no tiene obligaciones pendiente por pago.`}

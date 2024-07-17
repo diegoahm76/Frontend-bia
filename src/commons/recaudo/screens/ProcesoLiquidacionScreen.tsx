@@ -68,10 +68,40 @@ export interface Obligacion {
   dias_mora: number;
   valor_capital_intereses: number;
 }
+interface LiquidacionResponse {
+  success: boolean;
+  detail: string;
+  data: {
+      rp: number;
+      limite_pago: string;
+      doc_cobro: string;
+      ley: string;
+      fecha_impresion: string;
+      anio: number;
+      cedula: string;
+      titular: string;
+      representante_legal: string;
+      direccion: string;
+      telefono: string;
+      expediente: string;
+      exp_resolucion: string;
+      nombre_fuente: string;
+      predio: string;
+      municipio: string;
+      caudal_consecionado: number;
+      uso: string;
+      fr: number;
+      tt: number;
+      numero_cuota: string;
+      valor_cuota: number;
+      codigo_barras: string;
+      factor_costo_oportunidad: number;
+  };
+}
 export interface ObligacionesUsuario {
-  id_deudor: number;
-  nombre_completo: string;
-  numero_identificacion: string;
+  id_deudor: number; 
+  nombre_completo: string; 
+  numero_identificacion: string; 
   email: string;
   obligaciones: Obligacion[];
   tiene_facilidad: boolean;
@@ -189,6 +219,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       api
         .get(
           `recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor}/`
+          //  recaudo/liquidaciones/expedientes-deudor/get/
+           
         )
         .then((response) => {
           set_expedientes_deudor(response.data.data);
@@ -579,6 +611,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     (state: RootStateObligaciones) => state.obligaciones
   );
 
+  const [id_cc, set_id_cc] = useState('');
+  const [tipo_renta, set_tipo_renta] = useState<string>('');
 
   const columns_deudores: GridColDef[] = [
     {
@@ -636,6 +670,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
             <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
+                  // set_tipo_renta()
+                  // set_id_cc(params.row.id_expediente)
                   set_form_liquidacion((previousData) => ({
                     ...previousData,
                     id_deudor: params.row.id,
@@ -748,28 +784,25 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         deudor.nombres.toLowerCase().includes(filtroNombres.toLowerCase())
     );
     set_deudores(deudoresFiltrados);
-  };
+  }; 
 
-
-
-
-
-  const handleClear = () => {
-    setFiltroNombres('');
-    setFiltroIdentificacion('');
-
-    api
-      .get('recaudo/liquidaciones/deudores')
-      .then((response) => {
-        set_deudores(response.data.data);
-      })
-      .catch((error) => {
-        //  console.log('')(error);
-      })
-      .finally(() => {
-        set_loading(false);
-      });
-  };
+  const handleClear = () => { 
+    setFiltroNombres(''); 
+    setFiltroIdentificacion(''); 
+ 
+    api 
+      .get('recaudo/liquidaciones/deudores') 
+      .then((response) => { 
+        set_deudores(response.data.data); 
+      }) 
+      .catch((error) => { 
+        //  console.log('')(error); 
+      }) 
+      .finally(() => { 
+        set_loading(false); 
+      }); 
+  }; 
+  const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
 
   return (
     <>
@@ -784,6 +817,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        {/* ccc
+        {id_cc} */}
         {/* <Button onClick={handle_open_buscar} fullWidth variant="outlined"    >
           Crear
         </Button> */}
@@ -801,6 +836,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         />
         <Grid item xs={12}>
           <Title title="Proceso de Liquidación"></Title>
+          {/* {form_liquidacion.id_deudor} */}
           <Box
             component="form"
             sx={{ mt: '20px' }}
@@ -909,6 +945,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                         {obligaciones.length !== 0 ? (
                           <>
                             <TablaObligacionesUsuarioConsulta
+                            set_id_cc={set_id_cc}
+                            set_tipo_renta={set_tipo_renta}
                               lista_obligaciones={lista_obligaciones}
                               set_lista_obligaciones={set_lista_obligaciones}
                               set_position_tab={set_position_tab}
@@ -931,6 +969,11 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 {/* INPUTS EDITAR LIQUIDACION */}
                 <GenerarLiquidacion
+
+                set_tipo_renta={set_tipo_renta}
+                tipo_renta={tipo_renta}
+                 liquidacion={liquidacion}
+                 setLiquidacion={setLiquidacion}
                   obligaciones={obligaciones}
                   lista_obligaciones={lista_obligaciones}
                   set_form_liquidacion={set_form_liquidacion}
@@ -985,6 +1028,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
+              id_cc={id_cc}
+           set_tipo_renta={set_tipo_renta}
+           tipo_renta={tipo_renta}
+           liquidacion={liquidacion}
+           setLiquidacion={setLiquidacion}
+          obligaciones={obligaciones}
             form_liquidacion={form_liquidacion}
             rows_detalles={rows_detalles}
             estado_expediente={estado_expediente}

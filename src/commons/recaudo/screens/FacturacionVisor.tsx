@@ -5808,7 +5808,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
                 >
                     <Grid container item xs={12} spacing={2} marginTop={2}>
 
-        
+                    {form_liquidacion.id_expediente}
                         <Grid item xs={12} sm={4}>
                             <FormControl size="small" fullWidth>
                                 <InputLabel>Expediente</InputLabel>
@@ -5824,7 +5824,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
                                     onChange={handle_select_form_liquidacion_change}
                                 >
                                     {expedientes_deudor
-                                        .filter((expediente: any) => expediente.estado === 'guardado') // Filtra por "estado_expediente" igual a "guardado"
+                                        // .filter((expediente: any) => expediente.estado === 'guardado') // Filtra por "estado_expediente" igual a "guardado"
                                         .map((expediente: any) => (
                                             <MenuItem key={expediente.id} value={expediente.id}>
                                                 {expediente.cod_expediente}
