@@ -689,7 +689,8 @@ export const GestionCarteraScreen: React.FC = () => {
       });
     } else {
       api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}&identificacion=${filtered_identificacion}`)
-        .then((response) => {
+           //  recaudo/cobros/filtrar-carteras/?nombres=Daniel&apellidos=Muñoz&identificacion=8
+      .then((response) => {
           if ((response.data.data as Cartera[]).length > 0) {
             set_carteras(response.data.data);
           } else {
