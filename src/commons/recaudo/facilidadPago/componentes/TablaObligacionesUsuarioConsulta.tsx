@@ -34,12 +34,18 @@ interface BuscarProps {
   set_selectedIds: any;
   set_lista_obligaciones: any;
   lista_obligaciones: any;
+  set_tipo_renta:any;
+  set_id_cc:any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
-  // set_selectedIds,
-  // selectedIds,
+
+  set_id_cc,
+  set_tipo_renta,
+  set_selectedIds,
+  selectedIds,
+
   set_position_tab,
   set_cobro_persuasivo_active,
   is_modal_active,
@@ -341,10 +347,13 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
             checked={selectedIds.indexOf(params.row.id) !== -1}
 
             onClick={(event) => {
-              handle_click(event, params.row.id);
 
-              // handle_click(event, params.row.nombre, params.row.id)
+              set_id_cc(params.row.id_expediente)
+              handle_click(event, params.row.nombre, params.row.id)
+
               handle_gestor_cartera(params.row)
+              set_tipo_renta(params.row.tipo_renta)
+              
             }}
 
           // onClick={(event) => {

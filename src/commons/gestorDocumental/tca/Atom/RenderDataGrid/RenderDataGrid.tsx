@@ -44,13 +44,13 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows ?? []}
-                  columns={columns ?? []}
                   pageSize={11}
                   rowHeight={75}
                   getRowHeight={() => 'auto'}
                   rowsPerPageOptions={[11]}
                   experimentalFeatures={{ newEditingApi: true }}
+                  rows={rows ?? []}
+                  columns={columns ?? []}
                   getRowId={() => {
                     try {
                       return uuidv4();

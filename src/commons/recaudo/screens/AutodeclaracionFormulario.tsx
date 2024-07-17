@@ -138,7 +138,7 @@ interface MacroCuenca {
 
 export const AutodeclaracionFormulario: React.FC = () => {
   const {
-    userinfo: { telefono_celular },
+    userinfo: { telefono_celular ,id_persona },
   } = useSelector((state: AuthSlice) => state.auth);
 
   const initialFormData: Data = {
