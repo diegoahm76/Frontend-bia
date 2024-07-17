@@ -141,6 +141,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     };
 
 
+
     // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
     const [year, set_year] = useState<number>(0);
     // const [tipo_renta, set_tipo_renta] = useState<string>('');
@@ -212,7 +213,9 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 id_expediente: lista_obligaciones[0]?.expediente,
             }));
 
+
             // set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
+
 
             if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'MULTAS') {
                 set_form_liquidacion((prevData: any) => ({
