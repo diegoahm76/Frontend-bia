@@ -139,17 +139,10 @@ export const ConceptoPago: React.FC = () => {
             field: 'valor',
             headerName: 'Valor',
             flex: 1,
-            renderCell: (params: any) => {
-                // Formatear el valor a pesos colombianos
-                const valorFormateado = new Intl.NumberFormat('es-CO', {
-                    style: 'currency',
-                    currency: 'COP',
-                    minimumFractionDigits: 0, // Ajusta según la precisión deseada
-                }).format(params.value);
-    
-                return <>{valorFormateado}</>;
+            valueFormatter: (params:any) => {
+              return parseInt(params.value, 10);
             },
-        },
+          },
         {
             field: 'Acciones',
             headerName: 'Acciones',
@@ -290,12 +283,9 @@ export const ConceptoPago: React.FC = () => {
                             rowHeight={75}
                             getRowHeight={() => 'auto'}
                             rowsPerPageOptions={[11]}
-                            experimentalFeatures={{ newEditingApi: true }}
-
+                            experimentalFeatures={{ newEditingApi: true }} 
                             rows={configuraciones}
-                            columns={columns}
-                             
-                            
+                            columns={columns} 
                             getRowId={(row) => row.id_valores_variables}
                         />
                     </div>
@@ -312,7 +302,7 @@ export const ConceptoPago: React.FC = () => {
                 }}
             >
 
-                <Title title="Configuracion " />
+                <Title title="Configuración " />
 
                 <Grid container item xs={12} spacing={2} marginTop={2}  >
                     <Grid item xs={12} sm={6}>

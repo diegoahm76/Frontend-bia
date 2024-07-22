@@ -48,6 +48,7 @@ interface ConfiguracionBasicados {
     nombre: any;
     tipo_cobro: any;
     tipo_renta: any;
+
 }
 
 export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones, is_modal_active, set_is_modal_active }) => {
@@ -73,11 +74,14 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     });
 
 
-
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event:any) => {
         const { name, value } = event.target;
-        setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
-      };
+        setFormValues({ ...formValues, [name]: value });
+    };
+    // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const { name, value } = event.target;
+    //     setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
+    //   };
     
 
     const handleSubmitCrear = async () => {
@@ -136,7 +140,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     };
 
  
-    const PrehandleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const PrehandleInputChange = (event: any ) => {
         const { name, value } = event.target;
         PresetFormValues({ ...PreformValues, [name]: value });
     };

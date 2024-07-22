@@ -80,11 +80,14 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
 
   // Código del componente...
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  //   setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
+  // };
+  const handleInputChange = (event:any) => {
     const { name, value } = event.target;
-    setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
-  };
-
+    setFormValues({ ...formValues, [name]: value });
+};
   const handleSubmit = async () => {
     try {
       const url = `/recaudo/configuracion_baisca/valoresvariables/put/${selectedConfiguracion?.id_valores_variables}/`;
