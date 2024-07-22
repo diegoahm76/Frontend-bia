@@ -549,7 +549,7 @@ export const FormTRDAdmin = (): JSX.Element => {
                               ? control_administrar_trd._formValues
                                   .ruta_archivo_cambio.name ??
                                 control_administrar_trd._formValues.ruta_soporte.replace(
-                                  /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                                  /https?:\/\/bia-backend-beta-dev\.up\.railway\.app\/media\//,
                                   ''
                                 )
                               : 'Seleccione archivo'}
