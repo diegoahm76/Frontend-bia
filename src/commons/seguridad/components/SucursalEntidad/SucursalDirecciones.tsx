@@ -87,7 +87,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
                     //  console.log('')('municipio is null or undefined');
                     return;
                 }
-                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/paises/?cod_municipio=${form_values.municipio}`);
+                const response = await fetch(`https://bia-backend-beta-dev.up.railway.app/api/listas/paises/?cod_municipio=${form_values.municipio}`);
                 const data: DepartamentoResponse = await response.json();
                 if (data.success) {
                     set_pais_retur(data.data);
@@ -137,7 +137,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
     /*const fetch_data = async (): Promise<any> => {
             try {
                 if (form_values.municipio !== null) {
-                    const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=${selected_pais}&municipio=${form_values.municipio}`);
+                    const response = await fetch(`https://bia-backend-beta-dev.up.railway.app/api/listas/departamentos/?pais=${selected_pais}&municipio=${form_values.municipio}`);
                     const data: DepartamentoResponse = await response.json();
                     if (data.success) {
                         set_departamentos_retur(data.data);
@@ -228,7 +228,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
   useEffect(() => {
     /* const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=`);
+                const response = await fetch(`https://bia-backend-beta-dev.up.railway.app/api/listas/departamentos/?pais=`);
                 const data: DepartamentoResponse = await response.json();
                 if (data.success) {
                     set_departamentos_noti(data.data);
@@ -277,7 +277,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
                     //  console.log('')('municipio_notificacion is null or undefined');
                     return;
                 }
-                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/departamentos/?pais=CO&municipio=${form_values.municipio_notificacion}`);
+                const response = await fetch(`https://bia-backend-beta-dev.up.railway.app/api/listas/departamentos/?pais=CO&municipio=${form_values.municipio_notificacion}`);
                 const data: DepartamentoResponse = await response.json();
 
                 if (data.success) {
@@ -331,7 +331,7 @@ export const SucursalDirecciones: FC<SucursalDireccionesProps> = ({
   useEffect(() => {
     /*  const fetch_data = async (): Promise<any> => {
             try {
-                const response = await fetch(`https://back-end-bia-beta.up.railway.app/api/listas/municipios/?cod_departamento=${selected_departamento_noti}`);
+                const response = await fetch(`https://bia-backend-beta-dev.up.railway.app/api/listas/municipios/?cod_departamento=${selected_departamento_noti}`);
                 const data: MunicipiosResponse = await response.json();
                 if (data.success) {
                     set_municipios_noti(data.data);

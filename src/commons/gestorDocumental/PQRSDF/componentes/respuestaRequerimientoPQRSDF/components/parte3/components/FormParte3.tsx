@@ -355,7 +355,7 @@ export const FormParte3 = ({
                       {controlFormulario._formValues.ruta_soporte
                         ? controlFormulario._formValues.ruta_soporte.name ??
                           controlFormulario._formValues.ruta_soporte.replace(
-                            /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                            /https?:\/\/bia-backend-beta-dev\.up\.railway\.app\/media\//,
                             ''
                           )
                         : 'Seleccione archivo'}

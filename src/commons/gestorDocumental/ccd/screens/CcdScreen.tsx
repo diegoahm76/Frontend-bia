@@ -416,7 +416,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                             ? control_create_ccd._formValues.ruta_soporte
                                 .name ??
                               control_create_ccd._formValues.ruta_soporte.replace(
-                                /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                                /https?:\/\/bia-backend-beta-dev\.up\.railway\.app\/media\//,
                                 ''
                               )
                             : 'Seleccione archivo'}
