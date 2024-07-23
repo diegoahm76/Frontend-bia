@@ -976,9 +976,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 {/* INPUTS EDITAR LIQUIDACION */}
                 <GenerarLiquidacion
-
-                set_tipo_renta={set_tipo_renta}
-                tipo_renta={tipo_renta}
+                 id_cc={id_cc}
+                 set_tipo_renta={set_tipo_renta}
+                 tipo_renta={tipo_renta}
                  liquidacion={liquidacion}
                  setLiquidacion={setLiquidacion}
                   obligaciones={obligaciones}
