@@ -245,7 +245,7 @@ const DialogCrearOrganigrama = ({
                       ? control_organigrama_creacion?._formValues?.ruta_resolucion
                           .name ??
                         control_organigrama_creacion?._formValues?.ruta_resolucion.replace(
-                          /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                          /https?:\/\/bia-backend-beta-dev\.up\.railway\.app\/media\//,
                           ''
                         )
                       : 'Seleccione archivo'}

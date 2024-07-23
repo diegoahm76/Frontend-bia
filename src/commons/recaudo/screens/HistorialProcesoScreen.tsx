@@ -83,7 +83,7 @@ export const HistorialProceso: React.FC = () => {
     if (valor_proceso.id_atributo.id_tipo.tipo === 'Documento') {
       const nombre_documento: string = valor_proceso?.documento?.split('/')[2] ?? '';
       // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-      return <Link to={`http://back-end-bia-beta.up.railway.app${valor_proceso?.documento}`}>{nombre_documento}</Link>
+      return <Link to={`http://bia-backend-beta-dev.up.railway.app${valor_proceso?.documento}`}>{nombre_documento}</Link>
     }
     return <span>{valor_proceso?.valor}</span>;
   };
