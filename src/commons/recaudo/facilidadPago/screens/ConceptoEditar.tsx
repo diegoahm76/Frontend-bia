@@ -42,6 +42,7 @@ interface ConfiguracionBasica {
   descripccion: any;
   tipo_cobro: any;
   fecha_inicio: any;
+  nombre: any;
 }
 interface TipoCobro {
   id_tipo_cobro: number;
@@ -55,6 +56,7 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
   selectedConfiguracion,
 }) => {
   const [formValues, setFormValues] = useState<ConfiguracionBasica>({
+    nombre:selectedConfiguracion?.nombre_variable || '',
     fecha_inicio: selectedConfiguracion?.fecha_inicio || '',
     tipo_cobro: selectedConfiguracion?.id_tipo_cobro || '',
     tipo_renta: selectedConfiguracion?.id_tipo_renta || '',
@@ -67,6 +69,7 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
   useEffect(() => {
     if (selectedConfiguracion) {
       setFormValues({
+        nombre: selectedConfiguracion?.nombre_variable || '',
         fecha_inicio: selectedConfiguracion?.fecha_inicio || '',
         tipo_cobro: selectedConfiguracion?.id_tipo_cobro || '',
         tipo_renta: selectedConfiguracion.id_tipo_renta || '',
@@ -80,11 +83,14 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
 
   // Código del componente...
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = event.target;
+  //   setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
+  // };
+  const handleInputChange = (event:any) => {
     const { name, value } = event.target;
-    setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
-  };
-
+    setFormValues({ ...formValues, [name]: value });
+};
   const handleSubmit = async () => {
     try {
       const url = `/recaudo/configuracion_baisca/valoresvariables/put/${selectedConfiguracion?.id_valores_variables}/`;
@@ -137,6 +143,11 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
   useEffect(() => {
     fetchTiposRenta();
   }, []);
+  useEffect(() => {
+    fetchTiposRenta();
+  }, [isBuscarActivo]);
+  
+
   const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
   const fetchTiposCobro = async () => {
     try {
@@ -149,6 +160,9 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
   useEffect(() => {
     fetchTiposCobro();
   }, []);
+  useEffect(() => {
+    fetchTiposCobro();
+  }, [isBuscarActivo]);
   const formatCurrency = (value: any) => {
     if (!value) return '';
     return new Intl.NumberFormat('es-CO', {
@@ -233,19 +247,19 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
               </TextField>
             </Grid>
 
-            {/* <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 required
                 fullWidth
                 size="small"
                 variant="outlined"
-                label="Variable"
-                name="variables"
+                label="nombre"
+                name="nombre"
                 onChange={handleInputChange}
-                value={formValues.variables}
+                value={formValues.nombre}
               />
-            </Grid> */}
-                <Grid item xs={12} sm={4}>
+            </Grid>
+                {/* <Grid item xs={12} sm={4}>
                                 <TextField
                                     select
                                     required
@@ -263,17 +277,18 @@ export const ConceptoEditar: React.FC<BuscarProps> = ({
                                         </MenuItem>
                                     ))}
                                 </TextField>
-                            </Grid>
+                            </Grid> */}
             <Grid item xs={12} sm={4}>
               <TextField
                 required
+                   type="number"
                 fullWidth
                 size="small"
                 variant="outlined"
                 label="valor"
                 name="valor"
                 onChange={handleInputChange}
-                value={formatCurrency(formValues.valor)}
+                value={formValues.valor}
               />
             </Grid>
             <Grid item xs={12} sm={4}>

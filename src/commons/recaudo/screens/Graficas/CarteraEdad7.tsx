@@ -108,7 +108,24 @@ export const ReporteGeneralCarteraDeuda: React.FC = () => {
 
     
     return (
-        <Grid container item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}>
+        <Grid
+        container
+        item
+        xs={12}
+        marginLeft={2}
+        marginRight={2}
+        spacing={2}
+        marginTop={3}
+        sx={{
+          position: 'relative',
+          borderRadius: '15px',
+          background: '#FAFAFA',
+          boxShadow: '0px 3px 6px #042F4A26',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+        }}
+      >
             <Grid item xs={12} sm={12}>
                 <Title title="Reporte General Cartera Por Deuda" />
             </Grid>

@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
@@ -29,9 +30,13 @@ interface renta {
     nombre_cobro:any;
     tipo_cobro_asociado: any;
  }
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export const TipoRenta: React.FC = () => {
+ interface BuscarProps {
+    fetchTiposRenta: any;
+  
+}
+
+export const TipoRenta:  React.FC<BuscarProps> = ({  fetchTiposRenta }) => {
+
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<renta | null>(null);
 
 
@@ -63,6 +68,7 @@ const handleAbrirEditar = (configuracion: renta) => {
             //  console.log('')("Configuración eliminada con éxito", response.data);
             // Actualizar la lista de Renta después de eliminar
             fetchRenta();
+            fetchTiposRenta()
             control_error("eliminado exitosamente ");
 
         } catch (error: any) {
@@ -142,6 +148,7 @@ const handleAbrirEditar = (configuracion: renta) => {
             };
             await api.put(url, dataToUpdate);
             fetchRenta();
+            fetchTiposRenta()
             setFormValues({
                 ...formValues,
                 id_tipo_renta: "",
@@ -161,6 +168,7 @@ const handleAbrirEditar = (configuracion: renta) => {
             const response = await api.post(url, formValues);
             //  console.log('')("Configuración básica creada con éxito", response.data);
             fetchRenta()
+            fetchTiposRenta()
             control_success("Guardado exitosamente");
             setFormValues({
                 ...formValues,

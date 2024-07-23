@@ -312,23 +312,23 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>REPRESENTANTE LEGAL</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>TENIENTE CORONEL LEONARDO JAIRO TORRES CASTILLO</StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.representante_legal}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>DIRECCIÓN</StyledHeaderCell>
-              <StyledTableCell colSpan={5}>KM 7 VIA PUERTO LOPEZ, CANTON MILITAR DE APIAY, VILLAVICENCIO</StyledTableCell>
+              <StyledTableCell colSpan={5}>{historico?.direccion_titular}</StyledTableCell>
               <StyledHeaderCell colSpan={2}>TELÉFONOS</StyledHeaderCell>
-              <StyledTableCell colSpan={4}>317 6460815 - 313 3607704</StyledTableCell>
+              <StyledTableCell colSpan={4}>{historico?.telefono_titular}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>EXPEDIENTE</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>3.37.2.09.197</StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.expediente}</StyledTableCell>
               {/* <StyledHeaderCell colSpan={2}>N° RESOLUCION Y FECHA</StyledHeaderCell>
               <StyledTableCell colSpan={5}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell> */}
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>NOMBRE DE LA FUENTE</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>CAÑO MARARABE</StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.nombre_fuente_hidrica}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>NOMBRE DEL TRAMO</StyledHeaderCell>
@@ -342,7 +342,7 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>¿AUTODECLARACIÓN APROBADA?</StyledHeaderCell>
-              <StyledTableCell colSpan={1}>SI</StyledTableCell>
+              <StyledTableCell colSpan={1}>NO</StyledTableCell>
               <StyledHeaderCell colSpan={2}>RES. PERMISO DE VERTIMENTO</StyledHeaderCell>
               <StyledTableCell colSpan={8}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
             </TableRow>
@@ -354,13 +354,13 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>DBO - Demanda Bioquímica de Oxigeno</StyledHeaderCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
+              <StyledTableCell colSpan={4}>{historico?.factor_regional}</StyledTableCell>
               <StyledTableCell colSpan={4}>1.00</StyledTableCell>
               <StyledTableCell colSpan={4}>1.00</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>SST - Sólidos Suspedidos Totales</StyledHeaderCell>
-              <StyledTableCell colSpan={4}>1.00</StyledTableCell>
+              <StyledTableCell colSpan={4}>{historico?.factor_regional}</StyledTableCell>
               <StyledTableCell colSpan={4}>1.00</StyledTableCell>
               <StyledTableCell colSpan={4}>1.00</StyledTableCell>
             </TableRow>
@@ -480,12 +480,12 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
 
             <TableRow>
               <StyledTableCell sx={{width: '10%'}}>SUBTOTALES POR MES</StyledTableCell>
-              <StyledTableCell colSpan={2}>$ {rows_detalles[0].valor_liquidado}</StyledTableCell> 
-              <StyledTableCell colSpan={2}>$ {rows_detalles[0].valor_liquidado}</StyledTableCell>
-              <StyledTableCell colSpan={2}>$ {rows_detalles[0].valor_liquidado}</StyledTableCell>
-              <StyledTableCell colSpan={2}>$ {rows_detalles[0].valor_liquidado}</StyledTableCell> 
-              <StyledTableCell colSpan={1}>$ {rows_detalles[0].valor_liquidado}</StyledTableCell>
-              <StyledTableCell colSpan={2}>$ {rows_detalles[0].valor_liquidado}</StyledTableCell> 
+              <StyledTableCell colSpan={2}>{months.includes("Enero") ? currency_formatter(rows_detalles[0].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? currency_formatter(rows_detalles[1].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? currency_formatter(rows_detalles[2].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Abril") ? currency_formatter(rows_detalles[3].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? currency_formatter(rows_detalles[4].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Junio") ? currency_formatter(rows_detalles[5].valor_liquidado, 0) : "0"}</StyledTableCell> 
             </TableRow>
 
             <TableRow>
@@ -525,7 +525,7 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledTableCell colSpan={2} align='right'>TOTAL A PAGAR</StyledTableCell>
-              <StyledTableCell colSpan={10} align='left' sx={{color: 'red', fontWeight: 'bold'}}>{currency_formatter(form_liquidacion.valor ?? 0, 0)} </StyledTableCell>
+              <StyledTableCell colSpan={10} align='left' sx={{color: 'red', fontWeight: 'bold'}}>{NumerosLetras(form_liquidacion.valor)} </StyledTableCell>
             </TableRow>
             {/* Más filas según sean necesarias */}
           </TableBody>

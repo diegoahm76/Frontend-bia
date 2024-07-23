@@ -15,10 +15,41 @@ import dayjs from 'dayjs';
 import 'dayjs/locale/es'; // importar localización en español
 import localizedFormat from 'dayjs/plugin/localizedFormat';
 import { NumerosLetras } from '../../../gestorDocumental/Liquidacion_dos/utils/NumerosLetras';
+import { api } from '../../../../api/axios';
+import { useSelector } from 'react-redux';
+import { AuthSlice } from '../../../auth/interfaces';
+import { Barras } from '../procesoLiquidacion/Barras';
 
 dayjs.extend(localizedFormat);
 dayjs.locale('es');
-
+export interface Concepto {
+  nit_titular: string;
+  nombre_titular: string;
+  direccion_titular: string;
+  telefono_titular: string;
+  expediente: string;
+  num_resolucion: string;
+  fecha_resolucion: string;
+  nombre_fuente_hidrica: string | null;
+  caudal_concesionado: string;
+  clase_uso_agua: string;
+  factor_regional: number;
+}
+interface ConfigResponse {
+  id_config_ref_agno: any;
+  agno_ref: any;
+  consecutivo_inicial: any;
+  cantidad_digitos: any;
+  implementar: any;
+  fecha_inicial_config_implementacion: any;
+  referencia_actual: any;
+  fecha_consecutivo_actual: any;
+  id_persona_config_implementacion: any;
+  id_persona_referencia_actual: any;
+  id_catalogo_serie_unidad: string | null;
+  id_unidad: any;
+  conseg_nuevo: any;
+}
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   border: `1px solid black`, // bordes negros más gruesos
   backgroundColor: '#fff', // fondo blanco
@@ -41,13 +72,14 @@ const StyledCell = styled(StyledTableCell)({
 });
 
 export const DocumentoPersuasivoPago: React.FC<any> = ({
+  id_cc,
   datos,
   data_clean,
   current_deudor,
   is_generate_cobro,
   cobro_url,
   id_subetapa
-}: {datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
+}: {id_cc:any , datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
   const receiptRef = useRef(null);
   const [form_values, set_form_values] = useState({
     sumaConcepto: "",
@@ -106,6 +138,49 @@ export const DocumentoPersuasivoPago: React.FC<any> = ({
     }
   };
 
+  const {
+    userinfo: {  id_persona },
+  } = useSelector((state: AuthSlice) => state.auth);
+  
+  const [configData, setConfigData] = useState<ConfigResponse | any>("");
+
+  const updateUnidadesConfig = async () => {
+    const updateData = {
+      id_persona: id_persona,
+      fecha_actual: new Date().toISOString()
+    };
+  
+    try {
+      const url = `recaudo/configuracion_referencia/referencia/generar/`;
+      const res = await api.put(url, updateData);
+      setConfigData(res.data.data); // Acceder a la data dentro de la respuesta
+      console.log('Configuración actualizada con éxito', res.data);
+    } catch (error: any) {
+      console.error('Error al actualizar la configuración', error);
+    }
+  };
+  useEffect(() => {
+    updateUnidadesConfig();
+  }, [form_values.sumaTotal]);
+  
+  const variable = `(415)7709998443433(8020)${String(configData.referencia_actual).padStart(18, '0')}(3900)${form_values.sumaTotal.toString().padStart(14, '0')}(96)${dayjs().add(90, 'day').format('YYYYMMDD')}`;
+  const [historico, setHistorico] = useState<Concepto | any>("");
+
+  const fetchHistorico = async (): Promise<void> => {
+    try {
+      const url = `recaudo/cobros/info-tua/${id_cc}`;
+      const res = await api.get(url);
+      const historicoData: Concepto = res.data?.data || null;
+      setHistorico(historicoData);
+    } catch (error: any) {
+      // console.error(error);
+    }
+  };
+// {id_cc}
+
+useEffect(() => {
+  fetchHistorico();
+}, []);
   return (
     <>
       {is_generate_cobro && <>
@@ -145,13 +220,13 @@ export const DocumentoPersuasivoPago: React.FC<any> = ({
                 </article>
               </StyledTableCell>
               <StyledHeaderCell align="center">Ref. de Pago</StyledHeaderCell>
-              <StyledTableCell align="center" sx={{ color: 'red', fontWeight: 'bold', fontSize: '29px' }}>TUA</StyledTableCell>
+              <StyledTableCell align="center" sx={{ color: 'red', fontWeight: 'bold', fontSize: '29px' }}>TUA {configData && (<>{String(configData.referencia_actual).padStart(6, '0')}</>)}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell align="center" colSpan={2}>FECHA LÍMITE DE PAGO</StyledHeaderCell>
             </TableRow>
             <TableRow>
-              <StyledTableCell align="center" colSpan={2} sx={{fontSize: '26px', fontWeight: 'bold'}}>28 de Febrero de 2024</StyledTableCell>
+              <StyledTableCell align="center" colSpan={2} sx={{fontSize: '26px', fontWeight: 'bold'}}>{dayjs().add(90, 'day').format('LL')}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell align="center">Doc. de Cobro N°</StyledHeaderCell>
@@ -173,45 +248,45 @@ export const DocumentoPersuasivoPago: React.FC<any> = ({
               <StyledHeaderCell sx={{width: '8%'}}>PERIODO</StyledHeaderCell>
               <StyledTableCell colSpan={2} align='center'>Año {dayjs().year()}</StyledTableCell>
               <StyledHeaderCell sx={{width: '10%'}}>CEDULA/NIT</StyledHeaderCell>
-              <StyledTableCell colSpan={2} align='center'>{datos?.id_deudor?.identificacion}</StyledTableCell>
+              <StyledTableCell colSpan={2} align='center'>{historico?.nit_titular} </StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>NOMBRE DEL TITULAR</StyledHeaderCell>
-              <StyledTableCell colSpan={11} sx={{fontWeight: 'bold'}}>{datos?.id_deudor?.nombres || ''} {datos?.id_deudor?.apellidos || ''}</StyledTableCell>
+              <StyledTableCell colSpan={11} sx={{fontWeight: 'bold'}}>{historico?.nombre_titular}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>REPRESENTANTE LEGAL</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>TENIENTE CORONEL LEONARDO JAIRO TORRES CASTILLO</StyledTableCell>
+              <StyledTableCell colSpan={11}>CORONEL LEONARDO JAIRO TORRES CASTILLO</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>DIRECCIÓN</StyledHeaderCell>
-              <StyledTableCell colSpan={7}>KM 7 VIA PUERTO LOPEZ, CANTON MILITAR DE APIAY, VILLAVICENCIO</StyledTableCell>
+              <StyledTableCell colSpan={7}>{historico?.direccion_titular}</StyledTableCell>
               <StyledHeaderCell colSpan={1}>TELÉFONOS</StyledHeaderCell>
-              <StyledTableCell colSpan={3}>{datos?.id_deudor?.telefono || ''}</StyledTableCell>
+              <StyledTableCell colSpan={3}>{historico?.telefono_titular}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>EXPEDIENTE</StyledHeaderCell>
-              <StyledTableCell colSpan={4}>3.37.2.09.197</StyledTableCell>
+              <StyledTableCell colSpan={4}>{historico?.expediente}</StyledTableCell>
               <StyledHeaderCell colSpan={2}>N° RESOLUCION Y FECHA</StyledHeaderCell>
-              <StyledTableCell colSpan={5}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
+              <StyledTableCell colSpan={5}>{historico?.num_resolucion}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>NOMBRE DE LA FUENTE</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>POZO PROFUNDO</StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.nombre_fuente_hidrica}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '100px'}}>PREDIO</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>SANTA ANA Y PRADO, KM 12 VIA PUERTO LOPEZ - META</StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.predio}</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell sx={{width: '100px'}}>MUNICIPIO</StyledHeaderCell>
+              <StyledHeaderCell sx={{width: '100px'}}>MUNICIPIO</StyledHeaderCell> 
               <StyledTableCell colSpan={6}>VILLAVICENCIO</StyledTableCell>
               <StyledHeaderCell sx={{width: '15%'}}>DEPARTAMENTO</StyledHeaderCell>
               <StyledTableCell colSpan={5}>META</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '20%'}}>CAUDAL CONCESIONADO (Q) L/sg</StyledHeaderCell>
-              <StyledTableCell colSpan={6}>8.409</StyledTableCell>
+              <StyledTableCell colSpan={6}>{historico?.caudal_concesionado}</StyledTableCell>
               <StyledHeaderCell sx={{width: '15%'}}>USO</StyledHeaderCell>
               <StyledTableCell colSpan={5}>DOMESTICO</StyledTableCell>
             </TableRow>
@@ -258,12 +333,28 @@ export const DocumentoPersuasivoPago: React.FC<any> = ({
             {/* Más filas según sean necesarias */}
           </TableBody>
         </Table>
-        </TableContainer>
+        </TableContainer> 
         <article style={{marginTop: '1rem'}}>
           <div style={{fontSize: '24px', fontWeight:'600',  textAlign: 'center'}}>UNA VEZ REALIZADO EL PAGO, ENVIAR COPIA DEL SOPORTE RESPECTIVO AL CORREO info@cormacarena.gov.co</div>
           <div style={{fontSize: '28px', fontWeight: 'bold', textAlign: 'center'}}>Evite el inicio de procesos jurídicos pagando oportunamente dicha obligación</div>
           <div style={{textAlign: 'justify', fontSize: '19px', fontWeight:'500'}}>Para la Expedición de su Paz y Salvo, debe hacer llegar mediante oficio original y/o copia de Recibo de Consignación Bancaria, donde el sello del Banco sea legible, a la siguiente dirección: Oficina Territorial del META, Carrera 44C No. 33B - 24 Urbanización Los Pinos, Barzal Alto, Sede Principal, Villavicencio – Meta Dirección Electrónica: Info@cormacarena.gov.co PBX 673 0420 - 673 0417 - 673 0417 Ext. 105 Línea Gratuita: 01-8000-117177</div>
         </article>
+        <TableRow>
+  <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '5rem', width: '100%' }}>
+    <div style={{ textAlign: 'center', width: '50%' , marginTop: "50px" }}>
+      {/* <hr style={{ width: '400px', border: '1px solid black', margin: '0 auto' }} /> */}
+      <span></span>
+    </div>
+    <div style={{ textAlign: 'center', width: '50%' , marginLeft: "1000px" , marginTop: "-20px" }}>
+    {configData && (
+        <>
+          <Barras variable={variable} configData={configData} />
+        </>
+      )}
+    </div>
+  </div>
+</TableRow>
+
       </section>
       </>
       }

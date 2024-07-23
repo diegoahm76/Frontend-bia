@@ -70,10 +70,12 @@ interface IProps {
     set_form_liquidacion: any;
     lista_obligaciones: any;
     obligaciones: any;
+    id_cc:any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GenerarLiquidacion: React.FC<IProps> = ({
+    id_cc,
     set_tipo_renta,
     tipo_renta,
     liquidacion,
@@ -141,7 +143,6 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     };
 
 
-
     // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
     const [year, set_year] = useState<number>(0);
     // const [tipo_renta, set_tipo_renta] = useState<string>('');
@@ -164,22 +165,41 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
     const [caudalConcesionado, setCaudalConcesionado] = useState('');
 
+    // const actualizarCaudalConcesionado = async () => {
+    //     try {
+    //         const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
+    //             caudal_consecionado: caudalConcesionado
+    //         });
+    //         console.log('Caudal actualizado con éxito', response.data);
+    //         control_success("Caudal actualizado con éxito");
+
+    //         // Actualizar la información en la interfaz si es necesario
+    //     } catch (error: any) {
+    //         console.error('Error al actualizar el caudal concedido', error);
+    //         control_error(error.response.data.detail);
+    //     }
+    // };
+
     const actualizarCaudalConcesionado = async () => {
         try {
-            const response = await api.put(`/recaudo/liquidaciones/liquidacion_update_caudlk/${id_liquidacion_pdf}/`, {
-                caudal_consecionado: caudalConcesionado
+            const caudalConcesionadoNumero = Number(caudalConcesionado);
+    
+            if (isNaN(caudalConcesionadoNumero)) {
+                throw new Error('El valor de caudalConcesionado no es un número válido.');
+            }
+    
+            const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
+                caudal_concesionado: caudalConcesionadoNumero
             });
             console.log('Caudal actualizado con éxito', response.data);
             control_success("Caudal actualizado con éxito");
-
+    
             // Actualizar la información en la interfaz si es necesario
-        } catch (error: any) {
+        } catch (error) {
             console.error('Error al actualizar el caudal concedido', error);
-            control_error(error.response.data.detail);
+            // control_error(error.response?.data?.detail || error.message);
         }
     };
-
-
     const actualizarLiquidacionBase = async () => {
         try {
             const response = await api.put(`/recaudo/liquidaciones/liquidacion-base/${id_liquidacion_pdf}/`, {
@@ -213,9 +233,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 id_expediente: lista_obligaciones[0]?.expediente,
             }));
 
-
             // set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
-
 
             if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'MULTAS') {
                 set_form_liquidacion((prevData: any) => ({
@@ -241,7 +259,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     ciclo_liquidacion: 'semestral',
                     periodo_liquidacion: 'enero a junio'
                 }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)') {
+            } 
+            else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'anual',
@@ -607,11 +626,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                             Actualizar Caudal
                         </Button>
                     </Grid>
-                    <Grid item  >
+                    {/* <Grid item  >
                         <Button variant="contained" color="success" onClick={actualizarLiquidacionBase}>
                             actualizar fecha
                         </Button>
-                    </Grid>
+                    </Grid> */}
 
                 </>
 

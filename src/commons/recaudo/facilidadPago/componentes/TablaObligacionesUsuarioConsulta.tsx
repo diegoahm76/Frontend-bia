@@ -36,11 +36,13 @@ interface BuscarProps {
   lista_obligaciones: any;
   set_tipo_renta:any;
   set_id_cc:any;
+  id_cc:any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
   set_id_cc,
+  id_cc,
   set_tipo_renta,
   set_selectedIds,
   selectedIds,
