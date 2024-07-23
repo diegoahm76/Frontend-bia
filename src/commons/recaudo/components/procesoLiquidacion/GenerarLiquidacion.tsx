@@ -189,7 +189,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             }
     
             const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
-                caudal_consecionado: caudalConcesionadoNumero
+                caudal_concesionado: caudalConcesionadoNumero
             });
             console.log('Caudal actualizado con éxito', response.data);
             control_success("Caudal actualizado con éxito");
@@ -621,11 +621,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                             onChange={(e) => setCaudalConcesionado(e.target.value)}
                         />
                     </Grid>
-                    {/* <Grid item >
+                    <Grid item >
                         <Button variant="contained" color="success" onClick={actualizarCaudalConcesionado}>
                             Actualizar Caudal
                         </Button>
-                    </Grid> */}
+                    </Grid>
                     {/* <Grid item  >
                         <Button variant="contained" color="success" onClick={actualizarLiquidacionBase}>
                             actualizar fecha
