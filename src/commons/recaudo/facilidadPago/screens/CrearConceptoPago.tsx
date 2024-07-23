@@ -14,6 +14,13 @@ interface BuscarProps {
     is_modal_active: any;
     set_is_modal_active: any;
     fetchConfiguraciones: any;
+
+    tiposRenta :any;
+    setTiposRenta :any;
+    fetchTiposRenta :any;
+    setTiposCobro :any;
+    tiposCobro :any;
+    fetchTiposCobro :any;
 }
 
 interface TipoCobro {
@@ -48,21 +55,40 @@ interface ConfiguracionBasicados {
     nombre: any;
     tipo_cobro: any;
     tipo_renta: any;
-
+    valor:any
+    descripccion:any;
+    fecha_inicio:any;
+    fecha_fin:any;
+    variables:any;
+    
 }
 
-export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones, is_modal_active, set_is_modal_active }) => {
+export const CrearConceptoPago: React.FC<BuscarProps> = ({  tiposRenta,
+    setTiposRenta,
+    setTiposCobro ,
+    tiposCobro ,
+    fetchTiposCobro , 
+    fetchTiposRenta, fetchConfiguraciones, is_modal_active, set_is_modal_active }) => {
 
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
-    const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
+    // const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
     const [PreformValues, PresetFormValues] = useState<ConfiguracionBasicados>({
         id_variables: "",
         nombre: "",
         tipo_cobro: "",
-        tipo_renta: ""
+        tipo_renta: "",
+        valor:"",
+        descripccion:"",
+        fecha_inicio:"",
+        fecha_fin:"",
+        variables:"",
     });
+    const PrehandleInputChange = (event: any ) => {
+        const { name, value } = event.target;
+        PresetFormValues({ ...PreformValues, [name]: value });
+    };
     const [activador, set_activador] = useState<boolean>(false);
-    const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
+    // const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
 
 
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
@@ -87,7 +113,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     const handleSubmitCrear = async () => {
         try {
             const url = "/recaudo/configuracion_baisca/valoresvariables/post/";
-            const response = await api.post(url, formValues);
+            const response = await api.post(url, PreformValues);
             //  console.log('')("Configuración básica creada con éxito", response.data);
             fetchConfiguraciones()
             control_success("Guardado exitosamente");
@@ -98,7 +124,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
         }
     };
 
-
+   
 
     const CrearVariablePrecargada = async () => {
         try {
@@ -106,7 +132,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
             const response = await api.post(url, PreformValues);
             const id_enviar = response.data.data.id_variables; // Asegúrate de acceder a la propiedad correcta
             // setCreatedVariableId(id_enviar);  // Guardar el ID en el estado
-               setFormValues((prevValues) => ({
+            PresetFormValues((prevValues) => ({
             ...prevValues,
             variables: id_enviar
         }));
@@ -120,30 +146,27 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     };
     
 
-    const fetchTiposRenta = async () => {
-        try {
-            const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
-            setTiposRenta(res.data.data);
-        } catch (error) {
-            console.error("Error al obtener los tipos de renta", error);
-        }
-    };
+    // const fetchTiposRenta = async () => {
+    //     try {
+    //         const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
+    //         setTiposRenta(res.data.data);
+    //     } catch (error) {
+    //         console.error("Error al obtener los tipos de renta", error);
+    //     }
+    // };
 
 
-    const fetchTiposCobro = async () => {
-        try {
-            const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
-            setTiposCobro(res.data.data);
-        } catch (error) {
-            console.error("Error al obtener los tipos de cobro", error);
-        }
-    };
+    // const fetchTiposCobro = async () => {
+    //     try {
+    //         const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
+    //         setTiposCobro(res.data.data);
+    //     } catch (error) {
+    //         console.error("Error al obtener los tipos de cobro", error);
+    //     }
+    // };
 
  
-    const PrehandleInputChange = (event: any ) => {
-        const { name, value } = event.target;
-        PresetFormValues({ ...PreformValues, [name]: value });
-    };
+ 
 
 
     const handle_close = (): void => {
@@ -218,7 +241,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 onChange={PrehandleInputChange}
                                 value={PreformValues.tipo_renta}
                             >
-                                {tiposRenta.map((tipo) => (
+                                {tiposRenta.map((tipo:any) => (
                                     <MenuItem key={tipo.id_tipo_renta} value={tipo.id_tipo_renta}>
                                         {tipo.nombre_tipo_renta}
                                     </MenuItem>
@@ -226,6 +249,7 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                             </TextField>
                         </Grid>
 
+{/* {formValues.variables} */}
 
                         <Grid item xs={12} sm={4}>
                             <TextField
@@ -240,8 +264,8 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 value={PreformValues.tipo_cobro}
                             >
                                 {tiposCobro
-                                    .filter(tipoCobro => tipoCobro.tipo_renta_asociado === PreformValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
-                                    .map((tipoCobro) => (
+                                    .filter((tipoCobro: { tipo_renta_asociado: any; }) => tipoCobro.tipo_renta_asociado === PreformValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
+                                    .map((tipoCobro: { id_tipo_cobro: React.Key | readonly string[] | any | undefined; nombre_tipo_cobro: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
                                         <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
                                             {tipoCobro.nombre_tipo_cobro}
                                         </MenuItem>
@@ -266,15 +290,23 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
 
 
                         <Grid item xs={12} sm={4}>
-                            <TextField
+                        {/* <TextField
+                        name={key}
+                        value={displayValue}
+                      
+                        size="small"
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handle_variable_input_change(event, params.row.id, key)}
+                      /> */}
+                            <TextField 
+                             type="number"
                                 required
                                 fullWidth
                                 size="small"
                                 name="valor"
                                 label="valor"
                                 variant="outlined"
-                                onChange={handleInputChange}
-                                value={formatCurrency(formValues.valor)}
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.valor}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -285,8 +317,8 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 variant="outlined"
                                 name="descripccion"
                                 label="descripccion"
-                                onChange={handleInputChange}
-                                value={formValues.descripccion}
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.descripccion}
                             />
                         </Grid>
                         
@@ -298,8 +330,8 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 variant="outlined"
                                 name="fecha_inicio"
                                 label="fecha inicio"
-                                onChange={handleInputChange}
-                                value={formValues.fecha_inicio}
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.fecha_inicio}
                                 InputLabelProps={{ shrink: true }}
                             />
                         </Grid>
@@ -313,8 +345,8 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 name="fecha_fin"
                                 variant="outlined"
                                 label="fecha fin"
-                                value={formValues.fecha_fin}
-                                onChange={handleInputChange}
+                                value={PreformValues.fecha_fin}
+                                onChange={PrehandleInputChange}
                                 InputLabelProps={{ shrink: true }}
                             />
                         </Grid>

@@ -206,6 +206,16 @@ useEffect(() => {
 }, [id_cc]);
 
 const variable = `(415)7709998443433(8020)${String(configData.referencia_actual).padStart(18, '0')}(3900)${form_liquidacion.valor.toString().padStart(14, '0')}(96)${dayjs().add(90, 'day').format('YYYYMMDD')}`;
+const currency_formatter = (value: number, fraction_digits: number = 0): string => {
+  const formatter = new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    minimumFractionDigits: fraction_digits,
+    maximumFractionDigits: fraction_digits,
+    currency: 'COP'
+  });
+  return formatter.format(value);
+};
+
 
   return (
     <>
@@ -320,7 +330,7 @@ const variable = `(415)7709998443433(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>PREDIO</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>ESTADIO MACAL MUNICIPIO DE VILLAVICENCIO  </StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.predio}  </StyledTableCell>
             </TableRow>
             
             {/* <TableRow>
@@ -396,22 +406,31 @@ const variable = `(415)7709998443433(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
-              <StyledTableCell colSpan={2}>{months.includes("Enero") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Abril") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Junio") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell> 
+              <StyledTableCell colSpan={2}>{months.includes("Enero") ? currency_formatter(rows_detalles[0].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? currency_formatter(rows_detalles[1].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? currency_formatter(rows_detalles[2].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Abril") ? currency_formatter(rows_detalles[3].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? currency_formatter(rows_detalles[4].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>  {months.includes("Junio") ? currency_formatter(rows_detalles[5].valor_liquidado, 0) : "0"}
+             </StyledTableCell> 
             </TableRow>
 
 
-            {/* <TableRow> 
-              <StyledTableCell colSpan={12}>.</StyledTableCell> 
-            </TableRow> */}
+           
             <TableRow>
               <StyledTableCell colSpan={7}>   </StyledTableCell> 
               <StyledHeaderCell colSpan={2}>SUBTOTAL 1er Semestre</StyledHeaderCell>
-              <StyledTableCell colSpan={3}>   </StyledTableCell>
+              <StyledTableCell colSpan={3}>   {
+      currency_formatter(
+        (months.includes("Enero") ? rows_detalles[0].valor_liquidado : 0) +
+        (months.includes("Febrero") ? rows_detalles[1].valor_liquidado : 0) +
+        (months.includes("Marzo") ? rows_detalles[2].valor_liquidado : 0) +
+        (months.includes("Abril") ? rows_detalles[3].valor_liquidado : 0) +
+        (months.includes("Mayo") ? rows_detalles[4].valor_liquidado : 0) +
+        (months.includes("Junio") ? rows_detalles[5].valor_liquidado : 0),
+        0
+      )
+    }  </StyledTableCell>
             </TableRow>
 
 
@@ -444,22 +463,30 @@ const variable = `(415)7709998443433(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
-              <StyledTableCell colSpan={2}> {months.includes("Julio") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Agosto") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Septiembre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Octubre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Noviembre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Diciembre") ? rows_detalles[0].valor_liquidado : "0"}</StyledTableCell> 
+              <StyledTableCell colSpan={2}> {months.includes("Julio") ? currency_formatter(rows_detalles[6].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Agosto") ? currency_formatter(rows_detalles[7].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Septiembre") ? currency_formatter(rows_detalles[8].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Octubre") ? currency_formatter(rows_detalles[9].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Noviembre") ? currency_formatter(rows_detalles[10].valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Diciembre") ? currency_formatter(rows_detalles[11].valor_liquidado, 0) : "0"}</StyledTableCell> 
             </TableRow>
 
-            {/* <TableRow> 
-              <StyledTableCell colSpan={12}>.</StyledTableCell> 
-            </TableRow> */}
+           
 
             <TableRow>
               <StyledTableCell colSpan={7}>   </StyledTableCell> 
               <StyledHeaderCell colSpan={2}>SUBTOTAL 2do Semestre</StyledHeaderCell>
-              <StyledTableCell colSpan={3}>  </StyledTableCell>
+              <StyledTableCell colSpan={3}>{
+      currency_formatter(
+        (months.includes("Julio") ? rows_detalles[6].valor_liquidado : 0) +
+        (months.includes("Agosto") ? rows_detalles[7].valor_liquidado : 0) +
+        (months.includes("Septiembre") ? rows_detalles[8].valor_liquidado : 0) +
+        (months.includes("Octubre") ? rows_detalles[9].valor_liquidado : 0) +
+        (months.includes("Noviembre") ? rows_detalles[10].valor_liquidado : 0) +
+        (months.includes("Diciembre") ? rows_detalles[11].valor_liquidado : 0),
+        0
+      )
+    }  </StyledTableCell>
             </TableRow>
 
             <TableRow>
@@ -502,7 +529,7 @@ const variable = `(415)7709998443433(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>TOTAL A PAGAR</StyledHeaderCell>
-              <StyledTableCell colSpan={11} sx={{fontWeight: 'bold'}}>{currency_formatter(form_liquidacion.valor ?? 0, 0)}  </StyledTableCell>
+              <StyledTableCell colSpan={11} sx={{fontWeight: 'bold',color: 'red'}}>{NumerosLetras(form_liquidacion.valor)}  </StyledTableCell>
             </TableRow>
             {/* Más filas según sean necesarias */}
           </TableBody>

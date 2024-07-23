@@ -81,11 +81,11 @@ interface Historico {
     
       const [ConsultarSeguimiento, setconsultarSeguimiento] = useState<any[]>([]);
 
-     const data = ConsultarSeguimiento[1]?.valor || [];
-      const numero_programa = ConsultarSeguimiento[1]?.numero_programa || [];
-  
-      const numeroPrograma = ConsultarSeguimiento[1]?.numero_programa || [];
+ 
       const ejesData = ConsultarSeguimiento[0];
+      const total= ConsultarSeguimiento[1];
+      const [abrir1, setabrir1] = useState(false);
+
       const consultarSeguimiento = async (): Promise<void> => {
         try {
           const url = `seguimiento-planes/tablero-control-poai-general-grafica/${formData.tablero}/?id_plan=${formData.plan}&fecha_inicio=${formData.fecha_inicia}&fecha_fin=${formData.fecha_fin}`;
@@ -107,20 +107,42 @@ interface Historico {
             xaxis: { categories: [] },
           }));
           control_error(error.response.data.detail);
+          
         }
       };
       
+      // useEffect(() => {
+      //   if (ConsultarSeguimiento.length > 1) {
+      //     setChartOptions((prevOptions: any) => ({
+      //       ...prevOptions,
+      //       series: [
+      //         {
+      //           data: ConsultarSeguimiento[2].valor,
+      //         },
+      //       ],
+      //       xaxis: {
+      //         categories: ConsultarSeguimiento[2].numero_programa,
+      //       },
+      //     }));
+      //   } else {
+      //     setChartOptions((prevOptions: any) => ({
+      //       ...prevOptions,
+      //       series: [{ data: [] }],
+      //       xaxis: { categories: [] },
+      //     }));
+      //   }
+      // }, [ConsultarSeguimiento]);
       useEffect(() => {
-        if (ConsultarSeguimiento.length > 1) {
+        if (ConsultarSeguimiento.length > 2) {
           setChartOptions((prevOptions: any) => ({
             ...prevOptions,
             series: [
               {
-                data: ConsultarSeguimiento[1].valor,
+                data: ConsultarSeguimiento[2].valor,
               },
             ],
             xaxis: {
-              categories: ConsultarSeguimiento[1].numero_programa,
+              categories: ConsultarSeguimiento[2].numero_programa,
             },
           }));
         } else {
@@ -130,20 +152,18 @@ interface Historico {
             xaxis: { categories: [] },
           }));
         }
-      }, [ConsultarSeguimiento]);
       
-      useEffect(() => {
-        if (ConsultarSeguimiento.length > 2) {
+        if (ConsultarSeguimiento.length > 3) {
           setChartOptions2((prevOptions: any) => ({
             ...prevOptions,
             series: [
               {
                 name: 'Valor',
-                data: ConsultarSeguimiento[2].valor,
+                data: ConsultarSeguimiento[3].valor,
               },
             ],
             xaxis: {
-              categories: ConsultarSeguimiento[2].numero_proyecto,
+              categories: ConsultarSeguimiento[3].numero_proyecto,
             },
           }));
         } else {
@@ -153,38 +173,31 @@ interface Historico {
             xaxis: { categories: [] },
           }));
         }
-      }, [ConsultarSeguimiento]);
+      }, [ConsultarSeguimiento, abrir1]);
       
-    //   useEffect(() => {
-    //     if (ConsultarSeguimiento.length > 1) {
-    //       setChartOptions((prevOptions: any) => ({
-    //         ...prevOptions,
-    //         series: [
-    //           {
-    //             data: ConsultarSeguimiento[1].valor,
-    //           },
-    //         ],
-    //         xaxis: {
-    //           categories: ConsultarSeguimiento[1].numero_programa,
-    //         },
-    //       }));
-    //     }
-    //   }, [ConsultarSeguimiento]);
-    // const consultarSeguimiento = async (): Promise<void> => {
-    //   try {
-    //     const url = `seguimiento-planes/tablero-control-poai-general-grafica/${formData.tablero}/?id_plan=${formData.plan}&fecha_inicio=${formData.fecha_inicia}&fecha_fin=${formData.fecha_fin}`;
-    //     const res = await api.get(url);
-    //     const HistoricoData: any[] = res.data?.data || [];
-    //     setconsultarSeguimiento(HistoricoData);
-    //     control_success("Dato encontrados")
-    //      setabrir1(true)
-    //     console.log(  "1112")
-    //   } catch (error:any) {
-    //     setconsultarSeguimiento([])
-    //     control_error(error.response.data.detail);
-    //     // console.error(error);
-    //   }
-    // }; 
+      // useEffect(() => {
+      //   if (ConsultarSeguimiento.length > 3) {
+      //     setChartOptions2((prevOptions: any) => ({
+      //       ...prevOptions,
+      //       series: [
+      //         {
+      //           name: 'Valor',
+      //           data: ConsultarSeguimiento[3].valor,
+      //         },
+      //       ],
+      //       xaxis: {
+      //         categories: ConsultarSeguimiento[3].numero_proyecto,
+      //       },
+      //     }));
+      //   } else {
+      //     setChartOptions2((prevOptions: any) => ({
+      //       ...prevOptions,
+      //       series: [{ data: [] }],
+      //       xaxis: { categories: [] },
+      //     }));
+      //   }
+      // }, [ConsultarSeguimiento]);
+      
     
       const [chartOptions, setChartOptions] = useState<any>({
         series: [
@@ -242,25 +255,7 @@ interface Historico {
           },
         },
       });
-  // segundo grafico
-
-//   useEffect(() => {
-//     if (ConsultarSeguimiento.length > 2) {
-//       setChartOptions2((prevOptions: any) => ({
-//         ...prevOptions,
-//         series: [
-//           {
-//             name: 'Valor',
-//             data: ConsultarSeguimiento[2].valor,
-//           },
-//         ],
-//         xaxis: {
-//           categories: ConsultarSeguimiento[2].numero_proyecto,
-//         },
-//       }));
-//     }
-//   }, [ConsultarSeguimiento]);
-  
+  // segundo grafico  
   const [chartOptions2, setChartOptions2] = useState<any>({
     series: [
       {
@@ -368,17 +363,27 @@ interface Historico {
       const HistoricoData: Historico[] = res.data?.data || [];
      
       setHistorico(HistoricoData);
-    } catch (error) {
+    } catch (error:any) {
       console.error(error);
+       control_error(error.response.data.detail);
       setHistorico([])
     }
   };
 
-//   useEffect(() => {
-//     void fetchHistorico();
-//   }, []);
-  const [abrir1, setabrir1] = useState(false);
-
+ 
+  const handleCerrar = () => {
+    setabrir1(false);
+    setChartOptions((prevOptions: any) => ({
+      ...prevOptions,
+      series: [{ data: [] }],
+      xaxis: { categories: [] },
+    }));
+    setChartOptions2((prevOptions: any) => ({
+      ...prevOptions,
+      series: [{ data: [] }],
+      xaxis: { categories: [] },
+    }));
+  };
   return (
     <>
       <Grid
@@ -745,7 +750,7 @@ interface Historico {
   }}
 >
 <div style={{ marginRight: '-19px' ,fontWeight: 'bold'}}>Presupuesto POAI</div>
-<div style={{ marginRight: '-10px' }}>8</div>
+<div style={{ marginRight: '-10px' }}>{total?.total_presupuesto}</div>
   
 </Grid>   
  
@@ -770,7 +775,7 @@ interface Historico {
   }}
 >
   <div style={{ marginRight: '-19px' ,fontWeight: 'bold'}}>DISPONIVILIDAD POAI</div>
-  <div style={{ marginRight: '-10px' }}>8</div>
+  <div style={{ marginRight: '-10px' }}>{total?.total_disponible}</div>
 </Grid>   
 
 <Grid
@@ -793,7 +798,7 @@ interface Historico {
   }}
 >
   <div style={{ marginRight: '-19px',fontWeight: 'bold' }}>REGISTRO POAI</div> 
-<div style={{ marginRight: '-10px' }}>8</div>
+<div style={{ marginRight: '-10px' }}>{total?.total_registro}</div>
 </Grid>   
 
 <Grid
@@ -816,7 +821,7 @@ interface Historico {
   }}
 >
 <div style={{ marginRight: '-2', fontWeight: 'bold' }}>OBLICIONES POAI</div>
-  <div style={{ marginRight: '-10px' }}>8</div>
+  <div style={{ marginRight: '-10px' }}>{total?.total_obligado}</div>
 </Grid>   
       </Grid>
     
@@ -915,7 +920,7 @@ interface Historico {
                 variant="outlined"
                 fullWidth 
                 startIcon={<ClearIcon />}
-                onClick={() => setabrir1(false)}
+                onClick={() => handleCerrar()}
               >
                 cerrar
               </Button>

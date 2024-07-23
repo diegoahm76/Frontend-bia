@@ -5836,7 +5836,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
                         </Grid>
 
 
-                        <Grid item >
+                        {/* <Grid item >
                             <Button
                                 color="primary"
                                 variant="contained"
@@ -5848,7 +5848,7 @@ export const FacturacionVisor: React.FC<BuscarProps> = ({ rows_detalles, id_liqu
                             >
                                 Imprimir recibo
                             </Button>
-                        </Grid>
+                        </Grid> */}
 
 
 

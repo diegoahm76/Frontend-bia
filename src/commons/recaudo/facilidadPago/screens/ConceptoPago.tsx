@@ -35,8 +35,18 @@ interface ConfiguracionBasica {
     usada: boolean;
     estado: boolean;
 }
+interface TipoCobro {
+    id_tipo_cobro: number;
+    nombre_tipo_cobro: string;
+    tipo_renta_asociado: any;
+}
 
-
+interface TipoRenta {
+    id_tipo_renta: number;
+    nombre_tipo_renta: string;
+    tipo_cobro_asociado: any;
+    tipo_renta_asociado: any
+}
 export const ConceptoPago: React.FC = () => {
     const [value, setValue] = useState<number>(2023);
     const [configuraciones, setConfiguraciones] = useState<ConfiguracionBasica[]>([]);
@@ -216,7 +226,26 @@ export const ConceptoPago: React.FC = () => {
         void fetchConfiguraciones();
     }, []);
 
+    const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
 
+    const fetchTiposRenta = async () => {
+        try {
+            const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
+            setTiposRenta(res.data.data);
+        } catch (error) {
+            console.error("Error al obtener los tipos de renta", error);
+        }
+    };
+    const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
+
+    const fetchTiposCobro = async () => {
+        try {
+            const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
+            setTiposCobro(res.data.data);
+        } catch (error) {
+            console.error("Error al obtener los tipos de cobro", error);
+        }
+    };
 
     return (
         <>
@@ -237,6 +266,12 @@ export const ConceptoPago: React.FC = () => {
                 fetchConfiguraciones={fetchConfiguraciones}
             />
             <CrearConceptoPago
+            setTiposCobro={setTiposCobro}
+            tiposCobro={tiposCobro}
+            fetchTiposCobro={fetchTiposCobro}
+            tiposRenta={tiposRenta}
+            setTiposRenta={setTiposRenta}
+            fetchTiposRenta={fetchTiposRenta}
                 is_modal_active={is_modal_active}
                 set_is_modal_active={set_is_buscar}
                 fetchConfiguraciones={fetchConfiguraciones}
@@ -321,8 +356,8 @@ export const ConceptoPago: React.FC = () => {
 
             </Grid>
 
-            {selectedButton === "Tipos de cobro" && <TiposCobro />}
-            {selectedButton === "Tipos de renta" && <TipoRenta />}
+            {selectedButton === "Tipos de cobro" && <TiposCobro fetchTiposCobro={fetchTiposCobro} />}
+            {selectedButton === "Tipos de renta" && <TipoRenta  fetchTiposRenta={fetchTiposRenta}  />}
             {/* {selectedButton === "Variable" && <Varible />} */}
 
 

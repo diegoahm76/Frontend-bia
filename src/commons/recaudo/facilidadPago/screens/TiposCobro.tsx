@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import 'leaflet/dist/leaflet.css';
@@ -26,10 +27,13 @@ interface renta {
     nombre_cobro: any;
     tipo_cobro_asociado: any;
 }
-
+interface BuscarProps {
+    fetchTiposCobro: any;
+}
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const TiposCobro: React.FC = () => {
+export const TiposCobro: React.FC<BuscarProps> = ({  fetchTiposCobro }) => {
+
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
 
 
@@ -60,7 +64,7 @@ export const TiposCobro: React.FC = () => {
             // Actualizar la lista de configuraciones después de eliminar
             fetchConfiguraciones();
             control_error("eliminado exitosamente ");
-
+            fetchTiposCobro()
         } catch (error: any) {
             console.error("Error al eliminar la configuración", error);
             fetchConfiguraciones();
@@ -131,6 +135,7 @@ export const TiposCobro: React.FC = () => {
             };
             await api.put(url, dataToUpdate);
             fetchConfiguraciones();
+            fetchTiposCobro()
             setFormValues({
                 ...formValues,
                 id_tipo_cobro: "",
@@ -151,6 +156,7 @@ export const TiposCobro: React.FC = () => {
             //  console.log('')("Configuración básica creada con éxito", response.data);
             fetchConfiguraciones()
             control_success("Guardado exitosamente");
+            fetchTiposCobro()
             setFormValues({
                 ...formValues,
                 id_tipo_cobro: "",

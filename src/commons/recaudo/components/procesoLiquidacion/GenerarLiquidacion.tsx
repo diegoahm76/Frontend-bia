@@ -604,11 +604,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                             Actualizar Caudal
                         </Button>
                     </Grid>
-                    <Grid item  >
+                    {/* <Grid item  >
                         <Button variant="contained" color="success" onClick={actualizarLiquidacionBase}>
                             actualizar fecha
                         </Button>
-                    </Grid>
+                    </Grid> */}
 
                 </>
 
