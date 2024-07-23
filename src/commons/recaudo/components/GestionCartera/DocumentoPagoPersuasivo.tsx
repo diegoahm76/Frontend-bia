@@ -64,9 +64,10 @@ interface IProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DocumentoPagoPersuasivo: React.FC<any> = ({
   datos,
+  id_cc,
   set_cobro_coactivo_active,
   set_position_tab_up,
-}: {datos: any, set_cobro_coactivo_active: (b: boolean) => void, set_position_tab_up: (str: string) => void}) => {
+}: {id_cc:any, datos: any, set_cobro_coactivo_active: (b: boolean) => void, set_position_tab_up: (str: string) => void}) => {
 
   const columns: GridColDef[] = [
     { field: 'id', headerName: '#', minWidth: 100, flex: 1, valueGetter: (params) => params.row.id + 1},
@@ -247,20 +248,20 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
     }
   }, [is_from_liquidacion]);
 
-  useEffect(() => {
-    if (id_deudor) {
-      api
-        .get(
-          `recaudo/liquidaciones/expedientes-deudor/get/${id_deudor}/`
-        )
-        .then((response) => {
-          set_expedientes_deudor(response.data.data);
-        })
-        .catch((error) => {
-          control_error(error.response.data.message)
-        });
-    }
-  }, [id_deudor]);
+  // useEffect(() => {
+  //   if (id_deudor) {
+  //     api
+  //       .get(
+  //         `recaudo/liquidaciones/expedientes-deudor/get/${id_deudor}/`
+  //       )
+  //       .then((response) => {
+  //         set_expedientes_deudor(response.data.data);
+  //       })
+  //       .catch((error) => {
+  //         control_error(error.response.data.message)
+  //       });
+  //   }
+  // }, [id_deudor]);
 
   useEffect(() => {
     if(obligaciones_from_liquidacion.length && id_deudor && is_from_liquidacion){
@@ -295,7 +296,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
   }
 
   useEffect(() => console.log(current_deudor), [current_deudor]);
-  useEffect(() => console.log(expedientes_deudor), [expedientes_deudor]);
+  // useEffect(() => console.log(expedientes_deudor), [expedientes_deudor]);
   useEffect(() => console.log(data_clean), [data_clean]);
 
 
@@ -573,6 +574,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
 
           <TabPanel value="2" sx={{ p: '20px 0' }}>
             <DocumentoPersuasivoPago
+            id_cc={id_cc}
               datos={datos}
               data_clean={data_clean}
               current_deudor={current_deudor}

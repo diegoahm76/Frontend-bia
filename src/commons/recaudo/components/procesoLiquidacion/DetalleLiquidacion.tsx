@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/dot-notation */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { Dispatch, SetStateAction, SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { Box, Button, FormControl, Grid, InputLabel, List, ListItemText, MenuItem, Select, type SelectChangeEvent, TextField, Typography, Stack, Tab } from "@mui/material";
@@ -135,7 +136,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
     if (row_detalle) {
       let finalValue = value;
       if (key === 'T') {
-        const monthName = months[(id - 1) % months.length];
+        const monthName = months[(id - 0) % months.length];
         const year = parseInt(año);
         finalValue = getDaysInMonth(monthName, year).toString(); // Asigna el número de días del mes si la variable es "T"
       } else {
@@ -146,7 +147,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
       const new_detalles = rows_detalles.map((detalle) => detalle.id === id ? new_detalle : detalle);
       set_rows_detalles(new_detalles);
     }
-  };
+  };  
 
   const handle_form_submit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -339,7 +340,18 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
   useEffect(() => {
     fetchTiposRenta();
   }, []);
-  
+  useEffect(() => {
+    const updatedRows = rows_detalles.map((detalle) => {
+      if (detalle.variables['T']) {
+        const monthName = months[(detalle.id - 0) % months.length];
+        const year = parseInt(año);
+        const new_variables = { ...detalle.variables, 'T': getDaysInMonth(monthName, year).toString() };
+        return { ...detalle, variables: new_variables, valor_liquidado: get_calculated_variables(detalle.formula_aplicada, new_variables) };
+      }
+      return detalle;
+    });
+    set_rows_detalles(updatedRows);
+  }, [rows_detalles, months, año]);
   return (
     <>
     {/* {currency_formatter(form_liquidacion.valor ?? 0, 0)}
@@ -527,8 +539,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
               </Grid>
               {ver_factura && (
   <>
-    {tipo_renta === "TASA DE USO DE AGUA (TUA)" ? (
-      <DocumentoPagoTUA 
+    {tipo_renta === "TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)" ? (
+      <DocumetoPagoTR
       id_cc={id_cc}
         liquidacion={liquidacion} 
         obligaciones={obligaciones} 
@@ -536,9 +548,9 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
         datos={rows_detalles}
         months={months} 
         rows_detalles={rows_detalles} 
-      />
+      /> 
     ) : (
-      <DocumetoPagoTR
+     <DocumentoPagoTUA 
       id_cc={id_cc}
         liquidacion={liquidacion} 
         obligaciones={obligaciones} 
@@ -550,6 +562,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
     )}
   </>
 )}
+{/* TASA DE USO DE AGUA (TUA) */}
 
             </TabPanel>
           </TabContext>

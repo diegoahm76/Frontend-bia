@@ -49,6 +49,7 @@ import { Article, SearchOutlined } from '@mui/icons-material';
 import { DocumentoPagoPersuasivo } from '../components/GestionCartera/DocumentoPagoPersuasivo';
 import { ProcesoPagoCoactivo } from '../components/GestionCartera/ProcesoPagoCoactivo';
 import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
+import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
 const detalles_ciclos: string[] = [
   'diario',
@@ -618,13 +619,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     {
       field: 'identificacion',
       headerName: 'Identificación',
-      minWidth: 150,
+      minWidth: 140,
       flex: 0.3,
     },
     {
       field: 'deudor',
       headerName: 'Deudor',
-      minWidth: 160,
+      minWidth: 150,
       flex: 1,
       valueGetter: (params) => {
         return `${(params.row.nombres as string) ?? ''} ${
@@ -656,7 +657,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     {
       field: 'email',
       headerName: 'Email',
-      minWidth: 250,
+      minWidth: 260,
       flex: 0.3,
     },
     {
@@ -905,7 +906,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 {/* DATAGRID LIQUIDACION */}
 
                 <Grid item marginTop={2} >
-                  <DataGrid
+                <RenderDataGrid
+                        title="Deudores" 
+        columns={columns_deudores ?? []}
+        rows={deudores ?? []}
+      />
+                  {/* <DataGrid
                     density="compact"
                     autoHeight
                     rows={deudores}
@@ -924,7 +930,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                         },
                       },
                     }}
-                  />
+                  /> */}
                 </Grid>
 
                 {obligaciones_module ? (
@@ -945,6 +951,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                         {obligaciones.length !== 0 ? (
                           <>
                             <TablaObligacionesUsuarioConsulta
+                            id_cc={id_cc}
                             set_id_cc={set_id_cc}
                             set_tipo_renta={set_tipo_renta}
                               lista_obligaciones={lista_obligaciones}
@@ -969,9 +976,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 {/* INPUTS EDITAR LIQUIDACION */}
                 <GenerarLiquidacion
-
-                set_tipo_renta={set_tipo_renta}
-                tipo_renta={tipo_renta}
+                 id_cc={id_cc}
+                 set_tipo_renta={set_tipo_renta}
+                 tipo_renta={tipo_renta}
                  liquidacion={liquidacion}
                  setLiquidacion={setLiquidacion}
                   obligaciones={obligaciones}
@@ -1005,6 +1012,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
               {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
                   <DocumentoPagoPersuasivo
+                  id_cc={id_cc}
                     set_cobro_coactivo_active={set_cobro_coactivo_active}
                     set_position_tab_up={set_position_tab}
                     // datos={datos}
