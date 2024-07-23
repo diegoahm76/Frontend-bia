@@ -595,6 +595,11 @@ export const FuentesScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+{/* 
+plan: any;
+    tablero: any;
+    fecha_inicia: any;
+    fecha_fin: any; */}
         <Grid item xs={12} sm={12}>
           <Title title="Seleccione el Plan de Acción Institucional " />
         </Grid>
