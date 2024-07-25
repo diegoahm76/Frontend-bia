@@ -256,7 +256,7 @@ useEffect(() => {
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>REPRESENTANTE LEGAL</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>CORONEL LEONARDO JAIRO TORRES CASTILLO</StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.representante_legal} </StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>DIRECCIÓN</StyledHeaderCell>
@@ -280,7 +280,7 @@ useEffect(() => {
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '100px'}}>MUNICIPIO</StyledHeaderCell> 
-              <StyledTableCell colSpan={6}>VILLAVICENCIO</StyledTableCell>
+              <StyledTableCell colSpan={6}>{historico?.municipio}</StyledTableCell>
               <StyledHeaderCell sx={{width: '15%'}}>DEPARTAMENTO</StyledHeaderCell>
               <StyledTableCell colSpan={5}>META</StyledTableCell>
             </TableRow>

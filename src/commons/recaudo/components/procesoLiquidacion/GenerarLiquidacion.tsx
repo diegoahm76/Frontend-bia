@@ -13,6 +13,19 @@ import { currency_formatter } from "../../../../utils/functions/getFormattedCurr
 import { jsPDF } from 'jspdf';
 import { useState } from "react";
 import { control_error, control_success } from "../../../../helpers";
+export interface Concepto {
+    nit_titular: string;
+    nombre_titular: string;
+    direccion_titular: string;
+    telefono_titular: string;
+    expediente: string;
+    num_resolucion: string;
+    fecha_resolucion: string;
+    nombre_fuente_hidrica: string | null;
+    caudal_concesionado: string;
+    clase_uso_agua: string;
+    factor_regional: number;
+  }
 interface LiquidacionResponse {
     success: boolean;
     detail: string;
@@ -180,6 +193,23 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
     //     }
     // };
 
+
+    const [historico, setHistorico] = useState<Concepto | any>("");
+
+    const fetchHistorico = async (): Promise<void> => {
+      try {
+        const url = `recaudo/cobros/info-tua/${id_cc}`;
+        const res = await api.get(url);
+        const historicoData: Concepto = res.data?.data || null;
+        setHistorico(historicoData);
+        setCaudalConcesionado(historico?.caudal_concesionado)
+      } catch (error: any) {
+        // console.error(error);
+      }
+    };
+    useEffect(() => {
+        fetchHistorico();
+      }, []);
     const actualizarCaudalConcesionado = async () => {
         try {
             const caudalConcesionadoNumero = Number(caudalConcesionado);
@@ -193,7 +223,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
             });
             console.log('Caudal actualizado con éxito', response.data);
             control_success("Caudal actualizado con éxito");
-    
+            fetchHistorico()
             // Actualizar la información en la interfaz si es necesario
         } catch (error) {
             console.error('Error al actualizar el caudal concedido', error);
@@ -346,7 +376,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
         }
     }, [lista_obligaciones])
 
-
+   
     return (
         <>
 
@@ -565,7 +595,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label='direccion'
-                            value={liquidacion?.data.direccion}
+                            value={historico?.direccion_titular}
                             size="small"
                             InputLabelProps={{
                                 shrink: true,
@@ -579,7 +609,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label='Representante legal'
-                            value={liquidacion?.data.representante_legal}
+                            value={historico?.representante_legal}
                             size="small"
                             InputLabelProps={{
                                 shrink: true,
@@ -592,7 +622,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label='predio'
-                            value={liquidacion?.data.predio}
+                            value= {historico?.predio}
                             size="small"
                             InputLabelProps={{
                                 shrink: true,
@@ -617,7 +647,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                             size="small"
 
                             fullWidth
-                            value={caudalConcesionado}
+                            value={caudalConcesionado }
                             onChange={(e) => setCaudalConcesionado(e.target.value)}
                         />
                     </Grid>
