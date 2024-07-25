@@ -155,7 +155,7 @@ const detalles_periodos: DetallesPeriodos = {
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const ProcesoLiquidacionScreen: React.FC = () => {
+export const Liquidacionfactura: React.FC = () => {
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 

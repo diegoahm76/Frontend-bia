@@ -38,6 +38,7 @@ export const CobroPersuasivo: React.FC<any> = ({
   const [visor, setVisor] = useState('');
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
   const [localForm, setLocalForm] = useState<AprobadoresProps>({
+    fecha_limite:"",
     nombre_aprobador: '',
     cargo_aprobador: '',
     nombre_proyector: '',

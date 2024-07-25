@@ -216,6 +216,74 @@ const currency_formatter = (value: number, fraction_digits: number = 0): string 
   return formatter.format(value);
 };
 
+const currency_formatter2 = (value: any | number | bigint, fraction_digits = 2) => {
+  const formatter = new Intl.NumberFormat('es-CO', {
+    minimumFractionDigits: fraction_digits,
+    maximumFractionDigits: fraction_digits
+  });
+  return formatter.format(value);
+};
+
+const firstRow = rows_detalles[0].variables;
+const result = firstRow.Q * firstRow.FC * firstRow.T;
+
+const firstRow1 = rows_detalles[1].variables;
+const result1 = firstRow1.Q * firstRow1.FC * firstRow1.T;
+
+const firstRow2 = rows_detalles[2].variables;
+const result2 = firstRow2.Q * firstRow2.FC * firstRow2.T;
+
+const firstRow3 = rows_detalles[3].variables;
+const result3 = firstRow3.Q * firstRow3.FC * firstRow3.T;
+
+const firstRow4 = rows_detalles[4].variables;
+const result4 = firstRow4.Q * firstRow4.FC * firstRow4.T;
+
+const firstRow5 = rows_detalles[5].variables;
+const result5 = firstRow5.Q * firstRow5.FC * firstRow5.T;
+
+const firstRow6 = rows_detalles[6].variables;
+const result6 = firstRow6.Q * firstRow6.FC * firstRow6.T;
+
+const firstRow7 = rows_detalles[7].variables;
+const result7 = firstRow7.Q * firstRow7.FC * firstRow7.T;
+
+const firstRow8 = rows_detalles[8].variables;
+const result8 = firstRow8.Q * firstRow8.FC * firstRow8.T;
+
+const firstRow9 = rows_detalles[9].variables;
+const result9 = firstRow9.Q * firstRow9.FC * firstRow9.T;
+
+const firstRow10 = rows_detalles[10].variables;
+const result10 = firstRow10.Q * firstRow10.FC * firstRow10.T;
+
+const firstRow11 = rows_detalles[11].variables;
+const result11 = firstRow11.Q * firstRow11.FC * firstRow11.T;
+
+const firsttua = rows_detalles.length > 0 ? rows_detalles[0].variables.TUA: null;
+
+useEffect(() => {
+  firsttua
+}, [rows_detalles]);
+
+const firstFR = rows_detalles.length > 0 ? rows_detalles[0].variables.FR : null;
+  
+const firstFCValue0 = rows_detalles.length > 0 ? rows_detalles[0].variables.FOP : null;
+const firstFCValue1 = rows_detalles.length > 1 ? rows_detalles[1].variables.FOP : null;
+
+const firstFCValue2 = rows_detalles.length > 2 ? rows_detalles[2].variables.FOP : null;
+const firstFCValue3 = rows_detalles.length > 3 ? rows_detalles[3].variables.FOP : null;
+const firstFCValue4 = rows_detalles.length > 4 ? rows_detalles[4].variables.FOP : null;
+const firstFCValue5 = rows_detalles.length > 5 ? rows_detalles[5].variables.FOP : null;
+const firstFCValue6 = rows_detalles.length > 6 ? rows_detalles[6].variables.FOP : null;
+const firstFCValue7 = rows_detalles.length > 7 ? rows_detalles[7].variables.FOP : null;
+const firstFCValue8 = rows_detalles.length > 8 ? rows_detalles[8].variables.FOP : null;
+const firstFCValue9 = rows_detalles.length > 9 ? rows_detalles[9].variables.FOP : null;
+const firstFCValue10 = rows_detalles.length > 10 ? rows_detalles[10].variables.FOP : null;
+const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables.FOP : null;
+
+
+
 
   return (
     <>
@@ -229,6 +297,7 @@ const currency_formatter = (value: number, fraction_digits: number = 0): string 
         marginTop={3}
         
       > 
+      {/* <h1>Resultado de Q * FC * T: {result}</h1> */}
             {/* <button onClick={updateUnidadesConfig}>Actualizar Configuración</button> */}
          
             {/* {configData && (<>{String(configData.referencia_actual).padStart(18, '0')}</>)}  */}
@@ -309,7 +378,7 @@ const currency_formatter = (value: number, fraction_digits: number = 0): string 
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>REPRESENTANTE LEGAL	 </StyledHeaderCell>
-              <StyledTableCell colSpan={11}> CORONEL LEONARDO JAIRO TORRES CASTILLO</StyledTableCell>
+              <StyledTableCell colSpan={11}>{historico?.representante_legal} </StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>DIRECCIÓN</StyledHeaderCell>
@@ -347,7 +416,7 @@ const currency_formatter = (value: number, fraction_digits: number = 0): string 
             </TableRow> */}
             <TableRow>
               <StyledHeaderCell sx={{width: '20%'}}>Municipio   </StyledHeaderCell>
-              <StyledTableCell colSpan={8}>VILLAVICENCIO META</StyledTableCell>
+              <StyledTableCell colSpan={8}>{historico?.municipio} </StyledTableCell>
               <StyledHeaderCell colSpan={2}>FACTOR REGIONAL (FR)</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>TARIFA DE LA TASA $/m3 :TUA2022</StyledHeaderCell>
             </TableRow>
@@ -355,11 +424,11 @@ const currency_formatter = (value: number, fraction_digits: number = 0): string 
               <StyledHeaderCell sx={{width: '15%'}}>CAUDAL CONCESIONADO (Q) L/sg</StyledHeaderCell>
               <StyledTableCell colSpan={8}> {historico?.caudal_concesionado}</StyledTableCell>
               <StyledTableCell colSpan={2}>{historico?.factor_regional}</StyledTableCell>
-              <StyledTableCell colSpan={2}>$1.10</StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter(firsttua)}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>USO</StyledHeaderCell>
-              <StyledTableCell colSpan={11}>1.040</StyledTableCell>
+              <StyledTableCell colSpan={11}>1.00</StyledTableCell>
               
             </TableRow>
             <TableRow>
@@ -388,21 +457,21 @@ const currency_formatter = (value: number, fraction_digits: number = 0): string 
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>VOLUMEN DE AGUA V (m3)</StyledHeaderCell>
-              <StyledTableCell colSpan={2}>45,291.74  </StyledTableCell>
-              <StyledTableCell colSpan={2}>40,908.67  </StyledTableCell>
-              <StyledTableCell colSpan={2}>7,017.41  </StyledTableCell>
-              <StyledTableCell colSpan={2}>6,791.04  </StyledTableCell>
-              <StyledTableCell colSpan={2}>7,017.41  </StyledTableCell>
-              <StyledTableCell colSpan={2}>6,791.04  </StyledTableCell> 
+              <StyledTableCell colSpan={2}>{currency_formatter2(result)}  </StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result1)}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result2)}  </StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result3)}  </StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result4)}  </StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result5)}  </StyledTableCell> 
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>FACTOR DE COSTO DE OPORTUNIDAD</StyledHeaderCell>
-              <StyledTableCell colSpan={2}>1.00  </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00  </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00    </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00  </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00  </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00    </StyledTableCell> 
+              <StyledTableCell colSpan={2}>{firstFCValue0} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue1}  </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue2}   </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue3}  </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue4}  </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue5}   </StyledTableCell> 
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
@@ -445,21 +514,21 @@ const currency_formatter = (value: number, fraction_digits: number = 0): string 
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>VOLUMEN DE AGUA V (m3)</StyledHeaderCell>
-              <StyledTableCell colSpan={2}> 7,017.41</StyledTableCell>
-              <StyledTableCell colSpan={2}>  7,017.41</StyledTableCell>
-              <StyledTableCell colSpan={2}>6,791.04 </StyledTableCell>
-              <StyledTableCell colSpan={2}>7,017.41 </StyledTableCell>
-              <StyledTableCell colSpan={2}>6,791.04 </StyledTableCell>
-              <StyledTableCell colSpan={2}>7,017.41 </StyledTableCell> 
+              <StyledTableCell colSpan={2}>{currency_formatter2(result6)}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result7)}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result8)} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result9)} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result10)} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{currency_formatter2(result11)} </StyledTableCell> 
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>FACTOR DE COSTO DE OPORTUNIDAD</StyledHeaderCell>
-              <StyledTableCell colSpan={2}>1.00 </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00 </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00 </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00 </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00 </StyledTableCell>
-              <StyledTableCell colSpan={2}>1.00</StyledTableCell> 
+              <StyledTableCell colSpan={2}>{firstFCValue6} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue7} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue8} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue9} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue10} </StyledTableCell>
+              <StyledTableCell colSpan={2}>{firstFCValue11}</StyledTableCell> 
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>

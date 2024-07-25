@@ -34,6 +34,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import { AgregarPoai } from './AgregarPoai';
 import { ButtonSalir } from '../../../../components/Salir/ButtonSalir';
 import { api } from '../../../../api/axios';
+import { control_error } from '../../../../helpers';
 
 export const Seguimiento: React.FC = () => {
 
@@ -371,8 +372,10 @@ export const Seguimiento: React.FC = () => {
       const res = await api.get(url);
       const HistoricoData: ConsultarSeguimiento[] = res.data?.data || [];
       setconsultarSeguimiento(HistoricoData);
-    } catch (error) {
+    } catch (error:any) {
       console.error(error);
+      control_error(error.response.data.detail);
+      setconsultarSeguimiento([])
     }
   };
   // useEffect(() => {

@@ -4,4 +4,5 @@ export interface AprobadoresProps {
   nombre_proyector: string,
   cargo_proyector: string,
   send_data?: boolean,
+  fecha_limite:any,
 }

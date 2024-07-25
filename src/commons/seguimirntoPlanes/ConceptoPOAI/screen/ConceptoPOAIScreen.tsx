@@ -225,6 +225,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
     } catch (error: any) {
       // console.error(error);
       setabrir0(true);
+      setHistorico([])
       control_error(error.response.data.detail);
     }
   };
@@ -242,6 +243,7 @@ export const ConceptoPOAIScreen: React.FC = () => {
     } catch (error: any) {
       // console.error(error);
       setabrir0(true);
+      setHistorico([])
       control_error(error.response.data.detail);
     }
   };

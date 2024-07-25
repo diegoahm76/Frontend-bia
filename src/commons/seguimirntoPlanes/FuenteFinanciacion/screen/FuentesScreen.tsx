@@ -244,6 +244,7 @@ export const FuentesScreen: React.FC = () => {
       setabrir0(true);
       control_success('Datos encontrados con exito');
     } catch (error: any) {
+      setHistorico([])
       // console.error(error);
       setabrir0(true)
       control_error(error.response.data.detail);

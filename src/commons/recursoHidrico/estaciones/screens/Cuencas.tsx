@@ -90,9 +90,7 @@ export const Cuencas: React.FC = () => {
   useEffect(() => {
     void fetchCuencas();
   }, []);
-
   const [macroCuencas, setMacroCuencas] = useState<MacroCuenca[]>([]);
-
   const fetchMacroCuencas = async (): Promise<void> => {
     try {
       const url = `/hidrico/zonas-hidricas/zona_hidrica/get/${selectedMacroCuenca}/`;
@@ -159,23 +157,14 @@ export const Cuencas: React.FC = () => {
       </Accordion>
     ));
   };
-
-
   const [selectedSubZonaHidricaId, setSelectedSubZonaHidricaId] = useState<number | null>(null);
   const handleSelectSubZonaHidrica = (zonaHidrica: ZonaHidrica) => {
     setSelectedSubZonaHidrica(zonaHidrica);
     handleAbrirActualizarModal();
     setSelectedSubZonaHidricaId(zonaHidrica.id_sub_zona_hidrica);
   };
-
-
-
-
   const [selectedrio, setSelectedrio] = useState<number | null>(null); // El tipo de dato puede variar según tus necesidades
 
-
-
-  
   const [rios, setrios] = useState<Rio[]>([]);
   const fetchrios = async (): Promise<void> => {
     try {
