@@ -352,21 +352,17 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
     });
     set_rows_detalles(updatedRows);
   }, [rows_detalles, months, año]);
+
+  const handleLogRowsDetalles = () => {
+    console.log(rows_detalles);
+  };
+
+
   return (
     <>
-    {/* {currency_formatter(form_liquidacion.valor ?? 0, 0)}
- <Button
-                    variant="contained"
-                    color="primary"
-                    
-                    onClick={() => {
-                      consol()
-                    }}
-                  >
-                    Ver factura
-                  </Button> */}
-      {/* {liquidacion?.data.cedula} */}
-      {/* {rows_detalles[0].valor_liquidado} */}
+   
+     {/* <button onClick={handleLogRowsDetalles}>Log rows_detalles</button> */}
+    {/* {firstFCValue !== null && <h1>FC: {firstFCValue}</h1>} */}
       <Grid
         container
         sx={{

@@ -86,7 +86,7 @@ export const ControlPoai: React.FC = () => {
 
   const consultarSeguimiento = async (): Promise<void> => {
     try {
-      const url = `seguimiento-planes/tablero-control-poai-general-grafica/${formData.tablero}/?id_plan=${formData.plan}&fecha_inicio=${formData.fecha_inicia}&fecha_fin=${formData.fecha_fin}`;
+      const url = `seguimiento-planes/tablero-control-poai-general-grafica/1/?id_plan=${formData.plan}&fecha_inicio=${formData.fecha_inicia}&fecha_fin=${formData.fecha_fin}`;
       const res = await api.get(url);
       const HistoricoData: any[] = res.data?.data || [];
       setconsultarSeguimiento(HistoricoData);
@@ -358,7 +358,7 @@ export const ControlPoai: React.FC = () => {
   const [Historico, setHistorico] = useState<Historico[]>([]);
   const fetchHistorico = async (): Promise<void> => {
     try {
-      const url = `/seguimiento-planes/tablero-control-poai-general/${formData.tablero}/?id_plan=${formData.plan}&fecha_inicio=${formData.fecha_inicia}&fecha_fin=${formData.fecha_fin}`;
+      const url = `/seguimiento-planes/tablero-control-poai-general/1/?id_plan=${formData.plan}&fecha_inicio=${formData.fecha_inicia}&fecha_fin=${formData.fecha_fin}`;
       const res = await api.get(url);
       const HistoricoData: Historico[] = res.data?.data || [];
 
@@ -431,7 +431,7 @@ export const ControlPoai: React.FC = () => {
           </FormControl>
         </Grid>
 
-        <Grid item xs={12} sm={12}>
+        {/* <Grid item xs={12} sm={12}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label">Tablero de control </InputLabel>
             <Select
@@ -441,12 +441,11 @@ export const ControlPoai: React.FC = () => {
               onChange={handleInputSelect}
             >
               <MenuItem value={1}>Tablero de Control General POAI </MenuItem>
-              <MenuItem value={2}>
-                Tablero de Control POAI Por Proyecto{' '}
+              <MenuItem value={2}>   Tablero de Control POAI Por Proyecto{' '}
               </MenuItem>
             </Select>
           </FormControl>
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12} sm={6}>
           <TextField
@@ -489,7 +488,7 @@ export const ControlPoai: React.FC = () => {
               startIcon={<SearchOutlined />}
               variant="contained"
               fullWidth
-              disabled={!formData.plan || !formData.tablero}
+              disabled={!formData.plan}
               onClick={() => {
                 consultarSeguimiento(), fetchHistorico();
               }}
