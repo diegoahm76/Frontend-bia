@@ -288,7 +288,7 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell align="center" colSpan={2}>Doc. de Cobro N°</StyledHeaderCell>
-              <StyledTableCell align="center" sx={{fontSize: '24px', fontWeight: 'bold'}}>GR- 2023 011883</StyledTableCell>
+              <StyledTableCell align="center" sx={{fontSize: '24px', fontWeight: 'bold'}}>GR-  011883</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledCell colSpan={12}>Ley 99 de 1993 Artículo 42, Decreto 901 de 1997, Resoluciones 0273 de 1997 y 0372 de 1998 del Ministerio del Medio Ambiente, Acuerdo 011 del 2000 de CORMACARENA (Por medio del cual se creó El Fondo Regional de Descontaminación), Decreto 2667 de 2012, Decreto 1076 de 2015 y Resolución PS-GJ.1.2.6.23.1974 de 2023.
@@ -338,13 +338,13 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
               <StyledHeaderCell sx={{width: '15%'}}>¿PRESENTA AUTODECLARACION?</StyledHeaderCell>
               <StyledTableCell colSpan={1}>SI</StyledTableCell>
               <StyledHeaderCell colSpan={2}>RESOLUCIÓN PSMV</StyledHeaderCell>
-              <StyledTableCell colSpan={8}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
+              <StyledTableCell colSpan={8}>{historico?.num_resolucion}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>¿AUTODECLARACIÓN APROBADA?</StyledHeaderCell>
               <StyledTableCell colSpan={1}>NO</StyledTableCell>
               <StyledHeaderCell colSpan={2}>RES. PERMISO DE VERTIMENTO</StyledHeaderCell>
-              <StyledTableCell colSpan={8}>PS-GJ.1.2.6.19.2741 14 de Nov de 2019</StyledTableCell>
+              <StyledTableCell colSpan={8}>{historico?.num_resolucion}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '20%'}}>Parámetros generales</StyledHeaderCell>
@@ -388,7 +388,7 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
               <StyledTableCell colSpan={1}>0.000</StyledTableCell>
             </TableRow> 
             
-            <TableRow>
+            {/* <TableRow>
               <StyledHeaderCell sx={{width: '10%'}}>PARÁMETRO / MESES DEL AÑO</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>Enero</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>Febrero</StyledHeaderCell>
@@ -396,8 +396,33 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
               <StyledHeaderCell colSpan={2}>Abril</StyledHeaderCell>
               <StyledHeaderCell colSpan={1}>Mayo</StyledHeaderCell>
               <StyledHeaderCell colSpan={2}>Junio</StyledHeaderCell>
-            </TableRow>
-
+            </TableRow> */}
+            <>
+    {form_liquidacion.periodo_liquidacion === "enero a junio" ? (
+      <TableRow>
+      <StyledHeaderCell sx={{width: '10%'}}>PARÁMETRO / MESES DEL AÑO</StyledHeaderCell>
+      <StyledHeaderCell colSpan={2}>Enero</StyledHeaderCell>
+      <StyledHeaderCell colSpan={2}>Febrero</StyledHeaderCell>
+      <StyledHeaderCell colSpan={2}>Marzo</StyledHeaderCell>
+      <StyledHeaderCell colSpan={2}>Abril</StyledHeaderCell>
+      <StyledHeaderCell colSpan={1}>Mayo</StyledHeaderCell>
+      <StyledHeaderCell colSpan={2}>Junio</StyledHeaderCell>
+    </TableRow>
+    ) : (
+      <>
+               <TableRow>
+      <StyledHeaderCell sx={{width: '10%'}}>PARÁMETRO / MESES DEL AÑO</StyledHeaderCell>
+      <StyledHeaderCell colSpan={2}>Julio</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Agosto </StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Septiembre</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Octubre</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Noviembre</StyledHeaderCell>
+              <StyledHeaderCell colSpan={2}>Diciembre</StyledHeaderCell>
+    </TableRow>
+      </>
+    
+    )}
+  </>
 
 
             <TableRow>
@@ -475,18 +500,35 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
               <StyledTableCell colSpan={1}>$149,462</StyledTableCell>
               <StyledTableCell colSpan={2}>$137,420</StyledTableCell> 
             </TableRow>
-
-
-
-            <TableRow>
+            <>
+    {form_liquidacion.periodo_liquidacion === "enero a junio" ? (
+    <TableRow>
               <StyledTableCell sx={{width: '10%'}}>SUBTOTALES POR MES</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Enero") ? currency_formatter(rows_detalles[0].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? currency_formatter(rows_detalles[1].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? currency_formatter(rows_detalles[2].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Abril") ? currency_formatter(rows_detalles[3].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? currency_formatter(rows_detalles[4].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Junio") ? currency_formatter(rows_detalles[5].valor_liquidado, 0) : "0"}</StyledTableCell> 
+              <StyledTableCell colSpan={2}>{months.includes("Enero") ? currency_formatter(rows_detalles[0]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? currency_formatter(rows_detalles[1]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? currency_formatter(rows_detalles[2]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Abril") ? currency_formatter(rows_detalles[3]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? currency_formatter(rows_detalles[4]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Junio") ? currency_formatter(rows_detalles[5]?.valor_liquidado, 0) : "0"}</StyledTableCell> 
             </TableRow>
+    ) : (
+      <>
+           <TableRow>
+     <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
+     <StyledTableCell colSpan={2}> {months.includes("Julio") ? currency_formatter(rows_detalles[0]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+     <StyledTableCell colSpan={2}> {months.includes("Agosto") ? currency_formatter(rows_detalles[1]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+     <StyledTableCell colSpan={2}> {months.includes("Septiembre") ? currency_formatter(rows_detalles[2]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+     <StyledTableCell colSpan={2}> {months.includes("Octubre") ? currency_formatter(rows_detalles[3]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+     <StyledTableCell colSpan={2}> {months.includes("Noviembre") ? currency_formatter(rows_detalles[4]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+     <StyledTableCell colSpan={2}> {months.includes("Diciembre") ? currency_formatter(rows_detalles[5]?.valor_liquidado, 0) : "0"}</StyledTableCell> 
+   </TableRow>    
+      </>
+    
+    )}
+  </>
+
+
+           
 
             <TableRow>
               <StyledHeaderCell colSpan={5} align='center'>DESCRIPCIÓN</StyledHeaderCell>

@@ -97,15 +97,16 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
     set_position_tab(newValue);
   };
 
-  useEffect(() => console.log(estado_expediente), [estado_expediente])
+  // useEffect(() => console.log(estado_expediente), [estado_expediente])
 
-  const get_calculated_variables = (funcion: string, variables: Record<string, string>): string => {
+  const get_calculated_variables = (funcion: string, variables: Record<string, any>): any => {
     const regex = new RegExp(Object.keys(variables).map((propiedad) => `\\b${propiedad}\\b`).join('|'), 'g');
     const formula = funcion.replace(regex, matched => variables[matched]);
     return new Function(`return ${formula}`)();
+
   };
 
-  const handle_select_change: (event: SelectChangeEvent) => void = (event: SelectChangeEvent) => {
+  const handle_select_change: (event: any) => void = (event: any) => {
     set_id_opcion_liquidacion(event.target.value);
   }
 
@@ -254,13 +255,13 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
                   <Stack direction={'row'} spacing={2} alignItems={'center'}>
                     <Typography variant="body1">{key}</Typography>:
                     {estado_expediente?.toLowerCase() === 'liquidado' ?
-                      <Typography variant="body1">{value as string}</Typography> :
+                      <Typography variant="body1">{value as any}</Typography> :
                       <TextField
                         name={key}
                         value={displayValue}
                         type="number"
                         size="small"
-                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handle_variable_input_change(event, params.row.id, key)}
+                        onChange={(event: any) => handle_variable_input_change(event, params.row.id, key)}
                       />
                     }
                   </Stack>
@@ -283,7 +284,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
       }
     },
   ]
-  console.log("rows_detalles", rows_detalles, estado_expediente);
+  // console.log("rows_detalles", rows_detalles, estado_expediente);
   //codigo miguel para visor de factura
   const encodedHtml = encodeURIComponent(htmlContent);
   const dataUri = 'data:text/html;charset=utf-8,' + encodedHtml;
@@ -354,7 +355,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
   }, [rows_detalles, months, año]);
 
   const handleLogRowsDetalles = () => {
-    console.log(rows_detalles);
+    console.log("1",rows_detalles);
   };
 
 
@@ -546,7 +547,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
         rows_detalles={rows_detalles} 
       /> 
     ) : (
-     <DocumentoPagoTUA 
+      <> 
+       <DocumentoPagoTUA 
       id_cc={id_cc}
         liquidacion={liquidacion} 
         obligaciones={obligaciones} 
@@ -555,6 +557,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
         months={months} 
         rows_detalles={rows_detalles} 
       />
+      </>
+    
     )}
   </>
 )}

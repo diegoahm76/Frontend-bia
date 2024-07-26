@@ -87,174 +87,174 @@ interface IProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const GenerarLiquidacion: React.FC<IProps> = ({
-    id_cc,
-    set_tipo_renta,
-    tipo_renta,
-    liquidacion,
-    setLiquidacion,
-    periodos,
-    selectedIds,
-    rows_detalles,
-    nombre_deudor,
-    form_liquidacion,
-    tamano_detalles,
-    detalles_ciclos,
-    set_form_liquidacion,
-    set_selectedIds,
-    estado_expediente,
-    fecha_liquidacion,
-    fecha_vencimiento,
-    expedientes_deudor,
-    id_liquidacion_pdf,
-    set_fecha_vencimiento,
-    set_fecha_liquidacion,
-    handle_submit_liquidacion,
-    handle_submit_liquidacionma,
-    handle_input_form_liquidacion_change,
-    handle_select_form_liquidacion_change,
-    lista_obligaciones,
-    obligaciones
-}: IProps) => {
+    export const GenerarLiquidacion: React.FC<IProps> = ({
+        id_cc,
+        set_tipo_renta,
+        tipo_renta,
+        liquidacion,
+        setLiquidacion,
+        periodos,
+        selectedIds,
+        rows_detalles,
+        nombre_deudor,
+        form_liquidacion,
+        tamano_detalles,
+        detalles_ciclos,
+        set_form_liquidacion,
+        set_selectedIds,
+        estado_expediente,
+        fecha_liquidacion,
+        fecha_vencimiento,
+        expedientes_deudor,
+        id_liquidacion_pdf,
+        set_fecha_vencimiento,
+        set_fecha_liquidacion,
+        handle_submit_liquidacion,
+        handle_submit_liquidacionma,
+        handle_input_form_liquidacion_change,
+        handle_select_form_liquidacion_change,
+        lista_obligaciones,
+        obligaciones
+    }: IProps) => {
 
-    const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
-        if (date !== null) {
-            set_fecha_liquidacion(date);
-        }
-    };
-
-    const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
-        if (date !== null) {
-            set_fecha_vencimiento(date);
-        }
-    };
-
-    const [visor, setVisor] = useState('');
-
-
-
-    const generarHistoricoBajas = () => {
-        const doc = new jsPDF();
-        const anchoPagina = doc.internal.pageSize.width;
-        const agregarEncabezado = () => {
-            doc.setFontSize(22);
-            doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
-            doc.setFontSize(12);
-        };
-        agregarEncabezado();
-        doc.setFontSize(12);
-        let y = 30;
-        setVisor(doc.output('datauristring'));
-    };
-
-
-    const [pdfUrl, setPdfUrl] = useState('');
-
-    const handleOpenPdf = () => {
-        // Aquí estableces la URL del PDF que deseas mostrar
-        setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
-    };
-
-
-    // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
-    const [year, set_year] = useState<number>(0);
-    // const [tipo_renta, set_tipo_renta] = useState<string>('');
-
-
-    const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
-        // try {
-        //     const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
-
-        //     setLiquidacion(response.data);
-        //     console.log("Datos de liquidación cargados con éxito");
-        // } catch (error: any) {
-        //     console.error('Error al cargar los datos de liquidación', error);
-        //     // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
-        // }
-    };
-    useEffect(() => {
-        cargarLiquidacion(setLiquidacion);
-    }, [id_liquidacion_pdf]);
-
-    const [caudalConcesionado, setCaudalConcesionado] = useState('');
-
-    // const actualizarCaudalConcesionado = async () => {
-    //     try {
-    //         const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
-    //             caudal_consecionado: caudalConcesionado
-    //         });
-    //         console.log('Caudal actualizado con éxito', response.data);
-    //         control_success("Caudal actualizado con éxito");
-
-    //         // Actualizar la información en la interfaz si es necesario
-    //     } catch (error: any) {
-    //         console.error('Error al actualizar el caudal concedido', error);
-    //         control_error(error.response.data.detail);
-    //     }
-    // };
-
-
-    const [historico, setHistorico] = useState<Concepto | any>("");
-
-    const fetchHistorico = async (): Promise<void> => {
-      try {
-        const url = `recaudo/cobros/info-tua/${id_cc}`;
-        const res = await api.get(url);
-        const historicoData: Concepto = res.data?.data || null;
-        setHistorico(historicoData);
-        setCaudalConcesionado(historico?.caudal_concesionado)
-      } catch (error: any) {
-        // console.error(error);
-      }
-    };
-    useEffect(() => {
-        fetchHistorico();
-      }, []);
-    const actualizarCaudalConcesionado = async () => {
-        try {
-            const caudalConcesionadoNumero = Number(caudalConcesionado);
-    
-            if (isNaN(caudalConcesionadoNumero)) {
-                throw new Error('El valor de caudalConcesionado no es un número válido.');
+        const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
+            if (date !== null) {
+                set_fecha_liquidacion(date);
             }
-    
-            const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
-                caudal_concesionado: caudalConcesionadoNumero
-            });
-            console.log('Caudal actualizado con éxito', response.data);
-            control_success("Caudal actualizado con éxito");
-            fetchHistorico()
-            // Actualizar la información en la interfaz si es necesario
-        } catch (error) {
-            console.error('Error al actualizar el caudal concedido', error);
-            // control_error(error.response?.data?.detail || error.message);
-        }
-    };
-    const actualizarLiquidacionBase = async () => {
+        };
+
+        const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
+            if (date !== null) {
+                set_fecha_vencimiento(date);
+            }
+        };
+
+        const [visor, setVisor] = useState('');
+
+
+
+        const generarHistoricoBajas = () => {
+            const doc = new jsPDF();
+            const anchoPagina = doc.internal.pageSize.width;
+            const agregarEncabezado = () => {
+                doc.setFontSize(22);
+                doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+                doc.setFontSize(12);
+            };
+            agregarEncabezado();
+            doc.setFontSize(12);
+            let y = 30;
+            setVisor(doc.output('datauristring'));
+        };
+
+
+        const [pdfUrl, setPdfUrl] = useState('');
+
+        const handleOpenPdf = () => {
+            // Aquí estableces la URL del PDF que deseas mostrar
+            setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
+        };
+
+
+        // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+        const [year, set_year] = useState<any>('');
+        // const [tipo_renta, set_tipo_renta] = useState<string>('');
+
+
+        const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
+            // try {
+            //     const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
+
+            //     setLiquidacion(response.data);
+            //     console.log("Datos de liquidación cargados con éxito");
+            // } catch (error: any) {
+            //     console.error('Error al cargar los datos de liquidación', error);
+            //     // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
+            // }
+        };
+        useEffect(() => {
+            cargarLiquidacion(setLiquidacion);
+        }, [id_liquidacion_pdf]);
+
+        const [caudalConcesionado, setCaudalConcesionado] = useState('');
+
+        // const actualizarCaudalConcesionado = async () => {
+        //     try {
+        //         const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
+        //             caudal_consecionado: caudalConcesionado
+        //         });
+        //         console.log('Caudal actualizado con éxito', response.data);
+        //         control_success("Caudal actualizado con éxito");
+
+        //         // Actualizar la información en la interfaz si es necesario
+        //     } catch (error: any) {
+        //         console.error('Error al actualizar el caudal concedido', error);
+        //         control_error(error.response.data.detail);
+        //     }
+        // };
+
+
+        const [historico, setHistorico] = useState<Concepto | any>("");
+
+        const fetchHistorico = async (): Promise<void> => {
         try {
-            const response = await api.put(`/recaudo/liquidaciones/liquidacion-base/${id_liquidacion_pdf}/`, {
-                id_expediente: form_liquidacion.id_expediente,
-                fecha_liquidacion: fecha_liquidacion,
-                vencimiento: fecha_vencimiento
-            });
-            console.log('Liquidación base actualizada con éxito', response.data);
-            control_success("Liquidación base actualizada con éxito");
-
-            // Actualizar la información en la interfaz si es necesario
+            const url = `recaudo/cobros/info-tua/${id_cc}`;
+            const res = await api.get(url);
+            const historicoData: Concepto = res.data?.data || null;
+            setHistorico(historicoData);
+            setCaudalConcesionado(historico?.caudal_concesionado)
         } catch (error: any) {
-            console.error('Error al actualizar la liquidación base', error);
-            control_error(error.response.data.detail);
+            // console.error(error);
         }
-    };
+        };
+        useEffect(() => {
+            fetchHistorico();
+        }, []);
+        const actualizarCaudalConcesionado = async () => {
+            try {
+                const caudalConcesionadoNumero = Number(caudalConcesionado);
+        
+                if (isNaN(caudalConcesionadoNumero)) {
+                    throw new Error('El valor de caudalConcesionado no es un número válido.');
+                }
+        
+                const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
+                    caudal_concesionado: caudalConcesionadoNumero
+                });
+                console.log('Caudal actualizado con éxito', response.data);
+                control_success("Caudal actualizado con éxito");
+                fetchHistorico()
+                // Actualizar la información en la interfaz si es necesario
+            } catch (error) {
+                console.error('Error al actualizar el caudal concedido', error);
+                // control_error(error.response?.data?.detail || error.message);
+            }
+        };
+        const actualizarLiquidacionBase = async () => {
+            try {
+                const response = await api.put(`/recaudo/liquidaciones/liquidacion-base/${id_liquidacion_pdf}/`, {
+                    id_expediente: form_liquidacion.id_expediente,
+                    fecha_liquidacion: fecha_liquidacion,
+                    vencimiento: fecha_vencimiento
+                });
+                console.log('Liquidación base actualizada con éxito', response.data);
+                control_success("Liquidación base actualizada con éxito");
 
-    useEffect(() => {
-        set_form_liquidacion((prevData: any) => ({
-            ...prevData,
-            id_expediente: selectedIds[0].toString(),
+                // Actualizar la información en la interfaz si es necesario
+            } catch (error: any) {
+                console.error('Error al actualizar la liquidación base', error);
+                control_error(error.response.data.detail);
+            }
+        };
 
-        }));
+        useEffect(() => {
+            set_form_liquidacion((prevData: any) => ({
+                ...prevData,
+                id_expediente: selectedIds[0].toString(),
 
-    }, [selectedIds]);
+            }));
+
+        }, [selectedIds]);
 
     useEffect(() => {
         if (lista_obligaciones.length > 0) {
@@ -265,118 +265,136 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
             // set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
 
-            if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'MULTAS') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'diario',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'anual',
-                    periodo_liquidacion: 'enero a diciembre'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (VISITAS; TASA APROVECHAMIENTO FORESTAL; SALVOCONDUCTOS; ETC)') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'diario',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TR)') {
+            if (tipo_renta.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
                     ciclo_liquidacion: 'semestral',
                     periodo_liquidacion: 'enero a junio'
                 }));
-            } 
-            else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'anual',
-                    periodo_liquidacion: 'enero a diciembre'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'anual',
-                    periodo_liquidacion: 'enero a diciembre'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE APROVECHAMIENTO FORESTAL') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'anual',
-                    periodo_liquidacion: 'enero a diciembre'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'DETERMINANTES AMBIENTALES') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'diario',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL O PORCENTAJE') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (SALVOCONDUCTOS; ETC)') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS DE CONTROL Y SEGUIMIENTO') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS INICIALES DE EVALUACION') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VEHICULO 2024') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'INICIO DE COBRO 2024') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SALARIO MINIMO LEGAL VIGENTE 2024') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-
-            } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SUBSIDIO DE TRANSPORTE') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'mensual',
-                    periodo_liquidacion: 'pago unico'
-                }));
-
             }
+            if (tipo_renta.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'anual',
+                    periodo_liquidacion: 'enero a diciembre'
+                }));
+            }
+            //  else 
+            //  if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (VISITAS; TASA APROVECHAMIENTO FORESTAL; SALVOCONDUCTOS; ETC)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'diario',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TR)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'semestral',
+            //         periodo_liquidacion: 'enero a junio'
+            //     }));
+            // } 
+            // else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE APROVECHAMIENTO FORESTAL') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'DETERMINANTES AMBIENTALES') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'diario',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL O PORCENTAJE') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (SALVOCONDUCTOS; ETC)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS DE CONTROL Y SEGUIMIENTO') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS INICIALES DE EVALUACION') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VEHICULO 2024') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'INICIO DE COBRO 2024') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SALARIO MINIMO LEGAL VIGENTE 2024') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SUBSIDIO DE TRANSPORTE') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+
+            // }
 
         }
     }, [lista_obligaciones])
 
-   
+
+    // useEffect(() => {
+    //     if (tipo_renta === "TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)") {
+    //       set_form_liquidacion((prevData: any) => ({
+    //         ...prevData,
+    //         ciclo_liquidacion: "semestral"
+    //       }));
+    //     }
+    //   }, [tipo_renta, set_form_liquidacion]);
+
     return (
         <>
 
@@ -569,7 +587,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                             <InputLabel>Año: </InputLabel>
                             <Select
                                 value={year}
-                                label="Año: "
+                                label="Año:"
+                                
                                 onChange={(e) => set_year(Number(e.target.value))}
                             >
                                 <MenuItem value=''>Seleccione una opción</MenuItem>
