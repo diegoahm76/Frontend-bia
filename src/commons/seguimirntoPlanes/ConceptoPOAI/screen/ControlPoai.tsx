@@ -337,7 +337,7 @@ export const ControlPoai: React.FC = () => {
     { field: 'id_programa', headerName: 'Id proyecto', flex: 1 },
     { field: 'nombre_programa', headerName: 'Programa  ', flex: 1 },
     { field: 'nombre_proyecto', headerName: 'Proyecto  ', flex: 1 },
-    { field: 'numero_proyecto', headerName: 'Numero de proyecto  ', flex: 1 },
+    { field: 'numero_proyecto', headerName: 'Número de proyecto  ', flex: 1 },
     {
       field: 'valor_meta',
       headerName: 'Valor meta      ',
@@ -414,7 +414,7 @@ export const ControlPoai: React.FC = () => {
         {/* {selectedConceptoId} */}
         <Grid item xs={12} sm={12}>
           <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label"> Nombre de plan</InputLabel>
+            <InputLabel id="si-no-select-label"> Nombre del plan</InputLabel>
             <Select
               name="plan"
               // disabled
@@ -716,7 +716,7 @@ export const ControlPoai: React.FC = () => {
             }}
           >
             <Grid item xs={12} sm={12}>
-              <Title title="Resultado de busqueda " />
+              <Title title="Resultado de búsqueda " />
             </Grid>
             <Grid container item xs={12} spacing={2}>
               <Grid
@@ -761,7 +761,7 @@ export const ControlPoai: React.FC = () => {
                 }}
               >
                 <div style={{ marginRight: '-19px', fontWeight: 'bold' }}>
-                  Presupuesto POAI
+                  PRESUPUESTO POAI
                 </div>
                 <div style={{ marginRight: '-10px' }}>
                   {total?.total_presupuesto}
@@ -789,7 +789,7 @@ export const ControlPoai: React.FC = () => {
                 }}
               >
                 <div style={{ marginRight: '-19px', fontWeight: 'bold' }}>
-                  DISPONIVILIDAD POAI
+                DISPONIBILIDAD POAI
                 </div>
                 <div style={{ marginRight: '-10px' }}>
                   {total?.total_disponible}
@@ -845,7 +845,7 @@ export const ControlPoai: React.FC = () => {
                 }}
               >
                 <div style={{ marginRight: '-2', fontWeight: 'bold' }}>
-                  OBLICIONES POAI
+                OBLIGACIONES POAI
                 </div>
                 <div style={{ marginRight: '-10px' }}>
                   {total?.total_obligado}
@@ -939,7 +939,7 @@ export const ControlPoai: React.FC = () => {
             }}
           >
             <RenderDataGrid
-              title="Resultados Plan Operativo Anual de Inversion - POAI"
+              title="Resultados Plan Operativo Anual de Inversión - POAI"
               columns={columns ?? []}
               rows={Historico ?? []}
             />

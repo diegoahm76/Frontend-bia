@@ -409,9 +409,9 @@ export const TalentoHumano: React.FC = () => {
                       size="small"
                       required
                       error={!formData.año}
-                      helperText={
-                        !formData.año ? 'Este campo es obligatorio' : ''
-                      }
+                      // helperText={
+                      //   !formData.año ? 'Este campo es obligatorio' : ''
+                      // }
                     />
                   )}
                 />
