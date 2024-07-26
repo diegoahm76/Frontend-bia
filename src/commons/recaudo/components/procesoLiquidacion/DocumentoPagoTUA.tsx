@@ -224,63 +224,63 @@ const currency_formatter2 = (value: any | number | bigint, fraction_digits = 2) 
   return formatter.format(value);
 };
 
-const firstRow = rows_detalles[0].variables;
-const result = firstRow.Q * firstRow.FC * firstRow.T;
+const firstRow = rows_detalles[0]?.variables;
+const result = firstRow?.Q * firstRow?.FC * firstRow?.T;
 
-const firstRow1 = rows_detalles[1].variables;
-const result1 = firstRow1.Q * firstRow1.FC * firstRow1.T;
+const firstRow1 = rows_detalles[1]?.variables;
+const result1 = firstRow1?.Q * firstRow1?.FC * firstRow1?.T;
 
-const firstRow2 = rows_detalles[2].variables;
-const result2 = firstRow2.Q * firstRow2.FC * firstRow2.T;
+const firstRow2 = rows_detalles[2]?.variables;
+const result2 = firstRow2?.Q * firstRow2?.FC * firstRow2?.T;
 
-const firstRow3 = rows_detalles[3].variables;
-const result3 = firstRow3.Q * firstRow3.FC * firstRow3.T;
+const firstRow3 = rows_detalles[3]?.variables;
+const result3 = firstRow3.Q * firstRow3?.FC * firstRow3?.T;
 
-const firstRow4 = rows_detalles[4].variables;
-const result4 = firstRow4.Q * firstRow4.FC * firstRow4.T;
+const firstRow4 = rows_detalles[4]?.variables;
+const result4 = firstRow4.Q * firstRow4?.FC * firstRow4?.T;
 
-const firstRow5 = rows_detalles[5].variables;
-const result5 = firstRow5.Q * firstRow5.FC * firstRow5.T;
+const firstRow5 = rows_detalles[5]?.variables;
+const result5 = firstRow5.Q * firstRow5?.FC * firstRow5?.T;
 
-const firstRow6 = rows_detalles[6].variables;
-const result6 = firstRow6.Q * firstRow6.FC * firstRow6.T;
+const firstRow6 = rows_detalles[6]?.variables;
+const result6 = firstRow6?.Q * firstRow6?.FC * firstRow6?.T;
 
-const firstRow7 = rows_detalles[7].variables;
-const result7 = firstRow7.Q * firstRow7.FC * firstRow7.T;
+const firstRow7 = rows_detalles[7]?.variables;
+const result7 = firstRow7?.Q * firstRow7?.FC * firstRow7?.T;
 
-const firstRow8 = rows_detalles[8].variables;
-const result8 = firstRow8.Q * firstRow8.FC * firstRow8.T;
+const firstRow8 = rows_detalles[8]?.variables;
+const result8 = firstRow8?.Q * firstRow8?.FC * firstRow8?.T;
 
-const firstRow9 = rows_detalles[9].variables;
-const result9 = firstRow9.Q * firstRow9.FC * firstRow9.T;
+const firstRow9 = rows_detalles[9]?.variables;
+const result9 = firstRow9?.Q * firstRow9?.FC * firstRow9?.T;
 
-const firstRow10 = rows_detalles[10].variables;
-const result10 = firstRow10.Q * firstRow10.FC * firstRow10.T;
+const firstRow10 = rows_detalles[10]?.variables;
+const result10 = firstRow10?.Q * firstRow10?.FC * firstRow10?.T;
 
-const firstRow11 = rows_detalles[11].variables;
-const result11 = firstRow11.Q * firstRow11.FC * firstRow11.T;
+const firstRow11 = rows_detalles[11]?.variables;
+const result11 = firstRow11?.Q * firstRow11?.FC * firstRow11?.T;
 
-const firsttua = rows_detalles.length > 0 ? rows_detalles[0].variables.TUA: null;
+const firsttua = rows_detalles?.length > 0 ? rows_detalles[0]?.variables?.TUA: null;
 
 useEffect(() => {
   firsttua
 }, [rows_detalles]);
 
-const firstFR = rows_detalles.length > 0 ? rows_detalles[0].variables.FR : null;
+const firstFR = rows_detalles.length > 0 ? rows_detalles[0].variables?.FR : null;
   
-const firstFCValue0 = rows_detalles.length > 0 ? rows_detalles[0].variables.FOP : null;
-const firstFCValue1 = rows_detalles.length > 1 ? rows_detalles[1].variables.FOP : null;
+const firstFCValue0 = rows_detalles.length > 0 ? rows_detalles[0].variables?.FOP : null;
+const firstFCValue1 = rows_detalles.length > 1 ? rows_detalles[1].variables?.FOP : null;
 
-const firstFCValue2 = rows_detalles.length > 2 ? rows_detalles[2].variables.FOP : null;
-const firstFCValue3 = rows_detalles.length > 3 ? rows_detalles[3].variables.FOP : null;
-const firstFCValue4 = rows_detalles.length > 4 ? rows_detalles[4].variables.FOP : null;
-const firstFCValue5 = rows_detalles.length > 5 ? rows_detalles[5].variables.FOP : null;
-const firstFCValue6 = rows_detalles.length > 6 ? rows_detalles[6].variables.FOP : null;
-const firstFCValue7 = rows_detalles.length > 7 ? rows_detalles[7].variables.FOP : null;
-const firstFCValue8 = rows_detalles.length > 8 ? rows_detalles[8].variables.FOP : null;
-const firstFCValue9 = rows_detalles.length > 9 ? rows_detalles[9].variables.FOP : null;
-const firstFCValue10 = rows_detalles.length > 10 ? rows_detalles[10].variables.FOP : null;
-const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables.FOP : null;
+const firstFCValue2 = rows_detalles.length > 2 ? rows_detalles[2].variables?.FOP : null;
+const firstFCValue3 = rows_detalles.length > 3 ? rows_detalles[3].variables?.FOP : null;
+const firstFCValue4 = rows_detalles.length > 4 ? rows_detalles[4].variables?.FOP : null;
+const firstFCValue5 = rows_detalles.length > 5 ? rows_detalles[5].variables?.FOP : null;
+const firstFCValue6 = rows_detalles.length > 6 ? rows_detalles[6].variables?.FOP : null;
+const firstFCValue7 = rows_detalles.length > 7 ? rows_detalles[7].variables?.FOP : null;
+const firstFCValue8 = rows_detalles.length > 8 ? rows_detalles[8].variables?.FOP : null;
+const firstFCValue9 = rows_detalles.length > 9 ? rows_detalles[9].variables?.FOP : null;
+const firstFCValue10 = rows_detalles.length > 10 ? rows_detalles[10].variables?.FOP : null;
+const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables?.FOP : null;
 
 
 
@@ -475,12 +475,12 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables.F
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
-              <StyledTableCell colSpan={2}>{months.includes("Enero") ? currency_formatter(rows_detalles[0].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? currency_formatter(rows_detalles[1].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? currency_formatter(rows_detalles[2].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Abril") ? currency_formatter(rows_detalles[3].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? currency_formatter(rows_detalles[4].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}>  {months.includes("Junio") ? currency_formatter(rows_detalles[5].valor_liquidado, 0) : "0"}
+              <StyledTableCell colSpan={2}>{months.includes("Enero") ? currency_formatter(rows_detalles[0]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Febrero") ? currency_formatter(rows_detalles[1]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Marzo") ? currency_formatter(rows_detalles[2]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Abril") ? currency_formatter(rows_detalles[3]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>{months.includes("Mayo") ? currency_formatter(rows_detalles[4]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}>  {months.includes("Junio") ? currency_formatter(rows_detalles[5]?.valor_liquidado, 0) : "0"}
              </StyledTableCell> 
             </TableRow>
 
@@ -491,12 +491,12 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables.F
               <StyledHeaderCell colSpan={2}>SUBTOTAL 1er Semestre</StyledHeaderCell>
               <StyledTableCell colSpan={3}>   {
       currency_formatter(
-        (months.includes("Enero") ? rows_detalles[0].valor_liquidado : 0) +
-        (months.includes("Febrero") ? rows_detalles[1].valor_liquidado : 0) +
-        (months.includes("Marzo") ? rows_detalles[2].valor_liquidado : 0) +
-        (months.includes("Abril") ? rows_detalles[3].valor_liquidado : 0) +
-        (months.includes("Mayo") ? rows_detalles[4].valor_liquidado : 0) +
-        (months.includes("Junio") ? rows_detalles[5].valor_liquidado : 0),
+        (months.includes("Enero") ? rows_detalles[0]?.valor_liquidado : 0) +
+        (months.includes("Febrero") ? rows_detalles[1]?.valor_liquidado : 0) +
+        (months.includes("Marzo") ? rows_detalles[2]?.valor_liquidado : 0) +
+        (months.includes("Abril") ? rows_detalles[3]?.valor_liquidado : 0) +
+        (months.includes("Mayo") ? rows_detalles[4]?.valor_liquidado : 0) +
+        (months.includes("Junio") ? rows_detalles[5]?.valor_liquidado : 0),
         0
       )
     }  </StyledTableCell>
@@ -532,12 +532,12 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables.F
             </TableRow>
             <TableRow>
               <StyledHeaderCell colSpan={1}>MONTO A PAGAR($/m3)</StyledHeaderCell>
-              <StyledTableCell colSpan={2}> {months.includes("Julio") ? currency_formatter(rows_detalles[6].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Agosto") ? currency_formatter(rows_detalles[7].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Septiembre") ? currency_formatter(rows_detalles[8].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Octubre") ? currency_formatter(rows_detalles[9].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Noviembre") ? currency_formatter(rows_detalles[10].valor_liquidado, 0) : "0"}</StyledTableCell>
-              <StyledTableCell colSpan={2}> {months.includes("Diciembre") ? currency_formatter(rows_detalles[11].valor_liquidado, 0) : "0"}</StyledTableCell> 
+              <StyledTableCell colSpan={2}> {months.includes("Julio") ? currency_formatter(rows_detalles[6]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Agosto") ? currency_formatter(rows_detalles[7]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Septiembre") ? currency_formatter(rows_detalles[8]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Octubre") ? currency_formatter(rows_detalles[9]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Noviembre") ? currency_formatter(rows_detalles[10]?.valor_liquidado, 0) : "0"}</StyledTableCell>
+              <StyledTableCell colSpan={2}> {months.includes("Diciembre") ? currency_formatter(rows_detalles[11]?.valor_liquidado, 0) : "0"}</StyledTableCell> 
             </TableRow>
 
            
@@ -547,12 +547,12 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables.F
               <StyledHeaderCell colSpan={2}>SUBTOTAL 2do Semestre</StyledHeaderCell>
               <StyledTableCell colSpan={3}>{
       currency_formatter(
-        (months.includes("Julio") ? rows_detalles[6].valor_liquidado : 0) +
-        (months.includes("Agosto") ? rows_detalles[7].valor_liquidado : 0) +
-        (months.includes("Septiembre") ? rows_detalles[8].valor_liquidado : 0) +
-        (months.includes("Octubre") ? rows_detalles[9].valor_liquidado : 0) +
-        (months.includes("Noviembre") ? rows_detalles[10].valor_liquidado : 0) +
-        (months.includes("Diciembre") ? rows_detalles[11].valor_liquidado : 0),
+        (months.includes("Julio") ? rows_detalles[6]?.valor_liquidado : 0) +
+        (months.includes("Agosto") ? rows_detalles[7]?.valor_liquidado : 0) +
+        (months.includes("Septiembre") ? rows_detalles[8]?.valor_liquidado : 0) +
+        (months.includes("Octubre") ? rows_detalles[9]?.valor_liquidado : 0) +
+        (months.includes("Noviembre") ? rows_detalles[10]?.valor_liquidado : 0) +
+        (months.includes("Diciembre") ? rows_detalles[11]?.valor_liquidado : 0),
         0
       )
     }  </StyledTableCell>
