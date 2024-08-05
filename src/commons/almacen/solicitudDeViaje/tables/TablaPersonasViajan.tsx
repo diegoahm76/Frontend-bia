@@ -1,11 +1,12 @@
 import React from 'react';
-import { DataGrid, GridColDef, GridSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { ButtonGroup, Grid } from '@mui/material';
 import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { interface_busqueda_persona_solicita } from '../interfaces/types';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
+import dayjs from 'dayjs';
 
 
 interface CustomColumn extends GridColDef {
@@ -15,6 +16,7 @@ interface CustomColumn extends GridColDef {
 interface Props {
   data_personas_viajan: interface_busqueda_persona_solicita[];
   set_data_personas_viajan: React.Dispatch<React.SetStateAction<interface_busqueda_persona_solicita[]>>;
+  accion: string;
 }
 
 
@@ -22,6 +24,7 @@ interface Props {
 const TablaPersonasViajan: React.FC<Props> = ({
   data_personas_viajan,
   set_data_personas_viajan,
+  accion
 }) => {
 
   const quitar_persona = (row: interface_busqueda_persona_solicita) => {
@@ -29,31 +32,56 @@ const TablaPersonasViajan: React.FC<Props> = ({
     set_data_personas_viajan(data);
   }
 
-  const columns: CustomColumn[] = [
-    {
-      field: 'tipo_persona', headerName: 'Tipo de persona', minWidth: 120, flex: 1,
-      renderCell: (params) => params.row.tipo_persona === 'J' ? 'Jurídica' : 'Natural',
-    },
-    { field: 'numero_documento', headerName: 'Número de documento', minWidth: 120, flex: 1, },
-    {
-      field: 'primer_nombre', headerName: 'Nombres', minWidth: 120, flex: 1,
-      renderCell: (params) => params.row.primer_nombre ?? '' + ' ' + params.row.segundo_nombre ?? '',
-    },
-    {
-      field: 'primer_apellido', headerName: 'Apellidos', minWidth: 120, flex: 1,
-      renderCell: (params) => params.row.primer_apellido ?? '' + ' ' + params.row.segundo_apellido ?? '',
-    },
-    { field: 'razon_social', headerName: 'Razón social', minWidth: 120, flex: 1, },
-    { field: 'nombre_comercial', headerName: 'Nombre comercial', minWidth: 120, flex: 1, },
-    { field: 'quitar', headerName: 'Quitar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
-      renderCell: (params) => (
-        <RemoveCircleOutlineIcon
-          onClick={() => quitar_persona(params.row)}
-          style={{ cursor: 'pointer', color: 'red'}}
-        />
-      )
-    },
-  ];
+  let columns: CustomColumn[] = [];
+
+  if(accion === 'crear'){
+    columns = [
+      {
+        field: 'tipo_persona', headerName: 'Tipo de persona', minWidth: 120, flex: 1,
+        renderCell: (params) => params.row.tipo_persona === 'J' ? 'Jurídica' : 'Natural',
+      },
+      { field: 'numero_documento', headerName: 'Número de documento', minWidth: 120, flex: 1, },
+      {
+        field: 'primer_nombre', headerName: 'Nombres', minWidth: 120, flex: 1,
+        renderCell: (params) => params.row.primer_nombre ?? '' + ' ' + params.row.segundo_nombre ?? '',
+      },
+      {
+        field: 'primer_apellido', headerName: 'Apellidos', minWidth: 120, flex: 1,
+        renderCell: (params) => params.row.primer_apellido ?? '' + ' ' + params.row.segundo_apellido ?? '',
+      },
+      { field: 'razon_social', headerName: 'Razón social', minWidth: 120, flex: 1, },
+      { field: 'nombre_comercial', headerName: 'Nombre comercial', minWidth: 120, flex: 1, },
+      { field: 'quitar', headerName: 'Quitar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
+        renderCell: (params) => (
+          <RemoveCircleOutlineIcon
+            onClick={() => quitar_persona(params.row)}
+            style={{ cursor: 'pointer', color: 'red'}}
+          />
+        )
+      },
+    ]
+  }
+
+  if(accion === 'ver'){
+    columns = [
+      {
+        field: 'numero_documento_persona_viaja', headerName: 'Documento persona', minWidth: 120, flex: 1,
+      },
+      { field: 'nombre_persona_viaja', headerName: 'Nombres y apellidos', minWidth: 380, flex: 1, },
+      {
+        field: 'celular_documento_persona_viaja', headerName: 'Celular', minWidth: 120, flex: 1
+      },
+      {
+        field: 'email_persona_viaja', headerName: 'Email', minWidth: 300, flex: 1,
+      },
+      { field: 'fecha_resgistro', headerName: 'Fecha de registro', minWidth: 120, flex: 1,
+        valueFormatter: (value: any) => dayjs(value.value).format('DD/MM/YYYY'),
+      },
+      { field: 'fecha_confirmacion', headerName: 'Fecha confirmacion', minWidth: 120, flex: 1, 
+        valueFormatter: (value: any) => dayjs(value.value).format('DD/MM/YYYY'),
+      }
+    ]
+  }
 
   return (
     <>

@@ -8,6 +8,11 @@ export const postRespuestaOPA = async (
   setLoadingButton: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
   const url = `gestor/bandeja-tareas/opa/respuesta/create/`;
+  const url_guardado = `gestor/pqr/archivar-pqrsdf/`;
+  const {
+    respuesta: { id_solicitud_tramite },
+  } = formData;
+  console.log('respuesta', id_solicitud_tramite);
   try {
     if (!formData || typeof formData !== 'object') {
        showAlert('Opss!', 'Faltan valores para realizar la solicitud', 'warning');

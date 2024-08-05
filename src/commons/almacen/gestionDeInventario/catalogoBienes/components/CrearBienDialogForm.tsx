@@ -113,12 +113,12 @@ const CrearBienDialogForm = ({
           api.get('almacen/choices/metodo-valoracion-articulo/'),
           api.get('almacen/choices/tipo-depreciacion-activo/')
         ]);
-  
+
         const tipo_bien_format: IList[] = text_choise_adapter(tipo_bien_no_format.data);
         const activo_types_format: IList[] = text_choise_adapter(activo_types_no_format.data);
         const metodo_valoracion_format: IList[] = text_choise_adapter(metodo_valoracion_no_format.data);
         const depreciacion_types_format: IList[] = text_choise_adapter(depreciacion_types_no_format.data);
-  
+
         set_tipo_bien(tipo_bien_format);
         set_activo_types(activo_types_format);
         set_metodo_valoracion(metodo_valoracion_format);
@@ -127,7 +127,7 @@ const CrearBienDialogForm = ({
         // Manejar errores aquí si es necesario
       }
     };
-  
+
     if (is_modal_active) {
       if (!selects_option_realizados.current) {
         selects_option_realizados.current = true;
@@ -140,6 +140,7 @@ const CrearBienDialogForm = ({
   }, [is_modal_active]);
 
   useEffect(() => {
+    console.log(current_nodo);
     if (action === 'create_sub') {
       if (current_nodo.data.bien?.nivel_jerarquico !== 5) {
         //  console.log('')(current_nodo.data.bien?.nivel_jerarquico)
@@ -154,7 +155,7 @@ const CrearBienDialogForm = ({
       }
       reset_bien({
         ...current_nodo.data.bien,
-       
+
         maneja_hoja_vida:
           current_nodo.data.bien?.maneja_hoja_vida ?? false ? 'true' : 'false',
         solicitable_vivero:
@@ -306,10 +307,10 @@ const CrearBienDialogForm = ({
                         md: 2,
                         control_form: control_bien,
                         control_name: 'nombre_padre',
-                        default_value:
-                          action === 'create_sub'
-                            ? current_nodo.data.bien?.nombre
-                            : '',
+                        // default_value:
+                        //   action === 'create_sub'
+                        //     ? current_nodo.data.bien?.nombre_padre
+                        //     : '',
                         rules: {
                           required_rule: {
                             rule: false,

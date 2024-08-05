@@ -1,8 +1,8 @@
-import { Grid, } from '@mui/material';
+import { Chip, Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
-import { get_cv_vehicle_id, get_vehicles_all_service } from '../store/thunks/cvVehiclesThunks';
+import { get_cv_vehicle_arrendado_id, get_cv_vehicle_id, get_vehicles_all_service } from '../store/thunks/cvVehiclesThunks';
 import { set_current_cv_vehicle, set_current_vehicles, set_vehicles } from '../store/slices/indexCvVehiculo';
 import type { IVehicles } from '../interfaces/CvVehiculo';
 import { useForm } from 'react-hook-form';
@@ -26,6 +26,9 @@ const SeleccionarVehiculo = () => {
         if (current_vehicle.id_bien !== null) {
             void dispatch(get_cv_vehicle_id(current_vehicle.id_bien))
         }
+        if (current_vehicle?.id_vehiculo_arrendado) {
+            void dispatch(get_cv_vehicle_arrendado_id(current_vehicle.id_vehiculo_arrendado))
+        }
 
     }, [current_vehicle]);
 
@@ -37,7 +40,7 @@ const SeleccionarVehiculo = () => {
             width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.value ? params.value : 'N/A'}
                 </div>
             ),
 
@@ -55,11 +58,11 @@ const SeleccionarVehiculo = () => {
         },
         {
             field: 'cod_tipo_activo',
-            headerName: 'Tipo de bien',
+            headerName: 'Tipo Activo',
             width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.cod_tipo_activo == 'Veh' ? 'Vehículo' : 'N/A'}
                 </div>
             ),
 
@@ -77,7 +80,7 @@ const SeleccionarVehiculo = () => {
         },
         {
             field: 'doc_identificador_nro',
-            headerName: 'Placa serial',
+            headerName: 'Placa',
             width: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
@@ -85,6 +88,18 @@ const SeleccionarVehiculo = () => {
                 </div>
             ),
 
+        },
+        {
+            field: 'tiene_hoja_vida',
+            headerName: 'Tiene hoja de vida',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => {
+                return params.row.tiene_hoja_vida === true ? (
+                    <Chip size="small" label="SI" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="NO" color="error" variant="outlined" />
+                );
+            },
         },
         {
             field: 'estado',
@@ -119,18 +134,44 @@ const SeleccionarVehiculo = () => {
             ),
 
         },
+        {
+            field: 'id_vehiculo_arrendado',
+            headerName: '¿Es arrendado?',
+            width: 140, flex: 1,
+            renderCell: (params) => {
+                return params.row.id_vehiculo_arrendado ? (
+                    <Chip size="small" label="SI" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="NO" color="error" variant="outlined" />
+                );
+            },
+
+        },
 
     ];
-    const filter_vehicle: any = (async () => {
-        void dispatch(get_vehicles_all_service())
-    })
+    const filter_vehicle = async () => {
+        const placa_serial = get_values("doc_identificador_nro");
+        const nombre = get_values("nombre");
+        void dispatch(get_vehicles_all_service(placa_serial, nombre))
+    }
 
 
     const search_vehicle: any = (async () => {
+        const placa_serial = get_values("doc_identificador_nro");
+        const nombre = get_values("nombre");
+        console.log(placa_serial, nombre);
         const cv_vehicle = get_values("id_bien")
         if (cv_vehicle !== null) {
-            void dispatch(get_vehicles_all_service())
+            void dispatch(get_vehicles_all_service(placa_serial, nombre))
         }
+    })
+
+    const clear_fields: any = (async () => {
+        reset_vehicle({
+            doc_identificador_nro: "",
+            nombre: ""
+        });
+        filter_vehicle();
     })
 
 
@@ -155,22 +196,7 @@ const SeleccionarVehiculo = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
-                            control_form: control_vehicle,
-                            control_name: "codigo_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Código",
-                            type: "number",
-                            disabled: true,
-                            helper_text: "",
-                            on_blur_function: search_vehicle
-                        },
-
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
+                            md: 5,
                             control_form: control_vehicle,
                             control_name: "nombre",
                             default_value: "",
@@ -180,6 +206,19 @@ const SeleccionarVehiculo = () => {
                             disabled: true,
                             helper_text: ""
                         },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_vehicle,
+                            control_name: "doc_identificador_nro",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Placa",
+                            type: "text",
+                            disabled: true,
+                            helper_text: "",
+                        },
                     ]}
                     modal_select_model_title='Buscar Vehículos'
                     modal_form_filters={[
@@ -188,15 +227,28 @@ const SeleccionarVehiculo = () => {
                             xs: 12,
                             md: 2,
                             control_form: control_vehicle,
-                            control_name: "codigo_bien",
+                            control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Código",
-                            type: "number",
+                            label: "Placa",
+                            type: "text",
                             disabled: false,
                             helper_text: "",
-                        }
-                    ]} get_filters_models={filter_vehicle} />
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 4,
+                            control_form: control_vehicle,
+                            control_name: "nombre",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Nombre",
+                            type: "text",
+                            disabled: false,
+                            helper_text: ""
+                        },
+                    ]} get_filters_models={filter_vehicle} clear_fields={clear_fields}/>
             </Grid>
         </>
     );

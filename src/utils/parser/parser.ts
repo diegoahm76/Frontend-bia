@@ -1,27 +1,19 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 export class Parser {
   parse(str: string): Record<any, any> {
+    if (!str) return {};
+
     const delimiters = '|,';
     const objeto: Record<string, any> = {};
-    // eslint-disable-next-line no-useless-catch
-    try {
-      if (str === null) return objeto;
 
-      str.split(new RegExp(`[${delimiters}]`, 'g')).forEach((dato) => {
-        try {
-          const [llave, valor] = dato.split(':');
-          objeto[llave] = valor;
-        } catch (error) {
-          if (error instanceof SyntaxError) {
-            throw new Error('Formato de cadena inválido');
-          } else if (error instanceof TypeError) {
-            throw new Error('Valor inválido para la llave ' + dato);
-          }
-        }
-      });
-    } catch (error) {
-      throw error;
-    }
+    str.split(new RegExp(`[${delimiters}]`, 'g')).forEach((dato) => {
+      const [llave, valor] = dato.split(':');
+      if (!llave || !valor) {
+        console.error('Formato de cadena inválido o valor inválido para la llave:', dato);
+        return;
+      }
+      objeto[llave] = valor;
+    });
 
     return {
       objeto,
@@ -31,9 +23,9 @@ export class Parser {
   }
 
   formatStringWithSpaces(str: string): string {
-    const formatted_words = str
+    return str
       .split('_')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1));
-    return formatted_words.join(' ');
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
   }
 }

@@ -1,6 +1,9 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-misused-promises */
 import { Grid, TextField, Box, Button, Stack, InputLabel, FormControl, Select, MenuItem, type SelectChangeEvent, FormHelperText, Fab, Tooltip, IconButton, Avatar } from "@mui/material";
 import { Title } from "../../../../../components/Title";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -13,6 +16,8 @@ import ArrowUpwardOutlinedIcon from '@mui/icons-material/ArrowUpwardOutlined';
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
 import SaveIcon from '@mui/icons-material/Save';
+import { ModalMetadatos } from "../Components/ModalDatosNuevos/ModalMetadatos";
+import { MetadatosContexIndexacionDocumentos } from "../Components/Context/MetadatosContexIndexacionDocumentos";
 
 interface IProps {
     expediente: any,
@@ -223,18 +228,21 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         obtener_tipo_documento_fc();
         obtener_tipos_recurso_fc();
     }, []);
-    
-    useEffect(() => {        
+
+    useEffect(() => {
         console.log(props.configuracion?.expediente);
-        if(props.configuracion !== null)
+        if (props.configuracion !== null)
             props.configuracion?.expediente.length > 0 ? set_anulado(props.configuracion?.expediente[0]?.anulado) : set_anulado(false);
     }, [props.configuracion]);
 
     useEffect(() => {
         if (props.serie !== "")
             obtener_tipologias_id_serie_fc();
-    }, [props.serie]);
-
+    }, [props, props.serie]);
+    useEffect(() => {
+        if (props.serie !== "")
+            obtener_tipologias_id_serie_fc();
+    }, [props]);
     useEffect(() => {
         if (palabras_clave !== "")
             set_lt_palabras_clave(palabras_clave.split(',', 5));
@@ -261,12 +269,12 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     const cambio_tipologia_doc: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
         set_tipologia_doc(e.target.value);
         set_error_tipologia_doc(!(e.target.value !== null && e.target.value !== ""));
-        if((e.target.value !== null && e.target.value !== "")){
-            const tipo = lt_tipologias.find((t: any)=> t.id_tipologia_documental === e.target.value);
+        if ((e.target.value !== null && e.target.value !== "")) {
+            const tipo = lt_tipologias.find((t: any) => t.id_tipologia_documental === e.target.value);
             dispatch(obtener_tipos_archivos_permitidos(tipo.cod_tipo_medio_doc)).then((response: any) => {
                 let tipos = '';
                 response.data.forEach((tipo_archivo: any) => {
-                    tipos =tipos+"."+tipo_archivo.nombre+',';
+                    tipos = tipos + "." + tipo_archivo.nombre + ',';
                 });
                 set_tipo_doc(tipos.slice(0, -1));
             })
@@ -339,6 +347,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         }
     };
 
+
+    const { formValues } = useContext(MetadatosContexIndexacionDocumentos);
+
     const agregar_archivos: any = () => {
         if (validar_formulario()) {
             let archivos_grid: any[] = [...archivos];
@@ -358,10 +369,23 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                 "asunto": asunto,
                 "descripcion": descripcion,
                 "orden_en_expediente": orden,
-                "palabras_clave_documento": palabras_clave
+                "palabras_clave_documento": palabras_clave,
+
+
+
+                "crear_obligacion": formValues.agregar_documento,
+                "id_rango": formValues.id_rango_edad,
+                "id_codigo_contable": formValues.id_codigo_contable,
+                "nombre": formValues.nombre,
+                "monto_inicial": formValues.valor,
+                "id_etapa": formValues.id_etapa,
+                "id_subestapa": formValues.subEtapas,
+                "tipo_cobro": formValues.id_tipo_atributo,
+                "id_tipo": formValues.tipoTexto
+
             }
             const tipologia = lt_tipologias.find((t: any) => t.id_tipologia_documental === parseInt(tipologia_doc)).nombre;
-            archivos_grid = [...archivos_grid, { orden_en_expediente: orden,nombre_asignado_documento:nombre_documento, archivo: archivo_principal, tipologia: tipologia, data_json: data_json, estado: anulado ? 'Anulado' : 'Activo' }];
+            archivos_grid = [...archivos_grid, { orden_en_expediente: orden, nombre_asignado_documento: nombre_documento, archivo: archivo_principal, tipologia: tipologia, data_json: data_json, estado: anulado ? 'Anulado' : 'Activo' }];
             set_archivos([...archivos_grid]);
             set_limpiar(true);
         }
@@ -383,7 +407,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
         let archivos_grid: any[] = [...archivos].slice();
         const contador_archivos = archivos_grid.length;
         const nueva_posicion = archivo.orden_en_expediente;
-        if (contador_archivos > 2 && (nueva_posicion-1) !== 1) {
+        if (contador_archivos > 2 && (nueva_posicion - 1) !== 1) {
             archivos_grid[nueva_posicion - 1].orden_en_expediente = nueva_posicion - 1;
             archivos_grid[nueva_posicion - 2].orden_en_expediente = nueva_posicion;
             archivos_grid = [...archivos_grid.sort((a, b) => a.orden_en_expediente - b.orden_en_expediente)];
@@ -393,28 +417,29 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     }
     const seleccionar_archivos: any = (archivo: any) => {
         props.set_id_documento_seleccionado(archivo.id_documento_de_archivo_exped);
-        dispatch(obtener_documento_id(archivo.id_documento_de_archivo_exped)).then((response: any) => {
-            if(response.succes){
-                set_fecha_incorporacion_exp(dayjs(response.data.fecha_incorporacion_doc_a_Exp));
-                set_fecha_creacion_doc(dayjs(response.data.fecha_creacion_doc));
-                set_tipologia_doc(response.data.id_tipologia_documental);
-                set_nro_folio(response.data.nro_folios_del_doc);
-                set_tiene_consecutivo(response.data.tiene_consecutivo_documento ? 'S' : 'N');
-                set_tipo_archivo(response.data.cod_origen_archivo);
-                set_prefijo(response.data.codigo_radicado_prefijo);
-                set_año_doc(dayjs(response.data.codigo_radicado_agno));
-                set_consecutivo(response.data.codigo_radicado_consecutivo);
-                set_tipo_recurso(response.data.cod_categoria_archivo);
-                set_tiene_replica(response.data.tiene_replica_fisica ? 'S':'N');
-                set_nombre_documento(response.data.nombre_asignado_documento);
-                set_asunto(response.data.asunto);
-                set_descripcion(response.data.descripcion);
-                set_palabras_clave(response.data.palabras_clave_documento);
-                set_creado_automaticamente(response.data.creado_automaticamente);
-            }else{
+        dispatch(
+            (archivo.id_documento_de_archivo_exped)).then((response: any) => {
+                if (response.succes) {
+                    set_fecha_incorporacion_exp(dayjs(response.data.fecha_incorporacion_doc_a_Exp));
+                    set_fecha_creacion_doc(dayjs(response.data.fecha_creacion_doc));
+                    set_tipologia_doc(response.data.id_tipologia_documental);
+                    set_nro_folio(response.data.nro_folios_del_doc);
+                    set_tiene_consecutivo(response.data.tiene_consecutivo_documento ? 'S' : 'N');
+                    set_tipo_archivo(response.data.cod_origen_archivo);
+                    set_prefijo(response.data.codigo_radicado_prefijo);
+                    set_año_doc(dayjs(response.data.codigo_radicado_agno));
+                    set_consecutivo(response.data.codigo_radicado_consecutivo);
+                    set_tipo_recurso(response.data.cod_categoria_archivo);
+                    set_tiene_replica(response.data.tiene_replica_fisica ? 'S' : 'N');
+                    set_nombre_documento(response.data.nombre_asignado_documento);
+                    set_asunto(response.data.asunto);
+                    set_descripcion(response.data.descripcion);
+                    set_palabras_clave(response.data.palabras_clave_documento);
+                    set_creado_automaticamente(response.data.creado_automaticamente);
+                } else {
 
-            }
-        });
+                }
+            });
     }
     const actualizar_documentos: any = (archivo: any) => {
         if (validar_formulario()) {
@@ -432,7 +457,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                 "palabras_clave_documento": palabras_clave
             };
             dispatch(actualizar_documento(archivo.id_documento_de_archivo_exped, data_json)).then((response: any) => {
-                if(response.success)
+                if (response.success)
                     set_limpiar(true);
             });;
         }
@@ -477,8 +502,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
     }, [archivos]);
 
     useEffect(() => {
-        if(props.expediente !== null && props.expediente !== undefined){
-            if(props.expediente){
+        if (props.expediente !== null && props.expediente !== undefined) {
+            if (props.expediente) {
                 props.expediente.documentos_agregados.map((doc: any) => { doc.estado = anulado ? 'Anulado' : 'Activo'; });
                 set_archivos(props.expediente.documentos_agregados);
                 set_actualizar(props.expediente.documentos_agregados.length > 0);
@@ -513,7 +538,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
 
     return (
         <>
-            {props.expediente !== null && <Grid item md={12} xs={12}>
+            {/*{props.expediente !== null &&*/} <Grid item md={12} xs={12}>
                 <Title title="Archivado de documento" />
                 <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
                     <Grid item container spacing={2}>
@@ -523,7 +548,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     label="Fecha de incorporación al expediente"
                                     value={fecha_incorporacion_exp}
                                     onChange={(newValue) => { cambio_fecha_incorporacion_exp(newValue) }}
-                                    readOnly={creado_automaticamente}
+                                    // readOnly={creado_automaticamente}
                                     inputFormat='DD/MM/YYYY'
                                     disabled={anulado}
                                     renderInput={(params) => (
@@ -545,7 +570,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     label="Fecha de creación documento"
                                     value={fecha_creacion_doc}
                                     onChange={(newValue) => { cambio_fecha_creacion_doc(newValue) }}
-                                    readOnly={creado_automaticamente}
+                                    //readOnly={creado_automaticamente}
                                     inputFormat='DD/MM/YYYY'
                                     disabled={anulado}
                                     renderInput={(params) => (
@@ -568,8 +593,8 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     label="Tipología documental"
                                     value={tipologia_doc ?? ""}
                                     onChange={cambio_tipologia_doc}
-                                    readOnly={actualizar}
-                                    disabled={anulado}
+                                    // readOnly={actualizar}
+                                    // disabled={anulado}
                                     error={error_tipologia_doc}
                                 >
                                     {lt_tipologias.map((m: any) => (
@@ -588,9 +613,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 required
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 onChange={cambio_nro_folio}
                                 value={nro_folio}
@@ -624,7 +649,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={tipo_archivo ?? ""}
                                     onChange={cambio_tipo_archivo}
                                     disabled={anulado}
-                                    readOnly={creado_automaticamente}
+                                    // readOnly={creado_automaticamente}
                                     error={error_tipo_archivo}
                                 >
                                     {lt_tipo_archivo.map((m: any) => (
@@ -642,9 +667,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: actualizar,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={prefijo}
                                 onChange={cambio_prefijo}
@@ -657,7 +682,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     views={['year']}
                                     value={año_doc}
                                     onChange={(newValue) => { cambio_año_doc(newValue) }}
-                                    readOnly={actualizar}
+                                    //readOnly={actualizar}
                                     disabled={anulado}
                                     renderInput={(params) => (
                                         <TextField
@@ -678,9 +703,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: actualizar,
-                                }}
+                                }}*/
                                 required
                                 fullWidth
                                 value={consecutivo}
@@ -697,7 +722,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={tipo_recurso ?? ""}
                                     onChange={cambio_tipo_recurso}
                                     disabled={anulado}
-                                    readOnly={creado_automaticamente}
+                                    //readOnly={creado_automaticamente}
                                     error={error_tipo_recurso}
                                 >
                                     {lt_tipo_recurso.map((m: any) => (
@@ -717,7 +742,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     value={tiene_replica ?? ""}
                                     onChange={cambio_tiene_replica}
                                     disabled={anulado}
-                                    readOnly={creado_automaticamente}
+                                    //readOnly={creado_automaticamente}
                                     error={error_tiene_replica}
                                 >
                                     {lt_si_no.map((m: any) => (
@@ -735,9 +760,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={nombre_documento}
                                 required
@@ -753,9 +778,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 size="small"
                                 required
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={asunto}
                                 onChange={cambio_asunto}
@@ -771,14 +796,17 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 type={'text'}
                                 size="small"
                                 disabled={anulado}
-                                InputProps={{
+                                /*InputProps={{
                                     readOnly: creado_automaticamente,
-                                }}
+                                }}*/
                                 fullWidth
                                 value={descripcion}
                                 onChange={cambio_descripcion}
                             />
                         </Grid>
+                        
+                        <ModalMetadatos />
+
                         <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
@@ -792,17 +820,23 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                         fullWidth
                                         value={palabras_clave}
                                         onChange={cambio_palabras_clave}
-                                    disabled={anulado}
-                                    InputLabelProps={{
+                                        disabled={anulado}
+                                        InputLabelProps={{
                                             shrink: true
                                         }}
-                                        InputProps={{
-                                            readOnly: creado_automaticamente,
-                                        }}
+                                    /*InputProps={{
+                                        readOnly: creado_automaticamente,
+                                    }}*/
                                     />
                                 </Grid>
                             </Stack>
                         </Grid>
+
+
+
+
+
+
                         <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
@@ -817,7 +851,7 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                 </Grid>
                             </Stack>
                         </Grid>
-                        {(!actualizar && !anulado) && <Grid item xs={12} sm={12}>
+                        {/*{(!actualizar && !anulado) &&*/} <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -843,8 +877,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     </Button>
                                 </Grid>
                             </Stack>
-                        </Grid>}
-                        {(!actualizar && !anulado) && <Grid item xs={12} sm={12}>
+                        </Grid>
+                        { /*  } */}
+                        {/*{(!actualizar && !anulado) &&*/} <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
                                 justifyContent="center"
@@ -862,7 +897,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                                     </Button>
                                 </Grid>
                             </Stack>
-                        </Grid>}
+                        </Grid>
+
+                        { /* } */}
                         {archivos.length !== 0 && <Grid item xs={12} sm={12}>
                             <Stack
                                 direction="row"
@@ -886,7 +923,9 @@ export const ArchivoDocumento: React.FC<IProps> = (props: IProps) => {
                         </Grid>}
                     </Grid>
                 </Box>
-            </Grid>}
+            </Grid>
+
+            { /* } */}
         </>
     )
 }

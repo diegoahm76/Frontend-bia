@@ -25,6 +25,7 @@ import BoyIcon from '@mui/icons-material/Boy';
 import EmojiTransportationIcon from '@mui/icons-material/EmojiTransportation';
 import { useAppSelector } from '../../../../hooks';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 export const DialogEntornoApp: React.FC = () => {
   //* redux states
@@ -128,8 +129,8 @@ export const DialogEntornoApp: React.FC = () => {
           </ListItem>
         )}
 
-        {options.map((option) => (
-          <>
+        {options.map((option, index) => (
+          <React.Fragment key={index}>
             {option.label !== 'En representación de una empresa' &&
               option.label !== 'En representación de una persona' && (
                 <ListItem key={option.label} disableGutters alignItems="center">
@@ -203,7 +204,7 @@ export const DialogEntornoApp: React.FC = () => {
                   </ListItemButton>
                 </ListItem>
               )}
-          </>
+          </React.Fragment>
         ))}
       </List>
     </Dialog>

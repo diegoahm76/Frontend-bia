@@ -7,6 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
   Grid,
+  MenuItem,
   Stack,
   TextField,
 } from '@mui/material';
@@ -19,7 +20,7 @@ import { useAppDispatch } from '../../../../../../../hooks';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
-import { get_programmed_maintenance } from './thunks/maintenanceThunks';
+import { get_programmed_maintenance, get_veh_programmed_maintenance } from './thunks/maintenanceThunks';
 import { get_cv_vehicle_service } from '../../../hojaDeVidaVehiculo/store/thunks/cvVehiclesThunks';
 import { get_cv_computer_service } from '../../../hojaDeVidaComputo/store/thunks/cvComputoThunks';
 import { get_cv_others_service } from '../../../hojaDeVidaOtrosActivos/store/thunks/cvOtrosActivosThunks';
@@ -44,15 +45,30 @@ const BuscarProgramacionComponent = ({
   const dispatch = useAppDispatch();
   const [codigo, set_codigo] = useState<string>('');
   const [grid_busqueda, set_grid_busqueda] = useState<any[]>([]);
-  const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
+  // const [grid_busqueda_before, set_grid_busqueda_before] = useState<any[]>([]);
   const [selected_product, set_selected_product] = useState<any | null>(null);
+
   const [articulo, set_articulo] = useState<any | null>(null);
+
+  const [tipo_filtro, set_tipo_filtro] = useState<string>('F');
   const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
   const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
+  const [km_desde, set_km_desde] = useState<string | null>(null);
+  const [km_hasta, set_km_hasta] = useState<string | null>(null);
+  const [doc_identificador_nro, set_doc_identificador_nro] = useState<string | null>(null);
 
   const on_change_codigo: any = (e: React.ChangeEvent<HTMLInputElement>) => {
     set_codigo(e.target.value);
   };
+
+  const handle_change_filtro = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_fecha_desde(null);
+    set_fecha_hasta(null);
+    set_km_desde(null);
+    set_km_hasta(null);
+    set_doc_identificador_nro(null);
+    set_tipo_filtro(e.target.value);
+  }
 
   const handle_change_fecha_desde = (date: Date | null): void => {
     set_fecha_desde(date);
@@ -62,51 +78,79 @@ const BuscarProgramacionComponent = ({
     set_fecha_hasta(date);
   };
 
+  const handle_change_km_desde = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_km_desde(e.target.value);
+  }
+
+  const handle_change_km_hasta = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    set_km_hasta(e.target.value);
+  }
+
+  const on_change_doc_id: any = (e: React.ChangeEvent<HTMLInputElement>) => {
+    set_doc_identificador_nro(e.target.value);
+  }
+
   const accionar_busqueda: any = () => {
     if (tipo_articulo === 'vehículos') {
       dispatch(
-        get_programmed_maintenance(
-          dayjs(fecha_desde).format('DD-MM-YYYY'),
-          dayjs(fecha_hasta).format('DD-MM-YYYY'),
-          'Veh'
+        get_veh_programmed_maintenance(
+          tipo_filtro,
+          fecha_desde ? dayjs(fecha_desde).format('DD-MM-YYYY') : '',
+          fecha_hasta ? dayjs(fecha_hasta).format('DD-MM-YYYY') : '',
+          km_desde,
+          km_hasta,
+          doc_identificador_nro,
         )
+        // get_programmed_maintenance(
+        //   dayjs(fecha_desde).format('DD-MM-YYYY'),
+        //   dayjs(fecha_hasta).format('DD-MM-YYYY'),
+        //   'Veh'
+        // )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
-        set_grid_busqueda_before([...response.detail]);
+        // set_grid_busqueda_before([...response.detail]);
       });
     } else if (tipo_articulo === 'computadores') {
       dispatch(
         get_programmed_maintenance(
           dayjs(fecha_desde).format('DD-MM-YYYY'),
           dayjs(fecha_hasta).format('DD-MM-YYYY'),
-          'Com'
+          'Com',
+          doc_identificador_nro
         )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
-        set_grid_busqueda_before([...response.detail]);
+        // set_grid_busqueda_before([...response.detail]);
       });
     } else {
       dispatch(
         get_programmed_maintenance(
           dayjs(fecha_desde).format('DD-MM-YYYY'),
           dayjs(fecha_hasta).format('DD-MM-YYYY'),
-          'OAc'
+          'OAc',
+          doc_identificador_nro
         )
       ).then((response: any) => {
         set_grid_busqueda(response.detail);
-        set_grid_busqueda_before([...response.detail]);
+        // set_grid_busqueda_before([...response.detail]);
       });
     }
     //  console.log('')(grid_busqueda_before);
   };
 
   const selected_product_grid: any = () => {
+    console.log(selected_product);
     if (selected_product !== null) {
       if (tipo_articulo === 'vehículos') {
         dispatch(get_cv_vehicle_service(selected_product.articulo)).then(
           (response: any) => {
             set_articulo(response.data);
-            parent_details(response.data);
+            console.log(response);
+            if(response?.data){
+              parent_details(response.data);
+            }else{
+              parent_details(selected_product)
+            }
           }
         );
       } else if (tipo_articulo === 'computadores') {
@@ -129,9 +173,9 @@ const BuscarProgramacionComponent = ({
     }
   };
 
-  useEffect(() => {
-    parent_details(articulo);
-  }, [articulo, parent_details]);
+  // useEffect(() => {
+  //   parent_details(articulo);
+  // }, [articulo, parent_details]);
 
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
@@ -156,7 +200,7 @@ const BuscarProgramacionComponent = ({
             autoComplete="off"
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={3}>
+              {/* <Grid item xs={12} sm={3}>
                 <TextField
                   label="Código"
                   helperText="Ingrese código"
@@ -165,49 +209,150 @@ const BuscarProgramacionComponent = ({
                   value={codigo}
                   onChange={on_change_codigo}
                 />
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Fecha desde"
-                    value={fecha_desde}
-                    onChange={(newValue) => {
-                      handle_change_fecha_desde(newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField required fullWidth size="small" {...params} />
-                    )}
-                    maxDate={fecha_hasta}
-                  />
-                </LocalizationProvider>
-              </Grid>
-              <Grid item xs={12} sm={3}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DatePicker
-                    label="Fecha hasta"
-                    value={fecha_hasta}
-                    onChange={(newValue) => {
-                      handle_change_fecha_hasta(newValue);
-                    }}
-                    renderInput={(params) => (
-                      <TextField required fullWidth size="small" {...params} />
-                    )}
-                    minDate={fecha_desde}
-                    disabled={fecha_desde == null}
-                  />
-                </LocalizationProvider>
-              </Grid>
+              </Grid> */}
+              {tipo_articulo === 'vehículos' && <Grid item xs={12} sm={2}>
+                <TextField
+                  select
+                  label="Tipo de filtro"
+                  helperText="Seleccione un tipo de filtro"
+                  size="small"
+                  fullWidth
+                  value={tipo_filtro}
+                  onChange={handle_change_filtro}
+                >
+                  <MenuItem value=""><em>Selecciona una opción</em></MenuItem>
+                  <MenuItem value="F">Fecha</MenuItem>
+                  <MenuItem value="K">Kilometraje</MenuItem>
+                </TextField>
+              </Grid>}
+              {tipo_articulo === 'vehículos' && tipo_filtro == 'F' &&
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha desde"
+                        value={fecha_desde}
+                        onChange={(newValue) => {
+                          handle_change_fecha_desde(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        maxDate={fecha_hasta}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha hasta"
+                        value={fecha_hasta}
+                        onChange={(newValue) => {
+                          handle_change_fecha_hasta(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        minDate={fecha_desde}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                </>
+              }
+              {tipo_articulo !== 'vehículos' &&
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha desde"
+                        value={fecha_desde}
+                        onChange={(newValue) => {
+                          handle_change_fecha_desde(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        maxDate={fecha_hasta}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="Fecha hasta"
+                        value={fecha_hasta}
+                        onChange={(newValue) => {
+                          handle_change_fecha_hasta(newValue);
+                        }}
+                        renderInput={(params) => (
+                          <TextField required fullWidth size="small" {...params} />
+                        )}
+                        minDate={fecha_desde}
+                      />
+                    </LocalizationProvider>
+                  </Grid>
+                </>
+              }
+              {tipo_filtro == 'K' &&
+                <>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      label="Kilometraje desde"
+                      helperText="Ingrese kilómetros"
+                      size="small"
+                      fullWidth
+                      value={km_desde}
+                      onChange={handle_change_km_desde}
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={3}>
+                    <TextField
+                      label="Kilometraje hasta"
+                      helperText="Ingrese kilómetros"
+                      size="small"
+                      fullWidth
+                      value={km_hasta}
+                      onChange={handle_change_km_hasta}
+                    />
+                  </Grid>
+                </>
+              }
+              {tipo_articulo === 'vehículos' && <Grid item xs={12} sm={2}>
+                <TextField
+                  label="Placa"
+                  helperText="Ingrese placa"
+                  size="small"
+                  fullWidth
+                  value={doc_identificador_nro}
+                  onChange={on_change_doc_id}
+                />
+              </Grid>}
+              {tipo_articulo !== 'vehículos' && <Grid item xs={12} sm={2}>
+                <TextField
+                  label="Serial"
+                  helperText="Ingrese serial"
+                  size="small"
+                  fullWidth
+                  value={doc_identificador_nro}
+                  onChange={on_change_doc_id}
+                />
+              </Grid>}
               <Stack
                 direction="row"
-                justifyContent="flex-end"
                 sx={{ mt: '17px' }}
               >
-                <Grid item xs={12} sm={3}>
+                <Grid item sx={{ml: '1rem'}}>
                   <Button
                     color="primary"
                     variant="contained"
                     startIcon={<SearchIcon />}
                     onClick={accionar_busqueda}
+                    disabled={
+                      !tipo_filtro ||
+                      (tipo_articulo !== 'vehículos' && (!fecha_desde || !fecha_hasta)) ||
+                      (tipo_articulo === 'vehículos' && tipo_filtro === 'F' && (!fecha_desde !== !fecha_hasta)) ||
+                      (tipo_articulo === 'vehículos' && tipo_filtro === 'K' && (!km_desde !== !km_hasta))
+                    }
                   >
                     Buscar
                   </Button>
@@ -245,19 +390,56 @@ const BuscarProgramacionComponent = ({
                       dataKey="id_programacion_mantenimiento"
                     >
                       <Column
-                        field="articulo"
-                        header="Artículo"
+                        field="placa"
+                        header={tipo_articulo === 'vehículos' ? 'Placa' : 'Serial'}
                         style={{ width: '20%' }}
+                        body={(rowData) => <div>{rowData.placa.toUpperCase()}</div>}
                       ></Column>
                       <Column
                         field="tipo_descripcion"
                         header="Tipo mantenimiento"
-                        style={{ width: '40%' }}
+                        style={{ width: '30%' }}
                       ></Column>
                       <Column
                         field="fecha"
                         header="Fecha programado"
-                        style={{ width: '40%' }}
+                        style={{ width: '30%' }}
+                        body={(rowData) => <div>{rowData?.fecha || 'N/A'}</div>}
+                      ></Column>
+                      <Column
+                        field="fecha_solicitud"
+                        header="Fecha solicitud"
+                        style={{ width: '30%' }}
+                        body={(rowData) => <div>{rowData?.fecha_solicitud || 'N/A'}</div>}
+                      ></Column>
+                      {tipo_articulo === 'vehículos' && <Column
+                        field="kilometraje_programado"
+                        header="Kilometraje programado"
+                        style={{ width: '30%' }}
+                        body={(rowData) => <div>{rowData?.kilometraje_programado || 'N/A'}</div>}
+                      ></Column>}
+                      <Column
+                        field="marca"
+                        header="Marca"
+                        style={{ width: '20%' }}
+                        body={(rowData) => <div>{rowData.marca || 'Sin Marca'}</div>}
+                      ></Column>
+                      <Column
+                        field="motivo"
+                        header="Motivo"
+                        style={{ width: '60%' }}
+                        body={(rowData) => <div>{rowData.motivo || 'N/A'}</div>}
+                      ></Column>
+                      <Column
+                        field="responsable"
+                        header="Responsable"
+                        style={{ width: '20%' }}
+                        body={(rowData) => <div>{rowData.responsable || 'N/A'}</div>}
+                      ></Column>
+                      <Column
+                        field="estado"
+                        header="Estado"
+                        style={{ width: '20%' }}
                       ></Column>
                     </DataTable>
                   </div>

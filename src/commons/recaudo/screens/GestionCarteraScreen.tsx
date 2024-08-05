@@ -25,6 +25,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SettingsInputAntennaIcon from '@mui/icons-material/SettingsInputAntenna';
 import { showAlert } from '../../../utils/showAlert/ShowAlert';
+import dayjs from 'dayjs';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const GestionCarteraScreen: React.FC = () => {
@@ -75,7 +76,12 @@ export const GestionCarteraScreen: React.FC = () => {
   const [filtered_identificacion, set_filtered_identificacion] = useState<string>('');
   const [datos, set_datos] = useState<string>('');
 
+  useEffect(() => {
+    console.log(carteras)
+  },[carteras])
+
   const columns_carteras: GridColDef[] = [
+   
     {
       field: 'id',
       headerName: 'ID Cartera',
@@ -92,7 +98,7 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'Resolucion ',
+      field: 'num_resolucion',
       headerName: 'Resolucion   ',
       minWidth: 200,
       flex: 1,
@@ -101,16 +107,16 @@ export const GestionCarteraScreen: React.FC = () => {
       }
     },
     {
-      field: 'Periodo ',
+      field: 'Periodo',
       headerName: 'Periodo   ',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Periodo';
-      }
+      renderCell: (params) => (
+        dayjs(params.row.fecha_facturacion ?? null).month() + 1 <= 6 ? 'Primer periodo' : 'Segundo Periodo'
+      )
     },
     {
-      field: 'Expediente ',
+      field: 'expediente',
       headerName: 'Expediente   ',
       minWidth: 200,
       flex: 1,
@@ -120,43 +126,61 @@ export const GestionCarteraScreen: React.FC = () => {
     },
     {
       field: 'Descuento ',
-      headerName: 'Descuento   ',
+      headerName: 'Descuento',
       minWidth: 200,
       flex: 1,
       valueGetter: (params) => {
-        return params.value ?? 'Sin tipo renta';
+        return params.value ?? 'Sin Descuento';
       }
     },
     {
-      field: 'id_deudor',
-      headerName: 'Nit Deudor',
+      field: 'nombre_deudor',
+      headerName: 'Nombre Deudor',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        if (!params.value) {
-          return params.value;
-        }
-        return params.value.identificacion;
-      }
     },
     {
-      field: 'nombres_deudor',
-      headerName: 'Nombres Deudor',
+      field: 'identificacion',
+      headerName: 'identificacion',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        return params.row.id_deudor.nombres;
-      }
     },
     {
-      field: 'apellidos_deudor',
-      headerName: 'Apellidos Deudor',
+      field: 'tipo_cobro',
+      headerName: 'Tipo Cobro',
       minWidth: 200,
       flex: 1,
-      valueGetter: (params) => {
-        return params.row.id_deudor.apellidos;
-      }
     },
+    // {
+    //   field: 'id_deudor',
+    //   headerName: 'Nit Deudor',
+    //   minWidth: 200,
+    //   flex: 1,
+    //   valueGetter: (params) => {
+    //     if (!params.value) {
+    //       return params.value;
+    //     }
+    //     return params.value.identificacion;
+    //   }
+    // },
+    // {
+    //   field: 'nombres_deudor',
+    //   headerName: 'Nombres Deudor',
+    //   minWidth: 200,
+    //   flex: 1,
+    //   valueGetter: (params) => {
+    //     return params.row.id_deudor.nombres;
+    //   }
+    // },
+    // {
+    //   field: 'apellidos_deudor',
+    //   headerName: 'Apellidos Deudor',
+    //   minWidth: 200,
+    //   flex: 1,
+    //   valueGetter: (params) => {
+    //     return params.row.id_deudor.apellidos;
+    //   }
+    // },
     {
       field: 'fecha_facturacion',
       headerName: 'Fecha factura',
@@ -631,16 +655,31 @@ export const GestionCarteraScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
   };
-
+  
   const get_rango_color = (id_cartera: number, dias_mora: number): JSX.Element => {
-    const color = carteras.filter(cartera => cartera.id === id_cartera)[0]?.id_rango.color;
-
-    if (color) {
-      return <Chip size="small" label={dias_mora} color={color} variant="outlined" />;
+    
+    // Asigna un color predeterminado si los datos son nulos
+    const colorPredeterminado = 'grey';
+    
+    // Determina el color basado en el valor de dias_mora
+    let color = colorPredeterminado;
+  
+    if (dias_mora < 0) {
+      color = 'orange'; // negativa
+    } else if (dias_mora >= 0 && dias_mora <= 180) {
+      color = 'green'; // 0 - 180
+    } else if (dias_mora >= 181 && dias_mora <= 360) {
+      color = 'yellow'; // 181 - 360
+    } else if (dias_mora > 360) {
+      color = 'red'; // 361 en adelante
     }
-
-    return <></>;
+  
+    // Devuelve el Chip con el color especificado
+    return <Chip size="small" label={dias_mora} style={{ backgroundColor: color }} variant="outlined" />;
   };
+  
+  
+  
 
   const filter_by_name = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -650,7 +689,8 @@ export const GestionCarteraScreen: React.FC = () => {
       });
     } else {
       api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}&identificacion=${filtered_identificacion}`)
-        .then((response) => {
+           //  recaudo/cobros/filtrar-carteras/?nombres=Daniel&apellidos=Muñoz&identificacion=8
+      .then((response) => {
           if ((response.data.data as Cartera[]).length > 0) {
             set_carteras(response.data.data);
           } else {
@@ -726,6 +766,7 @@ export const GestionCarteraScreen: React.FC = () => {
     setLoading(true);
     unifiedSearchSubmit();
     fetchHistorico();
+
   }
 
 
@@ -736,6 +777,7 @@ export const GestionCarteraScreen: React.FC = () => {
         'info'
       );
   };
+
 
 
   const fetchHistorico = async (): Promise<void> => {
@@ -751,8 +793,45 @@ export const GestionCarteraScreen: React.FC = () => {
       setLoading(false)
 
       control_error(error.response.data.detail);
+    }finally{
+      actualizar_tablas_bia()
     }
   };
+
+  
+  const filter_by_name_tablas_verificadas = async () => {
+    
+    if (filtered_nombres === '' && filtered_apellidos === '' && filtered_identificacion === '') {
+      toast.info('Escriba por lo menos los nombres o apellidos o la identificación del deudor', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      });
+    } else {
+      try {
+        const response = await api.get(`recaudo/cobros/filtrar-carteras/?nombres=${filtered_nombres}&apellidos=${filtered_apellidos}&identificacion=${filtered_identificacion}`);
+        if ((response.data.data as Cartera[]).length > 0) {
+          set_carteras(response.data.data);
+        } else {
+          toast.warning(`No existe el deudor ${filtered_nombres} ${filtered_apellidos}`, {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const actualizar_tablas_bia = async (): Promise<void> => {
+    try {
+      const url = "/recaudo/cobros/carteras-tua/";
+      const res = await api.get(url);
+      control_success("Datos actualizados ");
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+    filter_by_name_tablas_verificadas()
+  };
+
 
   return (
     <>

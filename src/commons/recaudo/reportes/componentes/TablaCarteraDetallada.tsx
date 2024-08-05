@@ -60,7 +60,7 @@ export const TablaCarteraDetallada: React.FC = () => {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   /*  const fetchData = (page_number: number) => {
     // Realiza la solicitud HTTP utilizando la página especificada
-    fetch(`https://back-end-bia-beta.up.railway.app/api/recaudo/reportes/reporte-general-detallado/?page=${page_number + 1}`)
+    fetch(`https://bia-backend-beta-dev.up.railway.app/api/recaudo/reportes/reporte-general-detallado/?page=${page_number + 1}`)
       .then((response) => response.json())
       .then((responseData) => {
         // Extrae la propiedad "data" de la respuesta JSON

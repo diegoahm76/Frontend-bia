@@ -49,6 +49,7 @@ import { Article, SearchOutlined } from '@mui/icons-material';
 import { DocumentoPagoPersuasivo } from '../components/GestionCartera/DocumentoPagoPersuasivo';
 import { ProcesoPagoCoactivo } from '../components/GestionCartera/ProcesoPagoCoactivo';
 import { SeccionEnvio_MSM_CORREO_F } from '../components/GestionCartera/secciones-etapas/SeccionEnvio_MSM_CORREO';
+import { RenderDataGrid } from '../../gestorDocumental/tca/Atom/RenderDataGrid/RenderDataGrid';
 
 const detalles_ciclos: string[] = [
   'diario',
@@ -67,6 +68,36 @@ export interface Obligacion {
   valor_intereses: string;
   dias_mora: number;
   valor_capital_intereses: number;
+}
+interface LiquidacionResponse {
+  success: boolean;
+  detail: string;
+  data: {
+    rp: number;
+    limite_pago: string;
+    doc_cobro: string;
+    ley: string;
+    fecha_impresion: string;
+    anio: number;
+    cedula: string;
+    titular: string;
+    representante_legal: string;
+    direccion: string;
+    telefono: string;
+    expediente: string;
+    exp_resolucion: string;
+    nombre_fuente: string;
+    predio: string;
+    municipio: string;
+    caudal_consecionado: number;
+    uso: string;
+    fr: number;
+    tt: number;
+    numero_cuota: string;
+    valor_cuota: number;
+    codigo_barras: string;
+    factor_costo_oportunidad: number;
+  };
 }
 export interface ObligacionesUsuario {
   id_deudor: number;
@@ -128,6 +159,10 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 
+  const [lista_obligaciones, set_lista_obligaciones] = useState(
+    Array<Obligacion>
+  );
+
   const [nombre_deudor, set_nombre_deudor] = useState('');
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
     id_deudor: '',
@@ -164,8 +199,10 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [periodos, set_periodos] = useState<string[]>([]);
 
   //New States
-  const [cobro_persuasivo_active, set_cobro_persuasivo_active] = useState<boolean>(false);
-  const [cobro_coactivo_active, set_cobro_coactivo_active] = useState<boolean>(false);
+  const [cobro_persuasivo_active, set_cobro_persuasivo_active] =
+    useState<boolean>(false);
+  const [cobro_coactivo_active, set_cobro_coactivo_active] =
+    useState<boolean>(false);
 
   useEffect(() => {
     api
@@ -186,6 +223,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       api
         .get(
           `recaudo/liquidaciones/expedientes-deudor/get/${form_liquidacion.id_deudor}/`
+          //  recaudo/liquidaciones/expedientes-deudor/get/
         )
         .then((response) => {
           set_expedientes_deudor(response.data.data);
@@ -472,6 +510,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     event: SelectChangeEvent
   ) => void = (event: SelectChangeEvent) => {
     const { name, value } = event.target;
+    console.log(name, value);
     set_form_liquidacion((prevDetalles) => ({
       ...prevDetalles,
       [name]: value,
@@ -563,7 +602,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_open_notification_modal(true);
       })
       .catch((error) => {
-        //  console.log('')(error);
         set_notification_info({ type: 'error', message: 'Hubo un error.' });
         set_open_notification_modal(true);
       });
@@ -571,39 +609,25 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
   const [obligaciones_module, set_obligaciones_module] = useState(false);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
+
   const { obligaciones } = useSelector(
     (state: RootStateObligaciones) => state.obligaciones
   );
 
+  const [id_cc, set_id_cc] = useState('');
+  const [tipo_renta, set_tipo_renta] = useState<string>('');
+
   const columns_deudores: GridColDef[] = [
-    // {
-    //   field: 'id',
-    //   headerName: 'ID',
-    //   minWidth: 110,
-    //   flex: 0.1,
-    // },
     {
       field: 'identificacion',
       headerName: 'Identificación',
-      minWidth: 150,
+      minWidth: 140,
       flex: 0.3,
-    },
-    {
-      field: 'nombres',
-      headerName: 'Nombres',
-      minWidth: 110,
-      flex: 0.1,
-    },
-    {
-      field: 'apellidos',
-      headerName: 'Apellidos',
-      minWidth: 110,
-      flex: 0.1,
     },
     {
       field: 'deudor',
       headerName: 'Deudor',
-      minWidth: 160,
+      minWidth: 150,
       flex: 1,
       valueGetter: (params) => {
         return `${(params.row.nombres as string) ?? ''} ${
@@ -612,42 +636,33 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
       },
     },
     {
-      field: 'Estado',
-      headerName: 'Estado',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin tipo estaddo';
-      },
+      field: 'fecha_nacimiento',
+      headerName: 'Fecha nacimiento',
+      minWidth: 150,
+      flex: 0.3,
+      valueFormatter: (params) =>
+        dayjs(params.value ?? null).isValid()
+          ? dayjs(params.value as string).format('DD/MM/YYYY')
+          : '',
     },
     {
-      field: 'Periodo',
-      headerName: 'Periodo',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Periodo  ';
-      },
+      field: 'telefono',
+      headerName: 'Telefono',
+      minWidth: 150,
+      flex: 0.3,
     },
     {
-      field: 'Tipo de cobro',
-      headerName: 'Tipo de cobro',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Tipo de cobro  ';
-      },
+      field: 'direccion',
+      headerName: 'Dirección',
+      minWidth: 320,
+      flex: 0.3,
     },
     {
-      field: 'Tipo de renta',
-      headerName: 'Tipo de renta',
-      minWidth: 210,
-      flex: 0.1,
-      valueGetter: (params) => {
-        return params.value ?? 'Sin Tipo de renta  ';
-      },
+      field: 'email',
+      headerName: 'Email',
+      minWidth: 260,
+      flex: 0.3,
     },
-
     {
       field: 'acciones',
       headerName: 'Acciones',
@@ -659,6 +674,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
             <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
+                  // set_tipo_renta()
+                  // set_id_cc(params.row.id_expediente)
                   set_form_liquidacion((previousData) => ({
                     ...previousData,
                     id_deudor: params.row.id,
@@ -763,8 +780,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [filtroNombres, setFiltroNombres] = useState('');
 
   const handleBuscar = () => {
-
-
     const deudoresFiltrados = deudores.filter(
       (deudor) =>
         deudor.identificacion.includes(filtroIdentificacion) &&
@@ -772,10 +787,6 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
     );
     set_deudores(deudoresFiltrados);
   };
-
-
-
-
 
   const handleClear = () => {
     setFiltroNombres('');
@@ -793,6 +804,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         set_loading(false);
       });
   };
+  const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(
+    null
+  );
 
   return (
     <>
@@ -807,6 +821,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
           boxShadow: '0px 3px 6px #042F4A26',
         }}
       >
+        {/* ccc
+        {id_cc} */}
         {/* <Button onClick={handle_open_buscar} fullWidth variant="outlined"    >
           Crear
         </Button> */}
@@ -824,6 +840,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         />
         <Grid item xs={12}>
           <Title title="Proceso de Liquidación"></Title>
+          {/* {form_liquidacion.id_deudor} */}
           <Box
             component="form"
             sx={{ mt: '20px' }}
@@ -835,8 +852,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 <TabList onChange={handle_position_tab_change}>
                   <Tab label="Deudores" value="1" />
                   <Tab label="Generar Liquidación" disabled value="2" />
-                  {cobro_persuasivo_active && <Tab label="Proceso cobro Persuasivo" value="3"/>}
-                  {cobro_coactivo_active && <Tab label="Proceso Cobro Coactivo" value="4"/>}
+                  {cobro_persuasivo_active && (
+                    <Tab label="Proceso cobro Persuasivo" value="3" />
+                  )}
+                  {cobro_coactivo_active && (
+                    <Tab label="Proceso Cobro Coactivo" value="4" />
+                  )}
                 </TabList>
               </Box>
 
@@ -891,8 +912,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
 
                 {/* DATAGRID LIQUIDACION */}
 
-                <Grid item marginTop={2} >
-                  <DataGrid
+                <Grid item marginTop={2}>
+                  <RenderDataGrid
+                    title="Deudores"
+                    columns={columns_deudores ?? []}
+                    rows={deudores ?? []}
+                  />
+                  {/* <DataGrid
                     density="compact"
                     autoHeight
                     rows={deudores}
@@ -911,7 +937,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                         },
                       },
                     }}
-                  />
+                  /> */}
                 </Grid>
 
                 {obligaciones_module ? (
@@ -932,8 +958,15 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                         {obligaciones.length !== 0 ? (
                           <>
                             <TablaObligacionesUsuarioConsulta
+                              id_cc={id_cc}
+                              set_id_cc={set_id_cc}
+                              set_tipo_renta={set_tipo_renta}
+                              lista_obligaciones={lista_obligaciones}
+                              set_lista_obligaciones={set_lista_obligaciones}
                               set_position_tab={set_position_tab}
-                              set_cobro_persuasivo_active={set_cobro_persuasivo_active}
+                              set_cobro_persuasivo_active={
+                                set_cobro_persuasivo_active
+                              }
                               is_modal_active={is_modal_activee}
                               set_is_modal_active={set_is_buscarr}
                               set_selectedIds={set_selectedIds}
@@ -952,6 +985,13 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               <TabPanel value="2" sx={{ p: '20px 0' }}>
                 {/* INPUTS EDITAR LIQUIDACION */}
                 <GenerarLiquidacion
+                  id_cc={id_cc}
+                  set_tipo_renta={set_tipo_renta}
+                  tipo_renta={tipo_renta}
+                  liquidacion={liquidacion}
+                  setLiquidacion={setLiquidacion}
+                  obligaciones={obligaciones}
+                  lista_obligaciones={lista_obligaciones}
                   set_form_liquidacion={set_form_liquidacion}
                   form_liquidacion={form_liquidacion}
                   nombre_deudor={nombre_deudor}
@@ -979,16 +1019,23 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                 />
               </TabPanel>
 
-              {cobro_persuasivo_active && <TabPanel value="3" sx={{ p: '20px 0' }}>
+              {cobro_persuasivo_active && (
+                <TabPanel value="3" sx={{ p: '20px 0' }}>
                   <DocumentoPagoPersuasivo
+                    id_cc={id_cc}
+                    set_cobro_coactivo_active={set_cobro_coactivo_active}
+                    set_position_tab_up={set_position_tab}
                     // datos={datos}
                   ></DocumentoPagoPersuasivo>
-              </TabPanel>}
-              {cobro_coactivo_active && <TabPanel value="4" sx={{ p: '20px 0' }}>
+                </TabPanel>
+              )}
+              {cobro_coactivo_active && (
+                <TabPanel value="4" sx={{ p: '20px 0' }}>
                   <ProcesoPagoCoactivo
-                    // datos={datos}
+                  // datos={datos}
                   ></ProcesoPagoCoactivo>
-              </TabPanel>}
+                </TabPanel>
+              )}
             </TabContext>
           </Box>
         </Grid>
@@ -1002,6 +1049,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
+            id_cc={id_cc}
+            set_tipo_renta={set_tipo_renta}
+            tipo_renta={tipo_renta}
+            liquidacion={liquidacion}
+            setLiquidacion={setLiquidacion}
+            obligaciones={obligaciones}
             form_liquidacion={form_liquidacion}
             rows_detalles={rows_detalles}
             estado_expediente={estado_expediente}

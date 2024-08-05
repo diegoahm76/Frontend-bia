@@ -27,6 +27,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import StepTwo from '../../../../gestorDocumental/PQRSDF/componentes/CrearPQRSDF/StepTwo';
 import { GridColDef } from '@mui/x-data-grid';
 import {
+  reset_state,
   set_acto_administrativo,
   set_actos_administrativos,
   set_expediente,
@@ -58,6 +59,7 @@ import DialogSearchModel from '../componentes/DialogSearchModel';
 import { get_document_types_service as get_dni_types } from '../../../../gestorDocumental/PQRSDF/store/thunks/pqrsdfThunks';
 import { IObjExhibit } from '../../../../gestorDocumental/PQRSDF/interfaces/pqrsdf';
 import { IObjTypeDocument } from '../interfaces/notificaciones';
+import Limpiar from '../../../../conservacion/componentes/Limpiar';
 // import SeleccionTipoPersona from '../componentes/SolicitudPQRSDF/SeleccionTipoPersona';
 // import EstadoPqrsdf from '../componentes/SolicitudPQRSDF/EstadoPqrsdf';
 // import ListadoPqrsdf from '../componentes/SolicitudPQRSDF/ListadoPqrsdf';
@@ -112,6 +114,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     handleSubmit: handle_submit_notificacion,
     reset: reset_notificacion,
     watch,
+    getValues: get_values,
   } = useForm<any>();
   const {
     control: control_expediente,
@@ -134,13 +137,21 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
     getValues: get_values_persona_solicita,
   } = useForm<any>();
   useEffect(() => {
+    void dispatch(get_tipos_documento_notification());
     void dispatch(get_trd_service());
     void dispatch(get_tipos_acto_administrativo_service());
     void dispatch(get_dni_types());
     void dispatch(get_document_types_service());
     void dispatch(get_subdirecciones_service());
-    void dispatch(get_tipos_documento_notification());
   }, []);
+  const initial_values = (): void => {
+    void dispatch(get_tipos_documento_notification());
+    void dispatch(get_trd_service());
+    void dispatch(get_tipos_acto_administrativo_service());
+    void dispatch(get_dni_types());
+    void dispatch(get_document_types_service());
+    void dispatch(get_subdirecciones_service());
+  };
   const columns_list: GridColDef[] = [
     {
       field: 'persona_asignada',
@@ -242,6 +253,16 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
           '.' +
           (expediente?.codigo_exp_Agno !== null &&
             '.' + expediente?.codigo_exp_Agno),
+        tipo_documento: get_values('tipo_documento'),
+        cod_tipo_documentoID: get_values('cod_tipo_documentoID'),
+        nro_documentoID: get_values('nro_documentoID'),
+        persona_a_quien_se_dirige: get_values('persona_a_quien_se_dirige'),
+        dir_notificacion_nal: get_values('dir_notificacion_nal'),
+        tel_fijo: get_values('tel_fijo'),
+        tel_celular: get_values('tel_celular'),
+        email_notificacion: get_values('email_notificacion'),
+        asunto: get_values('asunto'),
+        descripcion: get_values('descripcion'),
       })
     );
   }, [expediente]);
@@ -447,6 +468,16 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
         ...notification_request,
         tramite: tramite?.nombre_proyecto,
         id_solicitud_tramite: tramite?.id_solicitud_tramite,
+        tipo_documento: get_values('tipo_documento'),
+        cod_tipo_documentoID: get_values('cod_tipo_documentoID'),
+        nro_documentoID: get_values('nro_documentoID'),
+        persona_a_quien_se_dirige: get_values('persona_a_quien_se_dirige'),
+        dir_notificacion_nal: get_values('dir_notificacion_nal'),
+        tel_fijo: get_values('tel_fijo'),
+        tel_celular: get_values('tel_celular'),
+        email_notificacion: get_values('email_notificacion'),
+        asunto: get_values('asunto'),
+        descripcion: get_values('descripcion'),
       })
     );
   }, [tramite]);
@@ -456,6 +487,16 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
       set_notification_request({
         ...notification_request,
         id_acto_administrativo: acto_administrativo?.id_acto_administrativo,
+        tipo_documento: get_values('tipo_documento'),
+        cod_tipo_documentoID: get_values('cod_tipo_documentoID'),
+        nro_documentoID: get_values('nro_documentoID'),
+        persona_a_quien_se_dirige: get_values('persona_a_quien_se_dirige'),
+        dir_notificacion_nal: get_values('dir_notificacion_nal'),
+        tel_fijo: get_values('tel_fijo'),
+        tel_celular: get_values('tel_celular'),
+        email_notificacion: get_values('email_notificacion'),
+        asunto: get_values('asunto'),
+        descripcion: get_values('descripcion'),
       })
     );
   }, [acto_administrativo]);
@@ -468,6 +509,16 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
         id_und_org_oficina_solicita: person.id_unidad_organizacional_actual,
         id_persona_solicita: person.id_persona,
         oficina: group.label,
+        tipo_documento: get_values('tipo_documento'),
+        cod_tipo_documentoID: get_values('cod_tipo_documentoID'),
+        nro_documentoID: get_values('nro_documentoID'),
+        persona_a_quien_se_dirige: get_values('persona_a_quien_se_dirige'),
+        dir_notificacion_nal: get_values('dir_notificacion_nal'),
+        tel_fijo: get_values('tel_fijo'),
+        tel_celular: get_values('tel_celular'),
+        email_notificacion: get_values('email_notificacion'),
+        asunto: get_values('asunto'),
+        descripcion: get_values('descripcion'),
       })
     );
   }, [person]);
@@ -554,6 +605,7 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
         cod_tipo_documento: data.tipo_documento,
         cod_medio_almacenamiento: 'Na',
         orden_anexo_doc: index,
+        id_tipo_anexo_soporte: 2,
         ya_digitalizado:
           elemento.metadatos === null
             ? false
@@ -1168,6 +1220,15 @@ export function CrearSolicitudNotificacionScreen(): JSX.Element {
             />
           </Grid> */}
           <>
+            <Grid item xs={12} md={3}>
+              <Limpiar
+                dispatch={dispatch}
+                reset_state={reset_state}
+                set_initial_values={initial_values}
+                variant_button={'outlined'}
+                clean_when_leaving={true}
+              />
+            </Grid>
             <Grid item xs={12} md={3}>
               <FormButton
                 variant_button="outlined"

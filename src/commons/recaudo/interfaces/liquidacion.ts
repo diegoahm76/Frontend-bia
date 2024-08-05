@@ -22,12 +22,14 @@ export interface Deudor {
 export type EstadoExpediente = 'activo' | 'guardado' | 'liquidado' | null;
 
 export interface Expediente {
+  id_expediente_doc: null;
+  id_expediente_pimisys: any;
   id: number;
   cod_expediente: string;
   numero_resolucion: string;
   cod_auto: string;
   cod_recurso: string;
-  estado: EstadoExpediente;
+  estado: any;
   id_deudor: number;
 }
 

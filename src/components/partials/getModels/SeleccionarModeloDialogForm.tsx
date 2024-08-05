@@ -12,6 +12,7 @@ import {
   Box,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import CleanIcon from '@mui/icons-material/CleaningServices';
 import { Title } from '../../Title';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
@@ -42,6 +43,7 @@ interface IProps {
   is_modal_active: boolean;
   set_is_modal_active: Dispatch<SetStateAction<boolean>>;
   get_filters_models: any;
+  clear_fields?: any;
   models: any[];
   columns_model: GridColDef[] | null;
   row_id: string | number;
@@ -50,6 +52,7 @@ interface IProps {
   button_add_selection_hidden?: boolean | null;
   button_origin_show?: boolean | null;
   search_model_function?: any;
+  button_modal_disabled?: boolean | null;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const SeleccionarModeloDialogForm = ({
@@ -59,6 +62,7 @@ const SeleccionarModeloDialogForm = ({
   modal_title,
   set_models,
   get_filters_models,
+  clear_fields,
   models,
   columns_model,
   row_id,
@@ -67,6 +71,7 @@ const SeleccionarModeloDialogForm = ({
   button_add_selection_hidden,
   button_origin_show,
   search_model_function,
+  button_modal_disabled,
 }: IProps) => {
   const dispatch = useAppDispatch();
   const [selected_row, set_selected_row] = useState([]);
@@ -281,7 +286,9 @@ const SeleccionarModeloDialogForm = ({
   };
 
   const select_model = (): void => {
-    const model = models.find((p) => p[row_id] === selected_row[0]);
+    console.log(models, row_id);
+    console.log(selected_row);
+    const model = models.find((p) => (p[row_id] !== null ? p[row_id] : p.id_vehiculo_arrendado) === selected_row[0]);
     if (model !== undefined) {
       dispatch(set_current_model(model));
       console.log('model', model);
@@ -313,7 +320,7 @@ const SeleccionarModeloDialogForm = ({
         }}
       >
         {/* <Title title={ modal_title  ?? 'Resultados de la busqueda'} ></Title>
-        
+
             <Divider /> */}
 
         <DialogContent sx={{ mb: '0px' }}>
@@ -337,12 +344,22 @@ const SeleccionarModeloDialogForm = ({
               {form_filters.map((option, index) => (
                 <TypeDatum key={index} form_input={option} />
               ))}
-              <Grid item xs={12} md={2}>
+              <Grid item>
                 <FormButton
                   variant_button="contained"
                   on_click_function={get_filters_models}
                   icon_class={<SearchIcon />}
                   label="BUSCAR"
+                  disabled={button_modal_disabled ?? false}
+                  type_button="button"
+                />
+              </Grid>
+              <Grid item>
+                <FormButton
+                  variant_button="outlined"
+                  on_click_function={clear_fields}
+                  icon_class={<CleanIcon />}
+                  label={'LIMPIAR'}
                   type_button="button"
                 />
               </Grid>
@@ -398,9 +415,9 @@ const SeleccionarModeloDialogForm = ({
                 rowsPerPageOptions={[10]}
                 experimentalFeatures={{ newEditingApi: true }}
                 getRowId={(row) =>
-                  row[row_id ?? uuid()] === null
-                    ? uuid()
-                    : row[row_id ?? uuid()]
+                  row[row_id] !== null
+                    ? row[row_id]
+                    : row.id_vehiculo_arrendado
                 }
                 selectionModel={selected_row}
               />

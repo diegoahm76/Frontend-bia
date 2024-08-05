@@ -45,13 +45,13 @@ const TablaArticulosAgregados: React.FC<props> = ({
 
 
   const quitar_articulo = (row: interface_articulos_obtenidos_por_id | interface_articulos_agregados) => {
-    const articulos_sin_articulo_eliminado = 
+    const articulos_sin_articulo_eliminado =
       (data_articulos_agregados as Array<interface_articulos_obtenidos_por_id | interface_articulos_agregados>)
       .filter((bien_temp) => bien_temp.id_bien !== row.id_bien);
 
     set_data_articulos_agregados(articulos_sin_articulo_eliminado as interface_articulos_agregados[]);
   }
-  
+
 
   const editar_articulo = (row: interface_articulos_agregados | interface_articulos_obtenidos_por_id) => {
     set_tipo_unidad_medida((row as interface_articulos_obtenidos_por_id).nombre_unidad_medida ?? '');
@@ -63,13 +63,19 @@ const TablaArticulosAgregados: React.FC<props> = ({
   }
 
   let columns: custom_column[] = [
-    {field: 'codigo_bien', headerName:'Código bien', maxWidth:150, flex:1},
-    {field: accion === 'ver' || accion === 'editar' ? 'nombre_bien' : 'nombre', headerName:'Nombre del articulo', minWidth:250, flex:1},
+    {field: 'codigo_bien', headerName:'Código bien', maxWidth:200, flex:1},
+    {field: accion === 'ver' || accion === 'editar' ? 'nombre_bien' : 'nombre', headerName:'Nombre del articulo', minWidth:200, flex:1},
     {field: 'nombre_unidad_medida', headerName:'Unidad medida', maxWidth:150, flex:1,
       renderCell: (params) => unidades_medidas?.find((unidad_medida) => unidad_medida.id_unidad_medida === params.row.id_unidad_medida)?.nombre
     },
     {field: 'cantidad', headerName:'Cantidad', maxWidth:150, flex:1},
-    {field: 'observacion', headerName:'Observacion', width:150, flex:1},
+    {field: 'cod_tipo_bien', headerName:'Tipo de bien', width:150, flex:1, renderCell: (params: any) => (
+      params.row?.cod_tipo_bien === 'A' ? 'Activo' : 'Consumo'
+    )},
+    {field: 'doc_identificador_nro', headerName:'Placa / Serial', width:150, flex:1},
+    {field: 'marca', headerName:'Marca', width:150, flex:1},
+    {field: 'descripcion', headerName:'Descripción', width:250, flex:1},
+    {field: 'observacion', headerName:'Observacion', width:250, flex:1},
   ];
 
   if(switch_solicitud_prestamo){
@@ -85,14 +91,14 @@ const TablaArticulosAgregados: React.FC<props> = ({
       {
         field: 'eliminar', headerName: 'Eliminar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
         renderCell: (params) => (
-          <HighlightOffIcon 
+          <HighlightOffIcon
             onClick={()=>quitar_articulo(params.row)}
             sx={{fontSize: '30px', cursor: 'pointer', color:'#c62828'}} />
         )
       },
       { field: 'editar', headerName: 'Editar', maxWidth: 70, flex: 1, align: 'center', headerAlign: 'center',
         renderCell: (params) => (
-          <EditIcon 
+          <EditIcon
             onClick={() => editar_articulo(params.row)}
             sx={{fontSize: '30px', cursor: 'pointer', color: '#1071b2'}} />
         )
@@ -102,7 +108,7 @@ const TablaArticulosAgregados: React.FC<props> = ({
     columns = columns;
   }
 
- 
+
   return (
     <>
       <Grid item xs={12} container
@@ -132,10 +138,11 @@ const TablaArticulosAgregados: React.FC<props> = ({
         rowsPerPageOptions={[5]}
         experimentalFeatures={{ newEditingApi: true }}
         getRowId={(row) => row.id_bien === undefined ? uuidv4() : row.id_bien}
+        getRowHeight={() => 'auto'}
       />
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaArticulosAgregados;

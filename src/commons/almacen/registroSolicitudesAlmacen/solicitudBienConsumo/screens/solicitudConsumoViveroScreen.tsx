@@ -50,6 +50,7 @@ const SolicitudConsumoViveroScreen = () => {
       nombre: userinfo.nombre,
       id_persona: userinfo.id_persona,
       unidad_organizacional: userinfo.nombre_unidad_organizacional,
+      id_unidad_organizacional_actual: userinfo.id_unidad_organizacional_actual
     }))
     set_action('crear');
   }
@@ -125,6 +126,7 @@ const SolicitudConsumoViveroScreen = () => {
         id_persona_solicita: persona_solicita.id_persona,
         persona_solicita: persona_solicita.nombre,
         nombre_unidad_organizacional: persona_solicita.unidad_organizacional,
+        nombre_unidad_organizacional_solicita: persona_solicita.unidad_organizacional,
         id_unidad_para_la_que_solicita: persona_solicita.id_unidad_organizacional_actual
       })
     );
@@ -151,6 +153,28 @@ const SolicitudConsumoViveroScreen = () => {
       );
     }
   }, [coordinador_vivero]);
+
+  useEffect(() => {
+    const observacion = get_values('observacion');
+    const motivo = get_values('motivo');
+    const id_unidad_para_la_que_solicita = get_values(
+      'id_unidad_para_la_que_solicita'
+    );
+    if (
+      current_funcionario.id_persona !==
+      current_solicitud_vivero.id_funcionario_responsable_unidad
+    ) {
+      dispatch(
+        set_current_solicitud_vivero({
+          ...current_solicitud_vivero,
+          id_funcionario_responsable_unidad: current_funcionario.id_persona,
+          observacion,
+          motivo,
+          id_unidad_para_la_que_solicita
+        })
+      );
+    }
+  }, [current_funcionario]);
   //  console.log('')(coordinador_vivero)
 
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-unused-vars
@@ -210,6 +234,7 @@ const SolicitudConsumoViveroScreen = () => {
     >
       <Grid item xs={12} marginY={2}>
         <SeleccionarSolicitudVivero
+          reset_values={reset_solicitud}
           control_solicitud_vivero={control_solicitud_vivero}
           get_values={get_values}
           title={'Solicitudes a vivero'}
@@ -218,11 +243,11 @@ const SolicitudConsumoViveroScreen = () => {
         />
 
         <>
-          {/* <PersonaResponsable
+          <PersonaResponsable
             title={"Funcionario responsable"}
-            get_values_solicitud={get_values} /> */}
+            get_values_solicitud={get_values} />
 
-          <FuncionarioResponsableCoordinador get_values_solicitud={get_values} />
+          {/* <FuncionarioResponsableCoordinador get_values_solicitud={get_values} /> */}
 
           <SeleccionarBienConsumoVivero />
         </>

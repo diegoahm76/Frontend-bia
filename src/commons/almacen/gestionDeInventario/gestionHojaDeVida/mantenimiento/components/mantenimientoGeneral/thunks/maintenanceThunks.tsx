@@ -58,10 +58,32 @@ export const override_maintenance: any = (id_programado: number,form_data: anula
   };
 };
 // Consulta mantenimientos programados por fechas y tipo
-export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string, tipo: string) => {
+export const get_programmed_maintenance: any = (fecha_desde: string, fecha_hasta: string, tipo: string, serial?: string) => {
   return async () => {
     try {
-      const { data } = await api.get(`almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}&cod_tipo_activo=${tipo}`);
+      let url = `almacen/mantenimientos/programados/get-by-fechas/?rango-inicial-fecha=${fecha_desde}&rango-final-fecha=${fecha_hasta}&cod_tipo_activo=${tipo}`;
+      if(serial) url += `&serial=${serial}`;
+      const { data } = await api.get(url);
+      return data;
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+      return error as AxiosError;
+    }
+  };
+};
+
+// Consulta mantenimientos programados por fechas y tipo
+export const get_veh_programmed_maintenance: any = (tipo_prog: string, fecha_desde?: string, fecha_hasta?: string, km_desde?: string, km_hasta?: string, doc_identificador_nro?: string) => {
+  return async () => {
+    try {
+      let url = `almacen/mantenimientos/programados/vehiculos/get-by-filters/?cod_tipo_activo=Veh&tipo_programacion=${tipo_prog}`;
+      if (fecha_desde) url += `&rango-inicial-fecha=${fecha_desde}`;
+      if (fecha_hasta) url += `&rango-final-fecha=${fecha_hasta}`;
+      if (km_desde) url += `&rango-inicial-kilometraje=${km_desde}`;
+      if (km_hasta) url += `&rango-final-kilometraje=${km_hasta}`;
+      if (doc_identificador_nro) url += `&doc_identificador_nro=${doc_identificador_nro}`;
+
+      const { data } = await api.get(url);
       return data;
     } catch (error: any) {
       control_error(error.response.data.detail);

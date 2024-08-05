@@ -3,22 +3,28 @@ import BuscarModelo from "../../../../../../components/partials/getModels/Buscar
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
 import { set_computers, set_current_computer, set_current_cv_computer } from '../store/slices/indexCvComputo';
 import { useEffect, useState } from 'react';
+import { baseURL } from '../../../../../../api/axios';
 
 
 
 interface IProps {
     title: string;
     control_computo: any;
-    get_values: any
+    get_values: any;
+    file: any;
+    set_file: any;
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
 const Especificaciones = ({
     title,
     control_computo,
-    get_values
+    get_values,
+    file,
+    set_file,
 }: IProps) => {
-    const { computers, marcas, current_cv_computer } = useAppSelector((state) => state.cv);
-    const [file, set_file] = useState<any>(null);
+    const url_base = baseURL.replace("/api/", "");
+
+    const { computers, marcas, current_cv_computer, current_computer } = useAppSelector((state) => state.cv);
     const [selected_image_aux, set_selected_image_aux] = useState<any>(null);
     const [file_name, set_file_name] = useState<string>("");
     const dispatch = useAppDispatch();
@@ -34,29 +40,12 @@ const Especificaciones = ({
             if ('name' in file) {
                 //  console.log('')(file.name)
                 set_file_name(file.name)
-                dispatch(set_current_cv_computer({
-                    ...current_cv_computer,
-                    id_marca: get_values("id_marca"),
-                    estado: get_values("estado"),
-                    color: get_values("color"),
-                    tipo_de_equipo: get_values("tipo_de_equipo"),
-                    capacidad_almacenamiento: get_values("capacidad_almacenamiento"),
-                    procesador: get_values("procesador"),
-                    memoria_ram: get_values("memoria_ram"),
-                    tipo_almacenamiento: get_values("tipo_almacenamiento"),
-                    suite_ofimatica: get_values("suite_ofimatica"),
-                    antivirus: get_values("antivirus"),
-                    otras_aplicaciones: get_values("otras_aplicaciones"),
-                    ruta_imagen_foto: file
-                }))
-
             }
         }
     }, [file]);
 
     useEffect(() => {
-        if (current_cv_computer.id_hoja_de_vida
-            !== null) {
+        if (current_cv_computer?.id_hoja_de_vida) {
             if (current_cv_computer.ruta_imagen_foto !== null) {
                 const file = current_cv_computer.ruta_imagen_foto
                 //  console.log('')(file)
@@ -67,10 +56,16 @@ const Especificaciones = ({
                     }
                 } else {
                     set_file_name(String(current_cv_computer.ruta_imagen_foto))
-                    set_selected_image_aux(current_cv_computer.ruta_imagen_foto);
+                    set_selected_image_aux(`${url_base}${current_cv_computer.ruta_imagen_foto}`);
                 }
 
+            }else{
+                set_selected_image_aux(null);
+                set_file_name("");
             }
+        }else{
+            set_selected_image_aux(null);
+            set_file_name("");
         }
     }, [current_cv_computer]);
 
@@ -113,7 +108,7 @@ const Especificaciones = ({
                             rules: {},
                             label: "Codigo bien",
                             type: "number",
-                            disabled: false,
+                            disabled: true,
                             helper_text: "",
                         },
                         {
@@ -139,9 +134,9 @@ const Especificaciones = ({
                             control_name: "doc_identificador_nro",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Serie",
+                            label: "Serial",
                             type: "text",
-                            disabled: false,
+                            disabled: true,
                             helper_text: ""
                         },
 
@@ -158,7 +153,7 @@ const Especificaciones = ({
                             helper_text: "debe seleccionar campo",
                             select_options: [{ label: "Óptimo", value: "O" }, { label: "Defectuoso", value: "D" }, { label: "Averiado", value: "A" }],
                             option_label: "label",
-                            option_key: "label",
+                            option_key: "value",
                         },
                         {
                             datum_type: "input_controller",

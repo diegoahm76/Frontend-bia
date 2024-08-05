@@ -19,13 +19,16 @@ export interface Filtro {
 export interface Obligacion {
   id: number;
   nombre: string;
+  monto_inicial: string;
+  InteresMoratorio_c:string;
+  valor_capital_intereses_c:string;
   inicio: string;
+  dias_mora: number;
   nro_expediente: number;
   nro_resolucion: string;
-  monto_inicial: string;
   valor_intereses: string;
-  dias_mora: number;
   valor_capital_intereses: number;
+  num_resolucion?:string;
 }
 
 export interface ObligacionesUsuario {
@@ -64,10 +67,10 @@ export interface Bien {
 export interface Deudor {
   id: number;
   identificacion: string;
-  nombres: string;
+  nombre_completo: string;
   apellidos: string;
   email: string;
-  ubicacion: string;
+  direccion_notificaciones: string;
 }
 
 export interface Contacto {
@@ -126,6 +129,8 @@ export interface Contribuyente {
   identificacion: string;
   nombre_contribuyente: string;
   obligaciones:any;
+  monto_total_con_intereses:number;
+  monto_total:number
 }
 
 export interface RegistroFacilidadPago {

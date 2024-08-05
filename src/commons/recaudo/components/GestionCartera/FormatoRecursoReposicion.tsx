@@ -27,9 +27,9 @@ export const FormatoRecursoReposicion: React.FC<any> = ({
   const [currentConsecutivo, setCurrentConsecutivo] = useState(0);
 
   useEffect(() => {
-    if(datos?.id_deudor){
+    // if(datos?.id_deudor){
       generatePDF();
-    }
+    // }
   }, [datos])
 
   const generatePDF = () => {

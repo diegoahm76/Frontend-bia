@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+
 import React, { useContext, useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import ReceiptIcon from '@mui/icons-material/Receipt';
@@ -14,9 +15,8 @@ import { useAppSelector } from "../../../../../../hooks/hooks";
 
 
 export const ModalConfirmacionLiquidacion = () => {
-    const { liquidacionState,precios } = useContext(PreciosContext);
+    const { liquidacionState, precios } = useContext(PreciosContext);
     const [respuesta, setRespuesta] = useState<Respuesta | null>(null);
-
 
     const fechaActual = new Date();
     const FechaElaboracion = fechaActual.toISOString();
@@ -29,11 +29,7 @@ export const ModalConfirmacionLiquidacion = () => {
         (state) =>
           state.PanelVentanillaSlice.currentElementPqrsdComplementoTramitesYotros
       );
-      console.log(currentElementPqrsdComplementoTramitesYotros?.id_solicitud_tramite)
-
       
-
-
     const fetch_Actualizar_archivo_digital = async () => {
         try {
             const url = `recaudo/configuracion_referencia/referencia/crear/`;
@@ -56,8 +52,6 @@ export const ModalConfirmacionLiquidacion = () => {
         }
     };
 
-
-   
     const nuevoArreglo = precios.map((item, index) => {
         return {
           id_opcion_liq: 1,
@@ -67,13 +61,10 @@ export const ModalConfirmacionLiquidacion = () => {
           valor: parseInt(item.valor),
           concepto: item.descripcion
         };
-      });
-
+    });
 
     const Guardar_Liquidacion = async () => {
         try {
-
-
             const url = `recaudo/liquidaciones/liquidacion-tramite/`;
             const formData = new FormData();
             formData.append('data_liquidacion', JSON.stringify(liquidacionState));
@@ -82,7 +73,6 @@ export const ModalConfirmacionLiquidacion = () => {
             const respuesta = await api.post(url, formData)
             if (respuesta && respuesta.data) {
                 console.log(respuesta)
-
             } else {
                 console.error('Error en la solicitud:', respuesta ? respuesta.statusText : 'Response undefined');
             }
@@ -90,9 +80,6 @@ export const ModalConfirmacionLiquidacion = () => {
             control_error(error.response?.data?.detail || 'Error desconocido, revisa que estés enviando todos los campos');
         }
     };
-
-
-
 
     useEffect(() => {
         if (respuesta) {
@@ -114,7 +101,6 @@ export const ModalConfirmacionLiquidacion = () => {
         }
     }, [respuesta]);
 
-
     return (
         <>
             <Button
@@ -125,9 +111,8 @@ export const ModalConfirmacionLiquidacion = () => {
                 startIcon={<ReceiptIcon />}
                 onClick={fetch_Actualizar_archivo_digital}
             >
-                Generar Liquidacionn
+                Generar Liquidacion
             </Button>
-
         </>
     );
 };

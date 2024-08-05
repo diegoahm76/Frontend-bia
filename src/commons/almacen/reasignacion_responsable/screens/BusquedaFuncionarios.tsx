@@ -1,7 +1,7 @@
 import { Button, Grid, TextField } from '@mui/material';
 import React, { Dispatch, FC, SetStateAction } from 'react';
 import FuncionarioResponsable from '../components/FuncionarioResponsable';
-import { interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_funcionarios, interface_tipos_documentos } from '../interfaces/types';
+import { interface_busqueda_operario, interface_busqueda_responsable, interface_inputs_funcionarios, interface_inputs_operario, interface_inputs_responsable, interface_inputs_responsable_actual, interface_tipos_documentos } from '../interfaces/types';
 import FuncionarioOperario from '../components/FuncionarioOperario';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
@@ -12,6 +12,12 @@ interface props {
   set_tipo_funcionario: Dispatch<SetStateAction<string>>;
   inputs_funcionarios: interface_inputs_funcionarios;
   set_inputs_funcionarios: Dispatch<SetStateAction<interface_inputs_funcionarios>>;
+  inputs_responsable: interface_inputs_responsable;
+  set_inputs_responsable: Dispatch<SetStateAction<interface_inputs_responsable>>;
+  inputs_operario: interface_inputs_operario;
+  set_inputs_operario: Dispatch<SetStateAction<interface_inputs_operario>>;
+  inputs_responsable_actual: interface_inputs_responsable_actual;
+  set_inputs_responsable_actual: Dispatch<SetStateAction<interface_inputs_responsable_actual>>;
   tipos_documentos: interface_tipos_documentos[];
   set_mostrar_modal_busqueda_funcionarios: Dispatch<SetStateAction<boolean>>;
   set_funcionario_responsable_reasignado_seleccionado: Dispatch<SetStateAction<interface_busqueda_responsable>>;
@@ -27,6 +33,12 @@ const BusquedaFuncionarios: FC<props> = ({
   set_tipo_funcionario,
   inputs_funcionarios,
   set_inputs_funcionarios,
+  inputs_responsable,
+  set_inputs_responsable,
+  inputs_operario,
+  set_inputs_operario,
+  inputs_responsable_actual,
+  set_inputs_responsable_actual,
   tipos_documentos,
   set_mostrar_modal_busqueda_funcionarios,
   set_funcionario_responsable_reasignado_seleccionado,
@@ -57,6 +69,10 @@ const BusquedaFuncionarios: FC<props> = ({
           set_tipo_funcionario={set_tipo_funcionario}
           inputs_funcionarios={inputs_funcionarios}
           set_inputs_funcionarios={set_inputs_funcionarios}
+          inputs_responsable={inputs_responsable}
+          set_inputs_responsable={set_inputs_responsable}
+          inputs_responsable_actual={inputs_responsable_actual}
+          set_inputs_responsable_actual={set_inputs_responsable_actual}
           tipos_documentos={tipos_documentos}
           set_mostrar_modal_busqueda_funcionarios={set_mostrar_modal_busqueda_funcionarios}
           set_funcionario_responsable_reasignado_seleccionado={set_funcionario_responsable_reasignado_seleccionado}
@@ -74,10 +90,11 @@ const BusquedaFuncionarios: FC<props> = ({
         <Grid item xs={12} lg={9}>
           <TextField
             fullWidth
-            label='Observación:'
+            label='Observación'
             value={observacion}
             onChange={(e) => set_observacion(e.target.value)}
             size='small'
+            required
           />
         </Grid>
 

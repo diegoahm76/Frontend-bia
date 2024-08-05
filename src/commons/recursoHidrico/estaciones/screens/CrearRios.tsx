@@ -37,6 +37,15 @@ interface ZonaHidrica {
     id_zona_hidrografica: string;
     id_macro_cuenca: string;
 }
+
+interface ZonaHidrica2 {
+    codigo_rio: string;
+    id_zona_hidrica: number;
+    id_sub_zona_hidrica: number;
+    id_tipo_zona_hidrica: number;
+    id_tipo_agua_zona_hidrica: any;
+    nombre_sub_zona_hidrica: string;
+  }
 interface TipoRio {
     id_tipo_zona_hidrica: number;
     nombre_tipo_zona_hidrica: string;
@@ -47,11 +56,12 @@ interface BuscarProps {
     fetchZonasHidricas:any;
 }
 interface SubZonaHidricaForm {
-    nombre_sub_zona_hidrica: string;
-    codigo_rio: string;
-    id_zona_hidrica: number;
-    id_tipo_zona_hidrica: number;
-    id_tipo_agua_zona_hidrica: number;
+    nombre_cuenca: any;
+    codigo_cuenca: any;
+    id_zona_hidrica: any;
+    // id_tipo_zona_hidrica: any;
+    // id_tipo_agua_zona_hidrica: any;
+    id_sub_zona_hidrica:any;
 }
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -60,52 +70,46 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
     const [selectedCuenca, setSelectedCuenca] = useState<number | "">("");
 
     const initialState: SubZonaHidricaForm = {
-        nombre_sub_zona_hidrica: "",
-        codigo_rio: "",
-        id_zona_hidrica: 0,
-        id_tipo_zona_hidrica: 0,
-        id_tipo_agua_zona_hidrica: 0,
+        nombre_cuenca: "",
+        codigo_cuenca: "",
+        id_zona_hidrica: 0, 
+        id_sub_zona_hidrica:"",
     };
     const [formValues, setFormValues] = useState<SubZonaHidricaForm>(initialState);
+      // id_tipo_zona_hidrica: 0,
+        // id_tipo_agua_zona_hidrica: 0,
+    // const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
+    //     const { name, value } = event.target;
+    
+    //     let newCodigoRio = formValues.codigo_rio;
+    //     if (name === "id_zona_hidrica") {
+    //         // Actualiza codigo_rio cuando cambia id_zona_hidrica
+    //         newCodigoRio = `${selectedCuenca}${value}${formValues.id_sub_zona_hidrica}`;
+    //     }
+    //     setFormValues({
+    //         ...formValues,
+    //         [name]: value,
+    //         ...(name === "id_zona_hidrica" && { codigo_rio: newCodigoRio })
+    //     });
+    // };
     const handleInputChange = (event: { target: { name: any; value: any; }; }) => {
         const { name, value } = event.target;
     
-        let newCodigoRio = formValues.codigo_rio;
+        let newCodigoRio = formValues.codigo_cuenca;
+    
         if (name === "id_zona_hidrica") {
-            // Actualiza codigo_rio cuando cambia id_zona_hidrica
-            newCodigoRio = `${selectedCuenca}${value}`;
+            newCodigoRio = `${selectedCuenca}${value}${formValues.id_sub_zona_hidrica}`;
+        } else if (name === "id_sub_zona_hidrica") {
+            newCodigoRio = `${selectedCuenca}${formValues.id_zona_hidrica}${value}`;
         }
+    
         setFormValues({
             ...formValues,
             [name]: value,
-            ...(name === "id_zona_hidrica" && { codigo_rio: newCodigoRio })
+            codigo_cuenca: newCodigoRio,
         });
     };
-
-    const validateForm = (): boolean => {
-        if (formValues.id_tipo_zona_hidrica === 0) {
-            control_error("Campo obligatorio: Tipo de zona");
-            return false;
-        }
-        if (!formValues.nombre_sub_zona_hidrica) {
-            control_error("Campo obligatorio: Nombre Sub Zona Hidrica");
-            return false;
-        }
-        if (!formValues.codigo_rio) {
-            control_error("Campo obligatorio: Código Río");
-            return false;
-        }
-        if (formValues.id_zona_hidrica === 0) {
-            control_error("Campo obligatorio:Zona Hidrica");
-            return false;
-        }
-
-        if (formValues.id_tipo_agua_zona_hidrica === 0) {
-            control_error("Campo obligatorio:Tipo agua zona hidrica");
-            return false;
-        }
-        return true;
-    };
+ 
 
 
 
@@ -130,21 +134,24 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
         const newSelectedCuenca = event.target.value as number;
         setSelectedCuenca(newSelectedCuenca);
     
-        // Actualiza codigo_rio cuando cambia la cuenca seleccionada
+        // Actualiza codigo_cuenca cuando cambia la cuenca seleccionada
         setFormValues({
             ...formValues,
-            codigo_rio: `${newSelectedCuenca}${formValues.id_zona_hidrica}`
+            codigo_cuenca: `${newSelectedCuenca}${formValues.id_zona_hidrica}`
         });
     };
     // const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    const handleSubmit = async () => {
-        if (!validateForm()) {
-            return; // Detiene la ejecución si la validación falla
-        }
 
+    const handleSubmit = async () => {
         try {
-            const url = "/hidrico/zonas-hidricas/sub_zona_hidrica/list-create/";
-            const response = await api.post(url, formValues);
+            const url = "hidrico/zonas-hidricas/cuencas/create/";
+            const dataToSend = {
+                codigo_cuenca: formValues.codigo_cuenca,
+                nombre_cuenca: formValues.nombre_cuenca,
+                id_sub_zona_hidrica: formValues.id_sub_zona_hidrica,
+              };
+
+            const response = await api.post(url, dataToSend);
             control_success("Guardado exitosamente");
             setFormValues(initialState);
             setSelectedCuenca("");
@@ -174,13 +181,38 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
         void fetchZonahidricas();
     }, [selectedCuenca]);
 
+
+
+    const [zonasHidricas, setZonasHidricas] = useState<ZonaHidrica2[]>([]);
+    const fetchZonasHidricas2 = async (): Promise<void> => {
+      try {
+        if (formValues.id_zona_hidrica !== null) {
+          const url = `/hidrico/zonas-hidricas/subZonahidrica/get/${formValues.id_zona_hidrica}/`;
+          const res = await api.get(url);
+          const zonasHidricasData: ZonaHidrica2[] = res.data?.data || [];
+          setZonasHidricas(zonasHidricasData);
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    useEffect(() => {
+        fetchZonasHidricas2(); 
+    }, [formValues.id_zona_hidrica]);
+
+
+
+
+
+
     const [selectedZonaHidrica, setSelectedZonaHidrica] = useState<number | "">("");
 
     const handleZonaHidricaChange = (event: SelectChangeEvent<number>) => {
         setSelectedZonaHidrica(event.target.value as number);
     };
 
-    //tipo de rio 
+    //tipo de id_sub_zona_hidrica 
     const [tipoRio, setTipoRio] = useState<TipoRio[]>([]);
 
     const fetchTiposRio = async (): Promise<void> => {
@@ -248,15 +280,15 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                     y
                     {formValues.id_zona_hidrica} */}
                      <Grid container item xs={12} spacing={2} marginTop={2}>
-                    <Grid item xs={12} sm={4}>
-                            {/* Select para Zona Hidrica */}
+                    {/* <Grid item xs={12} sm={4}>
+                         
                             <FormControl required size="small" fullWidth >
                                 <InputLabel id="id_tipo_agua_zona_hidrica"> Tipo agua zona hídrica  </InputLabel>
                                 <Select
                                     labelId="select-zonahidrica-label"
                                     id="id_tipo_agua_zona_hidrica"
                                     value={formValues.id_tipo_agua_zona_hidrica}
-                                    label="  id_tipo_agua_zona_hidrica"
+                                    label="Tipo agua zona hídrica"
                                     name="id_tipo_agua_zona_hidrica"
                                     onChange={handleInputChange}
                                 >
@@ -267,10 +299,10 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
 
-                        <Grid item xs={12} sm={4}>
-                            {/* Select para Zona Hidrica */}
+                        {/* <Grid item xs={12} sm={4}>
+                          
                             <FormControl required size="small" fullWidth>
                                 <InputLabel id="select-zonahidrica-label">Tipo de zona </InputLabel>
                                 <Select
@@ -279,14 +311,14 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                                     onChange={handleInputChange}
                                     name="id_tipo_zona_hidrica"
                                 >
-                                    {tipoRio.map((rio) => (
-                                        <MenuItem key={rio.id_tipo_zona_hidrica} value={rio.id_tipo_zona_hidrica}>
-                                            {rio.nombre_tipo_zona_hidrica}
+                                    {tipoRio.map((id_sub_zona_hidrica) => (
+                                        <MenuItem key={id_sub_zona_hidrica.id_tipo_zona_hidrica} value={id_sub_zona_hidrica.id_tipo_zona_hidrica}>
+                                            {id_sub_zona_hidrica.nombre_tipo_zona_hidrica}
                                         </MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                        </Grid>
+                        </Grid> */}
                 
                         <Grid item xs={12} sm={4}>
                             <FormControl required size="small" fullWidth >
@@ -334,9 +366,28 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                             </FormControl>
                         </Grid>
 
-
+                        <Grid item xs={12} sm={4}>
+                            {/* Select para Zona Hidrica */}
+                            <FormControl required size="small" fullWidth >
+                                <InputLabel id="select-zonahidrica-label">sub zona hidrica</InputLabel>
+                                <Select
+                                    labelId="select-zonahidrica-label"
+                                    id="id_zona_hidrica"
+                                    value={formValues.id_sub_zona_hidrica}
+                                    label="id_sub_zona_hidrica"
+                                    name="id_sub_zona_hidrica"
+                                    onChange={handleInputChange}
+                                >
+                                    {zonasHidricas.map((zona) => (
+                                        <MenuItem key={zona.id_zona_hidrica} value={zona.id_sub_zona_hidrica}>
+                                            {zona.nombre_sub_zona_hidrica}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
                         
-
+                        
 
                         <Grid item xs={12} sm={4}>
                             <TextField
@@ -346,8 +397,8 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                                 fullWidth
                                 required
                                 InputLabelProps={{ shrink: true }}
-                                name="nombre_sub_zona_hidrica"
-                                value={formValues.nombre_sub_zona_hidrica}
+                                name="nombre_cuenca"
+                                value={formValues.nombre_cuenca}
                                 onChange={handleInputChange}
                             />
                         </Grid>
@@ -355,12 +406,12 @@ export const CrearRios: React.FC<BuscarProps> = ({ fetchZonasHidricas,is_modal_a
                             <TextField
                                 // variant="outlined"
                                 size="small"
-                                label="Código río"
+                                label="Código cuenca"
                                 fullWidth
                                 required
                                 InputLabelProps={{ shrink: true }}
-                                name="codigo_rio"
-                                value={formValues.codigo_rio}
+                                name="codigo_cuenca"
+                                value={formValues.codigo_cuenca}
                                 onChange={handleInputChange}
                             />
                         </Grid>

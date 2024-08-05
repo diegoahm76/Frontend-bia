@@ -21,6 +21,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import {
   control_error,
   get_anexos_tarea,
+  get_anexos_tarea_aux,
   get_causas_notificacion,
   get_tipos_soporte,
 } from '../store/thunks/notificacionesThunks';
@@ -63,7 +64,7 @@ const StepTwo = () => {
     void dispatch(get_tipos_soporte());
     void dispatch(get_causas_notificacion());
     void dispatch(
-      get_anexos_tarea(
+      get_anexos_tarea_aux(
         notification_per_request?.id_registro_notificacion_correspondencia
       )
     );
@@ -246,7 +247,7 @@ const StepTwo = () => {
     {
       field: 'id_tipo_anexo',
       headerName: 'Tipo de anexo',
-      width: 250,
+      width: 220,
       renderCell: (params) => (
         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
           {tipos_soporte?.find(
@@ -306,7 +307,7 @@ const StepTwo = () => {
       width: 90,
       renderCell: (params) => (
         <>
-          {params.row.id_anexo === null && (
+          {/* {params.row.id_anexo === null && ( */}
             <Tooltip title="Editar">
               <IconButton
                 onClick={() => {
@@ -332,8 +333,8 @@ const StepTwo = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-          )}
-          {params.row.id_anexo === null && (
+          {/* )} */}
+          {/* {params.row.id_anexo === null && ( */}
             <Tooltip title="Borrar">
               <IconButton
                 onClick={() => {
@@ -359,7 +360,7 @@ const StepTwo = () => {
                 </Avatar>
               </IconButton>
             </Tooltip>
-          )}
+          {/* )} */}
         </>
       ),
     },

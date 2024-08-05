@@ -13,6 +13,20 @@ import BuscarBien from "./BuscarBien";
 import BuscarBienConsumo from "./BuscarBienConsumo";
 import ClearIcon from '@mui/icons-material/Clear';
 import CleanIcon from '@mui/icons-material/CleaningServices';
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { BuscadorPersonasReports } from "../../tablerosControlAlmacen/components_reports/BuscadorPersonasReports";
+import { Persona } from "../../../../interfaces/globalModels";
+
+interface ids_interface {
+  id_responsable: string;
+  id_solicitante: string;
+  id_despacha: string;
+  id_anula: string;
+  id_origen: string;
+  id_proveedor: string;
+  id_autoriza: string;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ControlDeInventariosScreen: React.FC = () => {
@@ -55,6 +69,8 @@ export const ControlDeInventariosScreen: React.FC = () => {
   { value: 'Inventario por categoría', id: 'IPC' },
   { value: 'Ver inventario propio', id: 'IP' },
   { value: 'Inventario por tipo por bodega', id: 'ITB' }];
+
+  let new_title: string = '';
   const lt_bienes_consumo = [{ value: 'Todo el inventario', id: 'TIC' },
   { value: 'Bienes solicitables por vivero', id: 'BSV' }];
   const lt_ubicaciones = [{ id: "Asignado", value: "Asignado" }, { id: "Prestado", value: "Prestado" }, { id: "En Bodega", value: "En Bodega" }];
@@ -85,6 +101,63 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const [msj_error_bien, set_msj_error_bien] = useState<any>("");
   const [abrir_modal_bien, set_abrir_modal_bien] = useState<boolean>(false);
   const [nombre_archivo, set_nombre_archivo] = useState<string>("");
+  const [fecha_desde, set_fecha_desde] = useState<Date | null>(null);
+  const [fecha_hasta, set_fecha_hasta] = useState<Date | null>(null);
+  const [new_filters, set_new_filters] = useState<any>({
+    consecutivo: '',
+    codigo_bien: '',
+    nombre_bien: '',
+  });
+  const [clear_persons, set_clear_persons] = useState<boolean>(false);
+  const [is_clear_filtros, set_is_clear_filtros] = useState<boolean>(false);
+  const [tipo_persona, set_tipo_persona] = useState<string>('');
+  const [persona, set_persona] = useState<Persona>({
+    id_persona: null,
+  }); //Se usa cuando se elige una sola persona
+  const [ids_persons, set_ids_persons] = useState<ids_interface>({
+    id_responsable: '',
+    id_solicitante: '',
+    id_despacha: '',
+    id_anula: '',
+    id_origen: '',
+    id_proveedor: '',
+    id_autoriza: '',
+  });
+
+  useEffect(() => {
+    if(persona?.id_persona){
+      switch (tipo_persona) {
+        case 'R':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_responsable: persona.id_persona }));
+          break;
+        case 'S':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_solicitante: persona.id_persona }));
+          break;
+        case 'D':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_despacha: persona.id_persona }));
+          break;
+        case 'A':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_anula: persona.id_persona }));
+          break;
+        case 'O':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_origen: persona.id_persona }));
+          break;
+        case 'P':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_proveedor: persona.id_persona }));
+          break;
+        case 'AU':
+          set_ids_persons((prevState: any) => ({ ...prevState, id_autoriza: persona.id_persona }));
+          break;
+        default:
+          break;
+      }
+    }
+  }, [persona, tipo_persona]);
+
+  const on_result = async (info_persona: Persona, param: string): Promise<void> => {
+    set_persona(info_persona);
+    set_tipo_persona(param);
+  } //Se usa cuando se elige una sola persona
 
   const cambio_tipo_consulta: (event: SelectChangeEvent) => void = (e: SelectChangeEvent) => {
     set_seleccion_tipo_consulta(e.target.value);
@@ -123,7 +196,55 @@ export const ControlDeInventariosScreen: React.FC = () => {
     set_seleccion_origen(e.target.value);
   }
 
+  const handle_change_fecha_desde = (date: Date | null): void => {
+    set_fecha_desde(date);
+  };
+  const handle_change_fecha_hasta = (date: Date | null): void => {
+    set_fecha_hasta(date);
+  };
+
+  const handle_consecutivo = (event: any): void => {
+    set_new_filters({
+      ...new_filters,
+      consecutivo: event.target.value
+    })
+  }
+
+  const handle_codigo_bien = (event: any): void => {
+    set_new_filters({
+      ...new_filters,
+      codigo_bien: event.target.value
+    })
+  }
+
+  const handle_nombre_bien = (event: any): void => {
+    set_new_filters({
+      ...new_filters,
+      nombre_bien: event.target.value
+    })
+  }
+
+  const clear_persons_function = (): void => {
+    set_ids_persons({
+      id_responsable: '',
+      id_solicitante: '',
+      id_despacha: '',
+      id_anula: '',
+      id_origen: '',
+      id_proveedor: '',
+      id_autoriza: '',
+    })
+  }
+
   const limpiar_filtros: () => void = () => {
+    clear_persons_function();
+    set_new_filters({
+      consecutivo: '',
+      codigo_bien: '',
+      nombre_bien: '',
+    });
+    set_fecha_desde(null);
+    set_fecha_hasta(null);
     set_msj_error_bien('');
     set_seleccion_bodega('');
     set_seleccion_estado('');
@@ -141,6 +262,13 @@ export const ControlDeInventariosScreen: React.FC = () => {
     set_inventarios([]);
   }
 
+  useEffect(() => {
+    if(clear_persons){
+      clear_persons_function();
+      set_clear_persons(false);
+    }
+  }, [clear_persons])
+
   const limpiar_todo: () => void = () => {
     set_seleccion_tipo_bien('');
     set_seleccion_tipo_consulta('');
@@ -152,7 +280,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
   }
 
   const obtener_inventario_af_fc: () => void = () => {
-    dispatch(obtener_inventario_af({ seleccion_bodega, seleccion_estado, seleccion_ubicacion, seleccion_propiedad, seleccion_categoria, bienes_baja, bienes_salida, seleccion_origen })).then((response: any) => {
+    dispatch(obtener_inventario_af({ seleccion_bodega, seleccion_estado, seleccion_ubicacion, seleccion_propiedad, seleccion_categoria, bienes_baja, bienes_salida, seleccion_origen, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', consecutivo: new_filters.consecutivo, codigo_bien: new_filters.codigo_bien, id_persona_responsable: ids_persons.id_responsable })).then((response: any) => {
       response.data.forEach((data: any) => {
         data.fecha_ingreso = dayjs(data.fecha_ingreso).format('DD/MM/YYYY');
         data.fecha_ultimo_movimiento = dayjs(data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
@@ -164,7 +292,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
     let solicitable_vivero: any = null;
     solicitable_vivero = seleccion_tipo_consulta === 'TIC' ? '' : true;
     const id_bien =  seleccion_bien !== undefined && seleccion_bien !== '' ? seleccion_bien.id_bien : '';
-    dispatch(obtener_inventario_consumo({ seleccion_bodega, seleccion_bien: id_bien, solicitable: solicitable_vivero, agrupar_bodega })).then((response: any) => {
+    dispatch(obtener_inventario_consumo({ seleccion_bodega, seleccion_bien: id_bien, solicitable: solicitable_vivero, agrupar_bodega, fecha_desde: fecha_desde ? dayjs(fecha_desde).format('YYYY-MM-DD') : '', fecha_hasta: fecha_hasta ? dayjs(fecha_hasta).format('YYYY-MM-DD') : '', codigo_bien: new_filters.codigo_bien, nombre_bien: new_filters.nombre_bien })).then((response: any) => {
       if (agrupar_bodega) {
         response.data.forEach((data: any) => {
           data.inventario.forEach((inv: any) => { inv.nombre_bodega = data.nombre_bodega; });
@@ -194,10 +322,12 @@ export const ControlDeInventariosScreen: React.FC = () => {
   const busqueda_control: () => void = () => {
     switch (seleccion_tipo_consulta) {
       case 'TI':
+        new_title = 'Todo el inventario';
         obtener_inventario_af_fc();
         break;
       case 'BE':
-        if(seleccion_bien !== undefined && seleccion_bien !== ''){        
+        new_title = 'Bien específico';
+        if(seleccion_bien !== undefined && seleccion_bien !== ''){
           dispatch(obtener_bien_especifico_af(seleccion_bien.id_bien)).then((response: any) => {
           response.data.fecha_ingreso = dayjs(response.data.fecha_ingreso).format('DD/MM/YYYY');
           response.data.fecha_ultimo_movimiento = dayjs(response.data.fecha_ultimo_movimiento).format('DD/MM/YYYY HH:mm');
@@ -207,6 +337,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
           set_msj_error_bien('El campo es obligatorio');
         break;
       case 'IPC':
+        new_title = 'Inventario por categoría';
         dispatch(obtener_inventario_categoria({ seleccion_bodega, seleccion_categoria })).then((response: any) => {
           response.data.forEach((data: any) => {
             data.inventario.forEach((inv: any) => {
@@ -218,9 +349,11 @@ export const ControlDeInventariosScreen: React.FC = () => {
         });
         break;
       case 'ISO':
+        new_title = 'Inventario según origen';
         obtener_inventario_af_fc();
         break;
       case 'IP':
+        new_title = 'Ver inventario propio';
         dispatch(obtener_inventario_propio({ seleccion_bodega, seleccion_categoria, agrupar })).then((response: any) => {
           if (agrupar) {
             response.data.forEach((data: any) => {
@@ -239,14 +372,17 @@ export const ControlDeInventariosScreen: React.FC = () => {
         });
         break;
       case 'ITB':
+        new_title = 'Inventario por tipo por bodega';
         dispatch(obtener_inventario_tipo({ seleccion_bodega, mostrar })).then((response: any) => {
           set_resultado_busqueda(response.data);
         });
         break;
       case 'TIC':
+        new_title = 'Todo el inventario';
         obtener_inventario_consumo_fc();
         break;
       case 'BSV':
+        new_title = 'Bienes solicitables por vivero';
         obtener_inventario_consumo_fc();
         break;
       default:
@@ -398,6 +534,66 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha desde"
+                    value={fecha_desde}
+                    onChange={(newValue) => {
+                      handle_change_fecha_desde(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        fullWidth
+                        size="small"
+                        {...params}
+                        // error={error_fecha_desde}
+                      />
+                    )}
+                    maxDate={fecha_hasta}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha hasta"
+                    value={fecha_hasta}
+                    onChange={(newValue) => {
+                      handle_change_fecha_hasta(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        fullWidth
+                        size="small"
+                        {...params}
+                        // error={error_fecha_hasta}
+                      />
+                    )}
+                    minDate={fecha_desde}
+                    disabled={fecha_desde == null}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Consecutivo"
+                  type='number'
+                  size="small"
+                  fullWidth
+                  value={new_filters.consecutivo}
+                  onChange={handle_consecutivo}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Código bien"
+                  size="small"
+                  fullWidth
+                  value={new_filters.codigo_bien}
+                  onChange={handle_codigo_bien}
+                />
+              </Grid>
               <Grid item xs={12} sm={12}>
                 <Stack direction="row" justifyContent="center">
                   <Grid item xs={12} sm={6}>
@@ -419,6 +615,13 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   </Grid>
                 </Stack>
               </Grid>
+              <BuscadorPersonasReports
+                is_clear_filtros={is_clear_filtros}
+                set_is_clear_filtros={set_is_clear_filtros}
+                set_clear_persons={set_clear_persons}
+                onResult={on_result}
+                seleccion_tablero_control={seleccion_tipo_consulta}
+              />
               <Grid item xs={12} sm={6}>
                 <Stack
                   direction="row"
@@ -662,7 +865,65 @@ export const ControlDeInventariosScreen: React.FC = () => {
                   </Select>
                 </FormControl>
               </Grid>
-
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha desde"
+                    value={fecha_desde}
+                    onChange={(newValue) => {
+                      handle_change_fecha_desde(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        fullWidth
+                        size="small"
+                        {...params}
+                        // error={error_fecha_desde}
+                      />
+                    )}
+                    maxDate={fecha_hasta}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DatePicker
+                    label="Fecha hasta"
+                    value={fecha_hasta}
+                    onChange={(newValue) => {
+                      handle_change_fecha_hasta(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        fullWidth
+                        size="small"
+                        {...params}
+                        // error={error_fecha_hasta}
+                      />
+                    )}
+                    minDate={fecha_desde}
+                    disabled={fecha_desde == null}
+                  />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Código bien"
+                  size="small"
+                  fullWidth
+                  value={new_filters.codigo_bien}
+                  onChange={handle_codigo_bien}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label="Nombre bien"
+                  size="small"
+                  fullWidth
+                  value={new_filters.nombre_bien}
+                  onChange={handle_nombre_bien}
+                />
+              </Grid>
               <Grid item xs={12} sm={12}>
                 <Stack direction="row" justifyContent="center">
                   <Grid item xs={12} sm={5}>
@@ -803,7 +1064,7 @@ export const ControlDeInventariosScreen: React.FC = () => {
         }}
       >
         <Grid item md={12} xs={12}>
-          <ResultadosBusqueda resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios} nombre_archivo={nombre_archivo ?? ''}></ResultadosBusqueda>
+          <ResultadosBusqueda title={new_title} resultado_busqueda={resultado_busqueda} seleccion_tipo_consulta={seleccion_tipo_consulta} titulo={"Activos fijos"} agrupar={agrupar} mostrar={mostrar} agrupar_bodega={agrupar_bodega} inventarios={inventarios} nombre_archivo={nombre_archivo ?? ''}></ResultadosBusqueda>
         </Grid>
       </Grid>)}
       <Grid container justifyContent="flex-end">

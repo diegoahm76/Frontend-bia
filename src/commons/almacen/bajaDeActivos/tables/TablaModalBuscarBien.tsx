@@ -8,6 +8,8 @@ import { download_xls } from '../../../../documentos-descargar/XLS_descargar';
 import { download_pdf } from '../../../../documentos-descargar/PDF_descargar';
 import { v4 as uuidv4 } from 'uuid';
 import { set } from 'date-fns';
+import dayjs from 'dayjs';
+
 
 interface custom_column extends GridColDef {
   renderCell?: (params: { row: interface_busqueda_avanzada_bienes }) => React.ReactNode;
@@ -26,6 +28,14 @@ const TablaModalBuscarBien: React.FC<props> = ({set_filas_seleccionadas_temp,dat
     {field: 'nombre_marca', headerName:'Marca', width:150, flex:1},
     {field: 'identificador_bien', headerName:'Identificador bien', width:150, flex:1},
     {field: 'valor_unitario', headerName:'Valor unitario', width:150, flex:1},
+    {field: 'valor_iva', headerName:'Valor iva', width:150, flex:1},
+    {field: 'valor_residual', headerName:'Valor residual', width:150, flex:1},
+    {field: 'depreciacion_valor', headerName:'Depreciación valor', width:150, flex:1},
+    {field: 'valor_total', headerName:'Valor total', width:150, flex:1},
+    { field: 'fecha_ingreso', headerName: 'Fecha de ingreso', minWidth: 120, flex: 1,
+      valueFormatter: (params) => params.value ? dayjs(params.value).format('DD/MM/YYYY') : '',
+    },
+    {field: 'estado', headerName:'Estado', width:150, flex:1},
   ]
 
   const handle_seleccionar_filas = (selectionModel: GridRowId[]) => {
@@ -34,14 +44,14 @@ const TablaModalBuscarBien: React.FC<props> = ({set_filas_seleccionadas_temp,dat
       // Encontrar el objeto con el ID correspondiente
       return data_bienes_baja.find(bien => bien.id_bien === id_bien);
     });
-  
+
     // Filtrar objetos nulos (por si no se encuentra coincidencia)
     const filasFiltradasValidas = filasFiltradas.filter(bien => bien !== undefined);
-  
+
     // Actualizar el estado con las filas seleccionadas
     set_filas_seleccionadas_temp(filasFiltradasValidas);
   };
-  
+
 
 
 
@@ -80,6 +90,6 @@ const TablaModalBuscarBien: React.FC<props> = ({set_filas_seleccionadas_temp,dat
     </>
   );
 }
- 
+
 // eslint-disable-next-line no-restricted-syntax
 export default TablaModalBuscarBien;

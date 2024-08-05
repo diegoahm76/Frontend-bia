@@ -108,7 +108,7 @@ export const AccionesFinales = ({
         })),
       })
     );
-
+    console.log('object');
     postResponderUsuario(formData, setLoadingButton)
       .then(() => {
         handleReset();
@@ -127,6 +127,7 @@ export const AccionesFinales = ({
       currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas?.estado_tarea ===
       'Respondida por el propietario de la bandeja de tareas'
     ) {
+      console.log(currentElementBandejaTareasPqrsdfYTramitesYOtrosYOpas);
       showAlert('Opss!', 'Esta PQRSDF ya ha sido respondida', 'warning');
       return;
     }

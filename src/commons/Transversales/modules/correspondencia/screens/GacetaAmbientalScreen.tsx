@@ -352,6 +352,7 @@ export function GacetaAmbientalScreen(): JSX.Element {
               label={'Cancelar'}
               type_button="button"
               color_button="error"
+              href={`/#/app/transversal/correspondencia/panel_asignacion_funcionario`}
             />
           </Grid>
           <>

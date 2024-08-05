@@ -351,27 +351,31 @@ export const TablaProyeccionPagos: React.FC = () => {
                 onClick={() => {
                   const post_registro = async (): Promise<void> => {
                     try {
+                      const porcentaje_abono_str = facilidades.porcentaje_abono.toString().slice(0, 5);
+                      const porcentaje_abono_format = `${porcentaje_abono_str.slice(0, 3)}.${porcentaje_abono_str.slice(3)}`;
+                  
                       const {
                         data: { data: res_registro },
                       } = await post_plan_pagos({
-                        id_facilidad_pago:
-                        solicitud_facilidad.facilidad_pago.id,
+                        id_facilidad_pago: solicitud_facilidad.facilidad_pago.id,
                         id_tasa_interes: 1,
                         tasa_diaria_aplicada: facilidades.tasa_diaria_aplicada,
                         abono_aplicado: parseFloat(deudores.valor_abonado),
-                        porcentaje_abono: facilidades.porcentaje_abono,
+                        porcentaje_abono: parseFloat(porcentaje_abono_format), // Envía el número con el punto después del tercer dígito
                         fecha_pago_abono: facilidades.fecha_pago_abono,
                         nro_cuotas: facilidades.cuotas,
                         periodicidad: facilidades.periodicidad,
                         saldo_total: plan_pagos.resumen_facilidad.saldo_total,
-                        intreses_mora:
-                          plan_pagos.resumen_facilidad.intreses_mora,
+                        intreses_mora: plan_pagos.resumen_facilidad.intreses_mora,
                       });
+                  
                       set_respuesta_registro(res_registro ?? {});
                     } catch (error: any) {
                       throw new Error(error);
                     }
                   };
+                  
+                  
                   void post_registro();
                 }}
               >

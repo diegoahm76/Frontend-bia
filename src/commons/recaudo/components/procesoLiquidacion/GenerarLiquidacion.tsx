@@ -1,10 +1,4 @@
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable object-shorthand */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint no-new-func: 0 */
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, type SelectChangeEvent, TextField, Typography, FormHelperText } from "@mui/material";
 import type { EstadoExpediente, Expediente, FormLiquidacion, RowDetalles } from "../../interfaces/liquidacion";
 import SaveIcon from '@mui/icons-material/Save';
@@ -19,6 +13,19 @@ import { currency_formatter } from "../../../../utils/functions/getFormattedCurr
 import { jsPDF } from 'jspdf';
 import { useState } from "react";
 import { control_error, control_success } from "../../../../helpers";
+export interface Concepto {
+    nit_titular: string;
+    nombre_titular: string;
+    direccion_titular: string;
+    telefono_titular: string;
+    expediente: string;
+    num_resolucion: string;
+    fecha_resolucion: string;
+    nombre_fuente_hidrica: string | null;
+    caudal_concesionado: string;
+    clase_uso_agua: string;
+    factor_regional: number;
+  }
 interface LiquidacionResponse {
     success: boolean;
     detail: string;
@@ -50,6 +57,10 @@ interface LiquidacionResponse {
     };
 }
 interface IProps {
+    set_tipo_renta:any;
+    tipo_renta:any;
+    setLiquidacion:any;
+    liquidacion:any;
     form_liquidacion: FormLiquidacion;
     nombre_deudor: string;
     rows_detalles: RowDetalles[];
@@ -70,148 +81,350 @@ interface IProps {
     selectedIds: any;
     set_selectedIds: any;
     set_form_liquidacion: any;
+    lista_obligaciones: any;
+    obligaciones: any;
+    id_cc:any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const GenerarLiquidacion: React.FC<IProps> = ({
-    periodos,
-    selectedIds,
-    rows_detalles,
-    nombre_deudor,
-    form_liquidacion,
-    tamano_detalles,
-    detalles_ciclos,
-    set_form_liquidacion,
-    set_selectedIds,
-    estado_expediente,
-    fecha_liquidacion,
-    fecha_vencimiento,
-    expedientes_deudor,
-    id_liquidacion_pdf,
-    set_fecha_vencimiento,
-    set_fecha_liquidacion,
-    handle_submit_liquidacion,
-    handle_submit_liquidacionma,
-    handle_input_form_liquidacion_change,
-    handle_select_form_liquidacion_change,
-}: IProps) => {
+    export const GenerarLiquidacion: React.FC<IProps> = ({
+        id_cc,
+        set_tipo_renta,
+        tipo_renta,
+        liquidacion,
+        setLiquidacion,
+        periodos,
+        selectedIds,
+        rows_detalles,
+        nombre_deudor,
+        form_liquidacion,
+        tamano_detalles,
+        detalles_ciclos,
+        set_form_liquidacion,
+        set_selectedIds,
+        estado_expediente,
+        fecha_liquidacion,
+        fecha_vencimiento,
+        expedientes_deudor,
+        id_liquidacion_pdf,
+        set_fecha_vencimiento,
+        set_fecha_liquidacion,
+        handle_submit_liquidacion,
+        handle_submit_liquidacionma,
+        handle_input_form_liquidacion_change,
+        handle_select_form_liquidacion_change,
+        lista_obligaciones,
+        obligaciones
+    }: IProps) => {
 
-    const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
-        if (date !== null) {
-            set_fecha_liquidacion(date);
-        }
-    };
-
-    const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
-        if (date !== null) {
-            set_fecha_vencimiento(date);
-        }
-    };
-
-
-
-    const [visor, setVisor] = useState('');
-
-    const generarHistoricoBajas = () => {
-        const doc = new jsPDF();
-        const anchoPagina = doc.internal.pageSize.width;
-        const agregarEncabezado = () => {
-            doc.setFontSize(22);
-            doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
-            doc.setFontSize(12);
+        const cambio_fecha_liquidacion = (date: Dayjs | null): void => {
+            if (date !== null) {
+                set_fecha_liquidacion(date);
+            }
         };
-        agregarEncabezado();
-        doc.setFontSize(12);
-        let y = 30;
-        setVisor(doc.output('datauristring'));
-    };
+
+        const cambio_fecha_vencimiento = (date: Dayjs | null): void => {
+            if (date !== null) {
+                set_fecha_vencimiento(date);
+            }
+        };
+
+        const [visor, setVisor] = useState('');
 
 
-    const [pdfUrl, setPdfUrl] = useState('');
 
-    const handleOpenPdf = () => {
-        // Aquí estableces la URL del PDF que deseas mostrar
-        setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
-    };
+        const generarHistoricoBajas = () => {
+            const doc = new jsPDF();
+            const anchoPagina = doc.internal.pageSize.width;
+            const agregarEncabezado = () => {
+                doc.setFontSize(22);
+                doc.text("    ", anchoPagina / 2, 20, { align: 'center' });
+                doc.setFontSize(12);
+            };
+            agregarEncabezado();
+            doc.setFontSize(12);
+            let y = 30;
+            setVisor(doc.output('datauristring'));
+        };
 
 
-    const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+        const [pdfUrl, setPdfUrl] = useState('');
+
+        const handleOpenPdf = () => {
+            // Aquí estableces la URL del PDF que deseas mostrar
+            setPdfUrl(`${api.defaults.baseURL}recaudo/liquidaciones/liquidacion-pdf/${id_liquidacion_pdf}/`);
+        };
 
 
-    const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
+        // const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(null);
+        const [year, set_year] = useState<any>('');
+        // const [tipo_renta, set_tipo_renta] = useState<string>('');
+
+
+        const cargarLiquidacion = async (setLiquidacion: React.Dispatch<React.SetStateAction<LiquidacionResponse | null>>) => {
+            // try {
+            //     const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
+
+            //     setLiquidacion(response.data);
+            //     console.log("Datos de liquidación cargados con éxito");
+            // } catch (error: any) {
+            //     console.error('Error al cargar los datos de liquidación', error);
+            //     // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
+            // }
+        };
+        useEffect(() => {
+            cargarLiquidacion(setLiquidacion);
+        }, [id_liquidacion_pdf]);
+
+        const [caudalConcesionado, setCaudalConcesionado] = useState('');
+
+        // const actualizarCaudalConcesionado = async () => {
+        //     try {
+        //         const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
+        //             caudal_consecionado: caudalConcesionado
+        //         });
+        //         console.log('Caudal actualizado con éxito', response.data);
+        //         control_success("Caudal actualizado con éxito");
+
+        //         // Actualizar la información en la interfaz si es necesario
+        //     } catch (error: any) {
+        //         console.error('Error al actualizar el caudal concedido', error);
+        //         control_error(error.response.data.detail);
+        //     }
+        // };
+
+
+        const [historico, setHistorico] = useState<Concepto | any>("");
+
+        const fetchHistorico = async (): Promise<void> => {
         try {
-            const response = await api.get<LiquidacionResponse>(`/recaudo/liquidaciones/liquidacion-pdf_miguel/${id_liquidacion_pdf}/`);
-
-            setLiquidacion(response.data);
-            console.log("Datos de liquidación cargados con éxito");
+            const url = `recaudo/cobros/info-tua/${id_cc}`;
+            const res = await api.get(url);
+            const historicoData: Concepto = res.data?.data || null;
+            setHistorico(historicoData);
+            setCaudalConcesionado(historico?.caudal_concesionado)
         } catch (error: any) {
-            console.error('Error al cargar los datos de liquidación', error);
-            // Aquí puedes manejar los errores, por ejemplo, mostrando una alerta
+            // console.error(error);
         }
-    };
+        };
+        useEffect(() => {
+            fetchHistorico();
+        }, []);
+        const actualizarCaudalConcesionado = async () => {
+            try {
+                const caudalConcesionadoNumero = Number(caudalConcesionado);
+        
+                if (isNaN(caudalConcesionadoNumero)) {
+                    throw new Error('El valor de caudalConcesionado no es un número válido.');
+                }
+        
+                const response = await api.put(`recaudo/liquidaciones/actualizar-caudal-concesionado/${id_cc}/`, {
+                    caudal_concesionado: caudalConcesionadoNumero
+                });
+                console.log('Caudal actualizado con éxito', response.data);
+                control_success("Caudal actualizado con éxito");
+                fetchHistorico()
+                // Actualizar la información en la interfaz si es necesario
+            } catch (error) {
+                console.error('Error al actualizar el caudal concedido', error);
+                // control_error(error.response?.data?.detail || error.message);
+            }
+        };
+        const actualizarLiquidacionBase = async () => {
+            try {
+                const response = await api.put(`/recaudo/liquidaciones/liquidacion-base/${id_liquidacion_pdf}/`, {
+                    id_expediente: form_liquidacion.id_expediente,
+                    fecha_liquidacion: fecha_liquidacion,
+                    vencimiento: fecha_vencimiento
+                });
+                console.log('Liquidación base actualizada con éxito', response.data);
+                control_success("Liquidación base actualizada con éxito");
+
+                // Actualizar la información en la interfaz si es necesario
+            } catch (error: any) {
+                console.error('Error al actualizar la liquidación base', error);
+                control_error(error.response.data.detail);
+            }
+        };
+
+        useEffect(() => {
+            set_form_liquidacion((prevData: any) => ({
+                ...prevData,
+                id_expediente: selectedIds[0].toString(),
+
+            }));
+
+        }, [selectedIds]);
+
     useEffect(() => {
-        cargarLiquidacion(setLiquidacion);
-    }, [id_liquidacion_pdf]);
+        if (lista_obligaciones.length > 0) {
+            set_form_liquidacion((prevData: any) => ({
+                ...prevData,
+                id_expediente: lista_obligaciones[0]?.expediente,
+            }));
 
-    const [caudalConcesionado, setCaudalConcesionado] = useState('');
+            // set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
 
-    const actualizarCaudalConcesionado = async () => {
-        try {
-            const response = await api.put(`/recaudo/liquidaciones/liquidacion_update_caudlk/${id_liquidacion_pdf}/`, {
-                caudal_consecionado: caudalConcesionado
-            });
-            console.log('Caudal actualizado con éxito', response.data);
-            control_success("Caudal actualizado con éxito");
+            if (tipo_renta.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'semestral',
+                    periodo_liquidacion: 'enero a junio'
+                }));
+            }
+            if (tipo_renta.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
+                set_form_liquidacion((prevData: any) => ({
+                    ...prevData,
+                    ciclo_liquidacion: 'anual',
+                    periodo_liquidacion: 'enero a diciembre'
+                }));
+            }
+            //  else 
+            //  if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (VISITAS; TASA APROVECHAMIENTO FORESTAL; SALVOCONDUCTOS; ETC)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'diario',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TR)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'semestral',
+            //         periodo_liquidacion: 'enero a junio'
+            //     }));
+            // } 
+            // else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE APROVECHAMIENTO FORESTAL') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'anual',
+            //         periodo_liquidacion: 'enero a diciembre'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'DETERMINANTES AMBIENTALES') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'diario',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL O PORCENTAJE') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (SALVOCONDUCTOS; ETC)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS DE CONTROL Y SEGUIMIENTO') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS INICIALES DE EVALUACION') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VEHICULO 2024') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'INICIO DE COBRO 2024') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
 
-            // Actualizar la información en la interfaz si es necesario
-        } catch (error: any) {
-            console.error('Error al actualizar el caudal concedido', error);
-            control_error(error.response.data.detail);
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SALARIO MINIMO LEGAL VIGENTE 2024') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+
+            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SUBSIDIO DE TRANSPORTE') {
+            //     set_form_liquidacion((prevData: any) => ({
+            //         ...prevData,
+            //         ciclo_liquidacion: 'mensual',
+            //         periodo_liquidacion: 'pago unico'
+            //     }));
+
+            // }
+
         }
-    };
+    }, [lista_obligaciones])
 
 
-    const actualizarLiquidacionBase = async () => {
-        try {
-            const response = await api.put(`/recaudo/liquidaciones/liquidacion-base/${id_liquidacion_pdf}/`, {
-                id_expediente: form_liquidacion.id_expediente,
-                fecha_liquidacion: fecha_liquidacion,
-                vencimiento: fecha_vencimiento
-            });
-            console.log('Liquidación base actualizada con éxito', response.data);
-            control_success("Liquidación base actualizada con éxito");
+    // useEffect(() => {
+    //     if (tipo_renta === "TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)") {
+    //       set_form_liquidacion((prevData: any) => ({
+    //         ...prevData,
+    //         ciclo_liquidacion: "semestral"
+    //       }));
+    //     }
+    //   }, [tipo_renta, set_form_liquidacion]);
 
-            // Actualizar la información en la interfaz si es necesario
-        } catch (error: any) {
-            console.error('Error al actualizar la liquidación base', error);
-            control_error(error.response.data.detail);
-        }
-    };
-
-    useEffect(() => {
-        set_form_liquidacion((prevData: any) => ({
-            ...prevData,
-            id_expediente: selectedIds[0].toString(),
-
-        }));
-
-    }, [selectedIds]);
-
-    const handleClick = () => {
-        console.log(selectedIds);
-        console.log("2222222");
-    };
     return (
         <>
 
 
-
-            {/* <Button color='success'
-                variant='contained'
-                onClick={handleClick}>CONSOLE </Button> */}
-
-
             <Grid container spacing={2}>
+            {/* <Grid item xs={12} sm={4}>
+  <FormControl size="small" fullWidth>
+    <InputLabel>Expediente</InputLabel>
+    <Select
+      label='Expediente'
+      name="id_expediente"
+      value={form_liquidacion.id_expediente}
+      MenuProps={{
+        style: {
+          maxHeight: 224,
+        }
+      }}
+      onChange={handle_select_form_liquidacion_change}
+    >
+      {expedientes_deudor.map((expediente) => (
+        <MenuItem key={expediente.id} value={expediente.id}>
+          {expediente.id_expediente_doc !== null ? expediente.id_expediente_doc : expediente.id_expediente_pimisys}
+        </MenuItem>
+      ))}
+    </Select>
+    <FormHelperText>Seleccione el expediente</FormHelperText>
+  </FormControl>
+</Grid> */}
+
+{/* 
                 <Grid item xs={12} sm={4}>
                     <FormControl size="small" fullWidth>
                         <InputLabel>Expediente</InputLabel>
@@ -234,7 +447,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                         </Select>
                         <FormHelperText>Seleccione el expediente</FormHelperText>
                     </FormControl>
-                </Grid>
+                </Grid> */}
                 {/* { selectedIds[0].toString()}
                ññ
                {form_liquidacion.id_expediente} */}
@@ -251,7 +464,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 <Grid item xs={12} sm={4}>
                     <TextField
                         label='Cedula'
-                        value={liquidacion?.data.cedula}
+                        value={obligaciones?.numero_identificacion ?? ''}
                         size="small"
                         InputLabelProps={{
                             shrink: true,
@@ -263,8 +476,8 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
 
                 <Grid item xs={12} sm={4}>
                     <TextField
-                        label='telefono'
-                        value={liquidacion?.data.telefono}
+                        label='Tipo de renta: '
+                        value={tipo_renta}
                         size="small"
                         InputLabelProps={{
                             shrink: true,
@@ -370,16 +583,29 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                 <>
 
                     <Grid item xs={12} sm={4}>
-                        <TextField
-                            label='Año'
-                            value={liquidacion?.data.anio}
-                            size="small"
-                            fullWidth
-                            InputLabelProps={{
-                                shrink: true,
-                            }}
-                            disabled
-                        />
+                        <FormControl fullWidth size="small">
+                            <InputLabel>Año: </InputLabel>
+                            <Select
+                                value={year}
+                                label="Año:"
+                                
+                                onChange={(e) => set_year(Number(e.target.value))}
+                            >
+                                <MenuItem value=''>Seleccione una opción</MenuItem>
+                                <MenuItem value={2024}>2024</MenuItem>
+                                <MenuItem value={2025}>2025</MenuItem>
+                                <MenuItem value={2026}>2026</MenuItem>
+                                <MenuItem value={2027}>2027</MenuItem>
+                                <MenuItem value={2028}>2028</MenuItem>
+                                <MenuItem value={2029}>2029</MenuItem>
+                                <MenuItem value={2030}>2030</MenuItem>
+                                <MenuItem value={2031}>2031</MenuItem>
+                                <MenuItem value={2032}>2032</MenuItem>
+                                <MenuItem value={2033}>2033</MenuItem>
+                                <MenuItem value={2034}>2034</MenuItem>
+                                <MenuItem value={2035}>2035</MenuItem>
+                            </Select>
+                        </FormControl>
                     </Grid>
 
 
@@ -388,7 +614,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label='direccion'
-                            value={liquidacion?.data.direccion}
+                            value={historico?.direccion_titular}
                             size="small"
                             InputLabelProps={{
                                 shrink: true,
@@ -402,7 +628,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label='Representante legal'
-                            value={liquidacion?.data.representante_legal}
+                            value={historico?.representante_legal}
                             size="small"
                             InputLabelProps={{
                                 shrink: true,
@@ -415,7 +641,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                     <Grid item xs={12} sm={4}>
                         <TextField
                             label='predio'
-                            value={liquidacion?.data.predio}
+                            value= {historico?.predio}
                             size="small"
                             InputLabelProps={{
                                 shrink: true,
@@ -440,7 +666,7 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                             size="small"
 
                             fullWidth
-                            value={caudalConcesionado}
+                            value={caudalConcesionado }
                             onChange={(e) => setCaudalConcesionado(e.target.value)}
                         />
                     </Grid>
@@ -449,11 +675,11 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                             Actualizar Caudal
                         </Button>
                     </Grid>
-                    <Grid item  >
+                    {/* <Grid item  >
                         <Button variant="contained" color="success" onClick={actualizarLiquidacionBase}>
                             actualizar fecha
                         </Button>
-                    </Grid>
+                    </Grid> */}
 
                 </>
 
@@ -518,39 +744,6 @@ export const GenerarLiquidacion: React.FC<IProps> = ({
                                 Imprimir recibo
                             </Button>
                         </Grid>
-                        {/* {id_liquidacion_pdf} */}
-                        {/* {id_liquidacion_pdf} */}
-
-                        {/* <div>
-              <Grid container spacing={3}>
-                <Grid item xs={12} sm={3}>
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    fullWidth
-                    startIcon={<PrintIcon />}
-                    onClick={handleOpenPdf}
-                  >
-                    Imprimir recibo
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={12}>
-                  {/* Aquí es donde se mostrará el PDF */}
-                        {/* pdfUrl && (
-                    <iframe
-                      src={pdfUrl}
-                      width="100%"
-                      height="600px"
-                    />
-                  )
-                </Grid>
-              </Grid> */}
-                        {/* </div> */}
-
-
-
-
-
 
 
 

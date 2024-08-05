@@ -25,6 +25,8 @@ import { control_error } from '../../../../helpers';
 import { get_tipos_vehiculos } from '../thunks/tablerosControlAlmacen';
 import SearchIcon from '@mui/icons-material/Search';
 import ModalBusquedaVehiculos from '../manners/ModalBusquedaVehiculos';
+import { BuscadorPersonasReports } from './BuscadorPersonasReports';
+import { InfoPersona } from '../../../../interfaces/globalModels';
 
 
 
@@ -33,6 +35,11 @@ interface props {
   set_inputs_huv: Dispatch<SetStateAction<interface_inputs_huv>>;
   set_data_vehiculo_seleccionado: Dispatch<SetStateAction<interface_busqueda_vehiculos>>;
   set_data_huv: Dispatch<SetStateAction<interface_historico_vehiculo[]>>;
+  onResult: (data_persona: InfoPersona, param: string) => void;
+  set_clear_persons: (bool: boolean) => void;
+  seleccion_tablero_control: string;
+  is_clear_filtros?: boolean;
+  set_is_clear_filtros?: (bool: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -41,6 +48,11 @@ const HistoricoUsoVehiculos: FC<props> = ({
   set_inputs_huv,
   set_data_vehiculo_seleccionado,
   set_data_huv,
+  onResult,
+  set_clear_persons,
+  seleccion_tablero_control,
+  is_clear_filtros,
+  set_is_clear_filtros,
 }) => {
   const dispatch = useDispatch();
 
@@ -67,6 +79,23 @@ const HistoricoUsoVehiculos: FC<props> = ({
       servicios_obtenidos.current = true;
     }
   }, [servicios_obtenidos]);
+
+  const clear_fields = () => {
+    set_inputs_huv({
+      ...inputs_huv,
+      nombre_vehiculo: '',
+      tipo_vehiculo: '',
+      propiedad: '',
+      fecha_desde: null,
+      fecha_hasta: null,
+    });
+  };
+
+  useEffect(() => {
+    if (is_clear_filtros) {
+      clear_fields();
+    }
+  }, [is_clear_filtros]);
 
 
   return (
@@ -106,10 +135,44 @@ const HistoricoUsoVehiculos: FC<props> = ({
 
         {inputs_huv?.tipo_consulta === 'vehiculo_especifico' &&
           <>
-            <Grid item xs={12} lg={8}>
+            <Grid item xs={12} lg={3}>
               <TextField
                 fullWidth
-                label='Vehículo:'
+                label='Consecutivo'
+                disabled
+                value={inputs_huv.consecutivo ?? ''}
+                onChange={
+                  (e) => {
+                    set_inputs_huv({
+                      ...inputs_huv,
+                      consecutivo: e.target.value,
+                    });
+                  }
+                }
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                label='Código bien'
+                disabled
+                value={inputs_huv.codigo_bien ?? ''}
+                onChange={
+                  (e) => {
+                    set_inputs_huv({
+                      ...inputs_huv,
+                      codigo_bien: e.target.value,
+                    });
+                  }
+                }
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                label='Vehículo'
                 disabled
                 value={inputs_huv.nombre_vehiculo ?? ''}
                 onChange={
@@ -123,8 +186,42 @@ const HistoricoUsoVehiculos: FC<props> = ({
                 size='small'
               />
             </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                label='Placa'
+                disabled
+                value={inputs_huv.placa ?? ''}
+                onChange={
+                  (e) => {
+                    set_inputs_huv({
+                      ...inputs_huv,
+                      placa: e.target.value,
+                    });
+                  }
+                }
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={12} lg={3}>
+              <TextField
+                fullWidth
+                label='Marca'
+                disabled
+                value={inputs_huv.marca ?? ''}
+                onChange={
+                  (e) => {
+                    set_inputs_huv({
+                      ...inputs_huv,
+                      marca: e.target.value,
+                    });
+                  }
+                }
+                size='small'
+              />
+            </Grid>
 
-            <Grid item xs={12} lg={4}>
+            <Grid item>
               <Button
                 fullWidth
                 color="primary"
@@ -155,6 +252,7 @@ const HistoricoUsoVehiculos: FC<props> = ({
                     }
                   }
                 >
+                  <MenuItem value={'Todos'}>Todos</MenuItem>
                   {tipos_vehiculos.length !== 0 ?
                     tipos_vehiculos.map((item: any) => (
                       <MenuItem key={item[0]} value={item[0]}>{item[1]}</MenuItem>
@@ -181,9 +279,9 @@ const HistoricoUsoVehiculos: FC<props> = ({
                     }
                   }
                 >
-                  <MenuItem value=''>Todos</MenuItem>
-                  <MenuItem value='true'>Propio</MenuItem>
-                  <MenuItem value='false'>Arrendado</MenuItem>
+                  <MenuItem value={'Todos'}>Todos</MenuItem>
+                  <MenuItem value='false'>Propio</MenuItem>
+                  <MenuItem value='true'>Arrendado</MenuItem>
                 </Select>
               </FormControl>
             </Grid>
@@ -224,6 +322,13 @@ const HistoricoUsoVehiculos: FC<props> = ({
                 />
               </LocalizationProvider>
             </Grid>
+            <BuscadorPersonasReports
+              set_clear_persons={set_clear_persons}
+              onResult={onResult}
+              seleccion_tablero_control={seleccion_tablero_control}
+              is_clear_filtros={is_clear_filtros}
+              set_is_clear_filtros={set_is_clear_filtros}
+            />
           </>
         }
 

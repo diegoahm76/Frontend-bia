@@ -8,6 +8,9 @@ import { FormProviderMetadatos } from '../../TramitesServicios/context/Metadatos
 import { MainScreenTiposTramites } from '../modules/TiposTramites/MainScreenTiposTramites';
 import { PermisosMenoresScreen } from '../modules/PermisosMenores/TramitesOServiciosScreen';
 import { StepperProvider } from '../../transferenciaDocumental/context/ContextControlSteper';
+import { MainFirstPartResReqOpa } from '../modules/PermisosMenores/respuestaReqPM/modules/firstPart/screen/MainFirstPartResPM';
+import { MainResReqOpaScreen } from '../modules/PermisosMenores/respuestaReqPM/modules/secondPart/screen/MainResReqOpaScreen';
+import { ResReqPermisoMenorRouter } from '../modules/PermisosMenores/respuestaReqPM/router/ResReqPermisoMenorRouter';
 
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -33,6 +36,7 @@ export const TramitesServiciosRouter = (): ReactElement => {
           />
 
           <Route path="permisos_menores/*" element={<PermisosMenoresScreen/>} />
+          <Route path="respuesta_requerimiento_permiso_menor/*" element={<ResReqPermisoMenorRouter />} />
           <Route path="/*" element={<Page404 />} />
         </Routes>
       </UserProvider>

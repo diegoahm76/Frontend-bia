@@ -24,6 +24,17 @@ export const obtener_solicitudes: any = () => {
   };
 };
 
+export const obtener_solicitud_por_id: any = (id_solicitud: string) => {
+  return async () => {
+    try {
+      const { data } = await api.get(`almacen/vehiculos/obtener-informacion-viajes/${id_solicitud}/`);
+      return data;
+    } catch (error: any) {
+      return error as AxiosError;
+    }
+  };
+};
+
 export const obtener_solicitudes_params: any = (estado: string, desde: string, hasta: string) => {
   return async () => {
     try {

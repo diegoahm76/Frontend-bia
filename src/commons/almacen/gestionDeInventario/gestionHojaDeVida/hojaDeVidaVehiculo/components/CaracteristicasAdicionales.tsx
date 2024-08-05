@@ -168,7 +168,7 @@ const EspecificacionAdicional = ({
                             xs: 12,
                             md: 3,
                             control_form: control_vehicle,
-                            control_name: "dimesion_llantas",
+                            control_name: "dimension_llantas",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
                             label: "Dimensión de las llantas",

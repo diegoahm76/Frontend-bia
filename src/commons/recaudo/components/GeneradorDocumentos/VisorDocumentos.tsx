@@ -4,20 +4,12 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
   Button,
-  Dialog,
-  Switch,
-  Chip,
-  Typography,
 } from '@mui/material';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import CreateIcon from '@mui/icons-material/Create';
+import CleaningServicesIcon from '@mui/icons-material/CleaningServices';
 import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 import { ModalConfirmacionMail } from './ModalConfirmacionMail';
 import { useState } from 'react';
@@ -25,8 +17,13 @@ import { api } from '../../../../api/axios';
 import { control_error, control_success } from '../../../../helpers';
 import swal from 'sweetalert2';
 
-export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_firma}: {file: any, current_borrador: any, uplock_firma: boolean}) => {
+export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_firma, set_uplock_firma, clean_template}: {file: any, current_borrador: any, uplock_firma: boolean, set_uplock_firma: (b: boolean) => void, clean_template: () => void}) => {
   const [open, setOpen] = useState(false);
+  const [resetTime, setResetTime] = useState(false);
+
+  const obtenerExtension = (url: any) => {
+    return url.split('.').pop();
+  }
 
   const new_firma_code = async () => {
     try {
@@ -34,6 +31,7 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
       const response = await api.post(url, {id_consecutivo: current_borrador?.id_consecutivo_tipologia});
       control_success('Código de verificación enviado correctamente');
       setOpen(true);
+      setResetTime(true)
     } catch (error: any) {
       control_error(error.response.data.detail);
     }
@@ -43,9 +41,14 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
     try {
       const url = `gestor/trd/codigo-verificacion-validacion/`;
       const response = await api.put(url, {id_consecutivo: current_borrador?.id_consecutivo_tipologia, codigo: code });
-      console.log(response);
       control_success('Documento firmado correctamente');
       setOpen(false);
+      set_uplock_firma(false);
+      if(response.data && response?.data?.finalizo){
+        setTimeout(() => {
+          control_success('El documento ha sido finalizado. Todas las firmas se han validado correctamente.')
+        }, 500)
+      }
     } catch (error: any) {
       control_error(error.response.data.detail);
     }
@@ -75,17 +78,17 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
       {(file) && (
         <>
           <Grid sx={{display: 'flex', justifyContent: 'center', gap: '1rem', mb: '1.5rem'}}>
-            <Button
-              fullWidth
-              variant="contained"
-              color="primary"
-              sx={{width: '200px'}}
-              href={file}
-              download
-              endIcon={<CloudDownloadIcon />}
-            >
-              Descargar
-            </Button>
+            <a href={file} target="_blank" rel="noopener noreferrer">
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                sx={{width: '200px'}}
+                endIcon={<CloudDownloadIcon />}
+              >
+                Descargar
+              </Button>
+            </a>
             <Button
               fullWidth
               sx={{width: '250px'}}
@@ -97,15 +100,34 @@ export const VisorDocumentos: React.FC<any> = ({file, current_borrador, uplock_f
             >
               Firmar Documento
             </Button>
+            <Button
+              fullWidth
+              sx={{width: '250px'}}
+              variant="outlined"
+              color="primary"
+              endIcon={<CleaningServicesIcon />}
+              onClick={clean_template}
+            >
+              Limpiar Pantalla
+            </Button>
           </Grid>
-          <DocViewer
+          {(obtenerExtension(file) == 'docx' || obtenerExtension(file) == 'doc') && <DocViewer
             pluginRenderers={DocViewerRenderers}
-            documents={[{ uri: file, fileType: 'docx' }]}
-            style={{height: 800, width: '70%', display: 'flex', margin: 'auto'}}
-          />
+            documents={[{ uri: file, fileType: obtenerExtension(file) }]}
+            style={{height: 1000, width: '70%', display: 'flex', margin: 'auto'}}
+          />}
+          {(obtenerExtension(file) !== 'docx' && obtenerExtension(file) !== 'doc') && <embed
+            style={{display: 'flex', margin: 'auto'}}
+            src={file}
+            type="application/pdf"
+            width="70%"
+            height="1080px"
+          />}
           <ModalConfirmacionMail
             open={open}
+            resetTime={resetTime}
             setOpen={setOpen}
+            setResetTime={setResetTime}
             put_firma_code={put_firma_code}
             new_firma_code={new_firma_code}
           />

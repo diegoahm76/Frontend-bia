@@ -23,8 +23,8 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
   aditionalElement,
 }: dataGridTypesWithAdditionalElement): JSX.Element => {
   return (
-    <Grid container sx={rows.length > 0 ? containerStyles : {}}>
-      {rows.length > 0 && <Grid item xs={12}>
+    <Grid container sx={containerStyles}>
+      <Grid item xs={12}>
         {title && <Title title={title} />}
         <Box sx={{ mt: '20px', mb: '20px' }}>
           <Grid container spacing={2}>
@@ -44,12 +44,13 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
                 <DataGrid
                   density="compact"
                   autoHeight
-                  rows={rows ?? []}
-                  columns={columns ?? []}
                   pageSize={11}
                   rowHeight={75}
+                  getRowHeight={() => 'auto'}
                   rowsPerPageOptions={[11]}
                   experimentalFeatures={{ newEditingApi: true }}
+                  rows={rows ?? []}
+                  columns={columns ?? []}
                   getRowId={() => {
                     try {
                       return uuidv4();
@@ -65,7 +66,7 @@ export const RenderDataGrid: FC<dataGridTypesWithAdditionalElement> = ({
           </Grid>
         </Box>
         {aditionalElement}
-      </Grid>}
+      </Grid>
     </Grid>
   );
 };

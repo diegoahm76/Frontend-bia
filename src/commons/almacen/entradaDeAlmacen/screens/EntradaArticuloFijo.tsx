@@ -12,6 +12,7 @@ import { Title } from "../../../../components/Title";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { v4 as uuid } from "uuid";
+import { control_warning } from "../../configuracion/store/thunks/BodegaThunks";
 interface IProps {
     is_modal_active: boolean,
     set_is_modal_active: Dispatch<SetStateAction<boolean>>,
@@ -110,6 +111,8 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
         if (detalle_complementario.length === props.cantidad_entrada) {
             props.detalles_entrada(detalle_complementario);
             props.set_is_modal_active(false);
+        } else {
+            control_warning('debe completar la cantidad de entradas')
         }
     }
 
@@ -130,7 +133,11 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                     set_detalle_complementario([...detalle_complementario, values]);
                     // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
                     set_title('Registro de detalles (' + (detalle_complementario.length + 1) + ' de ' + props.cantidad_entrada + ')');
+                } else {
+                    control_warning('No pueden haber dos placas iguales');
                 }
+            } else {
+                control_warning('Placa duplicada encontrada');
             }
         }
     }
@@ -197,7 +204,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                         />
                                         {(msj_error_placa_serial !== "") && (<FormHelperText error >{msj_error_placa_serial}</FormHelperText>)}
                                     </Grid>
-                                    <Grid item xs={12} sm={4}>
+                                    {/* <Grid item xs={12} sm={4}>
                                         <TextField
                                             label="N° elemento"
                                             value={nro_elemento_bien}
@@ -208,7 +215,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                 readOnly: true
                                             }}
                                         />
-                                    </Grid>
+                                        </Grid>*/}
                                 </Grid>
                             </Box>
                             <Box component="form" sx={{ mt: '20px' }} noValidate autoComplete="off">
@@ -259,7 +266,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                         />
                                         {(msj_error_valor_residual !== "") && (<FormHelperText error >{msj_error_valor_residual}</FormHelperText>)}
                                     </Grid>
-                                    <Grid item xs={12} sm={2}>
+                                    {/* <Grid item xs={12} sm={2}>
                                         <ToggleButton
                                             value="check"
                                             selected={abrir_hdv}
@@ -270,7 +277,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                         >
                                             <CheckIcon />Abrir Hoja de vida
                                         </ToggleButton>
-                                    </Grid>
+                                    </Grid> */}
                                     <Grid item xs={12} sm={3}>
                                         <Button
                                             color='primary'
@@ -310,11 +317,11 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                 rowsPerPageOptions={[5, 10, 25, 50]}
                                                 dataKey="placa_serial"
                                             >
-                                                <Column
+                                                {/*<Column
                                                     field="item"
                                                     header="#"
                                                     style={{ width: '5%' }}
-                                                ></Column>
+                                                ></Column>*/}
                                                 <Column
                                                     field="estado"
                                                     header="Estado"
@@ -344,6 +351,7 @@ const EntradaArticuloFijoComponent = (props: IProps) => {
                                                     field="abrir_hdv"
                                                     header="Hoja de vida"
                                                     style={{ width: '15%' }}
+                                                    body={(rowData) => rowData.abrir_hdv ? 'Sí' : 'No'}
                                                 ></Column>
                                                 <Column header="Acciones" style={{ width: '10%' }} align={'center'} body={(rowData) => {
                                                     return <Button color="error" size="small" variant='contained' onClick={() => {

@@ -1,4 +1,4 @@
-import { Grid, } from '@mui/material';
+import { Chip, Grid, } from '@mui/material';
 import BuscarModelo from "../../../../../../components/partials/getModels/BuscarModelo";
 import { type GridColDef } from '@mui/x-data-grid';
 import { useAppDispatch, useAppSelector } from '../../../../../../hooks';
@@ -35,7 +35,7 @@ const SeleccionarOtros = () => {
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200, flex: 1,
+            minWidth: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -46,7 +46,7 @@ const SeleccionarOtros = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200, flex: 1,
+            minWidth: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -56,11 +56,78 @@ const SeleccionarOtros = () => {
         },
         {
             field: 'cod_tipo_activo',
-            headerName: 'Tipo de bien',
-            width: 200, flex: 1,
+            headerName: 'Tipo Activo',
+            minWidth: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-                    {params.value}
+                    {params.row.cod_tipo_activo == 'OAc' ? 'Otros Activos' : 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'marca',
+            headerName: 'Marca',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'doc_identificador_nro',
+            headerName: 'Serial',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.doc_identificador_nro}
+                </div>
+            ),
+
+        },
+        {
+            field: 'tiene_hoja_vida',
+            headerName: 'Tiene hoja de vida',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => {
+                return params.row.tiene_hoja_vida === true ? (
+                    <Chip size="small" label="SI" color="success" variant="outlined" />
+                ) : (
+                    <Chip size="small" label="NO" color="error" variant="outlined" />
+                );
+            },
+        },
+        {
+            field: 'tipo_bien',
+            headerName: 'Tipo de bien',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'nro_elemento_bien',
+            headerName: 'Consecutivo de bien',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'estado',
+            headerName: 'Estado',
+            minWidth: 120, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.estado}
                 </div>
             ),
 
@@ -68,15 +135,26 @@ const SeleccionarOtros = () => {
 
     ];
     const filter_other: any = (async () => {
-        void dispatch(get_others_all_service())
+        const placa_serial = get_values("doc_identificador_nro");
+        const nombre = get_values("nombre");
+        void dispatch(get_others_all_service(nombre, placa_serial))
     })
 
 
     const search_other: any = (async () => {
         const cv_other = get_values("id_bien")
+        const placa_serial = get_values("doc_identificador_nro");
+        const nombre = get_values("nombre");
         if (cv_other !== null) {
-            void dispatch(get_others_all_service())
+        void dispatch(get_others_all_service(nombre, placa_serial))
         }
+    })
+
+    const clear_fields: any = (async () => {
+        reset_other({
+            doc_identificador_nro: "",
+            nombre: ""
+        });
     })
 
 
@@ -101,22 +179,7 @@ const SeleccionarOtros = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
-                            control_form: control_other,
-                            control_name: "codigo_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Código",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                            on_blur_function: search_other
-                        },
-
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
+                            md: 5,
                             control_form: control_other,
                             control_name: "nombre",
                             default_value: "",
@@ -124,7 +187,20 @@ const SeleccionarOtros = () => {
                             label: "Nombre",
                             type: "text",
                             disabled: true,
-                            helper_text: ""
+                            helper_text: "",
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_other,
+                            control_name: "doc_identificador_nro",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Serial",
+                            type: "text",
+                            disabled: true,
+                            helper_text: "",
                         },
                     ]}
                     modal_select_model_title='Buscar Otros Activos'
@@ -132,17 +208,30 @@ const SeleccionarOtros = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 4,
                             control_form: control_other,
-                            control_name: "codigo_bien",
+                            control_name: "nombre",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Código",
-                            type: "number",
+                            label: "Nombre",
+                            type: "text",
                             disabled: false,
                             helper_text: "",
-                        }
-                    ]} get_filters_models={filter_other} />
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_other,
+                            control_name: "doc_identificador_nro",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Serial",
+                            type: "text",
+                            disabled: false,
+                            helper_text: "",
+                        },
+                    ]} get_filters_models={filter_other} clear_fields={clear_fields}/>
             </Grid>
         </>
     );

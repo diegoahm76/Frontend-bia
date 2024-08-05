@@ -95,9 +95,11 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
   }, [ccd_current?.fecha_terminado]);
 
   useEffect(() => {
-    dispatch(getCatalogoSeriesYSubseries(ccd_current?.id_ccd));
-    get_assignments_service(ccd_current?.id_ccd)(dispatch);
-  }, [ccd_current]);
+    if(ccd_current) {
+        dispatch(getCatalogoSeriesYSubseries(ccd_current.id_ccd));
+        get_assignments_service(ccd_current.id_ccd)(dispatch);
+    }
+}, [ccd_current]);
 
   useEffect(() => {
     console.log('hello world ccd');
@@ -414,7 +416,7 @@ export const CcdScreen: React.FC<any> = (): JSX.Element | any => {
                             ? control_create_ccd._formValues.ruta_soporte
                                 .name ??
                               control_create_ccd._formValues.ruta_soporte.replace(
-                                /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                                /https?:\/\/bia-backend-beta-dev\.up\.railway\.app\/media\//,
                                 ''
                               )
                             : 'Seleccione archivo'}

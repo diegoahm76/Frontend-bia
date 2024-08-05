@@ -101,12 +101,6 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
 
   const columnsss: custom_column[] = [
     {
-      field: 'id_bien',
-      headerName: 'Id',
-      minWidth: 80,
-      maxWidth: 100
-    },
-    {
       field: 'codigo_bien',
       headerName: 'Código',
       minWidth: 160,
@@ -117,8 +111,25 @@ export const BusquedaArticulos: React.FC<IProps> = (props: IProps) => {
       minWidth: 420,
     },
     {
+      field: 'cod_tipo_activo',
+      headerName: 'Tipo Activo',
+      minWidth: 160,
+      renderCell: (params: any) => {
+        const tipo_activo: any = {
+          'Com': 'Computadores',
+          'CyE': 'Construcciones y Edificaciones',
+          'Int': 'Intangibles',
+          'OAc': 'Otros Activos',
+          'Ter': 'Terrenos',
+          'Veh': 'Vehículos'
+        };
+
+        return tipo_activo[params.row.cod_tipo_activo] || 'N/A';
+      }
+    },
+    {
       field: 'tipo_bien',
-      headerName: 'Tipo bien',
+      headerName: 'Tipo de bien',
       minWidth: 100
     },
   ];

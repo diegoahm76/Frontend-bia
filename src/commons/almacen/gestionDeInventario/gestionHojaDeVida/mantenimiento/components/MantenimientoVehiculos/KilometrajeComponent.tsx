@@ -19,10 +19,11 @@ interface IProps {
     tipo_matenimiento: string,
     especificacion: string,
     limpiar_formulario: boolean,
+    clean_form?: boolean,
     user_info: any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, limpiar_formulario, user_info }: IProps) => {
+export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, detalle_seleccionado, tipo_matenimiento, especificacion, limpiar_formulario, clean_form, user_info }: IProps) => {
     const [titulo_notificacion, set_titulo_notificacion] = useState<string>("");
     const [mensaje_notificacion, set_mensaje_notificacion] = useState<string>("");
     const [tipo_notificacion, set_tipo_notificacion] = useState<string>("");
@@ -57,13 +58,15 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
     }, [detalle_seleccionado]);
 
     useEffect(() => {
-        set_cada("");
-        set_cada_desde("");
-        set_cada_hasta("");
-        set_mensaje_error_cada("");
-        set_mensaje_error_desde("");
-        set_mensaje_error_hasta("");
-    }, [limpiar_formulario]);
+        if(limpiar_formulario || clean_form){
+            set_cada("");
+            set_cada_desde("");
+            set_cada_hasta("");
+            set_mensaje_error_cada("");
+            set_mensaje_error_desde("");
+            set_mensaje_error_hasta("");
+        }
+    }, [limpiar_formulario, clean_form]);
 
     const [cada, set_cada] = useState("");
     const [cada_desde, set_cada_desde] = useState("");
@@ -80,7 +83,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
             set_mensaje_error_desde("El campo Desde debe ser menor al campo Hasta.");
         else
             set_mensaje_error_desde("");
-        
+
     };
     const handle_change_cada_hasta: any = (e: React.ChangeEvent<HTMLInputElement>) => {
         set_cada_hasta(e.target.value);
@@ -88,14 +91,24 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
             set_mensaje_error_hasta("El campo Hasta debe ser mayor al campo Desde.");
         else
             set_mensaje_error_hasta("");
-        
+
     };
 
     const emit_news_mantenimientos = (): void => {
         if (cada !== "" && cada_desde !== "" && cada_hasta !== "") {
-            void calcular_kilometros(cada, cada_desde, cada_hasta, []).then(response => {
-                set_rows(response)
-            })
+            const desde = Number(cada_desde);
+            const hasta = Number(cada_hasta);
+            const cada_num = Number(cada);
+            if ((hasta - desde) % cada_num !== 0) {
+                set_mensaje_error_cada("El valor de 'Cada' no cumple con el rango especificado.");
+            } else if ((hasta - desde) / cada_num > 100) {
+                set_mensaje_error_cada("No se pueden crear más de 100 elementos a la vez.");
+            } else {
+                set_mensaje_error_cada("");
+                void calcular_kilometros(cada, cada_desde, cada_hasta, []).then(response => {
+                    set_rows(response)
+                })
+            }
         }else{
             if(cada === "")
                 set_mensaje_error_cada("El campo Cada es obligatorio.");
@@ -152,7 +165,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={4}>
                         <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-                            <FormHelperText>Cada</FormHelperText>
+                            <FormHelperText sx={{ fontSize: '.8rem', fontWeight: 'bold' }}>Cada</FormHelperText>
                             <OutlinedInput
                                 endAdornment={<InputAdornment position="end">km</InputAdornment>}
                                 aria-describedby="outlined-weight-helper-text"
@@ -160,6 +173,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                                     'aria-label': 'weight',
                                 }}
                                 size='small'
+                                value={cada}
                                 onChange={handle_change_cada}
                                 error={mensaje_error_cada !== ""}
                             />
@@ -168,7 +182,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-                            <FormHelperText>Desde</FormHelperText>
+                            <FormHelperText sx={{ fontSize: '.8rem', fontWeight: 'bold' }}>Desde</FormHelperText>
                             <OutlinedInput
                                 endAdornment={<InputAdornment position="end">km</InputAdornment>}
                                 aria-describedby="outlined-weight-helper-text"
@@ -176,6 +190,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                                     'aria-label': 'weight',
                                 }}
                                 size='small'
+                                value={cada_desde}
                                 onChange={handle_change_cada_desde}
                                 error={mensaje_error_desde !== ""}
                             />
@@ -184,7 +199,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                     </Grid>
                     <Grid item xs={12} sm={4}>
                         <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-                            <FormHelperText>Hasta</FormHelperText>
+                            <FormHelperText sx={{ fontSize: '.8rem', fontWeight: 'bold' }}>Hasta</FormHelperText>
                             <OutlinedInput
                                 endAdornment={<InputAdornment position="end">km</InputAdornment>}
                                 aria-describedby="outlined-weight-helper-text"
@@ -192,6 +207,7 @@ export const KilometrajeComponent: React.FC<IProps> = ({ parent_state_setter, de
                                     'aria-label': 'weight',
                                 }}
                                 size='small'
+                                value={cada_hasta}
                                 onChange={handle_change_cada_hasta}
                                 error={mensaje_error_hasta !== ""}
                             />

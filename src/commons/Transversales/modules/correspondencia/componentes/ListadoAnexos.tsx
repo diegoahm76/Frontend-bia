@@ -71,21 +71,21 @@ const ListadoAnexos = ({ type }: IProps) => {
 
   const [add_metadata_is_active, set_add_metadata_is_active] =
     useState<boolean>(false);
-
   useEffect(() => {
-    if (type === 'soporte') {
+    if ((type ?? '') === 'soporte') {
       if (notification_per_request !== null) {
         if (
           notification_per_request.id_registro_notificacion_correspondencia !==
             null &&
           notification_per_request.anexos !== undefined
         ) {
-          dispatch(set_exhibits(notification_per_request.anexos));
-          // dispatch(
-          //   get_anexos_tarea(
-          //     notification_per_request.id_registro_notificacion_correspondencia
-          //   )
-          // );
+          //dispatch(set_exhibits(notification_per_request.anexos));
+          console.log(notification_per_request.anexos);
+          dispatch(
+            get_anexos_tarea(
+              notification_per_request.id_registro_notificacion_correspondencia
+            )
+          );
         }
       }
     } else {
@@ -102,7 +102,7 @@ const ListadoAnexos = ({ type }: IProps) => {
         }
       }
     }
-  }, [notification_request, notification_per_request]);
+  }, []);
 
   useEffect(() => {
     //  console.log('')(exhibit);

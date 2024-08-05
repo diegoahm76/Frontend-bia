@@ -13,6 +13,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 interface IProps {
+  title: string,
   resultado_busqueda: any[],
   seleccion_presentacion: string,
   seleccion_tablero_control: string,
@@ -48,10 +49,22 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
           set_data_tabla(data_tabla);
           set_columnas_mp([
             {
+              field: 'consecutivo',
+              headerName: 'Consecutivo',
+              minWidth: 120,
+              flex: 1,
+          },
+            {
               field: 'nombre_bodega',
               headerName: 'Bodega',
               width: 300,
               valueGetter: (params) => params.row.nombre_bodega
+            },
+            {
+              field: 'codigo_bien',
+              headerName: 'Código bien',
+              minWidth: 140,
+              flex: 1,
             },
             {
               field: 'nombre_bien',
@@ -64,6 +77,18 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
               headerName: 'Cantidad ingresada total',
               width: 300,
               valueGetter: (params) => params.row.cantidad_ingresada_total
+            },
+            {
+              field: 'placa_serial',
+              headerName: 'Placa / Serial',
+              minWidth: 140,
+              flex: 1,
+            },
+            {
+              field: 'cod_tipo_activo',
+              headerName: 'Tipo Activo',
+              minWidth: 140,
+              flex: 1,
             },
             {
               field: 'responsable_bodega',
@@ -137,22 +162,30 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
   }
 
   function createData(
+    consecutivo: string,
     id_bodega: number,
     nombre_bodega: string,
     id_bien: number,
     nombre_bien: string,
     codigo_bien: string,
+    placa_serial: string,
+    cod_tipo_activo: string,
+    cod_tipo_bien: string,
     cantidad_ingresada_total: number,
     responsable_bodega: string,
     nombre_proveedor: string,
     detalle: [{ cantidad: number, entrada: string, fecha_entrada: string }],
   ) {
     return {
+      consecutivo,
       id_bodega,
       nombre_bodega,
       id_bien,
       nombre_bien,
       codigo_bien,
+      placa_serial,
+      cod_tipo_activo,
+      cod_tipo_bien,
       cantidad_ingresada_total,
       responsable_bodega,
       nombre_proveedor,
@@ -176,14 +209,19 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
+          <TableCell>{row.consecutivo}</TableCell>
           <TableCell>{row.nombre_bodega}</TableCell>
+          <TableCell>{row.codigo_bien}</TableCell>
           <TableCell>{row.nombre_bien}</TableCell>
           <TableCell>{row.cantidad_ingresada_total}</TableCell>
+          <TableCell>{row.placa_serial}</TableCell>
+          <TableCell>{row.cod_tipo_activo}</TableCell>
+          <TableCell>{row.cod_tipo_bien}</TableCell>
           <TableCell>{row.responsable_bodega}</TableCell>
           <TableCell>{row.nombre_proveedor}</TableCell>
         </TableRow>
         <TableRow>
-          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={12}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
                 <Table size="small" aria-label="purchases">
@@ -220,16 +258,21 @@ export const ResultadosBusquedaTable: React.FC<IProps> = (props: IProps) => {
       <Box component="form" sx={{ mt: '20px', '& .super-app.positive_green': { backgroundColor: '#C4DFAA' }, '& .super-app.positive': { backgroundColor: '#fdfd96' }, '& .super-app.warning': { backgroundColor: '#ffa07a' }, '& .super-app.danger': { backgroundColor: '#ff6961' } }} noValidate autoComplete="off">
         <Grid item container spacing={2}>
           <Grid item xs={12} sm={12}>
-            <ExportDocs cols={columnas_mp} resultado_busqueda={reporte} filtros={props.filtros} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
+            <ExportDocs title={props.title} isEI={true} cols={columnas_mp} resultado_busqueda={reporte} filtros={props.filtros} nombre_archivo={props.nombre_archivo} filtros_pdf={props.filtros_pdf}></ExportDocs>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
             <TableContainer component={Paper}>
               <Table aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
                     <TableCell />
+                    <TableCell>Consecutivo</TableCell>
                     <TableCell>Bodega</TableCell>
+                    <TableCell>Código bien</TableCell>
                     <TableCell>Bien&nbsp;</TableCell>
                     <TableCell>Cantidad ingresada total&nbsp;</TableCell>
+                    <TableCell>Placa / Serial&nbsp;</TableCell>
+                    <TableCell>Tipo Activo&nbsp;</TableCell>
+                    <TableCell>Tipo bien&nbsp;</TableCell>
                     <TableCell>Responsable bodega&nbsp;</TableCell>
                     <TableCell>Nombre proveedor&nbsp;</TableCell>
                   </TableRow>

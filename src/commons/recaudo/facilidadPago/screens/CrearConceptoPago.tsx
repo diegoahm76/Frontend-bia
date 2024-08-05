@@ -8,19 +8,34 @@ import SaveIcon from '@mui/icons-material/Save';
 import React, { useEffect, useState } from 'react';
 import { MenuItem } from '@mui/material';
 import { control_error, control_success } from '../../../../helpers';
-import dayjs from 'dayjs';
-
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import TextField from '@mui/material/TextField';
 
 interface BuscarProps {
     is_modal_active: any;
     set_is_modal_active: any;
     fetchConfiguraciones: any;
+
+    tiposRenta :any;
+    setTiposRenta :any;
+    fetchTiposRenta :any;
+    setTiposCobro :any;
+    tiposCobro :any;
+    fetchTiposCobro :any;
+}
+
+interface TipoCobro {
+    id_tipo_cobro: number;
+    nombre_tipo_cobro: string;
+    tipo_renta_asociado: any;
 }
 
 
+interface TipoRenta {
+    id_tipo_renta: number;
+    nombre_tipo_renta: string;
+    tipo_cobro_asociado: any;
+    tipo_renta_asociado: any
+}
 export interface Variable {
     id_variables: number;
     nombre: string;
@@ -34,15 +49,48 @@ interface ConfiguracionBasica {
     descripccion: any;
     fecha_inicio: any
 }
-export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones, is_modal_active, set_is_modal_active }) => {
+
+interface ConfiguracionBasicados {
+    id_variables: any;
+    nombre: any;
+    tipo_cobro: any;
+    tipo_renta: any;
+    valor:any
+    descripccion:any;
+    fecha_inicio:any;
+    fecha_fin:any;
+    variables:any;
+    
+}
+
+export const CrearConceptoPago: React.FC<BuscarProps> = ({  tiposRenta,
+    setTiposRenta,
+    setTiposCobro ,
+    tiposCobro ,
+    fetchTiposCobro , 
+    fetchTiposRenta, fetchConfiguraciones, is_modal_active, set_is_modal_active }) => {
+
     const [selectedConfiguracion, setSelectedConfiguracion] = useState<ConfiguracionBasica | null>(null);
+    // const [tiposCobro, setTiposCobro] = useState<TipoCobro[]>([]);
+    const [PreformValues, PresetFormValues] = useState<ConfiguracionBasicados>({
+        id_variables: "",
+        nombre: "",
+        tipo_cobro: "",
+        tipo_renta: "",
+        valor:"",
+        descripccion:"",
+        fecha_inicio:"",
+        fecha_fin:"",
+        variables:"",
+    });
+    const PrehandleInputChange = (event: any ) => {
+        const { name, value } = event.target;
+        PresetFormValues({ ...PreformValues, [name]: value });
+    };
+    const [activador, set_activador] = useState<boolean>(false);
+    // const [tiposRenta, setTiposRenta] = useState<TipoRenta[]>([]);
 
 
-    useEffect(() => {
-        void fetchConfiguraciones();
-    }, []);
-
-    //// editar tipos de cobro 
     const [formValues, setFormValues] = useState<ConfiguracionBasica>({
         valor: selectedConfiguracion?.valor || "",
         fecha_fin: selectedConfiguracion?.fecha_fin || "",
@@ -52,65 +100,119 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
     });
 
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleInputChange = (event:any) => {
         const { name, value } = event.target;
         setFormValues({ ...formValues, [name]: value });
     };
+    // const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     const { name, value } = event.target;
+    //     setFormValues({ ...formValues, [name]: value.replace(/[^\d]/g, '') });
+    //   };
+    
 
+    const handleSubmitCrear = async () => {
+        try {
+            const url = "/recaudo/configuracion_baisca/valoresvariables/post/";
+            const response = await api.post(url, PreformValues);
+            //  console.log('')("Configuración básica creada con éxito", response.data);
+            fetchConfiguraciones()
+            control_success("Guardado exitosamente");
+
+        } catch (error: any) {
+
+            control_error(error.response.data.detail?.error);
+        }
+    };
+
+   
+
+    const CrearVariablePrecargada = async () => {
+        try {
+            const url = "/recaudo/configuracion_baisca/variables/post/";
+            const response = await api.post(url, PreformValues);
+            const id_enviar = response.data.data.id_variables; // Asegúrate de acceder a la propiedad correcta
+            // setCreatedVariableId(id_enviar);  // Guardar el ID en el estado
+            PresetFormValues((prevValues) => ({
+            ...prevValues,
+            variables: id_enviar
+        }));
+            console.log(id_enviar);
+            control_success("Guardado exitosamente");
+        } catch (error: any) {
+            control_error(error.response.data.detail?.error);
+        } finally {
+            set_activador(!activador)
+        }
+    };
+    
+
+    // const fetchTiposRenta = async () => {
+    //     try {
+    //         const res = await api.get("/recaudo/configuracion_baisca/tiporenta/get/");
+    //         setTiposRenta(res.data.data);
+    //     } catch (error) {
+    //         console.error("Error al obtener los tipos de renta", error);
+    //     }
+    // };
+
+
+    // const fetchTiposCobro = async () => {
+    //     try {
+    //         const res = await api.get("/recaudo/configuracion_baisca/tipoCobro/get/");
+    //         setTiposCobro(res.data.data);
+    //     } catch (error) {
+    //         console.error("Error al obtener los tipos de cobro", error);
+    //     }
+    // };
+
+ 
+ 
+
+
+    const handle_close = (): void => {
+        set_is_modal_active(false);
+    };
+
+
+    useEffect(() => {
+        fetchTiposCobro();
+    }, []);
+
+    useEffect(() => {
+        if (activador) {
+            handleSubmitCrear();
+            set_activador(false);
+        }
+    }, [activador]);
 
     useEffect(() => {
         if (selectedConfiguracion) {
             setFormValues(selectedConfiguracion);
         }
     }, [selectedConfiguracion]);
-    //crear 
-    const handleSubmitCrear = async () => {
-        try {
-            const url = "/recaudo/configuracion_baisca/valoresvariables/post/";
-            const response = await api.post(url, formValues);
-            //  console.log('')("Configuración básica creada con éxito", response.data);
-            fetchConfiguraciones()
-            control_success("Guardado exitosamente");
-        } catch (error: any) {
-            //  console.log('')(error.response.data.detail.detail);
-            control_error(error.response.data.detail?.error);
-        }
-    };
-    //////
-    const [variables, setVariables] = useState<Variable[]>([]);
-
-    const fetchVariables = async () => {
-        try {
-            const res = await api.get("/recaudo/configuracion_baisca/variables/get/");
-            setVariables(res.data.data);
-        } catch (error) {
-            console.error("Error al obtener las variables", error);
-        }
-    };
 
     useEffect(() => {
-        fetchVariables();
+        void fetchConfiguraciones();
     }, []);
 
+
     useEffect(() => {
-        if (is_modal_active) {
-            fetchVariables();
-        }
-    }, [is_modal_active]);
+        fetchTiposRenta();
+    }, []);
 
-    // fecha de finalizacion 
-    const [fechaFin, setFechaFin] = useState((formValues.fecha_fin));
-    const today = dayjs();
 
-    const handle_close = (): void => {
-        set_is_modal_active(false);
-    };
-
+    const formatCurrency = (value: string) => {
+        if (!value) return '';
+        return new Intl.NumberFormat('es-CO', {
+          style: 'currency',
+          currency: 'COP',
+          minimumFractionDigits: 0,
+        }).format(Number(value));
+      };
     return (
 
         <>
             <Dialog open={is_modal_active} onClose={handle_close} maxWidth="xl" >
-                {/* <button onClick={() => //  console.log('')(tiposCobro)}>Mostrar zonahidrica en la consola</button> */}
                 <Grid container
                     item
                     xs={12}
@@ -133,29 +235,78 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 required
                                 fullWidth
                                 size="small"
-                                label="Variable"
-                                name="variables"
                                 variant="outlined"
-                                onChange={handleInputChange}
-                                value={formValues.variables}
+                                label="Tipo de renta"
+                                name="tipo_renta"
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.tipo_renta}
                             >
-                                {variables.map((variable) => (
-                                    <MenuItem key={variable.id_variables} value={variable.id_variables}>
-                                        {variable.nombre}
+                                {tiposRenta.map((tipo:any) => (
+                                    <MenuItem key={tipo.id_tipo_renta} value={tipo.id_tipo_renta}>
+                                        {tipo.nombre_tipo_renta}
                                     </MenuItem>
                                 ))}
                             </TextField>
                         </Grid>
+
+{/* {formValues.variables} */}
+
                         <Grid item xs={12} sm={4}>
                             <TextField
+                                select
+                                required
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                label="Tipo cobro"
+                                name="tipo_cobro"
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.tipo_cobro}
+                            >
+                                {tiposCobro
+                                    .filter((tipoCobro: { tipo_renta_asociado: any; }) => tipoCobro.tipo_renta_asociado === PreformValues.tipo_renta) // Filtrado basado en la selección de tipo_renta
+                                    .map((tipoCobro: { id_tipo_cobro: React.Key | readonly string[] | any | undefined; nombre_tipo_cobro: string | number | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | null | undefined; }) => (
+                                        <MenuItem key={tipoCobro.id_tipo_cobro} value={tipoCobro.id_tipo_cobro}>
+                                            {tipoCobro.nombre_tipo_cobro}
+                                        </MenuItem>
+                                    ))}
+                            </TextField>
+                        </Grid>
+
+
+
+                        <Grid item xs={12} sm={4}>
+                            <TextField
+                                required
+                                fullWidth
+                                size="small"
+                                variant="outlined"
+                                label="Variable"
+                                name="nombre"
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.nombre}
+                            />
+                        </Grid>
+
+
+                        <Grid item xs={12} sm={4}>
+                        {/* <TextField
+                        name={key}
+                        value={displayValue}
+                      
+                        size="small"
+                        onChange={(event: React.ChangeEvent<HTMLInputElement>) => handle_variable_input_change(event, params.row.id, key)}
+                      /> */}
+                            <TextField 
+                             type="number"
                                 required
                                 fullWidth
                                 size="small"
                                 name="valor"
                                 label="valor"
                                 variant="outlined"
-                                onChange={handleInputChange}
-                                value={formValues.valor}
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.valor}
                             />
                         </Grid>
                         <Grid item xs={12} sm={4}>
@@ -166,34 +317,11 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 variant="outlined"
                                 name="descripccion"
                                 label="descripccion"
-                                onChange={handleInputChange}
-                                value={formValues.descripccion}
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.descripccion}
                             />
                         </Grid>
-                        {/* 
-                        <Grid item xs={12} sm={4}>
-                            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DatePicker
-                                    label="Fecha fin"
-                                    value={fechaFin}
-                                    onChange={(newValue) => {
-                                        setFechaFin(newValue);
-                                        setFormValues({ ...formValues, fecha_fin: newValue?.format('YYYY-MM-DD') });
-                                    }}
-                                    renderInput={(params) => (
-                                        <TextField
-                                            required
-                                            fullWidth
-                                            size="small"
-                                            {...params}
-                                        />
-                                    )}
-                                    // Establecer la fecha mínima como la fecha actual
-                                    minDate={today}
-                                />
-                            </LocalizationProvider>
-                        </Grid> */}
-
+                        
                         <Grid item xs={12} sm={4}>
                             <TextField
                                 fullWidth
@@ -202,8 +330,8 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 variant="outlined"
                                 name="fecha_inicio"
                                 label="fecha inicio"
-                                onChange={handleInputChange}
-                                value={formValues.fecha_inicio}
+                                onChange={PrehandleInputChange}
+                                value={PreformValues.fecha_inicio}
                                 InputLabelProps={{ shrink: true }}
                             />
                         </Grid>
@@ -217,8 +345,8 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                 name="fecha_fin"
                                 variant="outlined"
                                 label="fecha fin"
-                                value={formValues.fecha_fin}
-                                onChange={handleInputChange}
+                                value={PreformValues.fecha_fin}
+                                onChange={PrehandleInputChange}
                                 InputLabelProps={{ shrink: true }}
                             />
                         </Grid>
@@ -236,17 +364,12 @@ export const CrearConceptoPago: React.FC<BuscarProps> = ({ fetchConfiguraciones,
                                     color="success"
                                     variant="contained"
                                     startIcon={<SaveIcon />}
-                                    onClick={() => { handleSubmitCrear(); }}
+                                    onClick={() => { CrearVariablePrecargada(); }}
                                 >
                                     Guardar
                                 </Button>
                             </Grid>
-
                         </Grid>
-
-
-
-
                     </Grid>
                 </Grid>
             </Dialog>

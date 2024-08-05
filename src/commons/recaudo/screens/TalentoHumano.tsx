@@ -316,21 +316,7 @@ export const TalentoHumano: React.FC = () => {
             <Grid item xs={12}>
               <Title title={`${modo} Profesionales`} />
             </Grid>
-            {/* {modo} */}
-            {/* <Grid container xs={12}   spacing={2}   >
-                            <Grid item xs={6}>
-                                <TextField
-                                    label="nivel"
-                                    variant="outlined"
-                                    size="small"
-                                    fullWidth
-                                    required
-                                    name="nivel"
-                                    value={formData.nivel}
-                                    onChange={handleInputChange}
-                                />
-                            </Grid>
-                        </Grid> */}
+      
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth size="small">
                 <InputLabel id="si-no-select-label">Grado</InputLabel>
@@ -413,7 +399,7 @@ export const TalentoHumano: React.FC = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   views={['year']}
-                  label="Año de nacimiento"
+                  label="Año "
                   value={formData.año ? dayjs(formData.año, 'YYYY') : null}
                   onChange={handleInputChange}
                   renderInput={(params) => (
@@ -423,9 +409,9 @@ export const TalentoHumano: React.FC = () => {
                       size="small"
                       required
                       error={!formData.año}
-                      helperText={
-                        !formData.año ? 'Este campo es obligatorio' : ''
-                      }
+                      // helperText={
+                      //   !formData.año ? 'Este campo es obligatorio' : ''
+                      // }
                     />
                   )}
                 />
@@ -526,7 +512,7 @@ export const TalentoHumano: React.FC = () => {
         </Grid>
 
         <Grid
-        item xs={12} sm={4}
+        item xs={12} sm={3}
           container
           direction="row"
           justifyContent="flex-end"

@@ -28,6 +28,11 @@ import { control_warning } from '../../../../../../../../../almacen/configuracio
 import { ModalTramitesServicio } from '../../../../../Atom/modalTramiteServicios/ModalTramitesServicio';
 import { getComplementosAsociadosTramite } from '../../../../../../../toolkit/thunks/TramitesyServiciosyRequerimientos/getComplementosTramites.service';
 import { ModalDetalleTramite } from '../../../../../Atom/modalDetalleTramite/ModalDetalleTramite';
+import { showAlert } from '../../../../../../../../../../utils/showAlert/ShowAlert';
+import BalanceIcon from '@mui/icons-material/Balance';
+import { handleApiError } from '../../../../../../../../../../utils/functions/errorManage';
+import { api } from '../../../../../../../../../../api/axios';
+import { de } from 'date-fns/locale';
 
 export const ListaElementosTramites = (): JSX.Element => {
   //* dispatch declaration
@@ -404,6 +409,80 @@ export const ListaElementosTramites = (): JSX.Element => {
                   <PreviewIcon
                     sx={{
                       color: 'success.main',
+                      width: '18px',
+                      height: '18px',
+                    }}
+                  />
+                </Avatar>
+              </IconButton>
+            </Tooltip>
+            <Tooltip title="Crear solicitud revisión jurídica">
+              <IconButton
+                onClick={async () => {
+                  dispatch(setCurrentElementPqrsdComplementoTramitesYotros(params.row));
+                  await Swal.fire({
+                    title: '¿Desea crear la revisión jurídica del trámite?',
+                    //.',
+                    showDenyButton: true,
+                    confirmButtonText: `Si`,
+                    denyButtonText: `No, cancelar`,
+                    confirmButtonColor: '#3085d6',
+                    denyButtonColor: '#d33',
+                  }).then(async (result) => {
+                    if (result.isConfirmed) {
+                      const delay = (ms: any) => new Promise((res) => setTimeout(res, ms));
+                      await delay(3000);
+                      const { id_solicitud_tramite } =
+                        currentElementPqrsdComplementoTramitesYotros;
+                      const createSolicitudRevisionJuridica = async () => {
+                        try{
+                          const url = `/api/gestor/panel_ventanilla/tramites/solicitud_juridica/create/`
+                          const dataPost = {
+                            id_solicitud_tramite,
+                          }
+                          const {data} = await api.post(url, dataPost);
+
+                          if(data?.succes){
+                            showAlert(
+                              'Solicitud de revisión jurídica creada',
+                              data?.detail,
+                              'success'
+                            );
+                          }else{
+                            showAlert(
+                              'Opps...',
+                              data?.detail,
+                              'error'
+                            );
+                          }
+                        }
+                        catch(error: any){
+                          handleApiError(error, error?.response.data.detail);
+                        }
+                      };
+                      await createSolicitudRevisionJuridica();
+                    } else if (result.isDenied) {
+                      showAlert(
+                        'Opps...',
+                        'Haz decidido no crear la solicitud de revisión jurídica del trámite.',
+                        'info'
+                      );
+                    }
+                  });
+                }}
+              >
+                <Avatar
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    background: '#fff',
+                    border: '2px solid',
+                  }}
+                  variant="rounded"
+                >
+                  <BalanceIcon
+                    sx={{
+                      color: 'primary.main',
                       width: '18px',
                       height: '18px',
                     }}

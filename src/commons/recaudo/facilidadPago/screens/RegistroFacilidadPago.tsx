@@ -20,6 +20,13 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 import { control_error } from '../../../../helpers';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Swal from 'sweetalert2';
+import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
+import { showAlert } from '../../../../utils/showAlert/ShowAlert';
+import AddIcon from '@mui/icons-material/Add';
+import { api } from '../../../../api/axios';
+import { DireccionVienesRegion } from './AmortizacionModalPlanPagos/Components/DirecionVienesReguion';
+
 
 interface RootStateDeudor {
   deudores: {
@@ -56,10 +63,16 @@ interface RelacionBien {
   valor: number;
   direccion: string;
   descripcion: string;
+  municipio_id: number;
 }
 
 interface RespuestaRegistroFacilidad {
   numero_radicacion: string;
+}
+
+interface Icalidad_actuacion {
+  id: number;
+  descripcion: string
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -76,13 +89,16 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [bienes_options, set_bienes_options] = useState<BienInput[]>([]);
   const [garantias_options, set_garantias_options] = useState<GarantiaInput[]>([]);
   const [rows_bienes, set_rows_bienes] = useState(Array<RelacionBien>);
-  const [tipo_bien, set_tipo_bien] = useState(0);
+  const [tipo_bien, set_tipo_bien] = useState<number | null>(0);
   const [tipos_bienes, set_tipos_bienes] = useState(Array<number>);
   const [identificacion_bien, set_identificacion_bien] = useState('');
   const [identificaciones_bienes, set_identificaciones_bienes] = useState(Array<string>);
   const [direccion_bien, set_direccion_bien] = useState('');
+  const [calidad_actuacion, set_calidad_actuacion] = useState<Icalidad_actuacion[]>([]);
   const [direcciones_bienes, set_direcciones_bienes] = useState(Array<string>);
   const [valor_bien, set_valor_bien] = useState(0);
+  const [numero_departamento, set_numero_departamento] = useState(0);
+
   const [valores_bienes, set_valores_bienes] = useState(Array<number>);
   const [archivos_bienes, set_archivos_bienes] = useState(Array<File>);
   const [archivo_bien, set_archivo_bien] = useState<File | null>(null);
@@ -91,23 +107,29 @@ export const RegistroFacilidadPago: React.FC = () => {
   const [respuesta_registro, set_respuesta_registro] = useState<RespuestaRegistroFacilidad>();
   const [modal, set_modal] = useState(false);
   const { form_state, on_input_change } = use_form({});
+
   const { form_files, name_files, handle_change_file, handle_delete_file } = useFormFiles({});
   const { deudores } = useSelector((state: RootStateDeudor) => state.deudores);
   const { obligaciones } = useSelector((state: RootStateObligaciones) => state.obligaciones);
   const { solicitud_facilidad } = useSelector((state: RootStateSolicitud) => state.solicitud_facilidad);
 
+  const [opengeneradordireccioness, setopengeneradordireccioness] = useState(false);
+  const [type_directionn, set_type_direction] = useState('');
+
+
+  const set_value_direction = (direccion_notificacion: any): void => {
+    set_direccion_bien(direccion_notificacion);
+
+  };
+
+  const handleMunicipioChange = (municipio: any) => {
+    set_numero_departamento(municipio);
+  };
+
   const handle_change_date_abono = (date: Date | null): void => {
     set_date_abono(date);
   };
 
-  // const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
-  //   const selected_file =
-  //     event.target.files != null ? event.target.files[0] : null;
-  //   if (selected_file != null) {
-  //     set_archivo_bien(selected_file);
-  //     set_nombre_archivo_bien(selected_file.name);
-  //   }
-  // };
   const handle_file_bienes = (event: React.ChangeEvent<HTMLInputElement>): void => {
     const selected_file = event.target.files != null ? event.target.files[0] : null;
     set_archivo_bien(selected_file);
@@ -219,32 +241,87 @@ export const RegistroFacilidadPago: React.FC = () => {
           {params.value}
         </div>
       ),
+
     },
-    // {
-    //   field: 'documento_soporte',
-    //   headerName: 'Doc. Impuestos',
-    //   width: 150,
-    //   renderCell: (params) => (
-    //     <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-    //       <Button
-    //         color='primary'
-    //         variant='outlined'
-    //         size='small'
-    //         onClick={() => { }}
-    //       >
-    //         Ver Documento
-    //       </Button>
-    //     </div>
-    //   ),
-    // },
+    {
+      field: 'municipio_id',
+      headerName: 'Cod municipio',
+      width: 150,
+      renderCell: (params) => (
+        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+          {params.value}
+        </div>
+      ),
+
+    }
+
   ];
 
+
+
+
+  const [totalSum, setTotalSum] = useState<number>(0);
+  console.log("totalSum", totalSum)
+  const updateTotalSum = (sum: number) => {
+    setTotalSum(sum);
+  };
+
+
+  const handleAgregarClick = () => {
+    if (!tipo_bien || !identificacion_bien || !direccion_bien || !valor_bien || !archivo_bien) {
+      const mensajesFaltantes = [];
+      if (!tipo_bien) mensajesFaltantes.push('tipo de bien');
+      if (!identificacion_bien) mensajesFaltantes.push('identificación del bien');
+      if (!direccion_bien) mensajesFaltantes.push('dirección del bien');
+      if (!valor_bien) mensajesFaltantes.push('valor del bien');
+      if (!archivo_bien) mensajesFaltantes.push('archivo del bien');
+
+      showAlert(
+        'Opps...',
+        `No hay datos suficientes para agregar. Faltan: ${mensajesFaltantes.join(', ')}.`,
+        'warning'
+      );
+      return;
+    }
+
+
+    set_rows_bienes(rows_bienes.concat({
+      id: faker.database.mongodbObjectId(),
+      id_tipo_bien: tipo_bien,
+      descripcion: identificacion_bien,
+      direccion: direccion_bien,
+      valor: valor_bien,
+      municipio_id: numero_departamento
+    }));
+    set_tipos_bienes(tipos_bienes.concat(tipo_bien));
+    set_identificaciones_bienes(identificaciones_bienes.concat(identificacion_bien));
+    set_direcciones_bienes(direcciones_bienes.concat(direccion_bien))
+    set_valores_bienes(valores_bienes.concat(valor_bien));
+    set_archivos_bienes(archivos_bienes.concat(archivo_bien as any));
+    set_ubicaciones_bienes(ubicaciones_bienes.concat(1));
+  };
+
+
+  const fetch_data_desplegable = async () => {
+    try {
+      const url = `/recaudo/facilidades-pagos/tipos-calidad-actuacion/`;
+      const res = await api.get(url);
+      const numero_consulta: Icalidad_actuacion[] = res.data.data;
+      set_calidad_actuacion(numero_consulta);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    fetch_data_desplegable();
+  }, []);
 
   return (
     <>
       <Title title='Solicitud de Facilidad de Pago - Usuario Externo' />
       <EncabezadoRegistro />
-      <TablaObligacionesRegistro />
+      <TablaObligacionesRegistro updateTotalSum={updateTotalSum} />
       <Grid
         container
         sx={{
@@ -346,10 +423,11 @@ export const RegistroFacilidadPago: React.FC = () => {
                       set_persona(parseInt(value))
                     }}
                   >
-                    <MenuItem value='1'>Persona Natural</MenuItem>
-                    <MenuItem value='2'>Persona Juridica / Apoderado</MenuItem>
-                    <MenuItem value='3'>Deudor Solidario Natural</MenuItem>
-                    <MenuItem value='4'>Deudor Solidario Juridico</MenuItem>
+                    {calidad_actuacion.map((item) => (
+                      <MenuItem key={item.id} value={item.id}>
+                        {item.descripcion}
+                      </MenuItem>
+                    ))}
                   </Select>
                 </FormControl>
               </Grid>
@@ -1178,6 +1256,42 @@ export const RegistroFacilidadPago: React.FC = () => {
                   }}
                 />
               </Grid>
+
+              <DialogGeneradorDeDirecciones
+                open={opengeneradordireccioness}
+                openDialog={setopengeneradordireccioness}
+                onChange={set_value_direction}
+                type={type_directionn}
+              />
+              <Grid item xs={12} sm={5}>
+
+                <TextField
+                  required
+                  label="Dirección"
+                  helperText='Escribe la Dirección'
+                  size="small"
+                  fullWidth
+                  disabled
+                  value={direccion_bien}
+                  name='direccion'
+                // onChange={(event: event) => {
+                //   const { value } = event.target
+                //   set_direccion_bien(value)
+                // }}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={5}>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setopengeneradordireccioness(true);
+                  }}
+                >
+                  Generar dirección
+                </Button>
+              </Grid>
+
               <Grid item xs={12} sm={5}>
                 <TextField
                   required
@@ -1193,20 +1307,7 @@ export const RegistroFacilidadPago: React.FC = () => {
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sm={5}>
-                <TextField
-                  required
-                  label="Dirección"
-                  helperText='Escribe la Dirección'
-                  size="small"
-                  fullWidth
-                  name='direccion'
-                  onChange={(event: event) => {
-                    const { value } = event.target
-                    set_direccion_bien(value)
-                  }}
-                />
-              </Grid>
+
               <Grid item xs={12} sm={5}>
                 <Tooltip title={`Carga el Documento Impuesto`}>
                   <Button
@@ -1227,42 +1328,35 @@ export const RegistroFacilidadPago: React.FC = () => {
                       onChange={handle_file_bienes}
                     />
                   </Button>
-                </Tooltip> 
+                </Tooltip>
               </Grid>
               {nombre_archivo_bien && (
                 <Grid item>
                   <IconButton
                     color="error"
                     onClick={eliminarArchivoSeleccionado}
-                   >
+                  >
                     <DeleteIcon />
 
                   </IconButton>
-                </Grid> 
-              )} 
+                </Grid>
+              )}
+
+
+              <DireccionVienesRegion onMunicipioChange={handleMunicipioChange} />
+
+
               <Grid item xs={12} sm={3.1}>
                 <Button
-                  color='primary'
+                  color='success'
                   variant='outlined'
-                  onClick={() => {
-                    set_rows_bienes(rows_bienes.concat({
-                      id: faker.database.mongodbObjectId(),
-                      id_tipo_bien: tipo_bien,
-                      descripcion: identificacion_bien,
-                      direccion: direccion_bien,
-                      valor: valor_bien,
-                    }))
-                    set_tipos_bienes(tipos_bienes.concat(tipo_bien))
-                    set_identificaciones_bienes(identificaciones_bienes.concat(identificacion_bien))
-                    set_direcciones_bienes(direcciones_bienes.concat(direccion_bien))
-                    set_valores_bienes(valores_bienes.concat(valor_bien))
-                    set_archivos_bienes(archivos_bienes.concat(archivo_bien as any))
-                    set_ubicaciones_bienes(ubicaciones_bienes.concat(1))
-                  }}
+                  startIcon={<AddIcon />}
+                  onClick={handleAgregarClick}
                 >
                   Agregar
                 </Button>
               </Grid>
+
             </Grid>
             {
               rows_bienes.length !== 0 ? (
@@ -1292,6 +1386,21 @@ export const RegistroFacilidadPago: React.FC = () => {
                         />
                       </Box>
                     </Grid>
+
+
+                    <Grid item xs={12} sm={3.1}>
+                      <Button
+                        color='primary'
+                        style={{ marginTop: 15 }}
+                        variant='outlined'
+                        startIcon={<DeleteIcon />}
+                        onClick={() => { set_rows_bienes([]) }}
+                      >
+                        Limpiar
+                      </Button>
+                    </Grid>
+
+
                   </Grid>
                 </Grid>
               ) : null
@@ -1299,6 +1408,10 @@ export const RegistroFacilidadPago: React.FC = () => {
           </Box>
         </Grid>
       </Grid>
+
+
+
+
       <Grid
         container
         sx={{
@@ -1352,8 +1465,15 @@ export const RegistroFacilidadPago: React.FC = () => {
                 color='primary'
                 variant='contained'
                 startIcon={<Save />}
-                onClick={() => {
-                  const post_registro = async (): Promise<void> => {
+                onClick={async () => {
+                  const valorAbonado = form_state.valor_abonado;
+
+                  if (valorAbonado > totalSum) {
+                    Swal.fire({
+                      icon: 'error',
+                      title: "Valor abonado es mayor que la suma total",
+                    });
+                  } else {
                     try {
                       const { data: { data: res_registro } } = await post_registro_fac_pago({
                         ...form_state,
@@ -1378,20 +1498,19 @@ export const RegistroFacilidadPago: React.FC = () => {
                         direcciones: direcciones_bienes,
                         valores: valores_bienes,
                         documentos_soporte_bien: archivos_bienes,
-                        id_ubicaciones: ubicaciones_bienes,
-                      })
+                        id_ubicaciones: rows_bienes.map(bien => bien.municipio_id)
+                        //ubicaciones_bienes
+                      });
                       set_respuesta_registro(res_registro ?? {});
                     } catch (error: any) {
-                      // throw new Error(error);
                       control_error(error.response.data.detail);
-
                     }
                   }
-                  void post_registro();
                 }}
               >
                 Enviar Solicitud
               </Button>
+
             </Stack>
           </Box>
         </Grid>

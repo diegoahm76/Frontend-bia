@@ -8,6 +8,7 @@ import { control_error, control_success } from "../../../../seguridad/components
 import { useNavigate } from "react-router-dom";
 import { Title } from "../../../../../components/Title";
 
+// Definición de la interfaz Persona
 export interface Persona {
     id_persona: number;
     primer_nombre: string;
@@ -17,21 +18,23 @@ export interface Persona {
 }
 
 export const ModalDocumentoLiquidacionDetalle = () => {
-
+    // Estado para almacenar las opciones de tipo de pago
     const [dataChoise, setDataChoise] = useState<any[]>([]);
-    const [form_tipo, set_tipo] = useState({ id_expediente: '' }); // Agregar estado para el formulario
+    
+    // Estado para el formulario de tipo de pago
+    const [form_tipo, set_tipo] = useState({ id_expediente: '' });
+    
+    // Estado para almacenar la información de la persona seleccionada
     const [persona, set_persona] = useState<Persona | undefined>();
+    
+    // Contexto para manejar el formulario y precios
     const { form, setForm, precios } = useContext(PreciosContext);
     const navigate = useNavigate();
 
-
-
-
-
-
+    // Concatenar descripciones de precios para el pago
     const descripcionConcatenada = precios.map(precio => `Servicio de ${precio.descripcion}`).join(',');
 
-
+    // Función para iniciar el pago
     const iniciarpago = async () => {
         try {
             const url = '/recaudo/pagos/iniciar/';
@@ -49,40 +52,39 @@ export const ModalDocumentoLiquidacionDetalle = () => {
             const res = await api.post(url, postData);
             const numeroConsulta = res.data && res.data.data;
             window.location.href = numeroConsulta?.redirect_url;
-            control_success("se creo correctamente");
+            control_success("Se creó correctamente");
         } catch (error: any) {
             control_error(error.response.data.detail);
-
         }
     };
 
-
+    // Función para obtener los datos de las opciones de pago
     const fetchDatosChoises = async (): Promise<void> => {
         try {
             const url = '/recaudo/choices/pagos-tipo-id/';
             const res = await api.get(url); // Utiliza Axios para realizar la solicitud GET
             const dataConsulta = res.data.data;
             setDataChoise(dataConsulta);
-            // control_success('Datos actualizados correctamente');
         } catch (error) {
             console.error(error);
         }
     };
 
+    // Manejadores de cambio para los selectores de formulario
     const handleSelectChange = (event: any) => {
         set_tipo({ ...form_tipo, [event.target.name || '']: event.target.value as string });
     };
+
     const handleSelectChangeBasico = (event: any) => {
         setForm({ ...form, [event.target.name || '']: event.target.value as string });
     };
 
-
-
+    // Concatenar nombres y apellidos de la persona seleccionada
     const { primer_nombre, segundo_nombre, primer_apellido, segundo_apellido } = persona ?? {};
     const nombres_concatenados = `${primer_nombre ?? ''} ${segundo_nombre ?? ''}`;
     const apellidos_concatenados = `${primer_apellido ?? ''} ${segundo_apellido ?? ''}`;
 
-
+    // Función para manejar el resultado de la búsqueda de personas
     const handleResult = async (persona?: Persona): Promise<void> => {
         if (persona) {
             set_persona(persona);
@@ -91,10 +93,12 @@ export const ModalDocumentoLiquidacionDetalle = () => {
         }
     };
 
+    // Obtener datos de opciones de pago al montar el componente
     useEffect(() => {
         fetchDatosChoises();
     }, []);
 
+    // Estilo para el botón de pago
     const button_style = {
         marginTop: '15px',
         borderRadius: '50%',
@@ -113,7 +117,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                 </Grid>
 
                 <Grid item xs={6} style={{ marginTop: 15 }}>
-
                     <FormControl size="small" fullWidth>
                         <InputLabel>Tipo Pago</InputLabel>
                         <Select
@@ -140,15 +143,10 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                         <FormHelperText>Seleccione el Pago</FormHelperText>
                     </FormControl>
                 </Grid>
-
             </Grid>
 
-
             <Grid container justifyContent="center">
-
                 <Grid container justifyContent="center" style={{ marginTop: 15 }}>
-
-
                     {nombres_concatenados && (
                         <>
                             <Grid item xs={12} sm={6}>
@@ -163,10 +161,9 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                                 />
                             </Grid>
 
-
                             <Grid item xs={12} sm={5}>
                                 <TextField
-                                    label='Apeliido Cliente'
+                                    label='Apellido Cliente'
                                     name="apellido_cliente"
                                     value={apellidos_concatenados}
                                     size="small"
@@ -178,14 +175,10 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                         </>
                     )}
 
-                    <Grid item xs={1} >
-
+                    <Grid item xs={1}>
                         <BuscadorPerzonasStiven onResultt={handleResult} />
                     </Grid>
                 </Grid>
-
-
-
 
                 <Grid item xs={12} sm={6}>
                     <TextField
@@ -199,11 +192,9 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                     />
                 </Grid>
 
-
-
                 <Grid item xs={12} sm={6}>
                     <TextField
-                        label='Telefono Cliente'
+                        label='Teléfono Cliente'
                         name="telefono_cliente"
                         value={form.telefono_cliente}
                         size="small"
@@ -216,7 +207,6 @@ export const ModalDocumentoLiquidacionDetalle = () => {
                     />
                 </Grid>
             </Grid>
-
 
             <Grid container alignItems="center" justifyContent="center">
                 <button

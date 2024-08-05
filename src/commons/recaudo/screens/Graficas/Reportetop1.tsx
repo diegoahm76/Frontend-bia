@@ -9,7 +9,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 
 
 
-export const Reportetop1: React.FC = () => {
+export const ReporteCarteraDeudayEdadTop: React.FC = () => {
     interface FormData {
         fecha_facturacion_desde: string;
         fecha_facturacion_hasta: string;
@@ -71,7 +71,24 @@ export const Reportetop1: React.FC = () => {
     }, []);
 
     return (
-        <Grid container item xs={12} marginLeft={2} marginRight={2} spacing={2} marginTop={3}>
+        <Grid
+        container
+        item
+        xs={12}
+        marginLeft={2}
+        marginRight={2}
+        spacing={2}
+        marginTop={3}
+        sx={{
+          position: 'relative',
+          borderRadius: '15px',
+          background: '#FAFAFA',
+          boxShadow: '0px 3px 6px #042F4A26',
+          p: '20px',
+          m: '10px 0 20px 0',
+          mb: '20px',
+        }}
+      >
             <Grid item xs={12} sm={12}>
                 <Title title="Reporte de Cartera Por Deuda y Edad – Top 1" />
             </Grid>
@@ -161,7 +178,7 @@ export const Reportetop1: React.FC = () => {
                 </Button>
             </Grid>
 
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={12} sx={{ background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF ` }}>
                 <ReactApexChart
                     options={{
                         chart: {

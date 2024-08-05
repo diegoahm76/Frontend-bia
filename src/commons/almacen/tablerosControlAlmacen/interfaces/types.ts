@@ -1,33 +1,37 @@
 export interface interface_inputs_mafi {
   tipo_activo: string
-  fecha_desde: string
-  fecha_hasta: string
+  fecha_desde: string | null
+  fecha_hasta: string | null
 }
 
 export interface interface_inputs_rabp {
   tipo_categoria: string
-  fecha_desde: string
-  fecha_hasta: string
+  fecha_desde: string | null
+  fecha_hasta: string | null
 }
 
 export interface interface_inputs_bce {
-  fecha_desde: string
-  fecha_hasta: string
+  fecha_desde: string | null
+  fecha_hasta: string | null
 }
 
 export interface interface_inputs_msi {
   tipo_bien: string
   tipo_categoria: string
-  fecha_desde: string
-  fecha_hasta: string
+  fecha_desde: string | null
+  fecha_hasta: string | null
 }
 
 export interface interface_inputs_huv {
   tipo_consulta: string
+  consecutivo?: string
+  codigo_bien?: string
+  placa?: string,
+  marca?: string,
   nombre_vehiculo: string
   tipo_vehiculo: string
-  fecha_desde: string
-  fecha_hasta: string
+  fecha_desde: string | null
+  fecha_hasta: string | null
   propiedad: string
 }
 
@@ -108,6 +112,8 @@ export interface response_busqueda_vehiculos {
 
 export interface interface_busqueda_vehiculos {
   id_hoja_de_vida: number
+  consecutivo: string
+  codigo_bien: string
   placa: string
   marca: string
   nombre: string

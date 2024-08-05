@@ -40,7 +40,7 @@ import { columnsThirdForm } from './columns/columnsTercerFormulario';
 import EditIcon from '@mui/icons-material/Edit';
 import { AvatarStyles } from '../../../../../../ccd/componentes/crearSeriesCcdDialog/utils/constant';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { control_success } from '../../../../../../../../helpers';
+import { control_error, control_success } from '../../../../../../../../helpers';
 0;
 import { showAlert } from '../../../../../../../../utils/showAlert/ShowAlert';
 import 'react-responsive-carousel/lib/styles/carousel.min.css'; // requires a loader
@@ -50,6 +50,8 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useBandejaTareas } from '../../../../../hook/useBandejaTareas';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import { useFiles } from '../../../../../../../../hooks/useFiles/useFiles';
+import { api, baseURL } from '../../../../../../../../api/axios';
+import axios from 'axios';
 export const FormParte3 = ({
   controlFormulario,
   handleSubmitFormulario,
@@ -84,6 +86,12 @@ export const FormParte3 = ({
     resetManejoMetadatosModal,
   } = useBandejaTareas();
 
+  //vars julian
+  const [documentosFinalizados, setDocumentosFinalizados] = useState<any[]>([]);
+  const [docSelected, setDocSelected] = useState<any>('');
+  const [isFileUpload, setIsFileUpload] = useState(false);
+  //
+
   useEffect(() => {
     if (currentAnexo) {
       //  console.log('')('currentAnexo', currentAnexo);
@@ -92,6 +100,23 @@ export const FormParte3 = ({
       });
     }
   }, [currentAnexo]);
+
+  //Code Julian
+  const getDocuments = async () => {
+    try {
+      const response = await api.get('gestor/trd/documentos-finalizados-get/');
+      if(response.data && response.data.data){
+        console.log(response.data.data);
+        setDocumentosFinalizados(response.data.data);
+      }
+    } catch (error: any) {
+      control_error(error.response.data.detail);
+    }
+  }
+
+  useEffect(() => {
+    getDocuments();
+  }, [])
 
   // ? funciones third form
 
@@ -204,6 +229,7 @@ export const FormParte3 = ({
 
     // Reset functions that are common to both cases
     resetFormulario();
+    setIsFileUpload(false);
     resetManejoMetadatosModalFunction();
     dispatch(setMetadatos(null as any));
 
@@ -251,7 +277,8 @@ export const FormParte3 = ({
     {
       headerName: 'Acciones',
       field: 'Acciones',
-      minWidth: 300,
+      minWidth: 120,
+      flex: 1,
       renderCell: (params: any) => {
         return (
           <>
@@ -334,6 +361,7 @@ export const FormParte3 = ({
                       marginTop: '.15rem',
                       width: '100%',
                     }}
+                    disabled={docSelected}
                     startIcon={<FilePresentIcon />}
                   >
                     {value === '' || value === null
@@ -348,6 +376,7 @@ export const FormParte3 = ({
                         const files = (e.target as HTMLInputElement).files;
                         if (files && files.length > 0) {
                           const file = files[0];
+                          setIsFileUpload(true);
                           controlar_tamagno_archivos(file, onChange)
                         }
                       }}
@@ -364,12 +393,57 @@ export const FormParte3 = ({
                       {controlFormulario._formValues.ruta_soporte
                         ? controlFormulario._formValues.ruta_soporte.name ??
                           controlFormulario._formValues.ruta_soporte.replace(
-                            /https?:\/\/back-end-bia-beta\.up\.railway\.app\/media\//,
+                            /https?:\/\/bia-backend-beta-dev\.up\.railway\.app\/media\//,
                             ''
                           )
                         : 'Seleccione archivo'}
                     </small>
                   </label>
+                </>
+              )}
+            />
+          </Grid>
+          <Grid item xs={12} sm={4}>
+            <Controller
+              name="ruta_soporte"
+              control={controlFormulario}
+              defaultValue=""
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <>
+                  <TextField
+                    select
+                    fullWidth
+                    disabled={isFileUpload}
+                    label="Documento a cargar"
+                    size="small"
+                    variant="outlined"
+                    value={docSelected}
+                    onChange={async (e) => {
+                      setDocSelected(e.target.value);
+                      const documentoSeleccionado = documentosFinalizados.find(document => document.id_consecutivo_tipologia === e.target.value);
+                      if (documentoSeleccionado && documentoSeleccionado.archivos_digitales) {
+                        try {
+                          const url = baseURL.replace("/api/", "");
+                          const urlFile = `${url}${documentoSeleccionado.archivos_digitales.ruta_archivo}`
+                          const response = await axios.get(urlFile, { responseType: 'blob' });
+                          // const randomNumber = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
+                          // const file = new File([response.data], `${documentoSeleccionado.archivos_digitales.nombre_de_Guardado}${randomNumber}.docx`);
+                          const file = new File([response.data], `${documentoSeleccionado.archivos_digitales.nombre_de_Guardado}.${documentoSeleccionado.archivos_digitales.formato}`);
+                          controlar_tamagno_archivos(file, onChange);
+                        } catch (error) {
+                          control_error('No se encontró un documento asociado');
+                          console.error('Error al descargar el archivo', error);
+                        }
+                      }
+                    }}
+                  >
+                    <MenuItem value=""><em>Selecciona un documento</em></MenuItem>
+                    {documentosFinalizados.map((document: any) => (
+                      <MenuItem key={document.id_consecutivo_tipologia} value={document.id_consecutivo_tipologia}>
+                        {document.archivos_digitales.nombre_de_Guardado}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 </>
               )}
             />
@@ -403,7 +477,7 @@ export const FormParte3 = ({
               )}
             />
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Controller
               name="medio_alamacenamiento"
               control={controlFormulario}
@@ -433,7 +507,7 @@ export const FormParte3 = ({
           <Grid
             item
             xs={12}
-            sm={4}
+            sm={3}
             sx={{
               mb: '2rem',
             }}
@@ -472,7 +546,7 @@ export const FormParte3 = ({
           </Grid>
 
           {/*  modal de metadatos */}
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Button
               sx={{
                 width: '100%',
@@ -490,7 +564,7 @@ export const FormParte3 = ({
             </Button>
           </Grid>
 
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={3}>
             <Button
               sx={{
                 width: '100%',

@@ -6,6 +6,7 @@ interface GenererarAmortizacion {
   fecha_final: string;
   cuotas: number;
   periodicidad: number;
+  abono:Number;
 }
 
 const initial_state = {
@@ -20,7 +21,7 @@ export const get_validacion_plan_pagos = createAsyncThunk('facilidades_pago/vali
 
 // Ver Datos para la amortización desde Pag. Usuario Interno
 export const get_datos_amortizacion = createAsyncThunk('facilidades_pago/amortizacion', async (amortizacion: GenererarAmortizacion) => {
-  const { data } = await api.get(`recaudo/planes-pagos/plan-obligaciones-facilidad/${amortizacion.id_facilidad}/?fecha_final=${amortizacion.fecha_final}&cuotas=${amortizacion.cuotas}&periodicidad=${amortizacion.periodicidad}`)
+  const { data } = await api.get(`recaudo/planes-pagos/plan-obligaciones-facilidad/${amortizacion.id_facilidad}/?fecha_final=${amortizacion.fecha_final}&cuotas=${amortizacion.cuotas}&periodicidad=${amortizacion.periodicidad}&abono=${amortizacion.abono}`)
   return data.data
 })
 

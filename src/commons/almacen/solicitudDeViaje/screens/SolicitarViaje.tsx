@@ -14,12 +14,13 @@ import ViajeAgendado from './ViajeAgendado';
 import { control_error } from '../../../../helpers';
 import Swal from 'sweetalert2';
 import { useAppDispatch } from '../../../../hooks';
-import { editar_solicitud_viaje, enviar_solicitud_viaje, get_obtener_estados_solicitud, listar_departamentos, listar_municipios, obtener_agendamiento_solicitud, obtener_solicitudes, parseHora } from '../thunks/viajes';
+import { editar_solicitud_viaje, enviar_solicitud_viaje, get_obtener_estados_solicitud, listar_departamentos, listar_municipios, obtener_agendamiento_solicitud, obtener_solicitud_por_id, obtener_solicitudes, parseHora } from '../thunks/viajes';
 import BusquedaExpediente from './BusquedaExpediente';
 import { DialogGeneradorDeDirecciones } from '../../../../components/DialogGeneradorDeDirecciones';
 import SearchOutlined from '@mui/icons-material/SearchOutlined';
 import TablaPersonasViajan from '../tables/TablaPersonasViajan';
 import PersonasViajan from '../components/PersonasViajan';
+import { vi } from 'date-fns/locale';
 
 
 interface props {
@@ -57,6 +58,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
   const [departamentos, set_departamentos] = useState<any>();
   const [departamento_editar, set_departamento_editar] = useState<string>('73');
   const [municipio_editar, set_municipio_editar] = useState<string>('73001');
+  const [unidad_organizacional, set_unidad_organizacional] = useState<string>('');
 
   const [abrir_modal_generar_direccion, set_abrir_modal_generar_direccion] = useState<boolean>(false);
 
@@ -81,6 +83,9 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
   // Estado para editar los datos de la solicitud de viaje
   const [editar_datos_solicitar_viaje, set_editar_datos_solicitar_viaje] = useState<data_solicitud_viaje>(Object);
 
+  // Estado de datos de la solicitud para ver
+  const [datos_solicitud_ver, set_datos_solicitud_ver] = useState<any>(Object);
+
   // Estado para almacenar los datos de la solicitud de viaje
   const [datos_solicitar_viaje, set_datos_solicitar_viaje] = useState<interface_solicitar_viaje>();
 
@@ -88,8 +93,6 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
   const [solicitud_respondida, set_solicitud_respondida] = useState<interface_solicitud_respondida>(Object);
 
   useEffect(() => {
-    
-    
     // Establece los datos de la solicitud de viaje en el estado correspondiente
     set_datos_solicitar_viaje({
       ...(accion === 'crear' ? { motivo_viaje_solicitado: motivo_viaje } : accion === 'editar' && { motivo_viaje: motivo_viaje }),
@@ -107,7 +110,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
       requiere_carga: switch_requiere_carga,  // Indica si se requiere compañía militar
       consideraciones_adicionales: consideraciones_adicionales,
       indicaciones_destino: indicadores_destino,
-      ...(accion === 'crear' ? { personas_viajan: data_personas_viajan.map((persona) => persona.id_persona) } : {})
+      ...(accion !== 'editar' ? { personas_viajan: data_personas_viajan?.map((persona) => persona.id_persona) } : {})
     });
   }, [switch_expediente_asociado,
     departamento,
@@ -127,7 +130,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
     consideraciones_adicionales,
     motivo_viaje,
     id_expediente,
-    data_personas_viajan
+    data_personas_viajan,
   ]);
 
   /**
@@ -394,10 +397,20 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
     })
   }
 
+  const obtener_solicitud_por_id_fc: () => void = () => {
+    dispatch(obtener_solicitud_por_id(id_solicitud_editar))
+    .then((response: any) => {
+      set_datos_solicitud_ver(response.data)
+    })
+  }
+
   const obtener_agendamiento_solicitud_fc: (value: number) => void = (id_solicitud_respondida: number) => {
-    dispatch(obtener_agendamiento_solicitud(id_solicitud_respondida)).then((response: response_solicitud_respondida) => {
-      if (response?.success) {
+    dispatch(obtener_agendamiento_solicitud(id_solicitud_respondida))
+    .then((response: response_solicitud_respondida) => {
+      if(Object.keys(response.data.viajes_agendados).length !== 0){
         set_solicitud_respondida(response?.data.viajes_agendados);
+      } else {
+        set_solicitud_respondida({} as interface_solicitud_respondida);
       }
     })
   }
@@ -440,8 +453,10 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
    * Obtiene la lista de departamentos, municipios y las solicitudes de viaje si se está editando o viendo una solicitud.
    */
   useEffect(() => {
-    if (accion === 'editar' || accion === 'ver') {
+    if (accion === 'editar') {
       obtener_solicitudes_fc();
+    } else if (accion === 'ver') {
+      obtener_solicitud_por_id_fc();
     }
   }, [accion, id_solicitud_editar]);
 
@@ -453,8 +468,7 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
     if (Object.keys(editar_datos_solicitar_viaje).length !== 0) {
 
       // Comprueba si la acción es 'editar' o 'ver'
-      if (accion === 'editar' || accion === 'ver') {
-        console.log(editar_datos_solicitar_viaje);
+      if (accion === 'editar') {
         // Obtiene el motivo de viaje de los datos de edición o solicitud
         const motivo_viaje = editar_datos_solicitar_viaje.motivo_viaje
           ? editar_datos_solicitar_viaje.motivo_viaje
@@ -495,13 +509,36 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
       if (accion === 'editar') {
         set_justificacion_rechazo(editar_datos_solicitar_viaje.justificacion_rechazo);
       }
-
+      
       // Si la acción es 'ver', obtiene el agendamiento de la solicitud de viaje
+    }
+    if(Object.keys(datos_solicitud_ver).length !== 0){
       if (accion === 'ver') {
-        obtener_agendamiento_solicitud_fc(editar_datos_solicitar_viaje.id_solicitud_viaje);
+        set_switch_expediente_asociado(datos_solicitud_ver.solicitud_viaje.tiene_expediente_asociado);
+        set_direccion(datos_solicitud_ver.solicitud_viaje.direccion);
+        set_indicadores_destino(datos_solicitud_ver.solicitud_viaje.indicaciones_destino);
+        set_numero_pasajeros(datos_solicitud_ver.solicitud_viaje.nro_pasajeros);
+        set_switch_requiere_carga(datos_solicitud_ver.solicitud_viaje.requiere_carga);
+        set_switch_requiere_acompanamiento_militar(datos_solicitud_ver.solicitud_viaje.requiere_compagnia_militar);
+        set_consideraciones_adicionales(datos_solicitud_ver.solicitud_viaje.consideraciones_adicionales);
+        cambio_fecha_salida(dayjs(datos_solicitud_ver.solicitud_viaje.fecha_partida));
+        cambio_fecha_rechazo(dayjs(datos_solicitud_ver.solicitud_viaje.fecha_rechazo));
+        cambio_fecha_retorno(dayjs(datos_solicitud_ver.solicitud_viaje.fecha_retorno));
+        cambio_hora_salida(parseHora(datos_solicitud_ver.solicitud_viaje.hora_partida));
+        cambio_hora_retorno(parseHora(datos_solicitud_ver.solicitud_viaje.hora_retorno));
+        set_municipio_editar(datos_solicitud_ver.solicitud_viaje.cod_municipio);
+        set_departamento_editar(datos_solicitud_ver.solicitud_viaje.cod_departamento);
+        set_municipio(datos_solicitud_ver.solicitud_viaje.cod_municipio);
+        set_departamento(datos_solicitud_ver.solicitud_viaje.cod_departamento);
+        set_motivo_viaje(datos_solicitud_ver.solicitud_viaje.motivo_viaje);
+        set_unidad_organizacional(datos_solicitud_ver.solicitud_viaje.unidad_organizacional_solicita);
+
+        set_data_personas_viajan(datos_solicitud_ver.personas_solicitud_viaje);
+  
+        obtener_agendamiento_solicitud_fc(datos_solicitud_ver.solicitud_viaje.id_solicitud_viaje);
       }
     }
-  }, [editar_datos_solicitar_viaje, id_solicitud_editar, accion])
+  }, [editar_datos_solicitar_viaje, id_solicitud_editar, accion, datos_solicitud_ver])
 
 
 
@@ -963,6 +1000,19 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
           />
         </Grid>
 
+        {accion === 'ver' &&
+          <Grid item xs={12}>
+            <TextField
+              label='Unidad organizacional'
+              disabled
+              fullWidth
+              size="small"
+              value={unidad_organizacional}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => set_unidad_organizacional(e.target.value)}
+            />
+          </Grid>
+        }
+
         {accion === 'editar' &&
           <Grid container spacing={1} item xs={12} sx={{
             display: "flex",
@@ -1009,14 +1059,14 @@ const SolicitarViaje: React.FC<props> = ({ set_mostrar_solicitud_viaje, set_refr
         }
       </Grid>
 
-      {accion === 'crear' &&
-        <PersonasViajan
-          inputs_persona_seleccionada={inputs_persona_seleccionada}
-          set_inputs_persona_seleccionada={set_inputs_persona_seleccionada}
-          data_personas_viajan={data_personas_viajan}
-          set_data_personas_viajan={set_data_personas_viajan}
-        />
-      }
+      <PersonasViajan
+        inputs_persona_seleccionada={inputs_persona_seleccionada}
+        set_inputs_persona_seleccionada={set_inputs_persona_seleccionada}
+        data_personas_viajan={data_personas_viajan}
+        set_data_personas_viajan={set_data_personas_viajan}
+        accion={accion}
+      />
+      
 
 
       {accion !== 'ver' &&

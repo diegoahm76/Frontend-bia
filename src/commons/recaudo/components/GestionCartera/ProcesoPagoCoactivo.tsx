@@ -68,12 +68,14 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
   const [data_clean, set_data_clean] = useState<any>([]);
   const [id_subetapa, set_id_subetapa] = useState<string>('1');
   const [form_table_values, set_form_table_values] = useState<AprobadoresProps>({
+    fecha_limite:"",
     nombre_aprobador: '',
     cargo_aprobador: '',
     nombre_proyector: '',
     cargo_proyector: '',
   });
   const [form_to_send, set_form_to_send] = useState<AprobadoresProps>({
+    fecha_limite:"",
     nombre_aprobador: '',
     cargo_aprobador: '',
     nombre_proyector: '',
@@ -181,6 +183,7 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
 
   const handle_click_update = () => {
     set_form_to_send({
+      fecha_limite:form_table_values.fecha_limite,
       nombre_aprobador: form_table_values.nombre_aprobador,
       cargo_aprobador: form_table_values.cargo_aprobador,
       nombre_proyector: form_table_values.nombre_proyector,
@@ -191,6 +194,7 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
 
   const clean_form = () => {
     set_form_table_values({
+      fecha_limite:"",
       nombre_aprobador: '',
       cargo_aprobador: '',
       nombre_proyector: '',
@@ -213,7 +217,7 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             name="documento"
             label="Documento"
             helperText="Documento"
-            value={current_deudor?.numero_identificacion || datos.id_deudor.identificacion}
+            value={current_deudor?.numero_identificacion || datos?.id_deudor.identificacion}
             disabled
           />
         </Grid>
@@ -224,7 +228,7 @@ export const ProcesoPagoCoactivo: React.FC<any> = ({
             name="nombreDeudor"
             label="Nombre deudor"
             helperText="Nombre deudor"
-            value={current_deudor?.nombre_completo || datos.id_deudor.nombres + ' ' + datos.id_deudor.apellidos}
+            value={current_deudor?.nombre_completo || datos?.id_deudor.nombres + ' ' + datos?.id_deudor.apellidos}
             disabled
           />
         </Grid>

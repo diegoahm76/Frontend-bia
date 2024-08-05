@@ -46,6 +46,7 @@ interface IProps {
   show_inputs?: boolean;
   title_table_modal?: string | null;
   button_submit_disabled?: boolean | null;
+  button_modal_disabled?: boolean | null;
   button_add_selection_hidden?: boolean | null;
   md_button?: number | null;
   button_icon_class?: any;
@@ -56,6 +57,7 @@ interface IProps {
   open_search_modal?: boolean | null;
   set_open_search_modal?: any | null;
   border_show?: boolean | null;
+  clear_fields?: any;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
@@ -67,6 +69,7 @@ const BuscarModelo = ({
   set_models,
   // reset_values,
   get_filters_models,
+  clear_fields,
   models,
   columns_model,
   row_id,
@@ -81,6 +84,7 @@ const BuscarModelo = ({
   show_inputs,
   title_table_modal,
   button_submit_disabled,
+  button_modal_disabled,
   button_add_selection_hidden,
   md_button,
   button_icon_class,
@@ -97,7 +101,7 @@ const BuscarModelo = ({
   // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/explicit-function-return-type
   const TypeDatum: any = (input: any) => {
     const form_input = input.form_input;
-    if (form_input.datum_type === 'input_controller') {
+    if (form_input?.datum_type === 'input_controller') {
       return (
         <FormInputController
           xs={form_input.xs}
@@ -427,6 +431,7 @@ const BuscarModelo = ({
         </Grid>
       )}
       <SeleccionarModeloDialogForm
+        button_modal_disabled={button_modal_disabled}
         set_current_model={set_current_model}
         is_modal_active={select_model_is_active}
         set_is_modal_active={set_select_model_is_active}
@@ -435,6 +440,7 @@ const BuscarModelo = ({
         set_models={set_models}
         button_origin_show={button_origin_show}
         get_filters_models={get_filters_models}
+        clear_fields={clear_fields}
         models={models}
         columns_model={columns_model}
         row_id={row_id}

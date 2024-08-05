@@ -46,10 +46,16 @@ const TablaActivosAgregados: FC<props> = ({
   const columns: custom_column[] = [
     { field: 'codigo_bien_espachado', headerName: 'Código bien', maxWidth: 150, flex: 1 },
     { field: 'nombre_bien_espachado', headerName: 'Nombre de articulo despachado', width: 150, flex: 1 },
-    { field: 'id_bien_despachado', headerName: 'Identificador del Activo', width: 150, flex: 1 },
+    // { field: 'id_bien_despachado', headerName: 'Identificador del Activo', width: 150, flex: 1 },
     { field: 'nombre_bodega', headerName: 'Bodega', width: 150, flex: 1 },
     { field: 'cantidad_despachada', headerName: 'Cantidad de articulos Despachado', width: 150, flex: 1, align: 'center', headerAlign: 'center' },
-    { field: 'observaciones', headerName: 'Observación', width: 150, flex: 1 },
+    {field: 'cod_tipo_bien', headerName:'Tipo de bien', width:150, flex:1, renderCell: (params: any) => (
+      params.row?.cod_tipo_bien === 'A' ? 'Activo' : 'Consumo'
+    )},
+    {field: 'doc_identificador_nro', headerName:'Placa / Serial', width:150, flex:1},
+    {field: 'marca', headerName:'Marca', width:150, flex:1},
+    {field: 'descripcion', headerName:'Descripción', width:200, flex:1},
+    { field: 'observaciones', headerName: 'Observación', width: 200, flex: 1 },
     {
       field: 'quitar', headerName: 'Quitar', maxWidth: 80, flex: 1, align: 'center', headerAlign: 'center',
       renderCell: (params) => (

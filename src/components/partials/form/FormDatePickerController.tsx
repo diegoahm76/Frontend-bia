@@ -9,6 +9,7 @@ import {
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useEffect } from 'react';
 
 interface IRuleMessage {
   rule: any;
@@ -63,7 +64,7 @@ const FormDatePickerController = ({
           <Controller
             name={control_name}
             control={control_form}
-            defaultValue={default_value}
+            defaultValue={default_value || null}
             rules={{
               required: rules.required_rule?.rule,
               min: rules.min_rule?.rule,
@@ -78,11 +79,9 @@ const FormDatePickerController = ({
                     openTo={open_to ?? 'day'}
                     views={open_to ?? null !== null ? [open_to] : ['day']}
                     value={
-                      value === null || value == undefined
-                        ? null
-                        : value === ''
-                        ? null
-                        : value
+                      value === null || value == undefined || value === ''
+                          ? (default_value || null)
+                          : value
                     }
                     onChange={onChange}
                     inputFormat={format ?? 'YYYY-MM-DD'}

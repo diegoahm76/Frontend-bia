@@ -97,7 +97,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
           </Grid>
           {mode.editar ? (
             <>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Controller
                   name="nombre_indicador"
                   control={control_concepto}
@@ -106,7 +106,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
                     <TextField
                       fullWidth
                       size="small"
-                      label="Nombre del indicador"
+                      label="Nombre del concepto"
                       variant="outlined"
                       multiline
                       value={value}
@@ -116,7 +116,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
                     />
                   )}
                 />
-              </Grid>
+              </Grid> */}
             </>
           ) : null}
           <Grid item xs={12} sm={6}>
@@ -125,23 +125,17 @@ export const AgregarConceptoPOAI: React.FC = () => {
               control={control_concepto}
               rules={{ required: true }}
               render={({ field: { onChange, value } }) => (
+               
                 <TextField
                   fullWidth
                   size="small"
-                  label="Concepto"
                   variant="outlined"
-                  multiline
-                  value={value}
-                  disabled={false}
-                  required={true}
-                  onChange={onChange}
-                  error={!!errors_concepto.concepto}
-                  helperText={
-                    errors_concepto.concepto
-                      ? 'Es obligatorio ingresar un concepto'
-                      : 'Ingrese un concepto'
-                  }
+                  label="Nombre de concepto "
+                  name="mes_proyectado"
+                  // value={formData.mes_proyectado}
+                  // onChange={handleInputChange}
                 />
+            
               )}
             />
           </Grid>
@@ -154,7 +148,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
                 <TextField
                   fullWidth
                   size="small"
-                  label="Valor concepto_poai"
+                  label="Valor inicial  "
                   variant="outlined"
                   multiline
                   value={value}
@@ -168,7 +162,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
                   helperText={
                     errors_concepto.valor_total
                       ? 'Es obligatorio ingresar un valor total'
-                      : 'Ingrese un valor total'
+                      : 'Valor inicial '
                   }
                 />
               )}
@@ -220,11 +214,11 @@ export const AgregarConceptoPOAI: React.FC = () => {
                   disabled={false}
                   fullWidth
                   required
-                  error={!!errors_concepto.id_cuenca}
+                  // error={!!errors_concepto.id_cuenca}
                   helperText={
                     errors_concepto?.id_cuenca?.type === 'required'
                       ? 'Este campo es obligatorio'
-                      : 'ingrese el rubro'
+                      : 'Unidad organizacional'
                   }
                 >
                   {rubros_selected.map((option) => (
@@ -256,7 +250,7 @@ export const AgregarConceptoPOAI: React.FC = () => {
                     errors_concepto?.id_unidad_organizacional?.type ===
                     'required'
                       ? 'Este campo es obligatorio'
-                      : 'ingrese el grupo '
+                      : 'Modalidad PAA'
                   }
                 >
                   {unidades_organizacionales_selected.map((option) => (

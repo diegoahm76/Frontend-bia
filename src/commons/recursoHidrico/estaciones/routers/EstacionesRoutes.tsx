@@ -17,6 +17,9 @@ import { ConfiguracionAlarma } from '../components/ConfiguracionAlarma';
 import { Clima } from '../screens/ClimaScreen';
 import { Cuencas } from '../screens/Cuencas';
 import { ValorRegional } from '../screens/ValorRegional';
+import { Vertimiento } from '../screens/Vertimiento';
+import { Sirh } from '../screens/Sirh';
+import { PlanesSirh } from '../screens/PlanesSirh';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const EstacionesRoutes: React.FC = () => {
@@ -62,6 +65,12 @@ export const EstacionesRoutes: React.FC = () => {
 
       {/* Configuracion_alarma   */}
       <Route path="Cuencas/*" element={<Cuencas />} />
+      <Route path="vertimiento/*" element={<Sirh />} />
+
+      <Route path="Planes_sirh/*" element={<PlanesSirh />} />
+
+      
+      
 
       <Route path="valor_regional/*" element={<ValorRegional />} />
 

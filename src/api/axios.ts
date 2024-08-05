@@ -19,9 +19,11 @@ const DEFAULT_AUTH_URL_BETA: string= 'http://localhost:3000/#';
 
 // ? default urls for the app - api connection & download files (beta)
 const DEFAULT_BETA_URL: string =
-  'https://back-end-bia-beta.up.railway.app/api/';
+  /*'https://back-end-bia-beta.up.railway.app/api/';*/
+  'https://bia-backend-beta-dev.up.railway.app/api/';
 const DEFAULT_BETA_DOWNLOAD_FILES_URL: string =
-  'https://back-end-bia-beta.up.railway.app';
+  /*'https://back-end-bia-beta.up.railway.app';*/
+  'https://bia-backend-beta-dev.up.railway.app';
 
 // ? default urls for the app - api connection & download files (production)
 const DEFAULT_PROD_URL: string = 'https://bia.cormacarena.gov.co/api/';
@@ -29,7 +31,7 @@ const DEFAULT_PROD_DOWNLOAD_FILES_URL =
   'https://bia.cormacarena.gov.co';
 
 export const baseURL: string =
-  process.env.NODE_ENV === 'production'
+  process.env.NODE_ENV === 'development'
     ? process.env.REACT_APP_BETA_URL || DEFAULT_BETA_URL
     : process.env.REACT_APP_PROD_URL || DEFAULT_PROD_URL;
 

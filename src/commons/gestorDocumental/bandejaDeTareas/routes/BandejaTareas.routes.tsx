@@ -17,6 +17,8 @@ import { RequerimientoAlUsuarioOPASProvider } from '../modules/OPAS/requerimient
 import { RequerimientoUsuarioOpasScreen } from '../modules/OPAS/requerimientosUsuarioOpas/screen/RequerimientoUsuarioOpasScreen';
 import { RespuestaOpaUsuario } from '../modules/OPAS/respuestaOpaUsuario/screen/RespuestaOpaUsuario';
 import { ModuleInfoTareaComplementoOpa } from '../mainModule/bandejaDeTareas/Atom/ModuleInfoTareaComplementoOpa';
+import { RequerimientoUsuTraScreen } from '../modules/requerimientosUsuarioTramites/screen/RequerimientoUsuarioOpasScreen';
+// import { RequerimientoUsuTraScreen } from '../modules/requerimientosUsuarioTramites/screen/RequerimientoUsuarioOpasScreen';
 
 const routes = [
   {
@@ -100,6 +102,14 @@ const routes = [
     component: () => (
       <RequerimientoAlUsuarioOPASProvider>
         <RespuestaOpaUsuario />
+      </RequerimientoAlUsuarioOPASProvider>
+    ),
+  },
+  {
+    path: 'requerimiento_usuario_tramites/',
+    component: () => (
+      <RequerimientoAlUsuarioOPASProvider>
+        <RequerimientoUsuTraScreen />
       </RequerimientoAlUsuarioOPASProvider>
     ),
   },

@@ -33,7 +33,7 @@ const SeleccionarComputer = () => {
         {
             field: 'codigo_bien',
             headerName: 'Código',
-            width: 200, flex: 1,
+            minWidth: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -44,7 +44,7 @@ const SeleccionarComputer = () => {
         {
             field: 'nombre',
             headerName: 'Nombre',
-            width: 200, flex: 1,
+            minWidth: 200, flex: 1,
             renderCell: (params) => (
                 <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
                     {params.value}
@@ -54,15 +54,41 @@ const SeleccionarComputer = () => {
         },
         {
             field: 'cod_tipo_activo',
-            headerName: 'Tipo de bien',
-            width: 200, flex: 1,
+            headerName: 'Tipo Activo',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.cod_tipo_activo == 'Com' ? 'Computador' : 'N/A'}
+                </div>
+            ),
 
+        },
+        {
+            field: 'marca',
+            headerName: 'Marca',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'doc_identificador_nro',
+            headerName: 'Serial',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.doc_identificador_nro}
+                </div>
+            ),
 
         },
         {
             field: 'tiene_hoja_vida',
             headerName: 'Tiene hoja de vida',
-            width: 200, flex: 1,
+            minWidth: 200, flex: 1,
             renderCell: (params) => {
                 return params.row.tiene_hoja_vida === true ? (
                     <Chip size="small" label="SI" color="success" variant="outlined" />
@@ -71,19 +97,60 @@ const SeleccionarComputer = () => {
                 );
             },
         },
+        {
+            field: 'tipo_bien',
+            headerName: 'Tipo de bien',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'nro_elemento_bien',
+            headerName: 'Consecutivo de bien',
+            minWidth: 200, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.value || 'N/A'}
+                </div>
+            ),
+
+        },
+        {
+            field: 'estado',
+            headerName: 'Estado',
+            minWidth: 120, flex: 1,
+            renderCell: (params) => (
+                <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+                    {params.row.estado}
+                </div>
+            ),
+
+        },
 
     ];
     const filter_computer: any = (async () => {
-        void dispatch(get_computers_all_service())
-
+        const placa_serial = get_values("doc_identificador_nro");
+        const nombre = get_values("nombre");
+        void dispatch(get_computers_all_service(nombre, placa_serial))
     })
-
 
     const search_computer: any = (async () => {
         const cv_computer = get_values("id_bien")
         if (cv_computer !== null) {
             void dispatch(get_computers_all_service())
         }
+    })
+
+    const clear_fields: any = (async () => {
+        reset_computo({
+            doc_identificador_nro: "",
+            nombre: ""
+        });
+        filter_computer()
     })
 
 
@@ -108,22 +175,7 @@ const SeleccionarComputer = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 3,
-                            control_form: control_computo,
-                            control_name: "codigo_bien",
-                            default_value: "",
-                            rules: {},
-                            label: "Código",
-                            type: "number",
-                            disabled: false,
-                            helper_text: "",
-                            on_blur_function: search_computer
-                        },
-
-                        {
-                            datum_type: "input_controller",
-                            xs: 12,
-                            md: 3,
+                            md: 5,
                             control_form: control_computo,
                             control_name: "nombre",
                             default_value: "",
@@ -131,7 +183,20 @@ const SeleccionarComputer = () => {
                             label: "Nombre",
                             type: "text",
                             disabled: true,
-                            helper_text: ""
+                            helper_text: "",
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_computo,
+                            control_name: "doc_identificador_nro",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Serial",
+                            type: "text",
+                            disabled: true,
+                            helper_text: "",
                         },
                     ]}
                     modal_select_model_title='Buscar Computadores'
@@ -139,17 +204,30 @@ const SeleccionarComputer = () => {
                         {
                             datum_type: "input_controller",
                             xs: 12,
-                            md: 2,
+                            md: 4,
                             control_form: control_computo,
-                            control_name: "codigo_bien",
+                            control_name: "nombre",
                             default_value: "",
                             rules: { required_rule: { rule: false, message: "requerido" } },
-                            label: "Código",
-                            type: "number",
+                            label: "Nombre",
+                            type: "text",
                             disabled: false,
                             helper_text: "",
-                        }
-                    ]} get_filters_models={filter_computer} />
+                        },
+                        {
+                            datum_type: "input_controller",
+                            xs: 12,
+                            md: 2,
+                            control_form: control_computo,
+                            control_name: "doc_identificador_nro",
+                            default_value: "",
+                            rules: { required_rule: { rule: false, message: "requerido" } },
+                            label: "Serial",
+                            type: "text",
+                            disabled: false,
+                            helper_text: "",
+                        },
+                    ]} get_filters_models={filter_computer} clear_fields={clear_fields}/>
             </Grid>
         </>
     );
