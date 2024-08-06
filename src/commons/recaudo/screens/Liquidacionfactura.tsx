@@ -41,7 +41,7 @@ import type { DetallePeriodo, DetallesPeriodos } from '../interfaces/proceso';
 import { FacturacionVisor } from './FacturacionVisor';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { control_error } from '../../../helpers';
-import { get_obligaciones_id } from '../facilidadPago/slices/ObligacionesSlice';
+import { get_obligaciones_factura, get_obligaciones_id } from '../facilidadPago/slices/ObligacionesSlice';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import { TablaObligacionesUsuarioConsulta } from '../facilidadPago/componentes/TablaObligacionesUsuarioConsulta';
@@ -156,6 +156,7 @@ const detalles_periodos: DetallesPeriodos = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const Liquidacionfactura: React.FC = () => {
+  const rutafactura = 1;
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 
@@ -206,7 +207,7 @@ export const Liquidacionfactura: React.FC = () => {
 
   useEffect(() => {
     api
-      .get('recaudo/liquidaciones/deudores')
+      .get('recaudo/liquidaciones/obtener-contribuyentes/')
       .then((response) => {
         set_deudores(response.data.data);
       })
@@ -606,6 +607,7 @@ export const Liquidacionfactura: React.FC = () => {
         set_open_notification_modal(true);
       });
   };
+  const [id_fecha, set_id_fecha] = useState('');
 
   const [obligaciones_module, set_obligaciones_module] = useState(false);
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
@@ -616,6 +618,7 @@ export const Liquidacionfactura: React.FC = () => {
 
   const [id_cc, set_id_cc] = useState('');
   const [tipo_renta, set_tipo_renta] = useState<string>('');
+  const [id_identificacion, set_identificacion] = useState('');
 
   const columns_deudores: GridColDef[] = [
     {
@@ -674,11 +677,12 @@ export const Liquidacionfactura: React.FC = () => {
             <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
+                  set_identificacion(params.row.id_persona)
                   // set_tipo_renta()
                   // set_id_cc(params.row.id_expediente)
                   set_form_liquidacion((previousData) => ({
                     ...previousData,
-                    id_deudor: params.row.id,
+                    id_deudor: params.row.id_persona,
                   }));
                   set_nombre_deudor(
                     `${(params.row.nombres as string) ?? ''} ${
@@ -687,7 +691,8 @@ export const Liquidacionfactura: React.FC = () => {
                   );
                   try {
                     void dispatch(
-                      get_obligaciones_id(params.row.identificacion)
+                      get_obligaciones_factura(params.row.id_persona)
+                   
                     );
                     set_obligaciones_module(true);
                     handle_open_buscarr();
@@ -793,7 +798,7 @@ export const Liquidacionfactura: React.FC = () => {
     setFiltroIdentificacion('');
 
     api
-      .get('recaudo/liquidaciones/deudores')
+      .get('recaudo/liquidaciones/obtener-contribuyentes/')
       .then((response) => {
         set_deudores(response.data.data);
       })
@@ -958,6 +963,10 @@ export const Liquidacionfactura: React.FC = () => {
                         {obligaciones.length !== 0 ? (
                           <>
                             <TablaObligacionesUsuarioConsulta
+                            set_id_fecha={set_id_fecha}
+                            set_identificacion={set_identificacion}
+                            identificacion={id_identificacion}
+                              rutafactura={rutafactura}
                               id_cc={id_cc}
                               set_id_cc={set_id_cc}
                               set_tipo_renta={set_tipo_renta}
@@ -1049,6 +1058,10 @@ export const Liquidacionfactura: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
+                    id_fecha={id_fecha}
+
+ fecha_liquidacion={fecha_liquidacion} 
+          fecha_vencimiento={fecha_vencimiento}
             id_cc={id_cc}
             set_tipo_renta={set_tipo_renta}
             tipo_renta={tipo_renta}

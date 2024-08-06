@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 
 /* eslint-disable no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
@@ -21,6 +22,50 @@ import { api } from '../../../../api/axios';
 import { useSelector } from 'react-redux';
 import { AuthSlice } from '../../../auth/interfaces';
 import { edit_baja_service } from '../../../conservacion/gestorVivero/store/thunks/gestorViveroThunks';
+import { control_error, control_success } from '../../../../helpers';
+
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+
+
+interface DataDetalles {
+  id_opcion_liq: number;
+  variables: {
+    test: string;
+  };
+  valor: number;
+  caudal_concesionado: number;
+  concepto: string;
+}
+
+interface DataLiquidacion {
+  fecha_liquidacion: string;
+  vencimiento: string;
+  num_factura:any,
+  periodo_liquidacion: number;
+  valor: number;
+  id_expediente: number;
+  ciclo_liquidacion: string;
+  id_tipo_renta: number;
+  num_liquidacion: number | null;
+  agno: number | null;
+  periodo: number | null;
+  nit: string | null;
+  fecha: string | null;
+  valor_liq: number | null;
+  valor_pagado: number | null;
+  valor_prescripcion: number | null;
+  anulado: boolean | null;
+  num_resolucion: string | null;
+  agno_resolucion: any | null;
+  cod_origen_liq: number | null;
+  observacion: string | null;
+  cod_tipo_beneficio: number | null;
+  fecha_contab: string | null;
+  se_cobra: boolean | null;
+  fecha_en_firme: string | null;
+  nnum_origen_liq: number | null;
+}
+
 
 dayjs.extend(localizedFormat);
 dayjs.locale('es');
@@ -71,9 +116,14 @@ export interface Concepto {
   nombre_fuente_hidrica: string | null;
   caudal_concesionado: string;
   clase_uso_agua: string;
+  
   factor_regional: number;
+  fecha_vencimiento:any
 }
 export const DocumentoPagoTUA: React.FC<any> = ({
+  fecha_liquidacion,
+  id_fecha,
+  fecha_vencimiento,
   id_cc,
   liquidacion,
   obligaciones,
@@ -86,7 +136,7 @@ export const DocumentoPagoTUA: React.FC<any> = ({
   is_generate_cobro,
   cobro_url,
   id_subetapa
-}: { id_cc:any, liquidacion:any ,obligaciones:any , form_liquidacion:any, rows_detalles:any, months:any, datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
+}: {  id_fecha:any, fecha_liquidacion:any, fecha_vencimiento:any, id_cc:any, liquidacion:any ,obligaciones:any , form_liquidacion:any, rows_detalles:any, months:any, datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
   const receiptRef = useRef(null);
   const [form_values, set_form_values] = useState({
     sumaConcepto: "",
@@ -120,8 +170,43 @@ export const DocumentoPagoTUA: React.FC<any> = ({
       set_form_values({sumaConcepto, sumaIntereses, sumaTotal, totalNumber})
     }
   }, [data_clean, datos])
+  const generatePDF = async (): Promise<File | null> => {
+    if (receiptRef.current) {
+      const element = receiptRef.current;
+      const canvas = await html2canvas(element, { scale: 1.1 });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: 'a4'
+      });
+  
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      const margin = 10;
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      let position = 0;
+  
+      for (let i = 0; i < Math.ceil(pdfHeight / pageHeight); i++) {
+        if (i > 0) {
+          pdf.addPage();
+          position = -pageHeight * i;
+        }
+        pdf.addImage(imgData, 'PNG', margin, position + margin, pdfWidth - margin * 2, pdfHeight);
+      }
+  
+      const pdfBlob = pdf.output('blob');
+      const file = new File([pdfBlob], 'archivo_liquidacion.pdf', { type: 'application/pdf' });
+      setArchivoLiquidacion(file);
+      return file;
+    }
+    return null;
+  };
 
 
+  
   const exportPDF = () => {
     if (receiptRef.current) {
       const element = receiptRef.current;
@@ -205,7 +290,7 @@ useEffect(() => {
   updateUnidadesConfig();
 }, [id_cc]);
 
-const variable = `(415)7709998443433(8020)${String(configData.referencia_actual).padStart(18, '0')}(3900)${form_liquidacion.valor.toString().padStart(14, '0')}(96)${dayjs().add(90, 'day').format('YYYYMMDD')}`;
+const variable = `(415)7709998443433(8020)${String(configData.referencia_actual).padStart(18, '0')}(3900)${form_liquidacion.valor.toString().padStart(14, '0')}(96)${dayjs().add(30, 'day').format('YYYYMMDD')}`;
 const currency_formatter = (value: number, fraction_digits: number = 0): string => {
   const formatter = new Intl.NumberFormat('es-CO', {
     style: 'currency',
@@ -285,8 +370,117 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables?.
 
 
 
+const data_detalles: DataDetalles[] = [
+  {
+    concepto: "test",
+    id_opcion_liq: 73,
+    variables: { test: "test" },
+    valor: 5000,
+    caudal_concesionado: 23,
+  },
+  {
+    id_opcion_liq: 73,
+    variables: { test: "test 2" },
+    valor: 5000,
+    caudal_concesionado: 23,
+    concepto: "test 2"
+  }
+];
+const agno_resolucion = new Date(id_fecha.fecha_resolucion).getFullYear();
+
+const referencia_actual = configData.referencia_actual ? String(configData.referencia_actual) : '';
+const num_factura = `TUA-${referencia_actual.padStart(6, '0')}`;
+const data_liquidacion: DataLiquidacion = {
+  fecha_liquidacion: `${fecha_liquidacion.format('YYYY-MM-DD')}`,
+  vencimiento:  `${fecha_vencimiento.format('YYYY-MM-DD')}`,
+  periodo_liquidacion: 1,
+  valor: form_liquidacion.valor,
+  id_expediente: id_fecha.id_expediente,
+  ciclo_liquidacion: `${form_liquidacion.ciclo_liquidacion}`,
+  num_factura:num_factura,
+  nit: id_fecha.nit_titular,
+  valor_liq: form_liquidacion.valor,
+  valor_pagado: form_liquidacion.valor,
+  num_resolucion: id_fecha.resolucion,
+
+  agno: dayjs().year(),
+  agno_resolucion: agno_resolucion,
+
+  id_tipo_renta: 30,
+  fecha: null,
+  // fecha creoo 
+
+
+
+  num_liquidacion: null,
+  periodo: null,
+  valor_prescripcion: null,
+  anulado: null,
+  cod_origen_liq: null,
+  observacion: null,
+  cod_tipo_beneficio: null,
+  fecha_contab: null,
+  se_cobra: null,
+  fecha_en_firme: null,
+  nnum_origen_liq: null
+};
+
+const [formmmm, set_form] = useState<{ archivo: null | any }>({
+  archivo: null,
+});
+const archivo_liquidacion = formmmm.archivo; // Suponiendo que el archivo es obtenido de algún input o variable
+
+const fetch_Crear_archivo_digital = async () => {
+  const archivo = await generatePDF();
+  if (!archivo) {
+    console.error('Error generating PDF');
+    return;
+  }
+
+  try {
+    const url = `/recaudo/liquidaciones/liquidacion-obligacion/`;
+    const formData = new FormData();
+
+    // Agregar data_liquidacion al FormData
+    formData.append('data_liquidacion', JSON.stringify(data_liquidacion));
+
+    // Agregar data_detalles al FormData
+    formData.append('data_detalles', JSON.stringify(data_detalles));
+
+    // Agregar archivo_liquidacion al FormData
+    formData.append('archivo_liquidacion', archivo);
+
+    // Realizar la solicitud POST
+    const res = await api.post(url, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+
+    if (res.data) {
+      control_success('se creo correctamente');
+    } else {
+      console.error('Error en la solicitud:', res.statusText);
+    }
+  } catch (error: any) {
+    control_error(error.response.data.detail);
+  }
+};
+const [archivoLiquidacion, setArchivoLiquidacion] = useState<File | null>(null);
+
+
+const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  if (event.target.files && event.target.files.length > 0) {
+    setArchivoLiquidacion(event.target.files[0]);
+  }
+};
+const handleLogRowsDetalles = () => {
+  console.log("tua",rows_detalles);
+};
   return (
     <>
+     {/* <button onClick={handleLogRowsDetalles}>Log tua </button> */}
+
      <Grid
         container
         item
@@ -297,12 +491,47 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables?.
         marginTop={3}
         
       > 
-      {/* <h1>Resultado de Q * FC * T: {result}</h1> */}
-            {/* <button onClick={updateUnidadesConfig}>Actualizar Configuración</button> */}
-         
-            {/* {configData && (<>{String(configData.referencia_actual).padStart(18, '0')}</>)}  */}
-{/* {id_persona} */}
-          <Grid item xs={12} sm={12}>
+ 
+
+{/* <div>
+      <input type="file" onChange={handleFileChange} />
+    </div> */}
+      <Grid
+          container
+          spacing={2}
+          marginTop={2}
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+        >
+  <Grid item  xs={2}>
+    <Button
+    fullWidth
+            color="success"
+            variant="contained"
+            startIcon={<MonetizationOnIcon />}
+            onClick={fetch_Crear_archivo_digital}
+          >
+            Liquidar 
+          </Button>
+  </Grid>
+  <Grid item  xs={2}>
+  <Button
+        color="primary"
+        size='medium'
+        fullWidth
+        startIcon={<CloudUpload />}
+        variant="contained"
+        onClick={exportPDF}
+        // sx={{margin: '1.5rem auto', display: 'flex', justifyContent: 'center', width: '300px'}}
+      >
+        Descargar PDF
+      </Button>
+  </Grid>
+
+        </Grid>
+
+          {/* <Grid item xs={12} sm={12}>
              <Button
         color="primary"
         size='medium'
@@ -313,9 +542,9 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables?.
       >
         Descargar PDF
       </Button>
-          </Grid>
+          </Grid> */}
           <Grid item xs={12} sm={12}>
-<section ref={receiptRef} style={{transform: 'scale(0.6)', margin: '-24rem 0'}}>
+<section ref={receiptRef} style={{transform: 'scale(0.55)', margin: '-24rem 0'}}>
         <TableContainer component={Paper} sx={{ border: '1px solid black', borderRadius: 0}}>
         <Table sx={{ minWidth: 650 }} aria-label="customized table">
           <TableBody>
@@ -341,18 +570,18 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables?.
                 </article>
               </StyledTableCell>
               <StyledHeaderCell align="center" colSpan={2}>Ref. de Pago</StyledHeaderCell>
-              <StyledTableCell align="center" sx={{ color: 'red', fontWeight: 'bold', fontSize: '29px' }}>TUA  {configData && (<>{String(configData.referencia_actual).padStart(6, '0')}</>)} </StyledTableCell>
+              <StyledTableCell align="center" sx={{ color: 'red', fontWeight: 'bold', fontSize: '29px' }}>TUA-{configData && (<>{String(configData.referencia_actual).padStart(6, '0')}</>)} </StyledTableCell>
             </TableRow>
 
             <TableRow>
               <StyledHeaderCell align="center" colSpan={5}>FECHA LÍMITE DE PAGO</StyledHeaderCell>
             </TableRow>
             <TableRow>
-              <StyledTableCell align="center" colSpan={5} sx={{fontSize: '26px', fontWeight: 'bold'}}>{dayjs().add(90, 'day').format('LL')}</StyledTableCell>
+              <StyledTableCell align="center" colSpan={5} sx={{fontSize: '26px', fontWeight: 'bold'}}>{fecha_vencimiento.add(0, 'day').format('LL')}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell align="center" colSpan={2}>Doc. de Cobro N°</StyledHeaderCell>
-              <StyledTableCell align="center" sx={{fontSize: '24px', fontWeight: 'bold'}}>GR- 2023 011883</StyledTableCell>
+              <StyledTableCell align="center" sx={{fontSize: '24px', fontWeight: 'bold'}}>GR-   {configData && (<>{String(configData.referencia_actual).padStart(6, '0')}</>)} </StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledCell colSpan={12}>No contribuyente de renta, exenta de retención en la fuente (ET. Libro I Art. 22 y Libro II Art. 369). Documento Equivalente a Factura Decreto 1001 de 1997.  De conformidad a 
@@ -362,7 +591,7 @@ const firstFCValue11 = rows_detalles.length > 11 ? rows_detalles[11].variables?.
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>FECHA DE ELABORACION</StyledHeaderCell>
-              <StyledTableCell colSpan={3} align='center'>{dayjs().format('LL')}</StyledTableCell>
+              <StyledTableCell colSpan={3} align='center'>{fecha_liquidacion.format('LL')}</StyledTableCell>
               <StyledHeaderCell sx={{width: '8%'}}>PERIODO</StyledHeaderCell>
               <StyledTableCell colSpan={2} align='center'>Año {dayjs().year()}</StyledTableCell>
               <StyledHeaderCell sx={{width: '10%'}}>CEDULA/NIT</StyledHeaderCell>
