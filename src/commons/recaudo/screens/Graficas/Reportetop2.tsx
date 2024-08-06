@@ -20,107 +20,101 @@ export const CarteraPorDeudaEdad: React.FC = () => {
 
   const [choiseConcepto, setChoiseConcepto] = useState([]);
 
-    const [chartData, setChartData] = useState<{
-        series: ApexAxisChartSeries | ApexNonAxisChartSeries,
-        options: ApexOptions
-    }>({
-        series: [],
-        options: {
-            chart: {
-                type: 'bar',
-                height: 350,
-                stacked: true,
-                toolbar: {
-                    show: true
-                },
-                zoom: {
-                    enabled: true
-                }
-            },
-            responsive: [{
-                breakpoint: 480,
-                options: {
-                    legend: {
-                        position: 'bottom',
-                        offsetX: -10,
-                        offsetY: 0
-                    }
-                }
-            }],
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    borderRadius: 10,
-                    dataLabels: {
-                        position: 'top',
-                    }
-                },
-            },
-            xaxis: {
-                categories: [],
-            },
-            legend: {
-                position: 'right',
-                offsetY: 40
-            },
-            fill: {
-                opacity: 1
-            }
+  const [chartData, setChartData] = useState<{
+    series: ApexAxisChartSeries | ApexNonAxisChartSeries,
+    options: ApexOptions
+  }>({
+    series: [],
+    options: {
+      chart: {
+        type: 'bar',
+        height: 350,
+        stacked: true,
+        toolbar: {
+          show: true
         },
-    });
+        zoom: {
+          enabled: true
+        }
+      },
+      responsive: [{
+        breakpoint: 480,
+        options: {
+          legend: {
+            position: 'bottom',
+            offsetX: -10,
+            offsetY: 0
+          }
+        }
+      }],
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          borderRadius: 10,
+          dataLabels: {
+            position: 'top',
+          }
+        },
+      },
+      xaxis: {
+        categories: [],
+      },
+      legend: {
+        position: 'right',
+        offsetY: 40
+      },
+      fill: {
+        opacity: 1
+      }
+    },
+  });
 
-    const [formData, setFormData] = useState(initialFormData);
-    const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState(initialFormData);
+  const [loading, setLoading] = useState(false);
 
-    const handleInputChange = (event: any) => {
-        const { name, value } = event.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+  const handleInputChange = (event: any) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
 
     const carteraDeudaTop = async (): Promise<void> => {
         setLoading(true);
         try {
-            const url = `/recaudo/reportes/reporte-general-cartera-deuda-y-edad-top/`;
-            const res = await api.get(url, { params: formData });
-            const data_consulta = res.data.detalles_por_codigo_contable;
-            console.log("data_consulta", data_consulta);
+        const url = `/recaudo/reportes/reporte-general-cartera-deuda-y-edad-top/`;
+        const res = await api.get(url, { params: formData });
+        const data_consulta = res.data.top_5_por_tipo_renta;
 
-            const categorias = Object.keys(data_consulta);
-            const seriesData = [
-                {
-                    name: '0 A 180',
-                    data: categorias.map(categoria => data_consulta[categoria]["RANGO DE 0 - 180"] || 0),
-                },
-                {
-                    name: '181 A 360',
-                    data: categorias.map(categoria => data_consulta[categoria]["RANGO DE 181 - 360"] || 0),
-                },
-                {
-                    name: 'MAS DE 360',
-                    data: categorias.map(categoria => data_consulta[categoria]["RANGO DE 361 - EN ADELANTE"] || 0),
-                }
-            ];
+        const categorias = Object.keys(data_consulta);
+        const seriesData = [
+            {
+            name: 'Valor Sanción Total',
+            data: categorias.map(categoria => data_consulta[categoria] || 0),
+            }
+        ];
 
-            setChartData({
-                series: seriesData,
-                options: {
-                    ...chartData.options,
-                    xaxis: {
-                        categories: categorias,
-                    },
-                },
-            });
+        setChartData({
+            series: seriesData,
+            options: {
+            ...chartData.options,
+            xaxis: {
+                categories: categorias,
+            },
+            },
+        });
 
         } catch (error) {
-            console.error(error);
+        console.error(error);
         } finally {
-            setLoading(false);
+        setLoading(false);
         }
     };
 
+
+
+  
     const fetchChoiseConcepto = async (): Promise<void> => {
       setLoading(true);
       try {

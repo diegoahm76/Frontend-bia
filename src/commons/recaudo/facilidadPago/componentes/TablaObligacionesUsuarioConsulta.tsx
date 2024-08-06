@@ -10,20 +10,24 @@ import { get_datos_deudor } from '../slices/DeudoresSlice';
 import { get_datos_contacto_solicitud } from '../slices/SolicitudSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { type ThunkDispatch } from '@reduxjs/toolkit';
-import { type Obligacion, type ObligacionesUsuario } from '../interfaces/interfaces';
+import {
+  type Obligacion,
+  type ObligacionesUsuario,
+} from '../interfaces/interfaces';
 import { DialogoInformativo } from './DialogoInformativo';
 import { faker } from '@faker-js/faker';
 import dayjs from 'dayjs';
-import { Divider, Dialog, } from '@mui/material';
+import { Divider, Dialog } from '@mui/material';
 import { Title } from '../../../../components';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import PaidIcon from '@mui/icons-material/Paid';
 import { EtapaProcesoConext } from '../../components/GestionCartera/Context/EtapaProcesoContext';
+import { api } from '../../../../api/axios';
 
 interface RootState {
   obligaciones: {
     obligaciones: ObligacionesUsuario;
-  }
+  };
 }
 interface BuscarProps {
   is_modal_active: any;
@@ -34,14 +38,22 @@ interface BuscarProps {
   set_selectedIds: any;
   set_lista_obligaciones: any;
   lista_obligaciones: any;
-  set_tipo_renta:any;
-  set_id_cc:any;
-  id_cc:any;
+  set_tipo_renta: any;
+  set_id_cc: any;
+  rutafactura: any;
+  id_cc: any;
+  set_identificacion:any;
+  identificacion:any;
+  set_id_fecha:any
 }
 // eslint-disable-next-line @typescript-eslint/naming-convention
 
 export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
+  set_id_fecha,
+  set_identificacion,
+  identificacion,
   set_id_cc,
+  rutafactura,
   id_cc,
   set_tipo_renta,
   set_selectedIds,
@@ -51,53 +63,75 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
   is_modal_active,
   set_is_modal_active,
   set_lista_obligaciones,
-  lista_obligaciones
+  lista_obligaciones,
 }) => {
   const [selected, set_selected] = useState<readonly string[]>([]);
-  const [seledexpediente, set_seledexpediente] = useState<readonly string[]>([]);
+  const [seledexpediente, set_seledexpediente] = useState<readonly string[]>(
+    []
+  );
 
   const [capital, set_capital] = useState(0);
   const [intereses, set_intereses] = useState(0);
   const [total, set_total] = useState(0);
   const [modal, set_modal] = useState(false);
   const [modal_opcion, set_modal_opcion] = useState(0);
-  const { obligaciones } = useSelector((state: RootState) => state.obligaciones);
+  const { obligaciones } = useSelector(
+    (state: RootState) => state.obligaciones
+  );
 
-  const [obligaciones_gestor, set_obligaciones_gestor] = useState(Array<Obligacion>)
+  const [obligaciones_gestor, set_obligaciones_gestor] = useState(
+    Array<Obligacion>
+  );
   const dispatch = useDispatch<ThunkDispatch<any, any, any>>();
   const navigate = useNavigate();
 
-  const { set_obligaciones_from_liquidacion, set_is_from_liquidacion, set_id_deudor } = useContext(
-    EtapaProcesoConext
-  );
+  const {
+    set_obligaciones_from_liquidacion,
+    set_is_from_liquidacion,
+    set_id_deudor,
+  } = useContext(EtapaProcesoConext);
 
   const handle_open = (opcion: number): void => {
-    set_modal(true)
-    set_modal_opcion(opcion)
+    set_modal(true);
+    set_modal_opcion(opcion);
   };
-  const handle_close = (): void => { set_modal(false) };
+  const handle_close = (): void => {
+    set_modal(false);
+  };
 
   const handle_submit = async (): Promise<void> => {
     const arr_registro = [];
     const idSet = new Set(); // Utilizamos un Set para almacenar IDs únicos
 
     // Verificar si lista_obligaciones y selected son arrays válidos
-    if (!lista_obligaciones || !Array.isArray(lista_obligaciones) || !selected || !Array.isArray(selected)) {
-      console.error('lista_obligaciones o selected no son arrays válidos:', lista_obligaciones, selected);
+    if (
+      !lista_obligaciones ||
+      !Array.isArray(lista_obligaciones) ||
+      !selected ||
+      !Array.isArray(selected)
+    ) {
+      console.error(
+        'lista_obligaciones o selected no son arrays válidos:',
+        lista_obligaciones,
+        selected
+      );
       return; // O manejar el error de otra manera apropiada
     }
 
     for (let i = 0; i < lista_obligaciones.length; i++) {
       for (let j = 0; j < selected.length; j++) {
         // Verificar si lista_obligaciones[i] es un objeto válido y tiene propiedades nombre e id
-        if (lista_obligaciones[i]?.nombre === selected[j] && !idSet.has(lista_obligaciones[i].id)) {
+        if (
+          lista_obligaciones[i]?.nombre === selected[j] &&
+          !idSet.has(lista_obligaciones[i].id)
+        ) {
           arr_registro.push(lista_obligaciones[i]);
           idSet.add(lista_obligaciones[i].id); // Agregamos el ID al Set para evitar duplicados
         }
       }
     }
 
-    console.log("lista_obligaciones", lista_obligaciones);
+    console.log('lista_obligaciones', lista_obligaciones);
     try {
       console.log('arr_registro:', arr_registro);
       // Verificar si obligaciones está definido y tiene la propiedad id_deudor antes de llamar a dispatch
@@ -117,12 +151,14 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
     }
   };
 
-
   // const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
 
   // const handle_click = (event: React.MouseEvent<unknown>, name: string): void => {
-  const handle_click = (event: React.MouseEvent<unknown>, name: string, id: string): void => {
-
+  const handle_click = (
+    event: React.MouseEvent<unknown>,
+    name: string,
+    id: string
+  ): void => {
     const selected_index = selected.indexOf(name);
     const selectedIdIndex = selectedIds.indexOf(id);
 
@@ -132,23 +168,20 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
     if (selected_index === -1) {
       new_selected = new_selected.concat(selected, name);
       newSelectedIds = newSelectedIds.concat(selectedIds, id);
-
     } else if (selected_index === 0) {
       new_selected = new_selected.concat(selected.slice(1));
       newSelectedIds = newSelectedIds.concat(selectedIds.slice(1));
-
     } else if (selected_index === selected.length - 1) {
       new_selected = new_selected.concat(selected.slice(0, -1));
       newSelectedIds = newSelectedIds.concat(selectedIds.slice(0, -1));
-
     } else if (selected_index > 0) {
       new_selected = new_selected.concat(
         selected.slice(0, selected_index),
-        selected.slice(selected_index + 1),
+        selected.slice(selected_index + 1)
       );
       newSelectedIds = newSelectedIds.concat(
         selectedIds.slice(0, selected_index),
-        selectedIds.slice(selected_index + 1),
+        selectedIds.slice(selected_index + 1)
       );
     }
 
@@ -166,7 +199,9 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
   };
 
   const handle_gestor_cartera = (obligacion: Obligacion): void => {
-    const selected_index = obligaciones_gestor.findIndex(ob => ob.id === obligacion.id);
+    const selected_index = obligaciones_gestor.findIndex(
+      (ob) => ob.id === obligacion.id
+    );
     let new_selected: any[] = [];
 
     if (selected_index === -1) {
@@ -186,7 +221,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
     }
 
     set_obligaciones_gestor(new_selected);
-  }
+  };
 
   const handle_generate_proceso_persuasivo = (): void => {
     set_obligaciones_from_liquidacion(obligaciones_gestor);
@@ -195,27 +230,61 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
     set_cobro_persuasivo_active(true);
     set_position_tab('3');
     // navigate('/app/recaudo/gestion_cartera');
-  }
+  };
 
-  const total_cop = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "COP",
-  }).format(total)
+  const total_cop = new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'COP',
+  }).format(total);
 
-  const intereses_cop = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "COP",
-  }).format(intereses)
+  const intereses_cop = new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'COP',
+  }).format(intereses);
 
-  const capital_cop = new Intl.NumberFormat("es-ES", {
-    style: "currency",
-    currency: "COP",
-  }).format(capital)
+  const capital_cop = new Intl.NumberFormat('es-ES', {
+    style: 'currency',
+    currency: 'COP',
+  }).format(capital);
 
+  const fetchHistorico = async (): Promise<void> => {
+    try {
+      const url = `recaudo/liquidaciones/expedientes-deudor/get/${identificacion}/`;
+
+      // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
+      const res = await api.get(url);
+      const HistoricoData: any[] = res.data?.data || [];
+      set_lista_obligaciones(HistoricoData); 
+    } catch (error: any) { 
+    }
+  };
+  const fetchHistorico2 = async (): Promise<void> => {
+    try {
+      const url = `recaudo/liquidaciones/obetener-obligaciones-deudor/${identificacion}/`;
+
+      // `/seguimiento-planes/consultar-conceptos-poai-lista/?id_plan=${formData.plan}&id_proyecto=${formData.proyecto}&id_indicador=${formData.indicador}&id_meta=${formData.meta}`
+      const res = await api.get(url);
+      const HistoricoData: any[] = res.data?.data || [];
+      set_lista_obligaciones(HistoricoData); 
+    } catch (error: any) { 
+    }
+  };
+  // useEffect(() => {
+  //   fetchHistorico();
+  // }, [identificacion]);
+  // recaudo/liquidaciones/obetener-obligaciones-deudor/
   useEffect(() => {
-    set_lista_obligaciones(obligaciones.obligaciones)
-  }, [obligaciones.obligaciones])
-
+    if (rutafactura === 1) {
+      fetchHistorico();
+    } else {
+      fetchHistorico2()
+      // set_lista_obligaciones(obligaciones.obligaciones);
+    }
+  }, [identificacion, rutafactura, obligaciones.obligaciones]);
+  
+  // useEffect(() => {
+  //   set_lista_obligaciones(obligaciones.obligaciones);
+  // }, [obligaciones.obligaciones]);
 
   useEffect(() => {
     if (!lista_obligaciones || !selected) {
@@ -240,9 +309,7 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
 
     // Actualizar total después de asegurar que capital e intereses están actualizados
     set_total(sub_capital + sub_intereses);
-
   }, [lista_obligaciones, selected]); // Dependencias correctas para el useEffect
-
 
   // useEffect(() => {
   //   let sub_capital = 0
@@ -264,16 +331,19 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
   //   set_total(capital + intereses)
   // }, [selected, capital, intereses])
 
-
   const handleSelectAllClick = (): void => {
     if (selected.length === lista_obligaciones.length) {
       set_selected([]);
       set_selectedIds([]);
     } else {
-      const newSelected = lista_obligaciones.map((obligacion: any) => obligacion.nombre);
+      const newSelected = lista_obligaciones.map(
+        (obligacion: any) => obligacion.nombre
+      );
       set_selected(newSelected);
 
-      const newSelectedd = lista_obligaciones.map((obligacion: any) => obligacion.id);
+      const newSelectedd = lista_obligaciones.map(
+        (obligacion: any) => obligacion.id
+      );
       set_selectedIds(newSelectedd);
     }
 
@@ -289,11 +359,11 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
       }));
       set_obligaciones_gestor(newObligaciones);
     }
-
   };
+  // const [id_fecha, set_id_fecha] = useState('');
 
-
-  const columns: GridColDef[] = [
+  const columns: GridColDef[] = rutafactura === 1
+  ? [
     {
       field: 'checkbox',
       headerName: 'Seleccionar',
@@ -301,26 +371,21 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
       renderCell: (params) => {
         return (
           <Checkbox
-            // checked={selected.indexOf(params.row.nombre) !== -1 }
-            checked={selected.indexOf(params.row.nombre) !== -1 && selectedIds.indexOf(params.row.id) !== -1}
-
+            checked={
+              selected.indexOf(params.row.nombre_titular) !== -1 &&
+              selectedIds.indexOf(params.row.id_expediente) !== -1
+            }
             onClick={(event) => {
-              set_id_cc(params.row.id_expediente)
-              handle_click(event, params.row.nombre, params.row.id)
-              handle_gestor_cartera(params.row)
-              set_tipo_renta(params.row.tipo_renta)
               
+              set_id_fecha(params.row);
+              set_id_cc(params.row.id_expediente);
+              handle_click(event, params.row.nombre_titular, params.row.id_expediente);
+              handle_gestor_cartera(params.row);
+              set_tipo_renta(params.row.tipo_renta);
             }}
-
-          // onClick={(event) => {
-          //   handle_click(event, params.row.nombre);
-
-
-          //  }}
           />
         );
       },
-
     },
     {
       field: 'tipo_renta',
@@ -328,114 +393,307 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
       width: 220,
     },
     {
-      field: 'tipo_cobro',
-      headerName: 'Tipo de cobro',
+      field: 'nombre_titular',
+      headerName: 'Nombre titular',
       width: 220,
-    },
-    {
-      field: 'periodo',
-      headerName: 'Periodo',
-      width: 150,
-      renderCell: (params) => (
-        dayjs(params.row.fecha_facturacion).month() + 1 <= 6 ? '1er Semestre' : '2do Semestre'
-      )
-    },
-    {
-      field: 'fecha_facturacion',
-      headerName: 'Fecha Facturacion',
-      width: 150,
-      valueFormatter: (params) => dayjs(params.value).isValid() ? dayjs(params.value).format('DD/MM/YYYY') : '',
-    },
-    {
-      field: 'inicio',
-      headerName: 'Fecha Inicio',
-      width: 150,
     },
     {
       field: 'expediente',
       headerName: 'Expediente',
-      width: 150,
+      width: 220,
     },
     {
-      field: 'num_resolucion',
-      headerName: 'Nro Resolución',
-      width: 200,
+      field: 'nit_titular',
+      headerName: 'Nit titular',
+      width: 220,
     },
     {
-      field: 'monto_inicial',
-      headerName: 'Valor Capital',
-      width: 150,
-      renderCell: (params) => {
-        const precio_cop = new Intl.NumberFormat("es-ES", {
-          style: "currency",
-          currency: "COP",
-        }).format(params.value)
-        return (
-          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-            {precio_cop}
-          </div>
-        )
-      },
+      field: 'telefono_titular',
+      headerName: 'Telefono',
+      width: 220,
     },
     {
-      field: 'valor_intereses',
-      headerName: 'Valor Intereses',
-      width: 150,
-      renderCell: (params) => {
-        const precio_cop = new Intl.NumberFormat("es-ES", {
-          style: "currency",
-          currency: "COP",
-        }).format(params.value)
-        return (
-          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-            {precio_cop}
-          </div>
-        )
-      },
+      field: 'resolucion',
+      headerName: 'Resolucion',
+      width: 220,
     },
-    {
-      field: 'dias_mora',
-      headerName: 'Días Mora',
-      width: 100,
-      renderCell: (params) => (
-        <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-          {params.value}
-        </div>
-      ),
-    },
+    
+    ]
+  : [
+      {
+        field: 'checkbox',
+        headerName: 'Seleccionar',
+        width: 120,
+        renderCell: (params) => {
+          return (
+            <Checkbox
+              checked={
+                selected.indexOf(params.row.nombre) !== -1 &&
+                selectedIds.indexOf(params.row.id) !== -1
+              }
+              onClick={(event) => {
+              set_id_fecha(params.row);
 
-    {
-      field: 'calculo_interes_mora',
-      headerName: 'Interés por Mora',
-      width: 180,
-      renderCell: (params) => {
-        const interes = params.row.valor_intereses * 0.0007; // 0.07% de valor_intereses
-        const interesMora = interes * params.row.dias_mora;
-        return (
-          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
-            {new Intl.NumberFormat("es-ES", {
-              style: "currency",
-              currency: "COP",
-            }).format(interesMora)}
-          </div>
-        );
+                set_id_cc(params.row.id_expediente);
+                handle_click(event, params.row.nombre, params.row.id);
+                handle_gestor_cartera(params.row);
+                set_tipo_renta(params.row.tipo_renta);
+              }}
+            />
+          );
+        },
       },
-    },
-  ];
+      {
+        field: 'tipo_renta',
+        headerName: 'Tipo de renta',
+        width: 220,
+      },
+      {
+        field: 'tipo_cobro',
+        headerName: 'Tipo de cobro',
+        width: 220,
+      },
+      {
+        field: 'periodo',
+        headerName: 'Periodo',
+        width: 150,
+        renderCell: (params) =>
+          dayjs(params.row.fecha_facturacion).month() + 1 <= 6
+            ? '1er Semestre'
+            : '2do Semestre',
+      },
+      {
+        field: 'fecha_facturacion',
+        headerName: 'Fecha Facturacion',
+        width: 150,
+        valueFormatter: (params) =>
+          dayjs(params.value).isValid()
+            ? dayjs(params.value).format('DD/MM/YYYY')
+            : '',
+      },
+      {
+        field: 'inicio',
+        headerName: 'Fecha Inicio',
+        width: 150,
+      },
+      {
+        field: 'expediente',
+        headerName: 'Expediente',
+        width: 150,
+      },
+      {
+        field: 'num_resolucion',
+        headerName: 'Nro Resolución',
+        width: 200,
+      },
+      {
+        field: 'monto_inicial',
+        headerName: 'Valor Capital',
+        width: 150,
+        renderCell: (params) => {
+          const precio_cop = new Intl.NumberFormat('es-ES', {
+            style: 'currency',
+            currency: 'COP',
+          }).format(params.value);
+          return (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+              {precio_cop}
+            </div>
+          );
+        },
+      },
+      {
+        field: 'valor_intereses',
+        headerName: 'Valor Intereses',
+        width: 150,
+        renderCell: (params) => {
+          const precio_cop = new Intl.NumberFormat('es-ES', {
+            style: 'currency',
+            currency: 'COP',
+          }).format(params.value);
+          return (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+              {precio_cop}
+            </div>
+          );
+        },
+      },
+      {
+        field: 'dias_mora',
+        headerName: 'Días Mora',
+        width: 100,
+        renderCell: (params) => (
+          <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+            {params.value}
+          </div>
+        ),
+      },
+      {
+        field: 'calculo_interes_mora',
+        headerName: 'Interés por Mora',
+        width: 180,
+        renderCell: (params) => {
+          const interes = params.row.valor_intereses * 0.0007; // 0.07% de valor_intereses
+          const interesMora = interes * params.row.dias_mora;
+          return (
+            <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+              {new Intl.NumberFormat('es-ES', {
+                style: 'currency',
+                currency: 'COP',
+              }).format(interesMora)}
+            </div>
+          );
+        },
+      },
+    ];
+
+  // const columns: GridColDef[] = [
+  //   {
+  //     field: 'checkbox',
+  //     headerName: 'Seleccionar',
+  //     width: 120,
+  //     renderCell: (params) => {
+  //       return (
+  //         <Checkbox
+  //           // checked={selected.indexOf(params.row.nombre) !== -1 }
+  //           checked={
+  //             selected.indexOf(params.row.nombre) !== -1 &&
+  //             selectedIds.indexOf(params.row.id) !== -1
+  //           }
+  //           onClick={(event) => {
+  //             set_id_cc(params.row.id_expediente);
+  //             handle_click(event, params.row.nombre, params.row.id);
+  //             handle_gestor_cartera(params.row);
+  //             set_tipo_renta(params.row.tipo_renta);
+  //           }}
+
+  //           // onClick={(event) => {
+  //           //   handle_click(event, params.row.nombre);
+
+  //           //  }}
+  //         />
+  //       );
+  //     },
+  //   }, 
+  //   {
+  //     field: 'tipo_renta',
+  //     headerName: 'Tipo de renta',
+  //     width: 220,
+  //   },
+  //   {
+  //     field: 'tipo_cobro',
+  //     headerName: 'Tipo de cobro',
+  //     width: 220,
+  //   },
+  //   {
+  //     field: 'periodo',
+  //     headerName: 'Periodo',
+  //     width: 150,
+  //     renderCell: (params) =>
+  //       dayjs(params.row.fecha_facturacion).month() + 1 <= 6
+  //         ? '1er Semestre'
+  //         : '2do Semestre',
+  //   },
+  //   {
+  //     field: 'fecha_facturacion',
+  //     headerName: 'Fecha Facturacion',
+  //     width: 150,
+  //     valueFormatter: (params) =>
+  //       dayjs(params.value).isValid()
+  //         ? dayjs(params.value).format('DD/MM/YYYY')
+  //         : '',
+  //   },
+  //   {
+  //     field: 'inicio',
+  //     headerName: 'Fecha Inicio',
+  //     width: 150,
+  //   },
+  //   {
+  //     field: 'expediente',
+  //     headerName: 'Expediente',
+  //     width: 150,
+  //   },
+  //   {
+  //     field: 'num_resolucion',
+  //     headerName: 'Nro Resolución',
+  //     width: 200,
+  //   },
+  //   {
+  //     field: 'monto_inicial',
+  //     headerName: 'Valor Capital',
+  //     width: 150,
+  //     renderCell: (params) => {
+  //       const precio_cop = new Intl.NumberFormat('es-ES', {
+  //         style: 'currency',
+  //         currency: 'COP',
+  //       }).format(params.value);
+  //       return (
+  //         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+  //           {precio_cop}
+  //         </div>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'valor_intereses',
+  //     headerName: 'Valor Intereses',
+  //     width: 150,
+  //     renderCell: (params) => {
+  //       const precio_cop = new Intl.NumberFormat('es-ES', {
+  //         style: 'currency',
+  //         currency: 'COP',
+  //       }).format(params.value);
+  //       return (
+  //         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+  //           {precio_cop}
+  //         </div>
+  //       );
+  //     },
+  //   },
+  //   {
+  //     field: 'dias_mora',
+  //     headerName: 'Días Mora',
+  //     width: 100,
+  //     renderCell: (params) => (
+  //       <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+  //         {params.value}
+  //       </div>
+  //     ),
+  //   },
+
+  //   {
+  //     field: 'calculo_interes_mora',
+  //     headerName: 'Interés por Mora',
+  //     width: 180,
+  //     renderCell: (params) => {
+  //       const interes = params.row.valor_intereses * 0.0007; // 0.07% de valor_intereses
+  //       const interesMora = interes * params.row.dias_mora;
+  //       return (
+  //         <div style={{ whiteSpace: 'normal', wordWrap: 'break-word' }}>
+  //           {new Intl.NumberFormat('es-ES', {
+  //             style: 'currency',
+  //             currency: 'COP',
+  //           }).format(interesMora)}
+  //         </div>
+  //       );
+  //     },
+  //   },
+  // ];
   const handle_closee = (): void => {
     set_is_modal_active(false);
     set_lista_obligaciones([]);
+    set_identificacion("")
   };
   const handleClick = () => {
     console.log(selectedIds);
-    console.log("2222222");
+    console.log('2222222');
+  };
+  const consol = (): void => { 
+    console.log(lista_obligaciones); 
   };
   return (
     <>
-      <Dialog open={is_modal_active} onClose={handle_closee} maxWidth="xl"
-      >
-
-
+      <Dialog open={is_modal_active} onClose={handle_closee} maxWidth="xl">
         <Grid
           container
           sx={{
@@ -447,23 +705,34 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
             boxShadow: '0px 3px 6px #042F4A26',
           }}
         >
-          <Title title='Listado de pagos pendientes' />
+          <Button
+        color="success"
+        variant="contained"
+      
+        onClick={consol}
+      >
+        co
+      </Button>
+          <Title title="Listado de pagos pendientes" />
           {/* <Button color='success'
           variant='contained'
           onClick={handleClick}>CONSOLE </Button> */}
-          {
-            lista_obligaciones && lista_obligaciones.length !== 0 ? (
+          {lista_obligaciones && lista_obligaciones.length !== 0 ? (
             <Grid item xs={12}>
               <Grid item>
                 <Box sx={{ width: '100%' }}>
                   <p>
                     {`Las obligaciones pendientes por pago para el usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} son las siguientes:`}
                   </p>
-                  <Grid item >
-                    <Button onClick={handleSelectAllClick} variant="contained" color="primary">
-                      Seleccionar  todo
+                  {/* <Grid item>
+                    <Button
+                      onClick={handleSelectAllClick}
+                      variant="contained"
+                      color="primary"
+                    >
+                      Seleccionar todo
                     </Button>
-                  </Grid>
+                  </Grid> */}
 
                   <DataGrid
                     autoHeight
@@ -477,7 +746,9 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
                   />
                 </Box>
               </Grid>
-              <Stack
+              {rutafactura === 1 ? <>
+              </> :<>
+                   <Stack
                 direction="row"
                 justifyContent="right"
                 spacing={2}
@@ -509,32 +780,20 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
                 </Grid>
               </Stack>
 
-
-
-
-
+              </>};
+         
               <Stack
                 direction="row"
                 justifyContent="right"
                 spacing={2}
                 marginTop={2}
                 sx={{ mb: '20px' }}
-
               >
-
-                <Button
-                  color='primary'
-                  variant='contained'
-                  sx={{ marginTop: '30px' }}
-                  startIcon={<PaidIcon />}
-                  disabled={selectedIds.length === 0}
-                  onClick={() => void handle_generate_proceso_persuasivo()}
-                >
-                  Generar Proceso Persuasivo
-                </Button>
-                <Button
-                  color='primary'
-                  variant='contained'
+                {rutafactura === 1 ? 
+                <>  
+                  <Button
+                  color="primary"
+                  variant="contained"
                   sx={{ marginTop: '30px' }}
                   startIcon={<RequestQuoteIcon />}
                   disabled={selectedIds.length === 0}
@@ -546,25 +805,50 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
                 >
                   Liquidar
                 </Button>
+                </> 
+                :
+                 <>
+                  <Button
+                  color="primary"
+                  variant="contained"
+                  sx={{ marginTop: '30px' }}
+                  startIcon={<PaidIcon />}
+                  disabled={selectedIds.length === 0}
+                  onClick={() => void handle_generate_proceso_persuasivo()}
+                >
+                  Generar Proceso Persuasivo
+                </Button>
+                {/* <Button
+                  color="primary"
+                  variant="contained"
+                  sx={{ marginTop: '30px' }}
+                  startIcon={<RequestQuoteIcon />}
+                  disabled={selectedIds.length === 0}
+                  onClick={() => {
+                    // navigate('../facilidades_pago/registro');
+                    // void handle_submit();
+                    set_position_tab('2');
+                  }}
+                >
+                  Liquidar
+                </Button> */}
                 <Button
-                  color='primary'
-                  variant='contained'
+                  color="primary"
+                  variant="contained"
                   disabled={selected.length === 0}
-
                   startIcon={<Add />}
                   sx={{ marginTop: '30px' }}
                   onClick={() => {
                     if (obligaciones.tiene_facilidad) {
                       handle_open(1);
-                      console.log("1")
+                      console.log('1');
                     } else if (selected.length === 0) {
                       handle_open(2);
-                      console.log("2")
-
+                      console.log('2');
                     } else {
                       // navigate('../registro');
                       navigate('../facilidades_pago/registro');
-                      console.log("3")
+                      console.log('3');
 
                       void handle_submit();
                     }
@@ -572,26 +856,29 @@ export const TablaObligacionesUsuarioConsulta: React.FC<BuscarProps> = ({
                 >
                   Crear Facilidad de Pago
                 </Button>
+                </>}
+               
+            
+            
               </Stack>
             </Grid>
-            ) : (
-              <p>
-                {`El usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} no tiene obligaciones pendiente por pago.`}
-              </p>
-            )
-          }
+          ) : (
+            <p>
+              {`El usuario ${obligaciones.nombre_completo} con identificación ${obligaciones.numero_identificacion} no tiene obligaciones pendiente por pago.`}
+            </p>
+          )}
         </Grid>
         <DialogoInformativo
           tipo_notificacion={modal_opcion === 1 ? 'error' : 'warn'}
           mensaje_notificacion={
-            modal_opcion === 1 ? `El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago` :
-              'Para continuar a la página de registro seleccione al menos una de las obligaciones'
+            modal_opcion === 1
+              ? `El usuario ${obligaciones.nombre_completo} ya cuenta con una Facilidad de Pago`
+              : 'Para continuar a la página de registro seleccione al menos una de las obligaciones'
           }
           abrir_modal={modal}
           abrir_dialog={handle_close}
         />
-
       </Dialog>
     </>
   );
-}
+};

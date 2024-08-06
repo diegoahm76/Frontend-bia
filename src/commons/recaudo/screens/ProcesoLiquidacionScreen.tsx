@@ -156,13 +156,35 @@ const detalles_periodos: DetallesPeriodos = {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const ProcesoLiquidacionScreen: React.FC = () => {
+  const rutafactura = 2;
+
   const [deudores, set_deudores] = useState<Deudor[]>([]);
   const [selectedIds, set_selectedIds] = useState<readonly string[]>([]);
+  const [id_identificacion, set_identificacion] = useState('');
 
   const [lista_obligaciones, set_lista_obligaciones] = useState(
     Array<Obligacion>
   );
 
+  // const [Historico, setHistorico] = useState<any[]>([]);
+  // const fetchHistorico = async (): Promise<void> => {
+  //   try {
+  //     const url = `recaudo/liquidaciones/obetener-obligaciones-deudor/${id_identificacion}/`;
+  //     const res = await api.get(url);
+  //     const HistoricoData: any[] = res.data?.data || [];
+  //     set_lista_obligaciones(HistoricoData);
+    
+  //     setHistorico(HistoricoData);
+  //     console.log("1111333") 
+  //     console.log(Historico)
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+  // useEffect(() => {
+  //   void fetchHistorico();
+  // }, [id_identificacion]);
+  
   const [nombre_deudor, set_nombre_deudor] = useState('');
   const [form_liquidacion, set_form_liquidacion] = useState<FormLiquidacion>({
     id_deudor: '',
@@ -615,6 +637,8 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   );
 
   const [id_cc, set_id_cc] = useState('');
+  const [id_fecha, set_id_fecha] = useState('');
+
   const [tipo_renta, set_tipo_renta] = useState<string>('');
 
   const columns_deudores: GridColDef[] = [
@@ -674,11 +698,12 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
             <Tooltip title="Ver">
               <IconButton
                 onClick={() => {
+                  set_identificacion(params.row.id_persona)
                   // set_tipo_renta()
                   // set_id_cc(params.row.id_expediente)
                   set_form_liquidacion((previousData) => ({
                     ...previousData,
-                    id_deudor: params.row.id,
+                    id_deudor: params.row.id_persona,
                   }));
                   set_nombre_deudor(
                     `${(params.row.nombres as string) ?? ''} ${
@@ -687,7 +712,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                   );
                   try {
                     void dispatch(
-                      get_obligaciones_id(params.row.identificacion)
+                      get_obligaciones_id(params.row.id_persona)
                     );
                     set_obligaciones_module(true);
                     handle_open_buscarr();
@@ -807,7 +832,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
   const [liquidacion, setLiquidacion] = useState<LiquidacionResponse | null>(
     null
   );
-
+ 
   return (
     <>
       <Grid
@@ -958,6 +983,10 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
                         {obligaciones.length !== 0 ? (
                           <>
                             <TablaObligacionesUsuarioConsulta
+                            set_identificacion={set_identificacion}
+                            identificacion={id_identificacion}
+                            rutafactura={rutafactura}
+                            set_id_fecha={set_id_fecha}
                               id_cc={id_cc}
                               set_id_cc={set_id_cc}
                               set_tipo_renta={set_tipo_renta}
@@ -1022,6 +1051,7 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
               {cobro_persuasivo_active && (
                 <TabPanel value="3" sx={{ p: '20px 0' }}>
                   <DocumentoPagoPersuasivo
+                  id_fecha={id_fecha}
                     id_cc={id_cc}
                     set_cobro_coactivo_active={set_cobro_coactivo_active}
                     set_position_tab_up={set_position_tab}
@@ -1049,6 +1079,9 @@ export const ProcesoLiquidacionScreen: React.FC = () => {
         <TabPanel value="2" sx={{ p: '20px 0' }}>
           {/* GRID DETALLE LIQUIDACION */}
           <DetalleLiquidacion
+          id_fecha={id_fecha}
+          fecha_liquidacion={fecha_liquidacion}
+          fecha_vencimiento={fecha_vencimiento}
             id_cc={id_cc}
             set_tipo_renta={set_tipo_renta}
             tipo_renta={tipo_renta}
