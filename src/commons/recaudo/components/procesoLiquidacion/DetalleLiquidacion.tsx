@@ -65,10 +65,12 @@ interface IProps {
   check_ciclo_and_periodo: (next: Function) => void;
   edit_detalles_liquidacion: () => void;
   form_liquidacion: any;
-
+  fecha_vencimiento:any;
+  fecha_liquidacion:any;
+  id_fecha:any;
 }
 
-export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, tipo_renta,liquidacion,setLiquidacion,  obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
+export const DetalleLiquidacion: React.FC<IProps> = ({id_fecha, fecha_liquidacion,fecha_vencimiento, id_cc , set_tipo_renta, tipo_renta,liquidacion,setLiquidacion,  obligaciones, form_liquidacion, rows_detalles, estado_expediente, set_rows_detalles, add_new_row_detalles, check_ciclo_and_periodo, edit_detalles_liquidacion }: IProps) => {
   const [position_tab, set_position_tab] = useState('1');
 
   const [opciones_liquidacion, set_opciones_liquidacion] = useState<OpcionLiquidacion[]>([]);
@@ -249,11 +251,11 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
                 const year = parseInt(año);
                 displayValue = getDaysInMonth(monthName, year).toString(); // Actualiza el valor mostrado si la clave es "T"
               }
-
+    
               return (
                 <ListItemText key={`${params.row.id}-${key}`}>
                   <Stack direction={'row'} spacing={2} alignItems={'center'}>
-                    <Typography variant="body1">{key}</Typography>:
+                    <Typography variant="body1" style={{ width: '50px' }}>{key}</Typography>:
                     {estado_expediente?.toLowerCase() === 'liquidado' ?
                       <Typography variant="body1">{value as any}</Typography> :
                       <TextField
@@ -262,6 +264,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
                         type="number"
                         size="small"
                         onChange={(event: any) => handle_variable_input_change(event, params.row.id, key)}
+                        InputProps={{ style: { width: '150px' } }}
                       />
                     }
                   </Stack>
@@ -272,6 +275,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
         );
       }
     },
+    
     {
       field: 'valor_liquidado',
       headerName: 'Valor Liquidado',
@@ -362,7 +366,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
   return (
     <>
    
-     {/* <button onClick={handleLogRowsDetalles}>Log rows_detalles</button> */}
+     <button onClick={handleLogRowsDetalles}>Log rows_detalles</button>
     {/* {firstFCValue !== null && <h1>FC: {firstFCValue}</h1>} */}
       <Grid
         container
@@ -389,8 +393,8 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
 
               <Grid container direction={'column'} sx={{ my: '20px' }} gap={1}>
            
-              {/* {tipo_renta} */}
-                <Grid item xs={12}>
+             
+                {/* <Grid item xs={12}>
                   <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
                     <InputLabel>Selecciona opción liquidación</InputLabel>
                     <Select
@@ -410,10 +414,62 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
                       ))}
                     </Select>
                   </FormControl>
-                </Grid>
+                </Grid> */}
 
+                
 
-
+{tipo_renta === "TASA DE USO DE AGUA (TUA)" ? (
+     <Grid item xs={12}>
+     <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
+       <InputLabel>Selecciona opción liquidación</InputLabel>
+       <Select
+         label='Selecciona opción liquidación'
+         value={id_opcion_liquidacion}
+         MenuProps={{
+           style: {
+             maxHeight: 224,
+           }
+         }}
+         onChange={handle_select_change}
+       >
+         {opciones_liquidacion
+           .filter(opc_liquidacion => opc_liquidacion.tipo_renta === "TASA DE USO DE AGUA (TUA)")
+           .map((opc_liquidacion) => (
+             <MenuItem key={opc_liquidacion.id} value={opc_liquidacion.id}>
+               {opc_liquidacion.nombre}
+             </MenuItem>
+           ))}
+       </Select>
+     </FormControl>
+   </Grid>
+    ) : (
+      <> 
+       <Grid item xs={12}>
+     <FormControl sx={{ pb: '10px' }} size='small' fullWidth required>
+       <InputLabel>Selecciona opción liquidación</InputLabel>
+       <Select
+         label='Selecciona opción liquidación'
+         value={id_opcion_liquidacion}
+         MenuProps={{
+           style: {
+             maxHeight: 224,
+           }
+         }}
+         onChange={handle_select_change}
+       >
+         {opciones_liquidacion
+          
+           .map((opc_liquidacion) => (
+             <MenuItem key={opc_liquidacion.id} value={opc_liquidacion.id}>
+               {opc_liquidacion.nombre}
+             </MenuItem>
+           ))}
+       </Select>
+     </FormControl>
+   </Grid>
+      </>
+    
+    )}
 
                 <Grid item xs={12}>
                   <TextField
@@ -519,7 +575,7 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
             </TabPanel>
 
             <TabPanel value="2" sx={{ p: '20px 0' }}>
-              <Grid container sx={{display: 'flex'}} justifyContent='end'>
+              {/* <Grid container sx={{display: 'flex'}} justifyContent='end'>
                 <Grid item xs={12} lg={3}>
                   <Button
                     variant="contained"
@@ -533,12 +589,14 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
                     Volver atras
                   </Button>
                 </Grid>
-              </Grid>
+              </Grid> */}
               {ver_factura && (
   <>
     {tipo_renta === "TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)" ? (
       <DocumetoPagoTR
       id_cc={id_cc}
+      fecha_liquidacion={fecha_liquidacion}
+      fecha_vencimiento={fecha_vencimiento}
         liquidacion={liquidacion} 
         obligaciones={obligaciones} 
         form_liquidacion={form_liquidacion} 
@@ -549,6 +607,10 @@ export const DetalleLiquidacion: React.FC<IProps> = ({id_cc , set_tipo_renta, ti
     ) : (
       <> 
        <DocumentoPagoTUA 
+                 id_fecha={id_fecha}
+
+       fecha_liquidacion={fecha_liquidacion}
+       fecha_vencimiento={fecha_vencimiento}
       id_cc={id_cc}
         liquidacion={liquidacion} 
         obligaciones={obligaciones} 

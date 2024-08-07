@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 import {
   Button,
@@ -40,7 +41,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { current } from '@reduxjs/toolkit';
 import { AprobadoresProps } from './models/interfaces';
 import swal from 'sweetalert2';
-
+import dayjs from 'dayjs';
 interface IProps {
   id_flujo_destino: string;
   selected_proceso: {
@@ -67,11 +68,13 @@ interface IProps {
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export const DocumentoPagoPersuasivo: React.FC<any> = ({
+  id_fecha,
   datos,
   id_cc,
   set_cobro_coactivo_active,
   set_position_tab_up,
 }: {
+  id_fecha:any;
   id_cc: any;
   datos: any;
   set_cobro_coactivo_active: (b: boolean) => void;
@@ -254,6 +257,42 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
     });
   };
 
+  const handle_cargo_ficha_limite = (event: any) => {
+    set_form_table_values({
+      ...form_table_values,
+      fecha_limite: event.target.value,
+    });
+  };
+  const getCurrentDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+  
+  // Asegurar que form_table_values.fecha_limite tenga la fecha actual por defecto
+  useEffect(() => {
+    if (!form_table_values.fecha_limite) {
+      set_form_table_values({
+        ...form_table_values,
+        fecha_limite: getCurrentDate(),
+      });
+    }
+  }, [form_table_values, set_form_table_values]);
+  
+  const [diasDiferencia, setDiasDiferencia] = useState(0);
+
+  useEffect(() => {
+    if (id_fecha.fecha_ejecutoriado && form_table_values.fecha_limite) {
+      const fechaEjecutoriado = dayjs(id_fecha.fecha_ejecutoriado);
+      const fechaLimite = dayjs(form_table_values.fecha_limite);
+      const diferencia = fechaLimite.diff(fechaEjecutoriado, 'day');
+      setDiasDiferencia(diferencia);
+    }
+  }, [id_fecha, form_table_values]);
+
+
   const handle_click_update = () => {
     set_form_to_send({
       fecha_limite:form_table_values.fecha_limite,
@@ -342,12 +381,25 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
   useEffect(() => console.log(current_deudor), [current_deudor]);
   // useEffect(() => console.log(expedientes_deudor), [expedientes_deudor]);
   useEffect(() => console.log(data_clean), [data_clean]);
+  const consol = (): void => { 
+    console.log(id_fecha); 
+  };
+   
 
   return (
     <>
       <Grid container>
         <Title title="Proceso Cobro Persuasivo"></Title>
-        {(current_deudor?.id_deudor || datos?.id_deudor) && (
+        {/* <Button
+        color="success"
+        variant="contained"
+      
+        onClick={consol}
+      >
+        co
+      </Button>
+      {diasDiferencia} */}
+        {/* {(current_deudor?.id_deudor || datos?.id_deudor) && ( */}
           <Grid container spacing={2} mt={2}>
             <Grid item xs={12} md={6} lg={4} sx={{ margin: 'auto' }}>
               <TextField
@@ -357,8 +409,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
                 label="Documento"
                 helperText="Documento"
                 value={
-                  current_deudor?.numero_identificacion ||
-                  datos.id_deudor.identificacion
+                  id_fecha?.nit_titular 
                 }
                 disabled
               />
@@ -371,9 +422,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
                 label="Nombre deudor"
                 helperText="Nombre deudor"
                 value={
-                  current_deudor?.nombre_completo ||
-                  datos.id_deudor.nombres + ' ' + datos.id_deudor.apellidos
-                }
+                  id_fecha?.nombre   }
                 disabled
               />
             </Grid>
@@ -387,7 +436,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
             disabled
           />
         </Grid> */}
-            {rows.length == 1 && (
+            {/* {rows.length == 1 && ( */}
               <Grid item xs={12} md={6} lg={4}>
                 <TextField
                   fullWidth
@@ -395,11 +444,11 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
                   name="codigoExpediente"
                   label="Expediente"
                   helperText="Expediente relacionado"
-                  value={rows[0].expediente}
+                  value={  id_fecha?.expediente  }
                   disabled
                 />
               </Grid>
-            )}
+            {/* )} */}
             <Grid item xs={12} md={6} lg={4}>
               <TextField
                 fullWidth
@@ -472,7 +521,7 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
                 variant="outlined"
                 label="fecha limite"
                 InputLabelProps={{ shrink: true }}
-                onChange={handle_cargo_proyector}
+                onChange={handle_cargo_ficha_limite}
                 value={form_table_values.fecha_limite}
               />
             </Grid>
@@ -519,9 +568,9 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
                   getRowHeight={() => 'auto'}
                 />
               </Grid>
-            )}
+             )} 
           </Grid>
-        )}
+        {/* )} */}
         <Grid item xs={12}>
           <Typography
             variant="subtitle1"
@@ -676,7 +725,10 @@ export const DocumentoPagoPersuasivo: React.FC<any> = ({
             </Box>
 
             <TabPanel value="1" sx={{ p: '20px 0' }}>
-              <CobroPersuasivo
+              <CobroPersuasivo 
+              diasDiferencia={diasDiferencia}
+              form_table_values={form_table_values}
+              id_fecha={id_fecha}
                 datos={datos}
                 currentDeudor={current_deudor}
                 dataClean={data_clean}

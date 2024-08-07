@@ -107,15 +107,25 @@ export const ReporteGeneralCarteraEdad: React.FC = () => {
         }));
     };
 
+    // useEffect(() => {
+    //     setChartData(prevChartData => ({
+    //         ...prevChartData,
+    //         series: [{
+    //             data: [carteraEdad["0 a 30 Dias"], carteraEdad["181 a 360 Dias"], carteraEdad["Mas 360 Dias"]]
+    //         }]
+    //     }));
+    // }, [carteraEdad]);
     useEffect(() => {
-        setChartData(prevChartData => ({
-            ...prevChartData,
-            series: [{
-                data: [carteraEdad["0 a 30 Dias"], carteraEdad["181 a 360 Dias"], carteraEdad["Mas 360 Dias"]]
-            }]
-        }));
+        if (carteraEdad && carteraEdad["0 a 30 Dias"] !== undefined && carteraEdad["181 a 360 Dias"] !== undefined && carteraEdad["Mas 360 Dias"] !== undefined) {
+            setChartData(prevChartData => ({
+                ...prevChartData,
+                series: [{
+                    data: [carteraEdad["0 a 30 Dias"], carteraEdad["181 a 360 Dias"], carteraEdad["Mas 360 Dias"]]
+                }]
+            }));
+        }
     }, [carteraEdad]);
-
+    
     useEffect(() => {
         fetchCarteraEdad();
         fetchChoiseConcepto();

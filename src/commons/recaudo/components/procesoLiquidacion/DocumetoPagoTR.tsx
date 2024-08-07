@@ -78,6 +78,11 @@ const StyledCell = styled(StyledTableCell)({
 });
 
 export const DocumetoPagoTR: React.FC<any> = ({
+  // fecha_liquidacion={fecha_liquidacion}
+  // fecha_vencimiento={fecha_vencimiento}
+
+  fecha_liquidacion,
+  fecha_vencimiento,
     id_cc,  
     liquidacion,
     obligaciones,
@@ -90,7 +95,8 @@ export const DocumetoPagoTR: React.FC<any> = ({
     is_generate_cobro,
     cobro_url,
     id_subetapa
-  }: {id_cc:any, liquidacion:any ,obligaciones:any , form_liquidacion:any, rows_detalles:any, months:any, datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
+  }: { fecha_liquidacion:any,
+    fecha_vencimiento:any,id_cc:any, liquidacion:any ,obligaciones:any , form_liquidacion:any, rows_detalles:any, months:any, datos: any, is_generate_cobro: boolean, cobro_url: any, data_clean: any, current_deudor: any, id_subetapa: number}) => {
     const receiptRef = useRef(null);
   const [form_values, set_form_values] = useState({
     sumaConcepto: "",
@@ -236,7 +242,7 @@ useEffect(() => {
   updateUnidadesConfig();
 }, [id_cc]);
 
-const variable = `(415)7709998094819(8020)${String(configData.referencia_actual).padStart(18, '0')}(3900)${form_liquidacion.valor.toString().padStart(14, '0')}(96)${dayjs().add(90, 'day').format('YYYYMMDD')}`;
+const variable = `(415)7709998094819(8020)${String(configData.referencia_actual).padStart(18, '0')}(3900)${form_liquidacion.valor.toString().padStart(14, '0')}(96)${dayjs().add(30, 'day').format('YYYYMMDD')}`;
 
   return (
     <>
@@ -281,10 +287,10 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
               <StyledTableCell align="center" sx={{ color: 'red', fontWeight: 'bold', fontSize: '29px' }}>TR {configData && (<>{String(configData.referencia_actual).padStart(6, '0')}</>)}</StyledTableCell>
             </TableRow>
             <TableRow>
-              <StyledHeaderCell align="center" colSpan={5}>FECHA LÍMITE  d DE PAGO</StyledHeaderCell>
+              <StyledHeaderCell align="center" colSpan={5}>FECHA LÍMITE   DE PAGO</StyledHeaderCell>
             </TableRow>
             <TableRow>
-              <StyledTableCell align="center" colSpan={5} sx={{fontSize: '26px', fontWeight: 'bold'}}>{dayjs().add(90, 'day').format('LL')}</StyledTableCell>
+            <StyledTableCell align="center" colSpan={5} sx={{fontSize: '26px', fontWeight: 'bold'}}>{fecha_vencimiento.add(0, 'day').format('LL')}</StyledTableCell>
             </TableRow>
             <TableRow>
               <StyledHeaderCell align="center" colSpan={2}>Doc. de Cobro N°</StyledHeaderCell>
@@ -296,7 +302,7 @@ const variable = `(415)7709998094819(8020)${String(configData.referencia_actual)
             </TableRow>
             <TableRow>
               <StyledHeaderCell sx={{width: '15%'}}>FECHA DE ELABORACION</StyledHeaderCell>
-              <StyledTableCell colSpan={3} align='center'>{dayjs().format('LL')}</StyledTableCell>
+              <StyledTableCell colSpan={3} align='center'>{fecha_liquidacion.format('LL')}</StyledTableCell>
               <StyledHeaderCell sx={{width: '8%'}}>PERIODO</StyledHeaderCell>
               <StyledTableCell colSpan={2} align='center'>Año {dayjs().year()}</StyledTableCell>
               <StyledHeaderCell sx={{width: '10%'}}>CEDULA/NIT</StyledHeaderCell>

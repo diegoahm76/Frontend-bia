@@ -26,6 +26,7 @@ import { IndicadoresRecaudo } from '../screens/IndicadoresRecaudo';
 import { SeguimientoExpendientes } from '../screens/SeguimientoExpedientesScreen';
 import { EstadoCuentaGeneralUsuario } from '../facilidadPago/screens/EstadoCuentaGeneralUsuario';
 import { Liquidacionfactura } from '../screens/Liquidacionfactura';
+import { UsoAgua } from '../screens/UsoAgua';
 
 
 
@@ -51,6 +52,9 @@ export const RecaudoRoutes: React.FC = () => {
       <Route path="HistoricoFacturacion/*" element={<HistoricoFacturacion />} />
       <Route path="proceso_liquidacion/*" element={<ProcesoLiquidacionScreen />} />
       <Route path="proceso_liquidacion_facruta/*" element={<Liquidacionfactura />} />
+      <Route path="uso_agua/*" element={<UsoAgua />} />
+
+      
       
       <Route path="Autodeclaracion_formulario/*" element={<AutodeclaracionFormulario/>} />
       <Route path="constructor_liquidacion/*" element={<ConstructorLiquidacionScreen />} />

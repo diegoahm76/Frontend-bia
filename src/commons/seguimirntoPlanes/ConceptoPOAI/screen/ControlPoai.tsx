@@ -24,6 +24,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import CleanIcon from '@mui/icons-material/CleaningServices';
 import SaveIcon from '@mui/icons-material/Save';
 import { control_error, control_success } from '../../../../helpers';
+import comaImage from './coma.jpg';
 
 import {
   Planes,
@@ -106,36 +107,16 @@ export const ControlPoai: React.FC = () => {
       }));
       control_error(error.response.data.detail);
     }
-  };
+  }; 
+ 
 
-  // useEffect(() => {
-  //   if (ConsultarSeguimiento.length > 1) {
-  //     setChartOptions((prevOptions: any) => ({
-  //       ...prevOptions,
-  //       series: [
-  //         {
-  //           data: ConsultarSeguimiento[2].valor,
-  //         },
-  //       ],
-  //       xaxis: {
-  //         categories: ConsultarSeguimiento[2].numero_programa,
-  //       },
-  //     }));
-  //   } else {
-  //     setChartOptions((prevOptions: any) => ({
-  //       ...prevOptions,
-  //       series: [{ data: [] }],
-  //       xaxis: { categories: [] },
-  //     }));
-  //   }
-  // }, [ConsultarSeguimiento]);
   useEffect(() => {
     if (ConsultarSeguimiento.length > 2) {
       setChartOptions((prevOptions: any) => ({
         ...prevOptions,
         series: [
           {
-            data: ConsultarSeguimiento[2].valor,
+            data: ConsultarSeguimiento[2].valor.map((v: number) => v), // Assuming you want to show values in thousands
           },
         ],
         xaxis: {
@@ -149,7 +130,7 @@ export const ControlPoai: React.FC = () => {
         xaxis: { categories: [] },
       }));
     }
-
+  
     if (ConsultarSeguimiento.length > 3) {
       setChartOptions2((prevOptions: any) => ({
         ...prevOptions,
@@ -157,6 +138,10 @@ export const ControlPoai: React.FC = () => {
           {
             name: 'Valor',
             data: ConsultarSeguimiento[3].valor,
+          },
+          {
+            name: 'Valor2',
+            data: ConsultarSeguimiento[3].valor2,
           },
         ],
         xaxis: {
@@ -171,29 +156,6 @@ export const ControlPoai: React.FC = () => {
       }));
     }
   }, [ConsultarSeguimiento, abrir1]);
-
-  // useEffect(() => {
-  //   if (ConsultarSeguimiento.length > 3) {
-  //     setChartOptions2((prevOptions: any) => ({
-  //       ...prevOptions,
-  //       series: [
-  //         {
-  //           name: 'Valor',
-  //           data: ConsultarSeguimiento[3].valor,
-  //         },
-  //       ],
-  //       xaxis: {
-  //         categories: ConsultarSeguimiento[3].numero_proyecto,
-  //       },
-  //     }));
-  //   } else {
-  //     setChartOptions2((prevOptions: any) => ({
-  //       ...prevOptions,
-  //       series: [{ data: [] }],
-  //       xaxis: { categories: [] },
-  //     }));
-  //   }
-  // }, [ConsultarSeguimiento]);
 
   const [chartOptions, setChartOptions] = useState<any>({
     series: [
@@ -250,6 +212,13 @@ export const ControlPoai: React.FC = () => {
         },
       },
     },
+    yaxis: {
+      labels: {
+        formatter: function (value: number) {
+          return value !== undefined ? value.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) : '';
+        },
+      },
+    },
   });
   // segundo grafico
   const [chartOptions2, setChartOptions2] = useState<any>({
@@ -289,8 +258,8 @@ export const ControlPoai: React.FC = () => {
           colors: '#8e8da4',
         },
         offsetX: 0,
-        formatter: function (val: number) {
-          return val.toFixed(0);
+        formatter: function (val: number | undefined) {
+          return val !== undefined ? val.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) : '';
         },
       },
       axisBorder: {
@@ -312,7 +281,7 @@ export const ControlPoai: React.FC = () => {
         },
       },
     },
-
+  
     title: {
       text: ' ',
       align: 'left',
@@ -320,6 +289,11 @@ export const ControlPoai: React.FC = () => {
     },
     tooltip: {
       shared: true,
+      y: {
+        formatter: function (val: number | undefined) {
+          return val !== undefined ? val.toLocaleString('es-CO', { style: 'currency', currency: 'COP' }) : '';
+        },
+      },
     },
     legend: {
       position: 'top',
@@ -327,7 +301,88 @@ export const ControlPoai: React.FC = () => {
       offsetX: -10,
     },
   });
-
+  
+  // const [chartOptions2, setChartOptions2] = useState<any>({
+  //   series: [
+  //     {
+  //       name: 'Valor',
+  //       data: [],
+  //     },
+  //   ],
+  //   chart: {
+  //     type: 'area' as const,
+  //     stacked: false,
+  //     height: 350,
+  //     zoom: {
+  //       enabled: false,
+  //     },
+  //   },
+  //   dataLabels: {
+  //     enabled: false,
+  //   },
+  //   markers: {
+  //     size: 0,
+  //   },
+  //   fill: {
+  //     type: 'gradient',
+  //     gradient: {
+  //       shadeIntensity: 1,
+  //       inverseColors: false,
+  //       opacityFrom: 0.45,
+  //       opacityTo: 0.05,
+  //       stops: [20, 100, 100, 100],
+  //     },
+  //   },
+  //   yaxis: {
+  //     labels: {
+  //       style: {
+  //         colors: '#8e8da4',
+  //       },
+  //       offsetX: 0,
+  //       formatter: function (val: number) {
+  //         return val.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  //       },
+  //     },
+  //     axisBorder: {
+  //       show: false,
+  //     },
+  //     axisTicks: {
+  //       show: false,
+  //     },
+  //   },
+  //   xaxis: {
+  //     categories: [],
+  //     labels: {
+  //       rotate: -15,
+  //       rotateAlways: true,
+  //       style: {
+  //         fontWeight: 'bold',
+  //         fontSize: '12px',
+  //         colors: '#000 y y000',
+  //       },
+  //     },
+  //   },
+  
+  //   title: {
+  //     text: ' ',
+  //     align: 'left',
+  //     offsetX: 14,
+  //   },
+  //   tooltip: {
+  //     shared: true,
+  //     y: {
+  //       formatter: function (val: number) {
+  //         return val.toLocaleString('es-CO', { style: 'currency', currency: 'COP' });
+  //       },
+  //     },
+  //   },
+  //   legend: {
+  //     position: 'top',
+  //     horizontalAlign: 'right',
+  //     offsetX: -10,
+  //   },
+  // });
+   
   const [planes, setPlanes] = useState<Planes[]>([]);
   useEffect(() => {
     fetplames({ setPlanes });
@@ -403,15 +458,7 @@ export const ControlPoai: React.FC = () => {
         <Grid item xs={12} sm={12}>
           <Title title="Tableros de Control POAI " />
         </Grid>
-        {/* {formData.plan} */}
-        {/* <div>
-      {numeroPrograma.join(', ')}
-    </div> */}
-        {/* {formData.plan}
-        {formData.tablero}
-        {formData.fecha_inicia}
-        {formData.fecha_fin} */}
-        {/* {selectedConceptoId} */}
+      
         <Grid item xs={12} sm={12}>
           <FormControl fullWidth size="small">
             <InputLabel id="si-no-select-label"> Nombre del plan</InputLabel>
@@ -431,21 +478,7 @@ export const ControlPoai: React.FC = () => {
           </FormControl>
         </Grid>
 
-        {/* <Grid item xs={12} sm={12}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="si-no-select-label">Tablero de control </InputLabel>
-            <Select
-              name="tablero"
-              label="Tablero de control "
-              value={formData.tablero}
-              onChange={handleInputSelect}
-            >
-              <MenuItem value={1}>Tablero de Control General POAI </MenuItem>
-              <MenuItem value={2}>   Tablero de Control POAI Por Proyecto{' '}
-              </MenuItem>
-            </Select>
-          </FormControl>
-        </Grid> */}
+    
 
         <Grid item xs={12} sm={6}>
           <TextField
@@ -873,7 +906,7 @@ export const ControlPoai: React.FC = () => {
                 xs={12}
                 sm={12}
                 sx={{
-                  background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
+                  background: `url(${comaImage}) no-repeat center center, #FFFFFF`,
                 }}
               >
                 <ReactApexChart
@@ -908,7 +941,7 @@ export const ControlPoai: React.FC = () => {
                 xs={12}
                 sm={12}
                 sx={{
-                  background: `url('https://api.gbif.org/v1/image/unsafe/https%3A%2F%2Fraw.githubusercontent.com%2FSIB-Colombia%2Flogos%2Fmain%2Fsocio-SiB-cormacarena.png') no-repeat center center, #FFFFFF `,
+                  background: `url(${comaImage}) no-repeat center center, #FFFFFF`,
                 }}
               >
                 <div id="chart2">

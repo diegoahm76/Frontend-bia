@@ -31,7 +31,7 @@ export const ReporteCarteraDeudayEdadTop: React.FC = () => {
     const [formData, setFormData] = useState(initialFormData);
     const [topData, setTopData] = useState<TopData>({});
     const [loading, setLoading] = useState(false);
-    console.log("formData", formData)
+    // console.log("formData", formData)
 
 
     const fetchTopData = async (): Promise<void> => {
@@ -193,10 +193,12 @@ export const ReporteCarteraDeudayEdadTop: React.FC = () => {
                         },
                         dataLabels: { enabled: false },
                         xaxis: {
-                            categories: Object.keys(topData).map((key) => [key]),
+                            categories: topData ? Object.keys(topData).map((key) => [key]) : [],
                         },
+                        
                     }}
-                    series={[{ data: Object.values(topData) }]}
+                    // series={[{ data: Object.values(topData) }]}
+                    series={[{ data: topData ? Object.values(topData) : [] }]}
                     type="bar"
                     height={450}
                 />
