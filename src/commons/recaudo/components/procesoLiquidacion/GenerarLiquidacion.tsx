@@ -247,145 +247,45 @@ interface IProps {
             }
         };
 
+        // useEffect(() => {
+        //     set_form_liquidacion((prevData: any) => ({
+        //         ...prevData,
+        //         id_expediente: selectedIds[0].toString(),
+
+        //     }));
+
+        // }, [selectedIds]);
+
         useEffect(() => {
-            set_form_liquidacion((prevData: any) => ({
-                ...prevData,
-                id_expediente: selectedIds[0].toString(),
-
-            }));
-
-        }, [selectedIds]);
-
-    useEffect(() => {
-        if (lista_obligaciones.length > 0) {
-            set_form_liquidacion((prevData: any) => ({
-                ...prevData,
-                id_expediente: lista_obligaciones[0]?.expediente,
-            }));
-
-            // set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
-
-            if (tipo_renta.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
+            if (lista_obligaciones.length > 0) {
                 set_form_liquidacion((prevData: any) => ({
                     ...prevData,
-                    ciclo_liquidacion: 'semestral',
-                    periodo_liquidacion: 'enero a junio'
+                    id_expediente: lista_obligaciones[0]?.expediente,
                 }));
+        
+                // set_tipo_renta(lista_obligaciones[0]?.tipo_renta?.toUpperCase());
+        
+                if (tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
+                    set_form_liquidacion((prevData: any) => ({
+                        ...prevData,
+                        ciclo_liquidacion: 'semestral',
+                        periodo_liquidacion: 'enero a junio'
+                    }));
+                }
+                if (tipo_renta?.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
+                    set_form_liquidacion((prevData: any) => ({
+                        ...prevData,
+                        ciclo_liquidacion: 'anual',
+                        periodo_liquidacion: 'enero a diciembre'
+                    }));
+                }
             }
-            if (tipo_renta.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
-                set_form_liquidacion((prevData: any) => ({
-                    ...prevData,
-                    ciclo_liquidacion: 'anual',
-                    periodo_liquidacion: 'enero a diciembre'
-                }));
-            }
-            //  else 
-            //  if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'anual',
-            //         periodo_liquidacion: 'enero a diciembre'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (VISITAS; TASA APROVECHAMIENTO FORESTAL; SALVOCONDUCTOS; ETC)') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'diario',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TR)') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'semestral',
-            //         periodo_liquidacion: 'enero a junio'
-            //     }));
-            // } 
-            // else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRANSFERENCIAS DEL SECTOR ELECTRICO (TSE)') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'anual',
-            //         periodo_liquidacion: 'enero a diciembre'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE USO DE AGUA (TUA)') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'anual',
-            //         periodo_liquidacion: 'enero a diciembre'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA DE APROVECHAMIENTO FORESTAL') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'anual',
-            //         periodo_liquidacion: 'enero a diciembre'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'DETERMINANTES AMBIENTALES') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'diario',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SOBRETASA AMBIENTAL O PORCENTAJE') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TRAMITES (SALVOCONDUCTOS; ETC)') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS DE CONTROL Y SEGUIMIENTO') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VISITAS INICIALES DE EVALUACION') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'VEHICULO 2024') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'INICIO DE COBRO 2024') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SALARIO MINIMO LEGAL VIGENTE 2024') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-
-            // } else if (lista_obligaciones[0]?.tipo_renta?.toUpperCase() === 'SUBSIDIO DE TRANSPORTE') {
-            //     set_form_liquidacion((prevData: any) => ({
-            //         ...prevData,
-            //         ciclo_liquidacion: 'mensual',
-            //         periodo_liquidacion: 'pago unico'
-            //     }));
-
-            // }
-
-        }
-    }, [lista_obligaciones])
-
-
+        }, [lista_obligaciones, tipo_renta]);
+        
+        useEffect(() => {
+            const defaultVencimiento = dayjs().add(30, 'day');
+            set_fecha_vencimiento(defaultVencimiento);
+          }, []);
     // useEffect(() => {
     //     if (tipo_renta === "TASA RETRIBUTIVA POR CONTAMINACION HIDRICA (TRCH)") {
     //       set_form_liquidacion((prevData: any) => ({
@@ -666,7 +566,7 @@ interface IProps {
                             size="small"
 
                             fullWidth
-                            value={caudalConcesionado }
+                            value={caudalConcesionado}
                             onChange={(e) => setCaudalConcesionado(e.target.value)}
                         />
                     </Grid>

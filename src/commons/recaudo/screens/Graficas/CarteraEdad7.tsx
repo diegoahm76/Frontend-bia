@@ -38,19 +38,32 @@ export const ReporteGeneralCarteraDeuda: React.FC = () => {
                 enabled: false
             },
             xaxis: {
-                categories: []
+                categories: [],
+                labels: {
+                    formatter: function (val: any) {
+                        return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
+                    },
+                },
             },
             yaxis: {
                 labels: {
                     style: {
                         fontSize: '9px',
+                        maxWidth: 300 // Ajusta el valor según sea necesario
+                    },
+                },
+            },
+            tooltip: {
+                y: {
+                    formatter: function (val: any) {
+                        return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
                     },
                 },
             },
         }
     });
 
-    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleInputChange = (event: any) => {
         const { name, value } = event.target;
         setFormData((prevData) => ({
             ...prevData,
@@ -58,24 +71,43 @@ export const ReporteGeneralCarteraDeuda: React.FC = () => {
         }));
     };
 
-    
     // Función que obtiene los datos de cartera de deuda y actualiza la gráfica
-    const carteraDeuda = async () => {
+    const grafica = async () => {
         setLoading(true);
         try {
             const url = `/recaudo/reportes/reporte-general-cartera-deuda/`;
             const res = await api.get(url, { params: formData });
             const data_consulta = res.data.data;
 
-            const data = Object.values(data_consulta).map((item: any) => item.total_sancion);
-            const categories = Object.values(data_consulta).map((item: any) => item.codigo_contable__descripcion);
+            const data = data_consulta.map((item: any) => item.valor_sancion_total);
+            const categories = data_consulta.map((item: any) => item.tipo_renta__descripcion);
 
             setEstado({
                 series: [{ data }],
                 options: {
                     ...estado.options,
                     xaxis: {
-                        categories: categories as never[],
+                        categories: categories,
+                        labels: {
+                            formatter: function (val: any) {
+                                return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
+                            },
+                        },
+                    },
+                    yaxis: {
+                        labels: {
+                            style: {
+                                fontSize: '9px',
+                                maxWidth: 300 // Ajusta el valor según sea necesario
+                            },
+                        },
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val: any) {
+                                return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
+                            },
+                        },
                     },
                 },
             });
@@ -85,6 +117,10 @@ export const ReporteGeneralCarteraDeuda: React.FC = () => {
             setLoading(false);
         }
     };
+
+
+
+    
 
     const fetchChoiseConcepto = async (): Promise<void> => {
         setLoading(true);
@@ -103,7 +139,7 @@ export const ReporteGeneralCarteraDeuda: React.FC = () => {
 
     useEffect(() => {
         fetchChoiseConcepto();
-        carteraDeuda();
+        grafica();
     }, []);
 
     
@@ -184,7 +220,7 @@ export const ReporteGeneralCarteraDeuda: React.FC = () => {
                     color="primary"
                     variant="contained"
                     startIcon={loading ? <CircularProgress size={20} /> : <SearchIcon />}
-                    onClick={carteraDeuda}
+                    onClick={grafica}
                     disabled={loading}
                 >
                     Buscar

@@ -8,7 +8,13 @@ import { api } from '../../../../api/axios';
 import ClearIcon from '@mui/icons-material/Clear';
 
 export const GraficaApex = () => {
-   
+   const formatCurrency = (value: number) => {
+  return value.toLocaleString('es-ES', {
+    style: 'currency',
+    currency: 'COP', // Puedes cambiar 'COP' a la moneda que desees
+  });
+};
+
 
     const initialFormData = {
         fecha_desde: '',
@@ -48,6 +54,13 @@ export const GraficaApex = () => {
                     },
                 },
             },
+            tooltip: {
+                y: {
+                    formatter: function (val: any) {
+                        return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
+                    },
+                },
+            },
         }
     });
 
@@ -59,16 +72,15 @@ export const GraficaApex = () => {
         }));
     };
 
-    
     // Función que obtiene los datos de cartera de deuda y actualiza la gráfica
     const carteraDeuda = async () => {
         setLoading(true);
         try {
-            const url = `/recaudo/reportes/reporte-general-cartera-deuda-y-etapa/`;
+            const url = '/recaudo/reportes/reporte-general-cartera-deuda-y-etapa/';
             const res = await api.get(url, { params: formData });
             const data_consulta = res.data.data;
-            const data = Object.values(data_consulta).map((item: any) => item.total_sancion);
-            const categories = Object.values(data_consulta).map((item: any) => item.codigo_contable__descripcion);
+            const data = data_consulta.map((item: any) => item.total_sancion);
+            const categories = data_consulta.map((item: any) => item.nombre_renta);
 
             setEstado({
                 series: [{ data }],

@@ -23,8 +23,6 @@ export const  ReporteGeneralCarteraDeudayEdad: React.FC = () => {
   const [choiseConcepto, setChoiseConcepto] = useState([]);
 
 
-
-
   const [chartData, setChartData] = useState<{
     series: ApexAxisChartSeries | ApexNonAxisChartSeries;
     options: ApexOptions;
@@ -87,9 +85,10 @@ export const  ReporteGeneralCarteraDeudayEdad: React.FC = () => {
         horizontalAlign: 'left',
         offsetX: 40,
       },
+
+      
     },
   });
-
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -99,14 +98,11 @@ export const  ReporteGeneralCarteraDeudayEdad: React.FC = () => {
     }));
   };
 
-
-
-
   const fetchData = async () => {
     try {
-      const url = `/recaudo/reportes/reporte-general-cartera-deuda-y-edad/`;
+      const url = '/recaudo/reportes/reporte-general-cartera-deuda-y-edad/';
       const res = await api.get(url, { params: formData });
-      const data = res.data.detalles_por_codigo_contable;
+      const data = res.data.detalles_por_tipo_renta;
 
       const categories: string[] = [];
       const seriesData: { name: string, data: number[] }[] = [];
@@ -114,8 +110,8 @@ export const  ReporteGeneralCarteraDeudayEdad: React.FC = () => {
       // Obtener todos los nombres de categoría únicos
       const uniqueCategories: string[] = Object.keys(data).reduce((acc: string[], categoria: string) => {
         const item = data[categoria];
-        Object.keys(item).forEach((key: string) => {
-          if (key !== 'codigo_contable' && !acc.includes(key)) {
+        Object.keys(item).forEach((key: any) => {
+          if (!acc.includes(key)) {
             acc.push(key);
           }
         });
@@ -138,7 +134,7 @@ export const  ReporteGeneralCarteraDeudayEdad: React.FC = () => {
       });
 
       // Obtener los nombres de las categorías
-      const categoryNames = Object.keys(data).map((categoria: string) => categoria);
+      const categoryNames = Object.keys(data);
 
       setChartData({
         series: seriesData,
@@ -146,14 +142,50 @@ export const  ReporteGeneralCarteraDeudayEdad: React.FC = () => {
           ...chartData.options,
           xaxis: {
             categories: categoryNames,
+            labels: {
+              formatter: function (val: any) {
+                return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
+              },
+            },
+          },
+          yaxis: {
+            labels: {
+              style: {
+                fontSize: '9px',
+              },
+              maxWidth: 500, // Ajusta este valor según sea necesario para la longitud de los nombres
+            },
+          },
+          chart: {
+            height: categoryNames.length * 40, // Ajusta la altura del gráfico basado en la cantidad de categorías
+          },
+          plotOptions: {
+            bar: {
+              horizontal: true,
+              barHeight: '80%', // Ajusta la altura de las barras según sea necesario
+            },
+          },
+          tooltip: {
+            y: {
+              formatter: function (val: any) {
+                return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
+              },
+            },
+          },
+          dataLabels: {
+            formatter: function (val: any) {
+              return val.toLocaleString(); // Formatea el valor en formato de dinero sin el símbolo "$"
+            },
           },
         },
       });
+      
+      
+      
     } catch (error) {
       console.error(error);
     }
   };
-
 
 
   const fetchChoiseConcepto = async (): Promise<void> => {

@@ -13,9 +13,16 @@ export const get_obligaciones = createAsyncThunk('facilidades_pago/get_obligacio
 
 // Listar Obligaciones de Usuario Externo desde Pag. Usuario Interno
 export const get_obligaciones_id = createAsyncThunk('facilidades_pago/get_obligaciones_id', async (identificacion: string) => {
-  const { data } = await api.get(`recaudo/facilidades-pagos/consulta-obligaciones-deudores/${identificacion}/`)
+  const { data } = await api.get(`recaudo/liquidaciones/obetener-obligaciones-deudor/${identificacion}/`)
   return data.data
 })
+
+export const get_obligaciones_factura = createAsyncThunk('facilidades_pago/get_obligaciones_id', async (identificacion: string) => {
+  const { data } = await api.get(`recaudo/liquidaciones/expedientes-deudor/get/${identificacion}/`)
+  return data.data
+})
+
+
 
 export const obligaciones_slice = createSlice({
   name: 'obligaciones',
